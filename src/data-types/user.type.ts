@@ -10,3 +10,13 @@ export interface User extends AdditionalUserData {
 export interface AdditionalUserData {
   displayName: string | null;
 }
+
+export interface PostedByUser {
+  id: string;
+  displayName: string;
+}
+
+export interface VoteByUser {
+  id: string;
+  displayName: string;
+}
