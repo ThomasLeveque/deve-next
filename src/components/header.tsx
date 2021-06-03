@@ -12,11 +12,8 @@ const Header: React.FC = () => {
 
   return (
     <header className="py-3 px-6 flex justify-end">
-      <Link href="/dashboard">
-        <a className="p-2">Dashboard</a>
-      </Link>
       <Link href="/account">
-        <a className="p-2">Account</a>
+        <a className="p-2">Profil</a>
       </Link>
       <button className="p-2" onClick={handleSignOut}>
         Logout
