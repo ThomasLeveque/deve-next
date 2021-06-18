@@ -17,7 +17,7 @@ const Home: NextPage = () => {
 
   return (
     <main>
-      <h1 className="text-5xl text-center mb-10">Welcome !</h1>
+      <h1 className="text-5xl text-center mb-10">Best react lib for mobile animation</h1>
       <SignUp />
       <SignIn />
       <SignInWithGoogle />
