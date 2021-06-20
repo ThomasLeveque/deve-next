@@ -1,10 +1,8 @@
 import { NextPage } from 'next';
 import React from 'react';
 
+import Layout from '@components/layout';
 import Redirect from '@components/redirect';
-import SignIn from '@components/sign-in';
-import SignInWithGoogle from '@components/sign-in-with-google';
-import SignUp from '@components/sign-up';
 
 import { useAuth } from '@hooks/useAuth';
 
@@ -16,12 +14,11 @@ const Home: NextPage = () => {
   }
 
   return (
-    <main>
-      <h1 className="text-5xl text-center mb-10">Best react lib for mobile animation</h1>
-      <SignUp />
-      <SignIn />
-      <SignInWithGoogle />
-    </main>
+    <Layout>
+      <div className="h-[4000px]">
+        <h1 className="text-5xl text-center mb-10">Best react lib for mobile animation</h1>
+      </div>
+    </Layout>
   );
 };
 

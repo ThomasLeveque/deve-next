@@ -23,8 +23,16 @@
 }
 
 @layer base {
+  button:focus,
+  input:focus,
+  a:focus {
+    outline: none;
+  }
 }
 @layer components {
 }
 @layer utilities {
+  .with-ring {
+    @apply focus:ring-[3px] focus:ring-secondary/50;
+  }
 }

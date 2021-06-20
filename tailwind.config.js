@@ -8,6 +8,16 @@ module.exports = {
       'poppins-bold': ['poppins-bold'],
     },
     extend: {
+      height: {
+        header: '100px',
+      },
+      width: {
+        sidebar: '250px',
+      },
+      borderRadius: {
+        button: '10px',
+        tag: '5px',
+      },
       colors: {
         black: '#1B1C2C',
         white: '#FFFFFF',
