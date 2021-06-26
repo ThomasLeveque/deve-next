@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { useAuth } from '@hooks/useAuth';
 
-import Button from './elements/button';
+import Button from '../../elements/button';
 
 const SignInWithGoogleBtn: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);

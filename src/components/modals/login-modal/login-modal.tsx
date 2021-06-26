@@ -3,15 +3,15 @@ import React, { useState } from 'react';
 
 import Button from '@components/elements/button';
 import Separator from '@components/elements/separator';
-import TextInput from '@components/elements/text-input';
-import SignInWithGoogleBtn from '@components/sign-in-with-google-btn';
+import SignInWithGoogleBtn from '@components/modals/login-modal/sign-in-with-google-btn';
 
-import { Modal } from './modal';
+import { Modal } from '../modal';
+import SignInForm from './sign-in-form';
 
 const authModalSelector = (state: ModalsStore) => state.authModal;
 const toggleAuthModalSelector = (state: ModalsStore) => state.toggleAuthModal;
 
-enum loginStep {
+export enum loginStep {
   LOGIN_SELECTION = 0,
   LOGIN_WITH_EMAIL,
   JOIN_NEXT_DEVE,
@@ -23,6 +23,11 @@ const LoginModal: React.FC = () => {
 
   const authModal = useModalsStore(authModalSelector);
   const toggleAuthModal = useModalsStore(toggleAuthModalSelector);
+
+  const closeModal = () => {
+    toggleAuthModal();
+    setStep(loginStep.LOGIN_SELECTION);
+  };
 
   const renderTitle = (): string => {
     switch (step) {
@@ -62,23 +67,12 @@ const LoginModal: React.FC = () => {
           </>
         );
       case loginStep.LOGIN_WITH_EMAIL:
-        return (
-          <>
-            <TextInput id="email" label="email" placeholder="Your email" />
-            <TextInput id="email" label="email" type="password" placeholder="Your email" />
-            <TextInput id="email" label="email" type="search" placeholder="Your email" />
-          </>
-        );
+        return <SignInForm setStep={setStep} />;
       case loginStep.JOIN_NEXT_DEVE:
         return null;
       case loginStep.PASSWORD_RECOVERY:
         return null;
     }
-  };
-
-  const closeModal = () => {
-    toggleAuthModal();
-    setStep(loginStep.LOGIN_SELECTION);
   };
 
   return (

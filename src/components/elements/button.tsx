@@ -9,6 +9,7 @@ interface ButtonProps {
   loading?: boolean;
   className?: string;
   text?: string;
+  type?: 'button' | 'submit';
   icon?: JSX.Element;
   iconPosition?: 'left' | 'right';
   fullWidth?: boolean;
@@ -17,6 +18,7 @@ interface ButtonProps {
 const Button: React.FC<ButtonProps> = (props) => {
   const iconPosition = props.iconPosition ?? 'right';
   const fullWidth = props.fullWidth ?? false;
+  const type = props.type ?? 'button';
 
   return (
     <button
@@ -25,6 +27,7 @@ const Button: React.FC<ButtonProps> = (props) => {
         { 'w-full': fullWidth },
         props.className
       )}
+      type={type}
       onClick={props.onClick}
       disabled={props.disabled || props.loading}
     >

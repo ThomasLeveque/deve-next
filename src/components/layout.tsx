@@ -4,7 +4,7 @@ import Header from '@components/header';
 
 import { useAuth } from '@hooks/useAuth';
 
-import LoginModal from './modals/login-modal';
+import LoginModal from './modals/login-modal/login-modal';
 import Redirect from './redirect';
 
 const Layout: React.FC = ({ children }) => {
