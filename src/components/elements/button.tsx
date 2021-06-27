@@ -32,7 +32,7 @@ const Button: React.FC<ButtonProps> = (props) => {
       disabled={props.disabled || props.loading}
     >
       {props.loading ? (
-        <span className="w-[20px]">
+        <span className="w-[16px]">
           <SpinnerIcon />
         </span>
       ) : (

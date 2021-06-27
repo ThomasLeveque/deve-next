@@ -58,7 +58,7 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>((props, ref
         {withResetPassword ? (
           <a
             href="#"
-            className="absolute bottom-full right-0 font-poppins-bold text-[10px] mb-1 mr-1 hover:underline focus:underline"
+            className="absolute bottom-full right-0 font-poppins-bold text-[10px] mb-2 mr-1 hover:underline focus:underline"
             onClick={(event) => {
               event.preventDefault();
               goToResetPassword();

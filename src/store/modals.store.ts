@@ -10,7 +10,7 @@ export interface ModalsStore {
 }
 
 export const useModalsStore = create<ModalsStore>((set) => ({
-  authModal: true,
+  authModal: false,
   toggleAuthModal: () => set((state) => ({ authModal: !state.authModal })),
   linkModal: false,
   toggleLinkModal: () => set((state) => ({ linkModal: !state.linkModal })),

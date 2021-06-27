@@ -9,7 +9,7 @@ import Button from './elements/button';
 const toggleAuthModalSelector = (state: ModalsStore) => state.toggleAuthModal;
 
 const Header: React.FC = () => {
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
   const toggleAuthModal = useModalsStore(toggleAuthModalSelector);
 
   const handleSignOut = () => {
@@ -21,7 +21,11 @@ const Header: React.FC = () => {
       <Link href="/">
         <a className="font-poppins-bold text-2xl focus:ring-4 focus:ring-primary">Deve-next</a>
       </Link>
-      <Button text="Login" onClick={toggleAuthModal} />
+      {user ? (
+        <Button text="Logout" onClick={handleSignOut} />
+      ) : (
+        <Button text="Login" onClick={toggleAuthModal} />
+      )}
     </header>
   );
 };

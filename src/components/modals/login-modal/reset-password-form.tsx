@@ -6,28 +6,24 @@ import * as yup from 'yup';
 import Button from '@components/elements/button';
 import TextInput from '@components/elements/text-input';
 
-import { useAuth } from '@hooks/useAuth';
+import { auth } from '@libs/firebase';
 
 import { loginStep } from './login-modal';
 
 interface FormData {
   email: string;
-  password: string;
 }
 
 const schema = yup.object().shape({
   email: yup.string().email().required().max(255),
-  password: yup.string().required().min(6).max(255),
 });
 
-interface SignInFormProps {
+interface ResetPasswordFormProps {
   setStep: (step: loginStep) => void;
 }
 
-const SignInForm: React.FC<SignInFormProps> = (props) => {
+const ResetPasswordForm: React.FC<ResetPasswordFormProps> = (props) => {
   const [loading, setLoading] = useState<boolean>(false);
-
-  const { signInWithEmail } = useAuth();
 
   const {
     register,
@@ -37,41 +33,33 @@ const SignInForm: React.FC<SignInFormProps> = (props) => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async ({ email, password }: FormData) => {
-    setLoading(true);
-    await signInWithEmail(email, password).catch((err) => {
+  const onSubmit = async ({ email }: FormData) => {
+    try {
+      setLoading(true);
+      await auth.sendPasswordResetEmail(email);
+      props.setStep(loginStep.LOGIN_WITH_EMAIL);
+      // Do not setLoading(false) because Signin will unmount this component.
+    } catch (err) {
       console.error(err);
       setLoading(false);
-    });
-    // Do not setLoading(false) because Signin will unmount this component.
+    }
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <TextInput
-        className="mb-6"
+        className="mb-8"
         id="email"
         label="Email"
         placeholder="your@email.com"
         {...register('email')}
         error={errors.email}
       />
-      <TextInput
-        className="mb-8"
-        id="password"
-        label="Password"
-        type="password"
-        placeholder="123456"
-        withResetPassword
-        goToResetPassword={() => props.setStep(loginStep.PASSWORD_RECOVERY)}
-        {...register('password')}
-        error={errors.password}
-      />
       <div className="flex justify-end">
         <Button
           text="Back"
           className="bg-gray-100 text-black"
-          onClick={() => props.setStep(loginStep.LOGIN_SELECTION)}
+          onClick={() => props.setStep(loginStep.LOGIN_WITH_EMAIL)}
         />
         <Button text="Continue" className="ml-5" type="submit" loading={loading} />
       </div>
@@ -79,4 +67,4 @@ const SignInForm: React.FC<SignInFormProps> = (props) => {
   );
 };
 
-export default SignInForm;
+export default ResetPasswordForm;

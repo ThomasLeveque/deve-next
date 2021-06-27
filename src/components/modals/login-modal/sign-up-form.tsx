@@ -1,53 +1,90 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
+
+import Button from '@components/elements/button';
+import TextInput from '@components/elements/text-input';
 
 import { useAuth } from '@hooks/useAuth';
 
-const SignUp: React.FC = () => {
+import { loginStep } from './login-modal';
+
+interface FormData {
+  displayName: string;
+  email: string;
+  password: string;
+}
+
+const schema = yup.object().shape({
+  displayName: yup.string().required().max(255),
+  email: yup.string().email().required().max(255),
+  password: yup.string().required().min(6).max(255),
+});
+
+interface SignUpFormProps {
+  setStep: (step: loginStep) => void;
+}
+
+const SignUpForm: React.FC<SignUpFormProps> = (props) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [displayName, setDisplayName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
 
   const { signUpWithEmail } = useAuth();
 
-  const handleSignUpWithEmail = async (): Promise<void> => {
-    try {
-      setLoading(true);
-      await signUpWithEmail(email, password, { displayName });
-      // Do not setLoading(false) because Signup will unmount this component.
-    } catch (err) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: yupResolver(schema),
+  });
+
+  const onSubmit = async ({ displayName, email, password }: FormData) => {
+    setLoading(true);
+    await signUpWithEmail(email, password, { displayName }).catch((err) => {
       console.error(err);
       setLoading(false);
-    }
+    });
+    // Do not setLoading(false) because Signup will unmount this component.
   };
 
   return (
-    <div className="flex items-center flex-col mb-8">
-      <h2 className="text-3xl text-center mb-4">Sign up</h2>
-      <input
-        className="border-black border-2"
-        value={displayName}
-        placeholder="DisplayName"
-        onChange={(event) => setDisplayName(event.target.value)}
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <TextInput
+        className="mb-6"
+        id="displayName"
+        label="Username"
+        placeholder="Your username"
+        {...register('displayName')}
+        error={errors.displayName}
       />
-      <input
-        className="border-black border-2"
-        value={email}
-        placeholder="Email"
-        onChange={(event) => setEmail(event.target.value)}
+      <TextInput
+        className="mb-6"
+        id="email"
+        label="Email"
+        placeholder="your@email.com"
+        {...register('email')}
+        error={errors.email}
       />
-      <input
-        className="border-black border-2"
-        value={password}
-        placeholder="Password"
+      <TextInput
+        className="mb-8"
+        id="password"
+        label="Password"
         type="password"
-        onChange={(event) => setPassword(event.target.value)}
+        placeholder="123456"
+        {...register('password')}
+        error={errors.password}
       />
-      <button className="bg-black text-white p-2" onClick={handleSignUpWithEmail}>
-        {loading ? 'loading...' : 'Sign up with email'}
-      </button>
-    </div>
+      <div className="flex justify-end">
+        <Button
+          text="Back"
+          className="bg-gray-100 text-black"
+          onClick={() => props.setStep(loginStep.LOGIN_SELECTION)}
+        />
+        <Button text="Continue" className="ml-5" type="submit" loading={loading} />
+      </div>
+    </form>
   );
 };
 
-export default SignUp;
+export default SignUpForm;

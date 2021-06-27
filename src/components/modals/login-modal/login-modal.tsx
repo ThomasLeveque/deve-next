@@ -6,7 +6,9 @@ import Separator from '@components/elements/separator';
 import SignInWithGoogleBtn from '@components/modals/login-modal/sign-in-with-google-btn';
 
 import { Modal } from '../modal';
+import ResetPasswordForm from './reset-password-form';
 import SignInForm from './sign-in-form';
+import SignUpForm from './sign-up-form';
 
 const authModalSelector = (state: ModalsStore) => state.authModal;
 const toggleAuthModalSelector = (state: ModalsStore) => state.toggleAuthModal;
@@ -69,9 +71,9 @@ const LoginModal: React.FC = () => {
       case loginStep.LOGIN_WITH_EMAIL:
         return <SignInForm setStep={setStep} />;
       case loginStep.JOIN_NEXT_DEVE:
-        return null;
+        return <SignUpForm setStep={setStep} />;
       case loginStep.PASSWORD_RECOVERY:
-        return null;
+        return <ResetPasswordForm setStep={setStep} />;
     }
   };
 

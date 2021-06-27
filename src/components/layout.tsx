@@ -1,18 +1,26 @@
-import React from 'react';
+import { ModalsStore, useModalsStore } from '@store/modals.store';
+import React, { useEffect } from 'react';
 
 import Header from '@components/header';
 
 import { useAuth } from '@hooks/useAuth';
 
 import LoginModal from './modals/login-modal/login-modal';
-import Redirect from './redirect';
+
+const authModalSelector = (state: ModalsStore) => state.authModal;
+const toggleAuthModalSelector = (state: ModalsStore) => state.toggleAuthModal;
 
 const Layout: React.FC = ({ children }) => {
-  const { user, userLoaded } = useAuth();
+  const { user } = useAuth();
 
-  // if (!user && userLoaded) {
-  //   return <Redirect to="/" />;
-  // }
+  const authModal = useModalsStore(authModalSelector);
+  const toggleAuthModal = useModalsStore(toggleAuthModalSelector);
+
+  useEffect(() => {
+    if (user && authModal) {
+      toggleAuthModal();
+    }
+  }, [user]);
 
   return (
     <>
