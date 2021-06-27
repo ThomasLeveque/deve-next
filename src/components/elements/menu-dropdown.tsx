@@ -19,11 +19,11 @@ const MenuDropdown: React.FC<MenuDropdownProps> = (props) => {
 
   return (
     <Menu as="div" className="relative">
-      <Menu.Button>{props.button}</Menu.Button>
+      <Menu.Button className="flex">{props.button}</Menu.Button>
       <Menu.Items
         className={classNames(
           'absolute bg-gray-100 min-w-full mt-2 rounded-button p-1 focus:outline-none',
-          dropdownPosition === 'right' ? 'right-0' : 'left-0'
+          dropdownPosition === 'right' ? 'right-0 origin-top-right' : 'left-0 origin-top-left'
         )}
       >
         {props.items.map((item, i) => (
