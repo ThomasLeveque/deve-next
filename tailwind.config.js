@@ -15,6 +15,7 @@ module.exports = {
         sidebar: '250px',
       },
       borderRadius: {
+        modal: '20px',
         button: '10px',
         tag: '5px',
       },

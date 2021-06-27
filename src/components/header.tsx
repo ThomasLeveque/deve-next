@@ -1,10 +1,12 @@
+import { CodeIcon, LogoutIcon } from '@heroicons/react/outline';
 import { ModalsStore, useModalsStore } from '@store/modals.store';
 import Link from 'next/link';
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import { useAuth } from '@hooks/useAuth';
 
 import Button from './elements/button';
+import MenuDropdown, { MenuDropdownItemProps } from './elements/menu-dropdown';
 
 const toggleAuthModalSelector = (state: ModalsStore) => state.toggleAuthModal;
 
@@ -12,20 +14,29 @@ const Header: React.FC = () => {
   const { signOut, user } = useAuth();
   const toggleAuthModal = useModalsStore(toggleAuthModalSelector);
 
-  const handleSignOut = () => {
-    signOut();
-  };
+  const userDropdownItems: MenuDropdownItemProps[] = useMemo(
+    () => [
+      {
+        text: 'Logout',
+        onClick: signOut,
+        icon: <LogoutIcon />,
+      },
+    ],
+    []
+  );
 
   return (
     <header className="xl:container xl:mx-auto h-header px-5 flex justify-between items-center sticky top-0">
       <Link href="/">
-        <a className="font-poppins-bold text-2xl focus:ring-4 focus:ring-primary">Deve-next</a>
+        <a className="font-poppins-bold text-2xl with-ring">Deve-next</a>
       </Link>
-      {user ? (
-        <Button text="Logout" onClick={handleSignOut} />
-      ) : (
-        <Button text="Login" onClick={toggleAuthModal} />
-      )}
+      <div className="flex">
+        {user ? (
+          <MenuDropdown button={<Button text="Menu" />} items={userDropdownItems} />
+        ) : (
+          <Button text="Login" onClick={toggleAuthModal} />
+        )}
+      </div>
     </header>
   );
 };
