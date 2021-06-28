@@ -1,18 +1,12 @@
 import { User as AuthUser } from '@firebase/auth-types';
-import { DocumentSnapshot } from '@firebase/firestore-types';
 
 import { db } from '@libs/firebase';
 import { Document } from '@libs/types';
 
 import { AdditionalUserData, User } from '@data-types/user.type';
 
+import { formatDoc } from '@utils/format-document';
 import { formatUser } from '@utils/format-user';
-
-const formatDoc = <Data>(doc: DocumentSnapshot): Document<Data> => ({
-  id: doc.id,
-  exists: doc.exists,
-  ...(doc.data() as Data),
-});
 
 export const createUser = async (
   userId: string,
