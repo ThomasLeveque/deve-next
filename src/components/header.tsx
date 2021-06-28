@@ -1,6 +1,7 @@
-import { LogoutIcon, PlusIcon } from '@heroicons/react/outline';
+import { LogoutIcon, PlusIcon, UserCircleIcon } from '@heroicons/react/outline';
 import { ModalsStore, useModalsStore } from '@store/modals.store';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';
 
 import { useAuth } from '@hooks/useAuth';
@@ -15,8 +16,15 @@ const Header: React.FC = () => {
   const { signOut, user, userLoaded } = useAuth();
   const toggleAuthModal = useModalsStore(toggleAuthModalSelector);
 
+  const router = useRouter();
+
   const userDropdownItems: MenuDropdownItemProps[] = useMemo(
     () => [
+      {
+        text: 'Profil',
+        onClick: () => router.push('/profil'),
+        icon: <UserCircleIcon />,
+      },
       {
         text: 'Logout',
         onClick: signOut,
