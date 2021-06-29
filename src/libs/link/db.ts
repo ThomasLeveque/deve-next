@@ -8,7 +8,7 @@ import { Link } from '@data-types/link.type';
 
 import { formatDoc } from '@utils/format-document';
 
-const LINKS_PER_PAGE = 2;
+const LINKS_PER_PAGE = 20;
 
 export const getLinks = async (cursor: DocumentSnapshot): Promise<PaginatedData<Link>> => {
   const linksRef = db.collection('links');

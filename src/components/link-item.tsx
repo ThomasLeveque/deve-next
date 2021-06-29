@@ -1,8 +1,12 @@
 import { AnnotationIcon, FireIcon } from '@heroicons/react/outline';
+import { FireIcon as FireIconSolid } from '@heroicons/react/solid';
+import classNames from 'classnames';
 import { format } from 'date-fns';
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import { Document } from '@libs/types';
+
+import { useAuth } from '@hooks/useAuth';
 
 import { Link } from '@data-types/link.type';
 
@@ -15,6 +19,40 @@ interface LinkItemProps {
 }
 
 const LinkItem: React.FC<LinkItemProps> = ({ link }) => {
+  const { user } = useAuth();
+
+  const isLikedByMe = useMemo(
+    () =>
+      !!link.votes.find((vote) => {
+        console.log({ vote: vote.voteBy.id });
+        console.log({ user: user?.id });
+        return vote.voteBy.id === user?.id;
+      }),
+    [user, link]
+  );
+
+  console.log(isLikedByMe);
+
+  const renderFires = useMemo(() => {
+    if (link.voteCount === 0) {
+      return 'This is fire !';
+    } else if (link.voteCount === 1) {
+      return `${link.voteCount} fire`;
+    } else {
+      return `${link.voteCount} fires`;
+    }
+  }, [link.voteCount]);
+
+  const renderComments = useMemo(() => {
+    if (link.commentCount === 0) {
+      return 'Add comment';
+    } else if (link.commentCount === 1) {
+      return `${link.commentCount} comment`;
+    } else {
+      return `${link.commentCount} comments`;
+    }
+  }, [link.commentCount]);
+
   return (
     <li className="p-[30px] rounded-link-card bg-gray-100">
       <div className="mb-5">
@@ -35,13 +73,17 @@ const LinkItem: React.FC<LinkItemProps> = ({ link }) => {
         ))}
       </ul>
       <div className="flex">
-        <div className="flex items-center mr-5">
-          <FireIcon className="mr-[6px] w-6" />
-          <span className="font-poppins-bold text-[11px]">This is fire !</span>
+        <div className={classNames('flex items-center mr-5', { 'text-secondary': isLikedByMe })}>
+          {isLikedByMe ? (
+            <FireIconSolid className="mr-[6px] w-6" />
+          ) : (
+            <FireIcon className="mr-[6px] w-6" />
+          )}
+          <span className="font-poppins-bold text-[11px]">{renderFires}</span>
         </div>
         <div className="flex items-center">
           <AnnotationIcon className="mr-[6px] w-6" />
-          <span className="font-poppins-bold text-[11px]">Add comment</span>
+          <span className="font-poppins-bold text-[11px]">{renderComments}</span>
         </div>
       </div>
     </li>

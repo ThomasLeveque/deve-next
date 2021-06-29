@@ -12,17 +12,18 @@ interface MenuDropdownProps {
   button: JSX.Element;
   items: MenuDropdownItemProps[];
   dropdownPosition?: 'left' | 'right';
+  className?: string;
 }
 
 const MenuDropdown: React.FC<MenuDropdownProps> = (props) => {
   const dropdownPosition = props.dropdownPosition ?? 'right';
 
   return (
-    <Menu as="div" className="relative">
-      <Menu.Button className="flex">{props.button}</Menu.Button>
+    <Menu as="div" className={classNames('relative', props.className)}>
+      <Menu.Button as="div">{props.button}</Menu.Button>
       <Menu.Items
         className={classNames(
-          'absolute bg-gray-100 min-w-full mt-2 rounded-button p-1 focus:outline-none shadow-lg',
+          'absolute bg-gray-100 mt-2 rounded-button p-1 focus:outline-none shadow-lg',
           dropdownPosition === 'right' ? 'right-0 origin-top-right' : 'left-0 origin-top-left'
         )}
       >

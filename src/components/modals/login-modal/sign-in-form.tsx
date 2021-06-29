@@ -70,7 +70,7 @@ const SignInForm: React.FC<SignInFormProps> = (props) => {
       <div className="flex justify-end">
         <Button
           text="Back"
-          className="bg-gray-100 text-black"
+          className="!bg-gray-100 text-black"
           onClick={() => props.setStep(loginStep.LOGIN_SELECTION)}
         />
         <Button text="Continue" className="ml-5" type="submit" loading={loading} />
