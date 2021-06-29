@@ -1,6 +1,6 @@
-export function getDomain(url: string): string {
+export const getDomain = (url: string): string => {
   return url.replace(/^https?:\/\//i, '').split('/')[0];
-}
+};
 
 export const getInitials = (text: string): string => {
   const splitedText = text.split(' ');

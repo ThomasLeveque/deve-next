@@ -12,7 +12,8 @@ const LINKS_PER_PAGE = 2;
 
 export const getLinks = async (cursor: DocumentSnapshot): Promise<PaginatedData<Link>> => {
   const linksRef = db.collection('links');
-  const query = cursor !== undefined ? linksRef.startAfter(cursor) : linksRef;
+  const orderQuery = linksRef.orderBy('createdAt', 'desc');
+  const query = cursor !== undefined ? orderQuery.startAfter(cursor) : orderQuery;
 
   const snapshot = await query.limit(LINKS_PER_PAGE).get();
   const data = snapshot.docs.map((doc) => formatDoc<Link>(doc));

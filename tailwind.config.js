@@ -16,6 +16,7 @@ module.exports = {
       },
       borderRadius: {
         modal: '20px',
+        'link-card': '15px',
         button: '10px',
         tag: '5px',
       },

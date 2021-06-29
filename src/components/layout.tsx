@@ -25,7 +25,7 @@ const Layout: React.FC = ({ children }) => {
   return (
     <>
       <Header />
-      <main className="xl:container xl:mx-auto px-5 mt-8">{children}</main>
+      <main className="xl:container xl:mx-auto px-5 my-8">{children}</main>
       <LoginModal />
     </>
   );

@@ -3,16 +3,24 @@ import React from 'react';
 
 import Button from '@components/elements/button';
 import Layout from '@components/layout';
+import LinkItem from '@components/link-item';
 
 import { useLinks } from '@libs/link/queries';
 
 const Home: NextPage = () => {
-  const { data, fetchNextPage, hasNextPage } = useLinks();
-  console.log(data);
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useLinks();
   return (
     <Layout>
-      <h1 className="text-5xl text-center mb-10">Best react lib for mobile animation</h1>
-      <Button text="Fetch more" disabled={!hasNextPage} onClick={fetchNextPage} />
+      <ul className="grid grid-cols-2 gap-5">
+        {data?.pages.map((page) => page.data.map((link) => <LinkItem key={link.id} link={link} />))}
+      </ul>
+      <Button
+        text="Fetch more"
+        className="mx-auto mt-8"
+        disabled={!hasNextPage}
+        loading={isFetchingNextPage}
+        onClick={fetchNextPage}
+      />
     </Layout>
   );
 };
