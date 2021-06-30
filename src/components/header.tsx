@@ -35,7 +35,7 @@ const Header: React.FC = () => {
   );
 
   return (
-    <header className="xl:container xl:mx-auto h-header px-5 flex justify-between items-center sticky top-0 bg-white">
+    <header className="xl:container xl:mx-auto h-header px-5 flex justify-between items-center sticky top-0 bg-white z-50">
       <Link href="/">
         <a className="font-poppins-bold text-2xl with-ring">Deve-next</a>
       </Link>

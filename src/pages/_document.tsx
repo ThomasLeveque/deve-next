@@ -8,16 +8,16 @@ class MyDocument extends Document {
         <Head>
           <link
             rel="preload"
-            href="/fonts/Poppins/Poppins-Bold.ttf"
+            href="/fonts/Poppins/Poppins-Bold.woff2"
             as="font"
-            type="font/ttf"
+            type="font/woff2"
             crossOrigin="anonymous"
           />
           <link
             rel="preload"
-            href="/fonts/Poppins/Poppins-Regular.ttf"
+            href="/fonts/Poppins/Poppins-Regular.woff2"
             as="font"
-            type="font/ttf"
+            type="font/woff2"
             crossOrigin="anonymous"
           />
           <link rel="icon" href="/favicon.ico" />
