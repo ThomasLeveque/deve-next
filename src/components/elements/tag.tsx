@@ -32,7 +32,7 @@ const Tag: React.FC<TagProps> = (props) => {
       <span className="font-poppins-bold text-[10px]">#{props.text}</span>
       {isClosable ? (
         <XIcon
-          className="w-[14px] ml-[6px] with-ring rounded-sm"
+          className="w-[14px] ml-[6px] cursor-pointer rounded-sm"
           onClick={(event) => {
             event.stopPropagation();
             onClose();

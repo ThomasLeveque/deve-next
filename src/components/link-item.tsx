@@ -7,6 +7,7 @@ import React, { useMemo } from 'react';
 import { Document } from '@libs/types';
 
 import { useAuth } from '@hooks/useAuth';
+import { useQueryString } from '@hooks/useQueryString';
 
 import { Link } from '@data-types/link.type';
 
@@ -20,18 +21,12 @@ interface LinkItemProps {
 
 const LinkItem: React.FC<LinkItemProps> = ({ link }) => {
   const { user } = useAuth();
+  const { addTagQuery } = useQueryString();
 
   const isLikedByMe = useMemo(
-    () =>
-      !!link.votes.find((vote) => {
-        console.log({ vote: vote.voteBy.id });
-        console.log({ user: user?.id });
-        return vote.voteBy.id === user?.id;
-      }),
+    () => !!link.votes.find((vote) => vote.voteBy.id === user?.id),
     [user, link]
   );
-
-  console.log(isLikedByMe);
 
   const renderFires = useMemo(() => {
     if (link.voteCount === 0) {
@@ -69,7 +64,9 @@ const LinkItem: React.FC<LinkItemProps> = ({ link }) => {
       </a>
       <ul className="mb-5 flex flex-wrap gap-[10px] gap-y-3">
         {link.categories.map((tag) => (
-          <Tag key={`${link.id}-${tag}`} text={tag} isColored />
+          <li key={`${link.id}-${tag}`}>
+            <Tag text={tag} isColored onClick={() => addTagQuery(tag)} />
+          </li>
         ))}
       </ul>
       <div className="flex">

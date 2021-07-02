@@ -8,7 +8,7 @@ module.exports = {
       'poppins-bold': ['poppins-bold'],
     },
     extend: {
-      height: {
+      spacing: {
         header: '100px',
       },
       width: {

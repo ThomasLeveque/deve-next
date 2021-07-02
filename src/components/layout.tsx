@@ -1,4 +1,5 @@
 import { ModalsStore, useModalsStore } from '@store/modals.store';
+import classNames from 'classnames';
 import React, { useEffect } from 'react';
 
 import Header from '@components/header';
@@ -10,7 +11,7 @@ import LoginModal from './modals/login-modal/login-modal';
 const authModalSelector = (state: ModalsStore) => state.authModal;
 const toggleAuthModalSelector = (state: ModalsStore) => state.toggleAuthModal;
 
-const Layout: React.FC = ({ children }) => {
+const Layout: React.FC<{ className?: string }> = ({ className, children }) => {
   const { user } = useAuth();
 
   const authModal = useModalsStore(authModalSelector);
@@ -25,7 +26,7 @@ const Layout: React.FC = ({ children }) => {
   return (
     <>
       <Header />
-      <main className="xl:container xl:mx-auto px-5 my-8">{children}</main>
+      <main className={classNames('xl:container xl:mx-auto px-5', className)}>{children}</main>
       <LoginModal />
     </>
   );

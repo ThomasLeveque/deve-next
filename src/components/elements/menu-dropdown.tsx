@@ -20,7 +20,9 @@ const MenuDropdown: React.FC<MenuDropdownProps> = (props) => {
 
   return (
     <Menu as="div" className={classNames('relative', props.className)}>
-      <Menu.Button as="div">{props.button}</Menu.Button>
+      <Menu.Button as="div" className="inline-flex">
+        {props.button}
+      </Menu.Button>
       <Menu.Items
         className={classNames(
           'absolute bg-gray-100 mt-2 rounded-button p-1 focus:outline-none shadow-lg',

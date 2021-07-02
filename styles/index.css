@@ -44,4 +44,7 @@
   .with-ring {
     @apply focus:ring-[3px] focus:ring-secondary/50;
   }
+  .tags-filter-sidebar-height {
+    height: calc(100vh - theme('spacing.header'));
+  }
 }
