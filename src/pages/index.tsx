@@ -81,7 +81,8 @@ const Home: NextPage = () => {
       {tags ? (
         <TagsFilterSidebar
           tags={tags}
-          className="tags-filter-sidebar-height sticky top-header py-8 overflow-y-auto"
+          // -mx-5 px-5 to make ring visible because of overflow
+          className="-mx-5 px-5 tags-filter-sidebar-height sticky top-header py-8 overflow-y-auto"
         />
       ) : null}
     </Layout>
