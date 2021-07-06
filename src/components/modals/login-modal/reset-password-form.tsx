@@ -58,10 +58,16 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = (props) => {
       <div className="flex justify-end">
         <Button
           text="Back"
-          className="bg-gray-100 text-black"
+          theme="gray"
           onClick={() => props.setStep(loginStep.LOGIN_WITH_EMAIL)}
         />
-        <Button text="Continue" className="ml-5" type="submit" loading={loading} />
+        <Button
+          theme="secondary"
+          text="Continue"
+          className="ml-5"
+          type="submit"
+          loading={loading}
+        />
       </div>
     </form>
   );

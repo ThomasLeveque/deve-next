@@ -76,12 +76,14 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
         error={errors.password}
       />
       <div className="flex justify-end">
+        <Button text="Back" theme="gray" onClick={() => props.setStep(loginStep.LOGIN_SELECTION)} />
         <Button
-          text="Back"
-          className="!bg-gray-100 text-black"
-          onClick={() => props.setStep(loginStep.LOGIN_SELECTION)}
+          theme="secondary"
+          text="Continue"
+          className="ml-5"
+          type="submit"
+          loading={loading}
         />
-        <Button text="Continue" className="ml-5" type="submit" loading={loading} />
       </div>
     </form>
   );

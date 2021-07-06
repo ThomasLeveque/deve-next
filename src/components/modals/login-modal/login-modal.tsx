@@ -51,12 +51,11 @@ const LoginModal: React.FC = () => {
           <>
             <div className="grid gap-5">
               <SignInWithGoogleBtn />
-              <Button text="login with github" fullWidth className="!bg-black" />
+              <Button theme="black" text="login with github" fullWidth />
               <Button
                 text="login with email"
                 onClick={() => setStep(loginStep.LOGIN_WITH_EMAIL)}
                 fullWidth
-                className="bg-primary text-black"
               />
             </div>
             <Separator className="my-7" />
@@ -64,7 +63,6 @@ const LoginModal: React.FC = () => {
               text="join next-deve"
               onClick={() => setStep(loginStep.JOIN_NEXT_DEVE)}
               fullWidth
-              className="bg-primary text-black"
             />
           </>
         );

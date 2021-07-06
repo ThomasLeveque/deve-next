@@ -20,7 +20,13 @@ const SignInWithGoogleBtn: React.FC = () => {
   };
 
   return (
-    <Button text="login with google" loading={loading} fullWidth onClick={handleSignInWithGoogle} />
+    <Button
+      theme="secondary"
+      text="login with google"
+      loading={loading}
+      fullWidth
+      onClick={handleSignInWithGoogle}
+    />
   );
 };
 

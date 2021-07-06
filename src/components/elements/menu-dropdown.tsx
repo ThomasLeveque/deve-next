@@ -1,6 +1,9 @@
 import { Menu } from '@headlessui/react';
+import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline';
 import classNames from 'classnames';
 import React from 'react';
+
+import Button from './button';
 
 export interface MenuDropdownItemProps {
   text: string;
@@ -9,7 +12,8 @@ export interface MenuDropdownItemProps {
 }
 
 interface MenuDropdownProps {
-  button: JSX.Element;
+  customButton?: JSX.Element;
+  defaultButtonText?: string;
   items: MenuDropdownItemProps[];
   dropdownPosition?: 'left' | 'right';
   className?: string;
@@ -20,19 +24,31 @@ const MenuDropdown: React.FC<MenuDropdownProps> = (props) => {
 
   return (
     <Menu as="div" className={classNames('relative', props.className)}>
-      <Menu.Button as="div" className="inline-flex">
-        {props.button}
-      </Menu.Button>
-      <Menu.Items
-        className={classNames(
-          'absolute bg-gray-100 mt-2 rounded-button p-1 focus:outline-none shadow-lg',
-          dropdownPosition === 'right' ? 'right-0 origin-top-right' : 'left-0 origin-top-left'
-        )}
-      >
-        {props.items.map((item, i) => (
-          <MenuDropdownItem key={`${item.text}${i}`} {...item} />
-        ))}
-      </Menu.Items>
+      {({ open }) => (
+        <>
+          <Menu.Button as="div" className="flex">
+            {props.customButton !== undefined ? (
+              props.customButton
+            ) : (
+              <Button
+                theme="gray"
+                text={props.defaultButtonText}
+                icon={open ? <ChevronUpIcon /> : <ChevronDownIcon />}
+              />
+            )}
+          </Menu.Button>
+          <Menu.Items
+            className={classNames(
+              'absolute bg-gray-100 mt-2 rounded-button p-1 focus:outline-none shadow-lg',
+              dropdownPosition === 'right' ? 'right-0 origin-top-right' : 'left-0 origin-top-left'
+            )}
+          >
+            {props.items.map((item, i) => (
+              <MenuDropdownItem key={`${item.text}${i}`} {...item} />
+            ))}
+          </Menu.Items>
+        </>
+      )}
     </Menu>
   );
 };

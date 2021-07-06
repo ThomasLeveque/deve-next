@@ -42,11 +42,11 @@ const Header: React.FC = () => {
       {userLoaded ? (
         user ? (
           <div className="grid grid-flow-col auto-cols-max items-center gap-4">
-            <Button text="Add link" icon={<PlusIcon />} />
-            <MenuDropdown button={<Avatar />} items={userDropdownItems} />
+            <Button theme="secondary" text="Add link" icon={<PlusIcon />} />
+            <MenuDropdown customButton={<Avatar />} items={userDropdownItems} />
           </div>
         ) : (
-          <Button text="Login" onClick={toggleAuthModal} />
+          <Button theme="secondary" text="Login" onClick={toggleAuthModal} />
         )
       ) : null}
     </header>

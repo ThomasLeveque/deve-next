@@ -1,4 +1,3 @@
-import { TrashIcon } from '@heroicons/react/outline';
 import classNames from 'classnames';
 import React, { useState, useRef } from 'react';
 
@@ -8,10 +7,10 @@ import { useQueryString } from '@hooks/useQueryString';
 
 import { Category } from '@data-types/categorie.type';
 
-import Button from './elements/button';
-import Separator from './elements/separator';
-import Tag from './elements/tag';
-import TextInput from './elements/text-input';
+import Separator from '../elements/separator';
+import Tag from '../elements/tag';
+import TextInput from '../elements/text-input';
+import TagListWrapper from './tag-list-wrapper';
 
 interface TagsFilterSidebarProps {
   tags: Document<Category>[];
@@ -19,7 +18,7 @@ interface TagsFilterSidebarProps {
 }
 
 const TagsFilterSidebar: React.FC<TagsFilterSidebarProps> = (props) => {
-  const { removeTagQuery, addTagQuery, tagsQuery, clearTagQuery } = useQueryString();
+  const { removeTagQuery, addTagQuery, tagsQuery } = useQueryString();
 
   const [searchTag, setSearchTag] = useState('');
   const searchRef = useRef<HTMLInputElement>(null);
@@ -31,19 +30,13 @@ const TagsFilterSidebar: React.FC<TagsFilterSidebarProps> = (props) => {
           <h3 className="text-center mb-5 font-poppins-bold text-lg">
             Selected tags ({tagsQuery.length}) :
           </h3>
-          <Button
-            text="Clear tags"
-            icon={<TrashIcon />}
-            className="w-full mb-5 !bg-danger-400 !ring-danger-100"
-            onClick={clearTagQuery}
-          />
-          <ul className="flex flex-wrap justify-end gap-[10px] gap-y-3">
+          <TagListWrapper className="justify-end">
             {tagsQuery?.map((tag) => (
               <li key={tag}>
                 <Tag text={tag} isColored isClosable onClose={() => removeTagQuery(tag)} />
               </li>
             ))}
-          </ul>
+          </TagListWrapper>
           <Separator className="my-8" />
         </>
       )}
@@ -62,7 +55,7 @@ const TagsFilterSidebar: React.FC<TagsFilterSidebarProps> = (props) => {
           searchRef.current?.focus();
         }}
       />
-      <ul className="flex flex-wrap justify-end gap-[10px] gap-y-3">
+      <TagListWrapper className="justify-end">
         {props.tags
           .filter(
             (tag) =>
@@ -75,7 +68,7 @@ const TagsFilterSidebar: React.FC<TagsFilterSidebarProps> = (props) => {
               <Tag text={`${tag.name} (${tag.count})`} onClick={() => addTagQuery(tag.name)} />
             </li>
           ))}
-      </ul>
+      </TagListWrapper>
     </aside>
   );
 };
