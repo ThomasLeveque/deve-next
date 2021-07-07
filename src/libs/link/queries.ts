@@ -3,6 +3,7 @@ import {
   useInfiniteQuery,
   UseInfiniteQueryResult,
   useMutation,
+  UseMutationResult,
   useQueryClient,
 } from 'react-query';
 
@@ -38,7 +39,12 @@ export const useUpdateLink = (
   link: Document<Link>,
   orderbyQuery: OrderLinksKey,
   tagsQuery: string[]
-) => {
+): UseMutationResult<
+  InfiniteData<PaginatedData<Link>>,
+  unknown,
+  Partial<Document<Link>>,
+  InfiniteData<PaginatedData<Link>> | undefined
+> => {
   const queryClient = useQueryClient();
   const linksKey = queryKeys.links(orderbyQuery, tagsQuery);
   return useMutation(

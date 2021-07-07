@@ -1,4 +1,5 @@
 import { DocumentSnapshot, Query } from '@firebase/firestore-types';
+import { InfiniteData } from 'react-query';
 
 import { db } from '@libs/firebase';
 import { Document, PaginatedData } from '@libs/types';
@@ -48,9 +49,10 @@ export const getLinks = async (
 export const updateLink = async (
   linkId: string | undefined,
   linkToUpdate: Partial<Document<Link>>
-): Promise<void> => {
+): Promise<InfiniteData<PaginatedData<Link>>> => {
   const linkRef = db.collection('links').doc(linkId);
-  return linkRef.update(linkToUpdate);
+  await linkRef.update(linkToUpdate);
+  return {} as InfiniteData<PaginatedData<Link>>;
 };
 
 export const getLinkComments = async (linkId: string): Promise<Document<Comment>[]> => {
