@@ -10,8 +10,6 @@ import { Link } from '@data-types/link.type';
 
 import { dataToDocument } from '@utils/format-document';
 
-import { UpdateVoteData } from './../../data-types/link.type';
-
 const LINKS_PER_PAGE = Number(process.env.NEXT_PUBLIC_LINKS_PER_PAGE) ?? 20;
 
 const getOrderbyDBQuery = (linksRef: Query, orderby: OrderLinksKey) => {
@@ -49,7 +47,7 @@ export const getLinks = async (
 
 export const updateLink = async (
   linkId: string | undefined,
-  linkToUpdate: UpdateVoteData
+  linkToUpdate: Partial<Document<Link>>
 ): Promise<void> => {
   const linkRef = db.collection('links').doc(linkId);
   return linkRef.update(linkToUpdate);

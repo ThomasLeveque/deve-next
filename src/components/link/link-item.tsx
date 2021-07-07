@@ -12,7 +12,7 @@ import { Document } from '@libs/types';
 import { useAuth } from '@hooks/useAuth';
 import { useQueryString } from '@hooks/useQueryString';
 
-import { Link, UpdateVoteData } from '@data-types/link.type';
+import { Link } from '@data-types/link.type';
 
 import { getDomain } from '@utils/format-string';
 
@@ -53,7 +53,7 @@ const LinkItem: React.FC<LinkItemProps> = ({ link }) => {
   }, [link.commentCount]);
 
   const addVote = () => {
-    const incrementedVoteLink: UpdateVoteData = {
+    const incrementedVoteLink: Partial<Document<Link>> = {
       voteCount: link.voteCount + 1,
       votes: [
         ...link.votes,
@@ -64,7 +64,7 @@ const LinkItem: React.FC<LinkItemProps> = ({ link }) => {
   };
 
   const removeVote = () => {
-    const decrementedVoteLink: UpdateVoteData = {
+    const decrementedVoteLink: Partial<Document<Link>> = {
       voteCount: link.voteCount - 1,
       votes: link.votes.filter((vote) => vote.voteBy.id !== user?.id),
     };

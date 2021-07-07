@@ -12,7 +12,6 @@ import { OrderLinksKey } from '@hooks/useQueryString';
 
 import { Link } from '@data-types/link.type';
 
-import { UpdateVoteData } from './../../data-types/link.type';
 import { getLinks, updateLink } from './db';
 
 export const queryKeys = {
@@ -42,31 +41,34 @@ export const useUpdateLink = (
 ) => {
   const queryClient = useQueryClient();
   const linksKey = queryKeys.links(orderbyQuery, tagsQuery);
-  return useMutation((updateLinkData: UpdateVoteData) => updateLink(link.id, updateLinkData), {
-    onMutate: async (updateLinkData: UpdateVoteData) => {
-      const newDocLink = { ...link, ...updateLinkData };
+  return useMutation(
+    (updateLinkData: Partial<Document<Link>>) => updateLink(link.id, updateLinkData),
+    {
+      onMutate: async (updateLinkData) => {
+        const newDocLink = { ...link, ...updateLinkData };
 
-      await queryClient.cancelQueries(linksKey);
+        await queryClient.cancelQueries(linksKey);
 
-      const previousLinks = queryClient.getQueryData<InfiniteData<PaginatedData<Link>>>(linksKey);
+        const previousLinks = queryClient.getQueryData<InfiniteData<PaginatedData<Link>>>(linksKey);
 
-      queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(linksKey, (oldLinks) => {
-        if (oldLinks) {
-          const pageIndex = oldLinks.pages.findIndex((page) =>
-            page.data.find((link) => link.id === newDocLink.id)
-          );
-          const linkIndex = oldLinks.pages[pageIndex].data.findIndex(
-            (link) => link.id === newDocLink.id
-          );
-          oldLinks.pages[pageIndex].data[linkIndex] = newDocLink;
-        }
-        return oldLinks ?? ({} as InfiniteData<PaginatedData<Link>>);
-      });
+        queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(linksKey, (oldLinks) => {
+          if (oldLinks) {
+            const pageIndex = oldLinks.pages.findIndex((page) =>
+              page.data.find((link) => link.id === newDocLink.id)
+            );
+            const linkIndex = oldLinks.pages[pageIndex].data.findIndex(
+              (link) => link.id === newDocLink.id
+            );
+            oldLinks.pages[pageIndex].data[linkIndex] = newDocLink;
+          }
+          return oldLinks ?? ({} as InfiniteData<PaginatedData<Link>>);
+        });
 
-      return previousLinks;
-    },
-    onError: (err, newDocLink, previousLinks) => {
-      queryClient.setQueryData(linksKey, previousLinks);
-    },
-  });
+        return previousLinks;
+      },
+      onError: (err, newDocLink, previousLinks) => {
+        queryClient.setQueryData(linksKey, previousLinks);
+      },
+    }
+  );
 };
