@@ -17,10 +17,9 @@ import LinkItem from '@components/link/link-item';
 import TagsFilterSidebar from '@components/tag/tags-filter-sidebar';
 
 import { useCategories } from '@libs/category/queries';
-import { OrderLinksKey } from '@libs/link/db';
 import { useLinks } from '@libs/link/queries';
 
-import { useQueryString } from '@hooks/useQueryString';
+import { OrderLinksKey, useQueryString } from '@hooks/useQueryString';
 
 const tagsSidebarOpenSelector = (state: AppConfigStore) => state.tagsSidebarOpen;
 const setTagsSidebarOpenSelector = (state: AppConfigStore) => state.setTagsSidebarOpen;
@@ -29,7 +28,7 @@ const Home: NextPage = () => {
   const tagsSidebarOpen = useAppConfigStore(tagsSidebarOpenSelector);
   const setTagsSidebarOpen = useAppConfigStore(setTagsSidebarOpenSelector);
 
-  const { updateOrderbyQuery, getOrderbyQuery, tagsQuery, clearTagQuery } = useQueryString();
+  const { updateOrderbyQuery, orderbyQuery, tagsQuery, clearTagQuery } = useQueryString();
 
   const orderLinksDropdownItems: Record<OrderLinksKey, MenuDropdownItemProps> = {
     newest: {
@@ -48,8 +47,6 @@ const Home: NextPage = () => {
       icon: <FireIcon />,
     },
   };
-
-  const orderbyQuery = getOrderbyQuery(Object.keys(orderLinksDropdownItems));
 
   const {
     data: links,

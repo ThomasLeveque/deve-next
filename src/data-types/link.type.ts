@@ -15,3 +15,8 @@ export interface Link {
   createdAt: number;
   updatedAt: number;
 }
+
+export interface UpdateVoteData {
+  voteCount: number;
+  votes: Vote[];
+}

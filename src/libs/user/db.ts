@@ -5,7 +5,7 @@ import { Document } from '@libs/types';
 
 import { AdditionalUserData, User } from '@data-types/user.type';
 
-import { formatDoc } from '@utils/format-document';
+import { dataToDocument } from '@utils/format-document';
 import { formatUser } from '@utils/format-user';
 
 export const createUser = async (
@@ -21,5 +21,5 @@ export const createUser = async (
 export const getUser = async (userId: string): Promise<Document<User>> => {
   const userRef = db.doc(`users/${userId}`);
   const doc = await userRef.get();
-  return formatDoc<User>(doc);
+  return dataToDocument<User>(doc);
 };

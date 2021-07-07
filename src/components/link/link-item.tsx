@@ -6,12 +6,13 @@ import React, { useMemo } from 'react';
 
 import TagListWrapper from '@components/tag/tag-list-wrapper';
 
+import { useUpdateLink } from '@libs/link/queries';
 import { Document } from '@libs/types';
 
 import { useAuth } from '@hooks/useAuth';
 import { useQueryString } from '@hooks/useQueryString';
 
-import { Link } from '@data-types/link.type';
+import { Link, UpdateVoteData } from '@data-types/link.type';
 
 import { getDomain } from '@utils/format-string';
 
@@ -23,7 +24,8 @@ interface LinkItemProps {
 
 const LinkItem: React.FC<LinkItemProps> = ({ link }) => {
   const { user } = useAuth();
-  const { addTagQuery } = useQueryString();
+  const { addTagQuery, tagsQuery, orderbyQuery } = useQueryString();
+  const updateLink = useUpdateLink(link, orderbyQuery, tagsQuery);
 
   const isLikedByMe = useMemo(
     () => !!link.votes.find((vote) => vote.voteBy.id === user?.id),
@@ -50,6 +52,25 @@ const LinkItem: React.FC<LinkItemProps> = ({ link }) => {
     }
   }, [link.commentCount]);
 
+  const addVote = () => {
+    const incrementedVoteLink: UpdateVoteData = {
+      voteCount: link.voteCount + 1,
+      votes: [
+        ...link.votes,
+        { voteBy: { id: user?.id ?? '', displayName: user?.displayName ?? '' } },
+      ],
+    };
+    updateLink.mutate(incrementedVoteLink);
+  };
+
+  const removeVote = () => {
+    const decrementedVoteLink: UpdateVoteData = {
+      voteCount: link.voteCount - 1,
+      votes: link.votes.filter((vote) => vote.voteBy.id !== user?.id),
+    };
+    updateLink.mutate(decrementedVoteLink);
+  };
+
   return (
     <li className="flex flex-col p-[30px] rounded-link-card bg-gray-100">
       <div className="mb-5">
@@ -72,14 +93,17 @@ const LinkItem: React.FC<LinkItemProps> = ({ link }) => {
         ))}
       </TagListWrapper>
       <div className="flex mt-auto">
-        <div className={classNames('flex items-center mr-5', { 'text-secondary': isLikedByMe })}>
+        <button
+          onClick={isLikedByMe ? removeVote : addVote}
+          className={classNames('flex items-center mr-5', { 'text-secondary': isLikedByMe })}
+        >
           {isLikedByMe ? (
             <FireIconSolid className="mr-[6px] w-6" />
           ) : (
             <FireIcon className="mr-[6px] w-6" />
           )}
           <span className="font-poppins-bold text-[11px]">{renderFires}</span>
-        </div>
+        </button>
         <div className="flex items-center">
           <AnnotationIcon className="mr-[6px] w-6" />
           <span className="font-poppins-bold text-[11px]">{renderComments}</span>

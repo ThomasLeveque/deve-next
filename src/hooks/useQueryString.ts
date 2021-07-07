@@ -1,13 +1,15 @@
 import { useRouter } from 'next/router';
-import { useMemo, useCallback } from 'react';
-
-import { OrderLinksKey } from '@libs/link/db';
+import { useMemo } from 'react';
 
 import { TAGS_QUERY_SEPARATOR } from '@utils/constants';
 
+export type OrderLinksKey = 'newest' | 'oldest' | 'liked';
+
+export const orderLinksKeys: OrderLinksKey[] = ['newest', 'oldest', 'liked'];
+
 interface useQueryStringReturn {
   tagsQuery: string[];
-  getOrderbyQuery: (orderLinksKeys: string[]) => OrderLinksKey;
+  orderbyQuery: OrderLinksKey;
   updateOrderbyQuery: (orderKey: OrderLinksKey) => void;
   addTagQuery: (name: string) => void;
   removeTagQuery: (name: string) => void;
@@ -22,8 +24,8 @@ export const useQueryString = (): useQueryStringReturn => {
     [router.query.tags]
   );
 
-  const getOrderbyQuery = useCallback(
-    (orderLinksKeys: string[]) =>
+  const orderbyQuery = useMemo(
+    () =>
       router.query.orderby && orderLinksKeys.includes(router.query.orderby as OrderLinksKey)
         ? (router.query.orderby as OrderLinksKey)
         : 'newest',
@@ -99,7 +101,7 @@ export const useQueryString = (): useQueryStringReturn => {
 
   return {
     tagsQuery,
-    getOrderbyQuery,
+    orderbyQuery,
     updateOrderbyQuery,
     addTagQuery,
     removeTagQuery,

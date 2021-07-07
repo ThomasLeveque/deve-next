@@ -1,10 +1,19 @@
-import { useInfiniteQuery, UseInfiniteQueryResult } from 'react-query';
+import {
+  InfiniteData,
+  useInfiniteQuery,
+  UseInfiniteQueryResult,
+  useMutation,
+  useQueryClient,
+} from 'react-query';
 
-import { PaginatedData } from '@libs/types';
+import { PaginatedData, Document } from '@libs/types';
+
+import { OrderLinksKey } from '@hooks/useQueryString';
 
 import { Link } from '@data-types/link.type';
 
-import { getLinks, OrderLinksKey } from './db';
+import { UpdateVoteData } from './../../data-types/link.type';
+import { getLinks, updateLink } from './db';
 
 export const queryKeys = {
   links: (
@@ -25,3 +34,39 @@ export const useLinks = (
       getNextPageParam: (lastPage) => lastPage.cursor,
     }
   );
+
+export const useUpdateLink = (
+  link: Document<Link>,
+  orderbyQuery: OrderLinksKey,
+  tagsQuery: string[]
+) => {
+  const queryClient = useQueryClient();
+  const linksKey = queryKeys.links(orderbyQuery, tagsQuery);
+  return useMutation((updateLinkData: UpdateVoteData) => updateLink(link.id, updateLinkData), {
+    onMutate: async (updateLinkData: UpdateVoteData) => {
+      const newDocLink = { ...link, ...updateLinkData };
+
+      await queryClient.cancelQueries(linksKey);
+
+      const previousLinks = queryClient.getQueryData<InfiniteData<PaginatedData<Link>>>(linksKey);
+
+      queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(linksKey, (oldLinks) => {
+        if (oldLinks) {
+          const pageIndex = oldLinks.pages.findIndex((page) =>
+            page.data.find((link) => link.id === newDocLink.id)
+          );
+          const linkIndex = oldLinks.pages[pageIndex].data.findIndex(
+            (link) => link.id === newDocLink.id
+          );
+          oldLinks.pages[pageIndex].data[linkIndex] = newDocLink;
+        }
+        return oldLinks ?? ({} as InfiniteData<PaginatedData<Link>>);
+      });
+
+      return previousLinks;
+    },
+    onError: (err, newDocLink, previousLinks) => {
+      queryClient.setQueryData(linksKey, previousLinks);
+    },
+  });
+};

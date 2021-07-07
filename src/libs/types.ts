@@ -1,8 +1,8 @@
 import { DocumentSnapshot } from '@firebase/firestore-types';
 
 export type Document<Data> = Data & {
-  id: string;
-  exists: boolean;
+  id?: string;
+  exists?: boolean;
 };
 
 export type PaginatedData<Data> = {
