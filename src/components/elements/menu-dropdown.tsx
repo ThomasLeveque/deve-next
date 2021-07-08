@@ -40,7 +40,7 @@ const MenuDropdown: React.FC<MenuDropdownProps> = (props) => {
 
           <Menu.Items
             className={classNames(
-              'absolute bg-gray-100 mt-2 rounded-button p-1 focus:outline-none shadow-lg',
+              'absolute bg-gray-100 mt-2 rounded-button py-1 focus:outline-none shadow-lg',
               dropdownPosition === 'right' ? 'right-0 origin-top-right' : 'left-0 origin-top-left'
             )}
           >
@@ -63,7 +63,7 @@ const MenuDropdownItem: React.FC<MenuDropdownItemProps> = (props) => {
         <a
           href="#"
           className={classNames(
-            'px-4 py-2 rounded-[6px] text-sm',
+            'px-4 py-2 text-sm',
             { 'grid grid-cols-[20px,1fr] gap-3': withIcon },
             {
               'bg-primary': active,

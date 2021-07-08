@@ -1,10 +1,12 @@
-import { CheckIcon } from '@heroicons/react/outline';
+import { CheckIcon, PlusIcon } from '@heroicons/react/outline';
 import classNames from 'classnames';
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 
 import Tag from '@components/elements/tag';
 import TextInput from '@components/elements/text-input';
 
+import { useAddCategory } from '@libs/category/queries';
+import { db } from '@libs/firebase';
 import { Document } from '@libs/types';
 
 import { Category } from '@data-types/categorie.type';
@@ -40,6 +42,8 @@ const TagsListBox: React.FC<TagsListBoxProps> = (props) => {
   const tagListRef = useRef<HTMLUListElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
+  const addCategory = useAddCategory();
+
   const isSelected = useCallback(
     (tag: string) =>
       !!selectedTags.find(
@@ -48,8 +52,18 @@ const TagsListBox: React.FC<TagsListBoxProps> = (props) => {
     [selectedTags]
   );
 
+  const isTagExist = useMemo(
+    () =>
+      !!props.tags?.find((tag) => tag.name.toLocaleLowerCase() === searchTag.toLocaleLowerCase()),
+    [props.tags, searchTag]
+  );
+
   const addSelectedTags = useCallback(
-    (tag: string) => setSelectedTags([...selectedTags, tag]),
+    (tag: string) => {
+      if (selectedTags.length < 4) {
+        setSelectedTags([...selectedTags, tag]);
+      }
+    },
     [selectedTags]
   );
   const removeSelectedTags = useCallback(
@@ -170,8 +184,25 @@ const TagsListBox: React.FC<TagsListBoxProps> = (props) => {
         {isOpen && (
           <ul
             ref={tagListRef}
-            className="absolute top-full w-full mt-2 rounded-button p-1 focus:outline-none shadow-lg max-h-60 overflow-auto bg-gray-100"
+            className="absolute top-full w-full mt-2 rounded-button py-1 focus:outline-none shadow-lg max-h-60 overflow-auto bg-gray-100"
           >
+            {!isTagExist && searchTag.length > 0 && (
+              <button
+                type="button"
+                onClick={() => {
+                  addCategory.mutate({
+                    categoryRef: db.collection('categories').doc(),
+                    category: { name: searchTag, count: 0 },
+                  });
+                }}
+                className="grid grid-cols-[20px,1fr] gap-3 px-4 py-2 text-sm w-full hover:bg-primary"
+              >
+                <PlusIcon />
+                <p className="text-left">
+                  Create <span className="font-poppins-bold">{searchTag}</span> tag
+                </p>
+              </button>
+            )}
             {filteredTags.map((tag, index) => (
               <TagsListBoxOption
                 index={index}
@@ -209,7 +240,7 @@ const TagsListBoxOption: React.FC<TagsListBoxOptionProps> = (props) => {
           props.setCurrentIndex(props.index);
         }}
         className={classNames(
-          'grid grid-cols-[20px,1fr] gap-3 px-4 py-2 rounded-[6px] text-sm w-full hover:bg-primary',
+          'grid grid-cols-[20px,1fr] gap-3 px-4 py-2 text-sm w-full hover:bg-primary',
           {
             'bg-primary': props.index === props.currentIndex,
           }
