@@ -23,20 +23,21 @@ const MenuDropdown: React.FC<MenuDropdownProps> = (props) => {
   const dropdownPosition = props.dropdownPosition ?? 'right';
 
   return (
-    <Menu as="div" className={classNames('relative', props.className)}>
+    <Menu as="div" className={classNames('relative w-full', props.className)}>
       {({ open }) => (
         <>
-          <Menu.Button as="div" className="flex">
-            {props.customButton !== undefined ? (
-              props.customButton
-            ) : (
+          {props.customButton !== undefined ? (
+            <Menu.Button as="div">{props.customButton}</Menu.Button>
+          ) : (
+            <Menu.Button as="div" className="inline-flex">
               <Button
                 theme="gray"
                 text={props.defaultButtonText}
                 icon={open ? <ChevronUpIcon /> : <ChevronDownIcon />}
               />
-            )}
-          </Menu.Button>
+            </Menu.Button>
+          )}
+
           <Menu.Items
             className={classNames(
               'absolute bg-gray-100 mt-2 rounded-button p-1 focus:outline-none shadow-lg',
@@ -61,9 +62,13 @@ const MenuDropdownItem: React.FC<MenuDropdownItemProps> = (props) => {
       {({ active }) => (
         <a
           href="#"
-          className={classNames('grid grid-cols-[20px,1fr] gap-3 px-4 py-2 rounded-[6px] text-sm', {
-            'bg-primary': active,
-          })}
+          className={classNames(
+            'px-4 py-2 rounded-[6px] text-sm',
+            { 'grid grid-cols-[20px,1fr] gap-3': withIcon },
+            {
+              'bg-primary': active,
+            }
+          )}
           onClick={(event) => {
             event.preventDefault();
             props.onClick();

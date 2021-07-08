@@ -29,7 +29,7 @@ const Tag: React.FC<TagProps> = (props) => {
         props.className
       )}
     >
-      <span className="font-poppins-bold text-[10px]">#{props.text}</span>
+      <span className="font-poppins-bold text-[10px] leading-[15px]">#{props.text}</span>
       {isClosable ? (
         <XIcon
           className="w-[14px] ml-[6px] cursor-pointer rounded-sm"

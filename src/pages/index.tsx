@@ -65,9 +65,14 @@ const Home: NextPage = () => {
             dropdownPosition="left"
             defaultButtonText={orderLinksDropdownItems[orderbyQuery].text}
           />
-          <div className="flex space-x-4">
+          <div className="flex space-x-4 flex-none">
             {tagsQuery.length > 0 && (
-              <Button theme="gray" text="Clear tags" onClick={clearTagQuery} />
+              <Button
+                theme="gray"
+                className="flex-none"
+                text="Clear tags"
+                onClick={clearTagQuery}
+              />
             )}
             <Button
               theme="secondary"

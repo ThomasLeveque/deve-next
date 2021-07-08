@@ -47,7 +47,6 @@ const TagsFilterSidebar: React.FC<TagsFilterSidebarProps> = (props) => {
         type="search"
         id="search-tag"
         className="mb-5"
-        inputClassName="font-poppins"
         onChange={(event) => setSearchTag(event.target.value)}
         value={searchTag}
         clearValue={() => {

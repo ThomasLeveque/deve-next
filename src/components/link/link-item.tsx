@@ -77,7 +77,7 @@ const LinkItem: React.FC<LinkItemProps> = ({ link }) => {
         <h3 className="font-poppins-bold text-[13px] mb-1">
           Posted by {link.postedBy.displayName}
         </h3>
-        <p className="text-[10px]">{format(link.createdAt, 'MMMM d yyyy')}</p>
+        <p className="text-[10px] text-gray-400">{format(link.createdAt, 'MMMM d yyyy')}</p>
       </div>
       <a href={link.url} rel="noreferrer" target="_blank" className="mb-8 with-ring block group">
         <h2 className="text-3xl mb-2 font-poppins-bold group-hover:text-secondary">

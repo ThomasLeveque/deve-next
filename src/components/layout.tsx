@@ -6,6 +6,7 @@ import Header from '@components/header';
 
 import { useAuth } from '@hooks/useAuth';
 
+import AddLinkModal from './modals/add-link-modal/add-link-modal';
 import LoginModal from './modals/login-modal/login-modal';
 
 const authModalSelector = (state: ModalsStore) => state.authModal;
@@ -28,6 +29,7 @@ const Layout: React.FC<{ className?: string }> = ({ className, children }) => {
       <Header />
       <main className={classNames('xl:container xl:mx-auto px-5', className)}>{children}</main>
       <LoginModal />
+      <AddLinkModal />
     </>
   );
 };
