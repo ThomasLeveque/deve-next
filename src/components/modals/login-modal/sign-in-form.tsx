@@ -8,12 +8,9 @@ import TextInput from '@components/elements/text-input';
 
 import { useAuth } from '@hooks/useAuth';
 
-import { loginStep } from './login-modal';
+import { SignInFormData } from '@data-types/user.type';
 
-interface FormData {
-  email: string;
-  password: string;
-}
+import { loginStep } from './login-modal';
 
 const schema = yup.object().shape({
   email: yup.string().email().required().max(255),
@@ -33,11 +30,11 @@ const SignInForm: React.FC<SignInFormProps> = (props) => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<SignInFormData>({
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async ({ email, password }: FormData) => {
+  const onSubmit = async ({ email, password }: SignInFormData) => {
     setLoading(true);
     await signInWithEmail(email, password).catch((err) => {
       console.error(err);
@@ -54,7 +51,7 @@ const SignInForm: React.FC<SignInFormProps> = (props) => {
         label="Email"
         placeholder="your@email.com"
         {...register('email')}
-        error={errors.email}
+        errorText={errors.email?.message}
       />
       <TextInput
         className="mb-8"
@@ -65,7 +62,7 @@ const SignInForm: React.FC<SignInFormProps> = (props) => {
         withResetPassword
         goToResetPassword={() => props.setStep(loginStep.PASSWORD_RECOVERY)}
         {...register('password')}
-        error={errors.password}
+        errorText={errors.password?.message}
       />
       <div className="flex justify-end">
         <Button text="Back" theme="gray" onClick={() => props.setStep(loginStep.LOGIN_SELECTION)} />

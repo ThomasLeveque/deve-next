@@ -8,11 +8,9 @@ import TextInput from '@components/elements/text-input';
 
 import { auth } from '@libs/firebase';
 
-import { loginStep } from './login-modal';
+import { ResetPasswordFormData } from '@data-types/user.type';
 
-interface FormData {
-  email: string;
-}
+import { loginStep } from './login-modal';
 
 const schema = yup.object().shape({
   email: yup.string().email().required().max(255),
@@ -29,11 +27,11 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = (props) => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<ResetPasswordFormData>({
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async ({ email }: FormData) => {
+  const onSubmit = async ({ email }: ResetPasswordFormData) => {
     try {
       setLoading(true);
       await auth.sendPasswordResetEmail(email);
@@ -53,7 +51,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = (props) => {
         label="Email"
         placeholder="your@email.com"
         {...register('email')}
-        error={errors.email}
+        errorText={errors.email?.message}
       />
       <div className="flex justify-end">
         <Button

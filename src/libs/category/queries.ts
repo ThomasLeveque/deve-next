@@ -11,7 +11,9 @@ import { Document } from '@libs/types';
 
 import { Category } from '@data-types/categorie.type';
 
-import { addCategory, getCategories } from './db';
+import { updateItemInsideData } from '@utils/queries';
+
+import { addCategory, getCategories, updateCategory } from './db';
 
 export const queryKeys = {
   categories: ['categories'],
@@ -48,4 +50,36 @@ export const useAddCategory = (): UseMutationResult<
       queryClient.setQueryData(queryKeys.categories, previousCategories);
     },
   });
+};
+
+export const useUpdateCategory = (): UseMutationResult<
+  Document<Category>[],
+  unknown,
+  { prevCategory: Document<Category>; categoryToUpdate: Partial<Document<Category>> },
+  Document<Category>[] | undefined
+> => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ({ prevCategory, categoryToUpdate }) => updateCategory(prevCategory.id, categoryToUpdate),
+    {
+      onMutate: async ({ prevCategory, categoryToUpdate }) => {
+        const newDocCategory: Document<Category> = { ...prevCategory, ...categoryToUpdate };
+
+        await queryClient.cancelQueries(queryKeys.categories);
+
+        const previousCategories = queryClient.getQueryData<Document<Category>[]>(
+          queryKeys.categories
+        );
+
+        queryClient.setQueryData<Document<Category>[]>(queryKeys.categories, (oldCategories) =>
+          updateItemInsideData<Category>(newDocCategory, oldCategories ?? [])
+        );
+
+        return previousCategories;
+      },
+      onError: (err, variables, previousCategories) => {
+        queryClient.setQueryData(queryKeys.categories, previousCategories);
+      },
+    }
+  );
 };

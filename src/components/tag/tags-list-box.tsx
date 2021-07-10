@@ -5,6 +5,7 @@ import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import Tag from '@components/elements/tag';
 import TextInput from '@components/elements/text-input';
 
+import { CATEGORIES_COLLECTION_KEY } from '@libs/category/db';
 import { useAddCategory } from '@libs/category/queries';
 import { db } from '@libs/firebase';
 import { Document } from '@libs/types';
@@ -196,7 +197,7 @@ const TagsListBox: React.FC<TagsListBoxProps> = (props) => {
                 type="button"
                 onClick={() => {
                   addCategory.mutate({
-                    categoryRef: db.collection('categories').doc(),
+                    categoryRef: db.collection(CATEGORIES_COLLECTION_KEY).doc(),
                     category: { name: searchTag, count: 0 },
                   });
                 }}

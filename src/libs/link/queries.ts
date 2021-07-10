@@ -1,3 +1,4 @@
+import { DocumentReference } from '@firebase/firestore-types';
 import {
   InfiniteData,
   useInfiniteQuery,
@@ -13,9 +14,9 @@ import { OrderLinksKey } from '@hooks/useQueryString';
 
 import { Link } from '@data-types/link.type';
 
-import { updateItemInsidePaginatedData } from '@utils/queries';
+import { addItemToPaginatedData, updateItemInsidePaginatedData } from '@utils/queries';
 
-import { getLinks, updateLink } from './db';
+import { addLink, getLinks, updateLink } from './db';
 
 export const queryKeys = {
   links: (
@@ -36,6 +37,40 @@ export const useLinks = (
       getNextPageParam: (lastPage) => lastPage.cursor,
     }
   );
+
+export const useAddLink = (
+  orderbyQuery: OrderLinksKey,
+  tagsQuery: string[]
+): UseMutationResult<
+  InfiniteData<PaginatedData<Link>>,
+  unknown,
+  { linkRef: DocumentReference; link: Link },
+  InfiniteData<PaginatedData<Link>> | undefined
+> => {
+  const queryClient = useQueryClient();
+  const linksKey = queryKeys.links(orderbyQuery, tagsQuery);
+  return useMutation(({ linkRef, link }) => addLink(linkRef, link), {
+    onMutate: async ({ linkRef, link }) => {
+      const newLink = { id: linkRef.id, ...link };
+
+      await queryClient.cancelQueries(linksKey);
+
+      const previousLinks = queryClient.getQueryData<InfiniteData<PaginatedData<Link>>>(linksKey);
+
+      queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(linksKey, (oldLinks) => {
+        if (oldLinks) {
+          return addItemToPaginatedData(newLink, oldLinks);
+        }
+        return {} as InfiniteData<PaginatedData<Link>>;
+      });
+
+      return previousLinks;
+    },
+    onError: (err, variables, previousLinks) => {
+      queryClient.setQueryData(linksKey, previousLinks);
+    },
+  });
+};
 
 export const useUpdateLink = (
   link: Document<Link>,

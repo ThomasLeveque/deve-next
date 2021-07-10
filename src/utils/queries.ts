@@ -11,3 +11,22 @@ export const updateItemInsidePaginatedData = <Data>(
   items.pages[pageIndex].data[itemIndex] = item;
   return items;
 };
+
+export const updateItemInsideData = <Data>(
+  item: Document<Data>,
+  items: Document<Data>[]
+): Document<Data>[] => {
+  const itemIndex = items.findIndex((i) => i.id === item.id);
+  items[itemIndex] = item;
+  return items;
+};
+
+export const addItemToPaginatedData = <Data>(
+  item: Document<Data>,
+  items: InfiniteData<PaginatedData<Data>>,
+  pageIndex = 0
+): InfiniteData<PaginatedData<Data>> => {
+  const currentPageData = items.pages[pageIndex].data;
+  items.pages[pageIndex].data = [item, ...currentPageData];
+  return items;
+};

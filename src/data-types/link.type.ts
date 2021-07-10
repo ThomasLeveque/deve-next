@@ -15,3 +15,9 @@ export interface Link {
   createdAt: number;
   updatedAt: number;
 }
+
+export interface LinkFormData {
+  url: string;
+  title: string;
+  tags: string[];
+}

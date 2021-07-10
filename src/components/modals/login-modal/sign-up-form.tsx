@@ -8,13 +8,9 @@ import TextInput from '@components/elements/text-input';
 
 import { useAuth } from '@hooks/useAuth';
 
-import { loginStep } from './login-modal';
+import { SignUpFormData } from '@data-types/user.type';
 
-interface FormData {
-  displayName: string;
-  email: string;
-  password: string;
-}
+import { loginStep } from './login-modal';
 
 const schema = yup.object().shape({
   displayName: yup.string().required().max(255),
@@ -35,11 +31,11 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<SignUpFormData>({
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async ({ displayName, email, password }: FormData) => {
+  const onSubmit = async ({ displayName, email, password }: SignUpFormData) => {
     setLoading(true);
     await signUpWithEmail(email, password, { displayName }).catch((err) => {
       console.error(err);
@@ -56,7 +52,7 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
         label="Username"
         placeholder="Your username"
         {...register('displayName')}
-        error={errors.displayName}
+        errorText={errors.displayName?.message}
       />
       <TextInput
         className="mb-6"
@@ -64,7 +60,7 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
         label="Email"
         placeholder="your@email.com"
         {...register('email')}
-        error={errors.email}
+        errorText={errors.email?.message}
       />
       <TextInput
         className="mb-8"
@@ -73,7 +69,7 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
         type="password"
         placeholder="123456"
         {...register('password')}
-        error={errors.password}
+        errorText={errors.password?.message}
       />
       <div className="flex justify-end">
         <Button text="Back" theme="gray" onClick={() => props.setStep(loginStep.LOGIN_SELECTION)} />

@@ -17,7 +17,7 @@ const AddLinkModal: React.FC = () => {
 
   return (
     <Modal isOpen={addLinkModal} closeModal={closeModal} title="Add new link">
-      <AddLinkForm />
+      <AddLinkForm closeModal={closeModal} />
     </Modal>
   );
 };
