@@ -1,7 +1,6 @@
 import { EyeIcon, EyeOffIcon, SearchIcon, XCircleIcon } from '@heroicons/react/outline';
 import classNames from 'classnames';
 import React, { useState, useCallback, ChangeEvent, FocusEvent, KeyboardEvent } from 'react';
-import { FieldError } from 'react-hook-form';
 
 interface TextInputProps {
   id: string;
@@ -24,7 +23,7 @@ interface TextInputProps {
   inputClassName?: string;
   minLength?: number;
   maxLength?: number;
-  error?: FieldError;
+  errorText?: string;
 }
 
 const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>((props, ref) => {

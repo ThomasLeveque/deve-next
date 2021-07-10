@@ -19,22 +19,25 @@ interface TagsListBoxOptionProps {
   isSelected: (tag: string) => boolean;
   addSelectedTags: (tag: string) => void;
   removeSelectedTags: (tag: string) => void;
-  selectedTags: string[];
   currentIndex: number;
   setCurrentIndex: (index: number) => void;
 }
 
 interface TagsListBoxProps {
   tags?: Document<Category>[];
+  setSelectedTags: (tags: string[]) => void;
+  selectedTags: string[];
   className?: string;
   buttonClassName?: string;
   labelClassName?: string;
   label?: string;
+  errorText?: string;
 }
 
 const TagsListBox: React.FC<TagsListBoxProps> = (props) => {
+  const selectedTags = props.selectedTags ?? [];
+
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [searchTag, setSearchTag] = useState<string>('');
   const [focusedTagIndex, setFocusedTagIndex] = useState<number>(0);
 
@@ -60,14 +63,15 @@ const TagsListBox: React.FC<TagsListBoxProps> = (props) => {
 
   const addSelectedTags = useCallback(
     (tag: string) => {
-      if (selectedTags.length < 4) {
-        setSelectedTags([...selectedTags, tag]);
-      }
+      props.setSelectedTags([...selectedTags, tag]);
+      // if (selectedTags.length < 4) {
+      // }
     },
     [selectedTags]
   );
   const removeSelectedTags = useCallback(
-    (tag: string) => setSelectedTags(selectedTags.filter((selectedTag) => selectedTag !== tag)),
+    (tag: string) =>
+      props.setSelectedTags(selectedTags.filter((selectedTag) => selectedTag !== tag)),
     [selectedTags]
   );
 
@@ -180,6 +184,7 @@ const TagsListBox: React.FC<TagsListBoxProps> = (props) => {
               event.preventDefault();
             }
           }}
+          errorText={props.errorText}
         />
         {isOpen && (
           <ul
@@ -205,8 +210,8 @@ const TagsListBox: React.FC<TagsListBoxProps> = (props) => {
             )}
             {filteredTags.map((tag, index) => (
               <TagsListBoxOption
-                index={index}
                 key={tag.id}
+                index={index}
                 tag={tag}
                 isSelected={isSelected}
                 addSelectedTags={(tag) => {
@@ -215,7 +220,6 @@ const TagsListBox: React.FC<TagsListBoxProps> = (props) => {
                   searchRef.current?.focus();
                 }}
                 removeSelectedTags={removeSelectedTags}
-                selectedTags={selectedTags}
                 setCurrentIndex={setFocusedTagIndex}
                 currentIndex={focusedTagIndex}
               />

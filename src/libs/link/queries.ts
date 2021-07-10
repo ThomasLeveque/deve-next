@@ -13,6 +13,8 @@ import { OrderLinksKey } from '@hooks/useQueryString';
 
 import { Link } from '@data-types/link.type';
 
+import { updateItemInsidePaginatedData } from '@utils/queries';
+
 import { getLinks, updateLink } from './db';
 
 export const queryKeys = {
@@ -51,7 +53,7 @@ export const useUpdateLink = (
     (updateLinkData: Partial<Document<Link>>) => updateLink(link.id, updateLinkData),
     {
       onMutate: async (updateLinkData) => {
-        const newDocLink = { ...link, ...updateLinkData };
+        const newDocLink: Document<Link> = { ...link, ...updateLinkData };
 
         await queryClient.cancelQueries(linksKey);
 
@@ -59,15 +61,9 @@ export const useUpdateLink = (
 
         queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(linksKey, (oldLinks) => {
           if (oldLinks) {
-            const pageIndex = oldLinks.pages.findIndex((page) =>
-              page.data.find((link) => link.id === newDocLink.id)
-            );
-            const linkIndex = oldLinks.pages[pageIndex].data.findIndex(
-              (link) => link.id === newDocLink.id
-            );
-            oldLinks.pages[pageIndex].data[linkIndex] = newDocLink;
+            return updateItemInsidePaginatedData<Link>(newDocLink, oldLinks);
           }
-          return oldLinks ?? ({} as InfiniteData<PaginatedData<Link>>);
+          return {} as InfiniteData<PaginatedData<Link>>;
         });
 
         return previousLinks;
