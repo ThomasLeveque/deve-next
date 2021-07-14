@@ -7,11 +7,11 @@ import { Document } from '@libs/types';
 
 import { Comment } from '@data-types/comment.type';
 
-interface LinkCommentItemProps {
+interface CommentItemProps {
   comment: Document<Comment>;
 }
 
-const LinkCommentItem: React.FC<LinkCommentItemProps> = ({ comment }) => {
+const CommentItem: React.FC<CommentItemProps> = ({ comment }) => {
   return (
     <li className="first:mt-8">
       <Separator className="my-5" />
@@ -24,4 +24,4 @@ const LinkCommentItem: React.FC<LinkCommentItemProps> = ({ comment }) => {
   );
 };
 
-export default LinkCommentItem;
+export default CommentItem;

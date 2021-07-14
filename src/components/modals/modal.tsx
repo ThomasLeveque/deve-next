@@ -1,5 +1,6 @@
 import { Dialog } from '@headlessui/react';
 import { XIcon } from '@heroicons/react/outline';
+import classNames from 'classnames';
 import React from 'react';
 
 interface ModalProps {
@@ -7,6 +8,7 @@ interface ModalProps {
   closeModal: () => void;
   title?: string;
   description?: string;
+  className?: string;
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -14,14 +16,20 @@ export const Modal: React.FC<ModalProps> = ({
   closeModal,
   title,
   description,
+  className,
   children,
 }) => {
   return (
     <Dialog open={isOpen} onClose={closeModal} className="fixed z-40 inset-0 overflow-y-auto">
       <div className="flex items-center justify-center min-h-screen">
-        <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
+        <Dialog.Overlay className="fixed inset-0 bg-black/40" />
 
-        <div className="bg-white max-w-md w-full mx-auto rounded-modal z-20 p-10 relative">
+        <div
+          className={classNames(
+            'bg-white max-w-lg w-full mx-auto rounded-modal z-20 p-10 relative',
+            className
+          )}
+        >
           <button
             onClick={closeModal}
             className="absolute right-5 top-5 with-ring rounded-tag hover:bg-gray-100 p-1"

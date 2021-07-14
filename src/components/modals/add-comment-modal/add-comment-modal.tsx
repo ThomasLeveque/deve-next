@@ -1,9 +1,11 @@
 import { ModalsStore, useModalsStore } from '@store/modals.store';
 import React from 'react';
 
-import LinkCommentItem from '@components/link/link-comment-item';
+import CommentItem from '@components/modals/add-comment-modal/comment-item';
 
 import { useLinkComments } from '@libs/link/queries';
+
+import { getDomain } from '@utils/format-string';
 
 import { Modal } from '../modal';
 import AddCommentForm from './add-comment-form';
@@ -22,13 +24,23 @@ const AddCommentModal: React.FC = () => {
   };
 
   return linkToCommentModal ? (
-    <Modal isOpen={!!linkToCommentModal} closeModal={closeModal} title="Add a comment">
-      <h2 className="text-2xl font-poppins-bold mb-6">{linkToCommentModal.description}</h2>
+    <Modal isOpen={!!linkToCommentModal} closeModal={closeModal} className="max-w-xl">
+      <a
+        href={linkToCommentModal.url}
+        rel="noreferrer"
+        target="_blank"
+        className="mb-6 with-ring block group"
+      >
+        <h2 className="text-3xl mb-2 font-poppins-bold group-hover:text-secondary">
+          {linkToCommentModal.description}
+        </h2>
+        <p className="text-xs group-hover:underline">On {getDomain(linkToCommentModal.url)}</p>
+      </a>
       <AddCommentForm link={linkToCommentModal} closeModal={closeModal} />
       {comments ? (
         <ul>
           {comments?.pages.map((page) =>
-            page.data.map((comment) => <LinkCommentItem key={comment.id} comment={comment} />)
+            page.data.map((comment) => <CommentItem key={comment.id} comment={comment} />)
           )}
         </ul>
       ) : null}
