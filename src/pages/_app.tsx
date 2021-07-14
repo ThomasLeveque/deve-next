@@ -2,6 +2,8 @@ import { AppProps } from 'next/app';
 import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
+import Layout from '@components/layout';
+
 import AuthProvider from '@hooks/useAuth';
 
 import '../../styles/index.css';
@@ -11,7 +13,9 @@ const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <Component {...pageProps} />
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
       </AuthProvider>
     </QueryClientProvider>
   );

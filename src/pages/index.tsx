@@ -12,7 +12,6 @@ import React from 'react';
 
 import Button from '@components/elements/button';
 import MenuDropdown, { MenuDropdownItemProps } from '@components/elements/menu-dropdown';
-import Layout from '@components/layout';
 import LinkItem from '@components/link/link-item';
 import TagsFilterSidebar from '@components/tag/tags-filter-sidebar';
 
@@ -57,7 +56,7 @@ const Home: NextPage = () => {
   const { data: tags } = useCategories();
 
   return (
-    <Layout className={classNames({ 'grid grid-cols-[1fr,250px] gap-9': tagsSidebarOpen })}>
+    <div className={classNames({ 'grid grid-cols-[1fr,250px] gap-9': tagsSidebarOpen })}>
       <section className="my-8">
         <div className="mb-5 flex justify-between space-x-4">
           <MenuDropdown
@@ -103,7 +102,7 @@ const Home: NextPage = () => {
           className="-mx-5 px-5 tags-filter-sidebar-height sticky top-header py-8 overflow-y-auto"
         />
       ) : null}
-    </Layout>
+    </div>
   );
 };
 
