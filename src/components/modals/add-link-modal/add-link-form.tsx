@@ -105,7 +105,7 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
         errorText={(errors.tags as unknown as FieldError)?.message}
       />
       <div className="flex justify-end">
-        <Button theme="secondary" text="Create" className="ml-5" type="submit" loading={loading} />
+        <Button theme="secondary" text="Create" type="submit" loading={loading} />
       </div>
     </form>
   );

@@ -12,11 +12,12 @@ import { PaginatedData, Document } from '@libs/types';
 
 import { OrderLinksKey } from '@hooks/useQueryString';
 
+import { Comment } from '@data-types/comment.type';
 import { Link } from '@data-types/link.type';
 
 import { addItemToPaginatedData, updateItemInsidePaginatedData } from '@utils/queries';
 
-import { addLink, getLinks, updateLink } from './db';
+import { addLink, getLinks, updateLink, getLinkComments, addLinkComment } from './db';
 
 export const queryKeys = {
   links: (
@@ -38,6 +39,18 @@ export const useLinks = (
     }
   );
 
+export const useLinkComments = (
+  linkId: string | undefined
+): UseInfiniteQueryResult<PaginatedData<Comment>> =>
+  useInfiniteQuery<PaginatedData<Comment>>(
+    queryKeys.linkComments(linkId as string),
+    (context) => getLinkComments(context.pageParam, linkId as string),
+    {
+      enabled: !!linkId,
+      getNextPageParam: (lastPage) => lastPage.cursor,
+    }
+  );
+
 export const useAddLink = (
   orderbyQuery: OrderLinksKey,
   tagsQuery: string[]
@@ -51,7 +64,7 @@ export const useAddLink = (
   const linksKey = queryKeys.links(orderbyQuery, tagsQuery);
   return useMutation(({ linkRef, link }) => addLink(linkRef, link), {
     onMutate: async ({ linkRef, link }) => {
-      const newLink = { id: linkRef.id, ...link };
+      const newLink: Document<Link> = { id: linkRef.id, ...link };
 
       await queryClient.cancelQueries(linksKey);
 
@@ -108,4 +121,38 @@ export const useUpdateLink = (
       },
     }
   );
+};
+
+export const useAddLinkComment = (
+  linkId: string
+): UseMutationResult<
+  InfiniteData<PaginatedData<Comment>>,
+  unknown,
+  { commentRef: DocumentReference; comment: Comment },
+  InfiniteData<PaginatedData<Comment>> | undefined
+> => {
+  const queryClient = useQueryClient();
+  const commentsKey = queryKeys.linkComments(linkId);
+  return useMutation(({ commentRef, comment }) => addLinkComment(commentRef, comment), {
+    onMutate: async ({ commentRef, comment }) => {
+      const newComment: Document<Comment> = { id: commentRef.id, ...comment };
+
+      await queryClient.cancelQueries(commentsKey);
+
+      const previousComments =
+        queryClient.getQueryData<InfiniteData<PaginatedData<Comment>>>(commentsKey);
+
+      queryClient.setQueryData<InfiniteData<PaginatedData<Comment>>>(commentsKey, (oldComments) => {
+        if (oldComments) {
+          return addItemToPaginatedData(newComment, oldComments);
+        }
+        return {} as InfiniteData<PaginatedData<Comment>>;
+      });
+
+      return previousComments;
+    },
+    onError: (err, variables, previousComments) => {
+      queryClient.setQueryData(commentsKey, previousComments);
+    },
+  });
 };

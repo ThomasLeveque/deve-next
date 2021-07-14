@@ -6,6 +6,7 @@ import Header from '@components/header';
 
 import { useAuth } from '@hooks/useAuth';
 
+import AddCommentModal from './modals/add-comment-modal/add-comment-modal';
 import AddLinkModal from './modals/add-link-modal/add-link-modal';
 import LoginModal from './modals/login-modal/login-modal';
 
@@ -30,6 +31,7 @@ const Layout: React.FC<{ className?: string }> = ({ className, children }) => {
       <main className={classNames('xl:container xl:mx-auto px-5', className)}>{children}</main>
       <LoginModal />
       <AddLinkModal />
+      <AddCommentModal />
     </>
   );
 };

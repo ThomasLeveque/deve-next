@@ -6,3 +6,7 @@ export interface Comment {
   updatedAt: number;
   text: string;
 }
+
+export interface CommentFormData {
+  text: string;
+}

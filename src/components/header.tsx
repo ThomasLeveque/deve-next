@@ -15,6 +15,7 @@ const toggleAddLinkModalSelector = (state: ModalsStore) => state.toggleAddLinkMo
 
 const Header: React.FC = () => {
   const { signOut, user, userLoaded } = useAuth();
+
   const toggleAuthModal = useModalsStore(toggleAuthModalSelector);
   const toggleAddLinkModal = useModalsStore(toggleAddLinkModalSelector);
 

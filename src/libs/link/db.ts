@@ -16,6 +16,7 @@ export const LINKS_COLLECTION_KEY = 'links';
 export const COMMENTS_COLLECTION_KEY = 'comments';
 
 const LINKS_PER_PAGE = Number(process.env.NEXT_PUBLIC_LINKS_PER_PAGE) ?? 20;
+const COMMENTS_PER_PAGE = Number(process.env.NEXT_PUBLIC_COMMENTS_PER_PAGE) ?? 20;
 
 const getOrderbyDBQuery = (linksRef: Query, orderby: OrderLinksKey) => {
   switch (orderby) {
@@ -69,11 +70,31 @@ export const addLink = async (
   return {} as InfiniteData<PaginatedData<Link>>;
 };
 
-export const getLinkComments = async (linkId: string): Promise<Document<Comment>[]> => {
+export const getLinkComments = async (
+  cursor: DocumentSnapshot,
+  linkId: string
+): Promise<PaginatedData<Comment>> => {
   const commentsRef = db
     .collection(LINKS_COLLECTION_KEY)
     .doc(linkId)
     .collection(COMMENTS_COLLECTION_KEY);
-  const snapshot = await commentsRef.get();
-  return snapshot.docs.map((doc) => dataToDocument<Comment>(doc));
+
+  const orderbyQuery = commentsRef.orderBy('createdAt', 'desc');
+  const query = cursor !== undefined ? orderbyQuery.startAfter(cursor) : orderbyQuery;
+
+  const snapshot = await query.limit(COMMENTS_PER_PAGE).get();
+  const data = snapshot.docs.map((doc) => dataToDocument<Comment>(doc));
+  const nextCursor = snapshot.docs[snapshot.docs.length - 1];
+  return {
+    data,
+    cursor: nextCursor,
+  };
+};
+
+export const addLinkComment = async (
+  commentRef: DocumentReference,
+  comment: Comment
+): Promise<InfiniteData<PaginatedData<Comment>>> => {
+  await commentRef.set(comment);
+  return {} as InfiniteData<PaginatedData<Comment>>;
 };

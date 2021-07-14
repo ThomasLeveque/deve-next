@@ -1,19 +1,23 @@
 import create from 'zustand';
 
+import { Document } from '@libs/types';
+
+import { Link } from '@data-types/link.type';
+
 export interface ModalsStore {
   authModal: boolean;
   toggleAuthModal: () => void;
-  linkModal: boolean;
-  toggleLinkModal: () => void;
   addLinkModal: boolean;
   toggleAddLinkModal: () => void;
+  linkToCommentModal: Document<Link> | null;
+  setLinkToCommentModal: (link: Document<Link> | null) => void;
 }
 
 export const useModalsStore = create<ModalsStore>((set) => ({
   authModal: false,
   toggleAuthModal: () => set((state) => ({ authModal: !state.authModal })),
-  linkModal: false,
-  toggleLinkModal: () => set((state) => ({ linkModal: !state.linkModal })),
   addLinkModal: false,
   toggleAddLinkModal: () => set((state) => ({ addLinkModal: !state.addLinkModal })),
+  linkToCommentModal: null,
+  setLinkToCommentModal: (link) => set({ linkToCommentModal: link }),
 }));
