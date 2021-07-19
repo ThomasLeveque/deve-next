@@ -3,9 +3,9 @@ import React from 'react';
 
 import Separator from '@components/elements/separator';
 
-import { Document } from '@libs/types';
-
 import { Comment } from '@data-types/comment.type';
+
+import { Document } from '@utils/shared-types';
 
 interface CommentItemProps {
   comment: Document<Comment>;

@@ -8,14 +8,14 @@ import React, { useMemo } from 'react';
 import TagListWrapper from '@components/tag/tag-list-wrapper';
 
 import { useUpdateLink } from '@libs/link/queries';
-import { Document } from '@libs/types';
 
-import { useAuth } from '@hooks/useAuth';
+import { useAuth } from '@hooks/auth/useAuth';
 import { useQueryString } from '@hooks/useQueryString';
 
 import { Link } from '@data-types/link.type';
 
 import { getDomain } from '@utils/format-string';
+import { Document } from '@utils/shared-types';
 
 import Tag from '../elements/tag';
 

@@ -5,12 +5,13 @@ import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import Tag from '@components/elements/tag';
 import TextInput from '@components/elements/text-input';
 
-import { CATEGORIES_COLLECTION_KEY } from '@libs/category/db';
-import { useAddCategory } from '@libs/category/queries';
-import { db } from '@libs/firebase';
-import { Document } from '@libs/types';
+import { dbKeys } from '@hooks/category/db-keys';
+import { useAddCategory } from '@hooks/category/use-add-category';
 
 import { Category } from '@data-types/categorie.type';
+
+import { db } from '@utils/init-firebase';
+import { Document } from '@utils/shared-types';
 
 import TagListWrapper from './tag-list-wrapper';
 
@@ -196,10 +197,14 @@ const TagsListBox: React.FC<TagsListBoxProps> = (props) => {
               <button
                 type="button"
                 onClick={() => {
+                  const tagName = searchTag.trim();
                   addCategory.mutate({
-                    categoryRef: db.collection(CATEGORIES_COLLECTION_KEY).doc(),
-                    category: { name: searchTag, count: 0 },
+                    categoryRef: db.collection(dbKeys.categories).doc(),
+                    category: { name: tagName, count: 0 },
                   });
+                  addSelectedTags(tagName);
+                  setSearchTag('');
+                  searchRef.current?.focus();
                 }}
                 className="grid grid-cols-[20px,1fr] gap-3 px-4 py-2 text-sm w-full hover:bg-primary"
               >

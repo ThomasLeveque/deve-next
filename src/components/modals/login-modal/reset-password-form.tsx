@@ -6,9 +6,9 @@ import * as yup from 'yup';
 import Button from '@components/elements/button';
 import TextInput from '@components/elements/text-input';
 
-import { auth } from '@libs/firebase';
-
 import { ResetPasswordFormData } from '@data-types/user.type';
+
+import { auth } from '@utils/init-firebase';
 
 import { loginStep } from './login-modal';
 

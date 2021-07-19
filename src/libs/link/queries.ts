@@ -8,14 +8,13 @@ import {
   useQueryClient,
 } from 'react-query';
 
-import { PaginatedData, Document } from '@libs/types';
-
 import { OrderLinksKey } from '@hooks/useQueryString';
 
 import { Comment } from '@data-types/comment.type';
 import { Link } from '@data-types/link.type';
 
-import { addItemToPaginatedData, updateItemInsidePaginatedData } from '@utils/queries';
+import { addItemToPaginatedData, updateItemInsidePaginatedData } from '@utils/mutate-data';
+import { PaginatedData, Document } from '@utils/shared-types';
 
 import { addLink, getLinks, updateLink, getLinkComments, addLinkComment } from './db';
 

@@ -1,11 +1,10 @@
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 
-import { TAGS_QUERY_SEPARATOR } from '@utils/constants';
+export const TAGS_QUERY_SEPARATOR = '|';
+export const orderLinksKeys: OrderLinksKey[] = ['newest', 'oldest', 'liked'];
 
 export type OrderLinksKey = 'newest' | 'oldest' | 'liked';
-
-export const orderLinksKeys: OrderLinksKey[] = ['newest', 'oldest', 'liked'];
 
 interface useQueryStringReturn {
   tagsQuery: string[];

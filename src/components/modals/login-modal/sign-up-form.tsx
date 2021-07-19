@@ -6,7 +6,7 @@ import * as yup from 'yup';
 import Button from '@components/elements/button';
 import TextInput from '@components/elements/text-input';
 
-import { useAuth } from '@hooks/useAuth';
+import { useAuth } from '@hooks/auth/useAuth';
 
 import { SignUpFormData } from '@data-types/user.type';
 

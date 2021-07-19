@@ -1,8 +1,8 @@
 import create from 'zustand';
 
-import { Document } from '@libs/types';
-
 import { Link } from '@data-types/link.type';
+
+import { Document } from '@utils/shared-types';
 
 export interface ModalsStore {
   authModal: boolean;

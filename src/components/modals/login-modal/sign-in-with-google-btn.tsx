@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { useAuth } from '@hooks/useAuth';
+import { useAuth } from '@hooks/auth/useAuth';
 
 import Button from '../../elements/button';
 

@@ -1,6 +1,6 @@
-import { Document } from '@libs/types';
-
 import { User } from '@data-types/user.type';
+
+import { Document } from '@utils/shared-types';
 
 import { CommentFormData, Comment } from './../data-types/comment.type';
 

@@ -1,6 +1,6 @@
 import { InfiniteData } from 'react-query';
 
-import { PaginatedData, Document } from '@libs/types';
+import { PaginatedData, Document } from '@utils/shared-types';
 
 export const updateItemInsidePaginatedData = <Data>(
   item: Document<Data>,

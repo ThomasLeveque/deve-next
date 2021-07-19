@@ -7,17 +7,18 @@ import Button from '@components/elements/button';
 import TextInput from '@components/elements/text-input';
 import TagsListBox from '@components/tag/tags-list-box';
 
-import { useCategories, useUpdateCategory } from '@libs/category/queries';
-import { db } from '@libs/firebase';
 import { LINKS_COLLECTION_KEY } from '@libs/link/db';
 import { useAddLink } from '@libs/link/queries';
 
-import { useAuth } from '@hooks/useAuth';
+import { useAuth } from '@hooks/auth/useAuth';
+import { useCategories } from '@hooks/category/use-categories';
+import { useUpdateCategory } from '@hooks/category/use-update-category';
 import { useQueryString } from '@hooks/useQueryString';
 
 import { LinkFormData } from '@data-types/link.type';
 
 import { formatLink } from '@utils/format-link';
+import { db } from '@utils/init-firebase';
 
 const schema = yup.object().shape({
   url: yup.string().required('An url is required').max(255),

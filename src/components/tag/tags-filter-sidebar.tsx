@@ -1,11 +1,11 @@
 import classNames from 'classnames';
 import React, { useState, useRef } from 'react';
 
-import { Document } from '@libs/types';
-
 import { useQueryString } from '@hooks/useQueryString';
 
 import { Category } from '@data-types/categorie.type';
+
+import { Document } from '@utils/shared-types';
 
 import Separator from '../elements/separator';
 import Tag from '../elements/tag';

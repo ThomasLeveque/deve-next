@@ -2,8 +2,6 @@ import { DocumentSnapshot, Query, DocumentReference } from '@firebase/firestore-
 import { InfiniteData } from 'react-query';
 
 import { CATEGORIES_COLLECTION_KEY } from '@libs/category/db';
-import { db } from '@libs/firebase';
-import { Document, PaginatedData } from '@libs/types';
 
 import { OrderLinksKey } from '@hooks/useQueryString';
 
@@ -11,6 +9,8 @@ import { Comment } from '@data-types/comment.type';
 import { Link } from '@data-types/link.type';
 
 import { dataToDocument } from '@utils/format-document';
+import { db } from '@utils/init-firebase';
+import { Document, PaginatedData } from '@utils/shared-types';
 
 export const LINKS_COLLECTION_KEY = 'links';
 export const COMMENTS_COLLECTION_KEY = 'comments';
@@ -30,9 +30,7 @@ const getOrderbyDBQuery = (linksRef: Query, orderby: OrderLinksKey) => {
 };
 
 const getTagsDBQuery = (linksRef: Query, tags: string[]) =>
-  tags.length > 0
-    ? linksRef.where(CATEGORIES_COLLECTION_KEY, 'array-contains-any', tags)
-    : linksRef;
+  tags.length > 0 ? linksRef.where('categories', 'array-contains-any', tags) : linksRef;
 
 export const getLinks = async (
   cursor: DocumentSnapshot,
