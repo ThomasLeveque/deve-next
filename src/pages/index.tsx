@@ -17,7 +17,7 @@ import TagsFilterSidebar from '@components/tag/tags-filter-sidebar';
 
 import { useCategories } from '@hooks/category/use-categories';
 import { useLinks } from '@hooks/link/use-links';
-import { OrderLinksKey, useQueryString } from '@hooks/useQueryString';
+import { OrderLinksKey, useQueryString } from '@hooks/use-query-string';
 
 const tagsSidebarOpenSelector = (state: AppConfigStore) => state.tagsSidebarOpen;
 const setTagsSidebarOpenSelector = (state: AppConfigStore) => state.setTagsSidebarOpen;

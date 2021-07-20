@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import React, { useState, useRef } from 'react';
 
-import { useQueryString } from '@hooks/useQueryString';
+import { useQueryString } from '@hooks/use-query-string';
 
 import { Category } from '@data-types/categorie.type';
 

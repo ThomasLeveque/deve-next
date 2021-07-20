@@ -1,7 +1,7 @@
 import { Query, DocumentSnapshot } from '@firebase/firestore-types';
 import { useInfiniteQuery, UseInfiniteQueryResult } from 'react-query';
 
-import { OrderLinksKey } from '@hooks/useQueryString';
+import { OrderLinksKey } from '@hooks/use-query-string';
 
 import { Link } from '@data-types/link.type';
 

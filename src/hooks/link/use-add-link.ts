@@ -1,7 +1,7 @@
 import { DocumentReference } from '@firebase/firestore-types';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
 
-import { OrderLinksKey } from '@hooks/useQueryString';
+import { OrderLinksKey } from '@hooks/use-query-string';
 
 import { Link } from '@data-types/link.type';
 

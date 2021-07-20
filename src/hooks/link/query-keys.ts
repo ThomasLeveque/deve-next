@@ -1,4 +1,4 @@
-import { OrderLinksKey } from '@hooks/useQueryString';
+import { OrderLinksKey } from '@hooks/use-query-string';
 
 export const queryKeys = {
   links: (

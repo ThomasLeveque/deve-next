@@ -10,7 +10,7 @@ import { useAuth } from '@hooks/auth/useAuth';
 import { dbKeys } from '@hooks/link/db-keys';
 import { useAddLinkComment } from '@hooks/link/use-add-link-comment';
 import { useUpdateLink } from '@hooks/link/use-update-link';
-import { useQueryString } from '@hooks/useQueryString';
+import { useQueryString } from '@hooks/use-query-string';
 
 import { CommentFormData } from '@data-types/comment.type';
 import { Link } from '@data-types/link.type';

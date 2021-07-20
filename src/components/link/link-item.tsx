@@ -9,7 +9,7 @@ import TagListWrapper from '@components/tag/tag-list-wrapper';
 
 import { useAuth } from '@hooks/auth/useAuth';
 import { useUpdateLink } from '@hooks/link/use-update-link';
-import { useQueryString } from '@hooks/useQueryString';
+import { useQueryString } from '@hooks/use-query-string';
 
 import { Link } from '@data-types/link.type';
 
