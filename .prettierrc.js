@@ -10,7 +10,6 @@ module.exports = {
   // match tsconfig.json paths
   importOrder: [
     '^@components/(.*)$',
-    '^@libs/(.*)$',
     '^@hooks/(.*)$',
     '^@data-types/(.*)$',
     '^@utils/(.*)$',

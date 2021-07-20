@@ -7,9 +7,8 @@ import React, { useMemo } from 'react';
 
 import TagListWrapper from '@components/tag/tag-list-wrapper';
 
-import { useUpdateLink } from '@libs/link/queries';
-
 import { useAuth } from '@hooks/auth/useAuth';
+import { useUpdateLink } from '@hooks/link/use-update-link';
 import { useQueryString } from '@hooks/useQueryString';
 
 import { Link } from '@data-types/link.type';

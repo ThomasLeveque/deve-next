@@ -3,7 +3,7 @@ import React from 'react';
 
 import CommentItem from '@components/modals/add-comment-modal/comment-item';
 
-import { useLinkComments } from '@libs/link/queries';
+import { useLinkComments } from '@hooks/link/use-link-comments';
 
 import { getDomain } from '@utils/format-string';
 

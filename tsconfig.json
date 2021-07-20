@@ -22,9 +22,6 @@
       "@components/*": [
         "src/components/*"
       ],
-      "@libs/*": [
-        "src/libs/*"
-      ],
       "@utils/*": [
         "src/utils/*"
       ],

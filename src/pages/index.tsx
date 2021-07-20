@@ -15,9 +15,8 @@ import MenuDropdown, { MenuDropdownItemProps } from '@components/elements/menu-d
 import LinkItem from '@components/link/link-item';
 import TagsFilterSidebar from '@components/tag/tags-filter-sidebar';
 
-import { useLinks } from '@libs/link/queries';
-
 import { useCategories } from '@hooks/category/use-categories';
+import { useLinks } from '@hooks/link/use-links';
 import { OrderLinksKey, useQueryString } from '@hooks/useQueryString';
 
 const tagsSidebarOpenSelector = (state: AppConfigStore) => state.tagsSidebarOpen;

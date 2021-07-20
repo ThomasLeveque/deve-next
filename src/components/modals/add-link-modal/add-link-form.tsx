@@ -7,12 +7,11 @@ import Button from '@components/elements/button';
 import TextInput from '@components/elements/text-input';
 import TagsListBox from '@components/tag/tags-list-box';
 
-import { LINKS_COLLECTION_KEY } from '@libs/link/db';
-import { useAddLink } from '@libs/link/queries';
-
 import { useAuth } from '@hooks/auth/useAuth';
 import { useCategories } from '@hooks/category/use-categories';
 import { useUpdateCategory } from '@hooks/category/use-update-category';
+import { dbKeys } from '@hooks/link/db-keys';
+import { useAddLink } from '@hooks/link/use-add-link';
 import { useQueryString } from '@hooks/useQueryString';
 
 import { LinkFormData } from '@data-types/link.type';
@@ -75,7 +74,7 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
 
     // Do not setLoading(false) because addLink will unmount this component (Modal).
     const link = formatLink(formData, user);
-    addLink.mutate({ linkRef: db.collection(LINKS_COLLECTION_KEY).doc(), link });
+    addLink.mutate({ linkRef: db.collection(dbKeys.links).doc(), link });
     props.closeModal();
   };
 
