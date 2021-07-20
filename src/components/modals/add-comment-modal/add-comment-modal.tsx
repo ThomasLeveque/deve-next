@@ -29,7 +29,7 @@ const AddCommentModal: React.FC = () => {
         href={linkToCommentModal.url}
         rel="noreferrer"
         target="_blank"
-        className="mb-6 with-ring block group"
+        className="mb-6 mr-8 with-ring block group"
       >
         <h2 className="text-3xl mb-2 font-poppins-bold group-hover:text-secondary">
           {linkToCommentModal.description}
