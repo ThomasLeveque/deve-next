@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FieldError, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -12,7 +12,8 @@ import { useCategories } from '@hooks/category/use-categories';
 import { useUpdateCategory } from '@hooks/category/use-update-category';
 import { dbKeys } from '@hooks/link/db-keys';
 import { useAddLink } from '@hooks/link/use-add-link';
-import { useQueryString } from '@hooks/useQueryString';
+import { useFetchHtmlText } from '@hooks/use-fetch-html-text';
+import { useQueryString } from '@hooks/use-query-string';
 
 import { LinkFormData } from '@data-types/link.type';
 
@@ -53,6 +54,12 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
   });
   const selectedTags = watch('tags', []);
 
+  const url = watch('url', '');
+  const { htmlText: title, loading: htmlTextLoading } = useFetchHtmlText(url);
+  useEffect(() => {
+    setValue('title', title);
+  }, [title]);
+
   const onSubmit = async (formData: LinkFormData) => {
     if (!user) {
       return;
@@ -92,7 +99,7 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
         className="mb-6"
         id="title"
         label="Title"
-        placeholder="A title for your link"
+        placeholder={htmlTextLoading ? 'Looking for title...' : 'A title for your link'}
         {...register('title')}
         errorText={errors.title?.message}
       />

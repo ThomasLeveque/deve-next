@@ -13,3 +13,8 @@ export const getInitials = (text: string): string => {
     return `${firstResult[0]}${lastResult[0]}`;
   }
 };
+
+export const isValidUrl = (url: string): boolean =>
+  url.match(
+    /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g
+  ) !== null;
