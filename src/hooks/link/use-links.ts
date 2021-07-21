@@ -12,7 +12,7 @@ import { PaginatedData } from '@utils/shared-types';
 import { dbKeys } from './db-keys';
 import { queryKeys } from './query-keys';
 
-const LINKS_PER_PAGE = Number(process.env.NEXT_PUBLIC_LINKS_PER_PAGE) ?? 20;
+export const LINKS_PER_PAGE = Number(process.env.NEXT_PUBLIC_LINKS_PER_PAGE) ?? 20;
 
 const getOrderbyDBQuery = (linksRef: Query, orderby: OrderLinksKey) => {
   switch (orderby) {

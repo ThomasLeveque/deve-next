@@ -10,7 +10,7 @@ import { PaginatedData } from '@utils/shared-types';
 import { dbKeys } from './db-keys';
 import { queryKeys } from './query-keys';
 
-const COMMENTS_PER_PAGE = Number(process.env.NEXT_PUBLIC_COMMENTS_PER_PAGE) ?? 20;
+export const COMMENTS_PER_PAGE = Number(process.env.NEXT_PUBLIC_COMMENTS_PER_PAGE) ?? 20;
 
 const getLinkComments = async (
   cursor: DocumentSnapshot,

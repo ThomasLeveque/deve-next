@@ -1,9 +1,11 @@
 import { ModalsStore, useModalsStore } from '@store/modals.store';
 import React from 'react';
 
+import Button from '@components/elements/button';
+import SpinnerIcon from '@components/icons/spinner-icon';
 import CommentItem from '@components/modals/add-comment-modal/comment-item';
 
-import { useLinkComments } from '@hooks/link/use-link-comments';
+import { COMMENTS_PER_PAGE, useLinkComments } from '@hooks/link/use-link-comments';
 
 import { getDomain } from '@utils/format-string';
 
@@ -17,7 +19,12 @@ const AddCommentModal: React.FC = () => {
   const linkToCommentModal = useModalsStore(linkToCommentModalSelector);
   const setLinkToCommentModal = useModalsStore(setLinkToCommentModalSelector);
 
-  const { data: comments } = useLinkComments(linkToCommentModal?.id);
+  const {
+    data: comments,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useLinkComments(linkToCommentModal?.id);
 
   const closeModal = () => {
     setLinkToCommentModal(null);
@@ -38,12 +45,26 @@ const AddCommentModal: React.FC = () => {
       </a>
       <AddCommentForm link={linkToCommentModal} closeModal={closeModal} />
       {comments ? (
-        <ul>
-          {comments?.pages.map((page) =>
-            page.data.map((comment) => <CommentItem key={comment.id} comment={comment} />)
-          )}
-        </ul>
-      ) : null}
+        <>
+          <ul>
+            {comments?.pages.map((page) =>
+              page.data.map((comment) => <CommentItem key={comment.id} comment={comment} />)
+            )}
+          </ul>
+          {linkToCommentModal?.commentCount > COMMENTS_PER_PAGE ? (
+            <Button
+              theme="secondary"
+              text={hasNextPage ? 'Load more' : 'No more comments'}
+              className="mx-auto mt-8"
+              disabled={!hasNextPage}
+              loading={isFetchingNextPage}
+              onClick={fetchNextPage}
+            />
+          ) : null}
+        </>
+      ) : (
+        <SpinnerIcon className="w-8 m-auto mt-12" />
+      )}
     </Modal>
   ) : null;
 };

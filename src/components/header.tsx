@@ -42,21 +42,19 @@ const Header: React.FC = () => {
       <Link href="/">
         <a className="font-poppins-bold text-2xl with-ring">Deve-next</a>
       </Link>
-      {userLoaded ? (
-        user ? (
-          <div className="grid grid-flow-col auto-cols-max items-center gap-4">
-            <Button
-              theme="secondary"
-              text="Add link"
-              icon={<PlusIcon />}
-              onClick={toggleAddLinkModal}
-            />
-            <MenuDropdown customButton={<Avatar />} items={userDropdownItems} />
-          </div>
-        ) : (
-          <Button theme="secondary" text="Login" onClick={toggleAuthModal} />
-        )
-      ) : null}
+      {user ? (
+        <div className="grid grid-flow-col auto-cols-max items-center gap-4">
+          <Button
+            theme="secondary"
+            text="Add link"
+            icon={<PlusIcon />}
+            onClick={toggleAddLinkModal}
+          />
+          <MenuDropdown customButton={<Avatar />} items={userDropdownItems} />
+        </div>
+      ) : (
+        <Button theme="secondary" text="Login" onClick={toggleAuthModal} />
+      )}
     </header>
   );
 };
