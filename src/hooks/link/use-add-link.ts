@@ -1,8 +1,11 @@
 import { DocumentReference } from '@firebase/firestore-types';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
 
+import { queryKeys as categoryQueryKeys } from '@hooks/category/query-keys';
+import { useUpdateCategory } from '@hooks/category/use-update-category';
 import { OrderLinksKey } from '@hooks/use-query-string';
 
+import { Category } from '@data-types/categorie.type';
 import { Link } from '@data-types/link.type';
 
 import { addItemToPaginatedData } from '@utils/mutate-data';
@@ -20,7 +23,8 @@ const addLink = async (
 
 export const useAddLink = (
   orderbyQuery: OrderLinksKey,
-  tagsQuery: string[]
+  tagsQuery: string[],
+  selectedTags: string[]
 ): UseMutationResult<
   InfiniteData<PaginatedData<Link>>,
   unknown,
@@ -29,6 +33,8 @@ export const useAddLink = (
 > => {
   const queryClient = useQueryClient();
   const linksKey = queryKeys.links(orderbyQuery, tagsQuery);
+  const updateCategory = useUpdateCategory();
+
   return useMutation(({ linkRef, link }) => addLink(linkRef, link), {
     onMutate: async ({ linkRef, link }) => {
       const newLink: Document<Link> = { id: linkRef.id, ...link };
@@ -45,6 +51,21 @@ export const useAddLink = (
       });
 
       return previousLinks;
+    },
+    onSuccess: () => {
+      const tags = queryClient.getQueryData<Document<Category>[]>(categoryQueryKeys.categories);
+      selectedTags.forEach((selectedTag) => {
+        const prevTag = tags?.find(
+          (tag) => tag.name.toLocaleLowerCase() === selectedTag.toLocaleLowerCase()
+        );
+
+        if (prevTag) {
+          updateCategory.mutate({
+            prevCategory: prevTag,
+            categoryToUpdate: { count: prevTag.count + 1 },
+          });
+        }
+      });
     },
     onError: (err, variables, previousLinks) => {
       queryClient.setQueryData(linksKey, previousLinks);

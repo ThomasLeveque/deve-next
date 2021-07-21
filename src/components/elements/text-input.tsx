@@ -54,7 +54,14 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>((props, ref
         </label>
       ) : null}
       <div className="relative flex items-center w-full">
-        {props.type === 'search' ? <SearchIcon className="w-6 absolute left-4" /> : null}
+        {props.type === 'search' ? (
+          <SearchIcon
+            className="w-6 absolute left-4 cursor-text"
+            onClick={() => {
+              (ref as React.MutableRefObject<HTMLInputElement | null>)?.current?.focus();
+            }}
+          />
+        ) : null}
         {props.type === 'search' && props.value?.length ? (
           <XCircleIcon onClick={clearValue} className="w-6 absolute right-4 cursor-pointer" />
         ) : null}

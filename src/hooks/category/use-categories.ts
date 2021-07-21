@@ -1,4 +1,4 @@
-import { useQuery, UseQueryResult } from 'react-query';
+import { useQuery, UseQueryOptions, UseQueryResult } from 'react-query';
 
 import { Category } from '@data-types/categorie.type';
 
@@ -15,5 +15,7 @@ const getCategories = async (): Promise<Document<Category>[]> => {
   return snapshot.docs.map((doc) => dataToDocument<Category>(doc));
 };
 
-export const useCategories = (): UseQueryResult<Document<Category>[]> =>
-  useQuery(queryKeys.categories, () => getCategories());
+export const useCategories = (
+  options?: UseQueryOptions<Document<Category>[]>
+): UseQueryResult<Document<Category>[]> =>
+  useQuery(queryKeys.categories, () => getCategories(), options);

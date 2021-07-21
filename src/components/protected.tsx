@@ -6,11 +6,11 @@ import { useAuth } from '@hooks/auth/useAuth';
 import SpinnerIcon from './icons/spinner-icon';
 
 const Protected: React.FC = (props) => {
-  const { user } = useAuth();
+  const { user, userLoaded } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!user) {
+    if (!user && userLoaded) {
       router.push('/');
     }
   }, [user]);

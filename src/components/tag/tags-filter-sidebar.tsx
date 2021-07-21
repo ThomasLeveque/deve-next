@@ -1,11 +1,10 @@
 import classNames from 'classnames';
 import React, { useState, useRef } from 'react';
 
+import SpinnerIcon from '@components/icons/spinner-icon';
+
+import { useCategories } from '@hooks/category/use-categories';
 import { useQueryString } from '@hooks/use-query-string';
-
-import { Category } from '@data-types/categorie.type';
-
-import { Document } from '@utils/shared-types';
 
 import Separator from '../elements/separator';
 import Tag from '../elements/tag';
@@ -13,17 +12,19 @@ import TextInput from '../elements/text-input';
 import TagListWrapper from './tag-list-wrapper';
 
 interface TagsFilterSidebarProps {
-  tags: Document<Category>[];
   className?: string;
 }
 
-const TagsFilterSidebar: React.FC<TagsFilterSidebarProps> = (props) => {
+const TagsFilterSidebar: React.FC<TagsFilterSidebarProps> = React.memo((props) => {
   const { removeTagQuery, addTagQuery, tagsQuery } = useQueryString();
+  const { data: tags } = useCategories();
 
   const [searchTag, setSearchTag] = useState('');
   const searchRef = useRef<HTMLInputElement>(null);
 
-  return (
+  return !tags ? (
+    <SpinnerIcon className="w-8 m-auto mt-14" />
+  ) : (
     <aside className={classNames('', props.className)}>
       {tagsQuery.length > 0 && (
         <>
@@ -55,7 +56,7 @@ const TagsFilterSidebar: React.FC<TagsFilterSidebarProps> = (props) => {
         }}
       />
       <TagListWrapper className="justify-end">
-        {props.tags
+        {tags
           .filter(
             (tag) =>
               !tagsQuery.includes(tag.name) &&
@@ -70,6 +71,6 @@ const TagsFilterSidebar: React.FC<TagsFilterSidebarProps> = (props) => {
       </TagListWrapper>
     </aside>
   );
-};
+});
 
-export default React.memo(TagsFilterSidebar);
+export default TagsFilterSidebar;

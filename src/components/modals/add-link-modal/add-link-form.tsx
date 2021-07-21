@@ -9,7 +9,6 @@ import TagsListBox from '@components/tag/tags-list-box';
 
 import { useAuth } from '@hooks/auth/useAuth';
 import { useCategories } from '@hooks/category/use-categories';
-import { useUpdateCategory } from '@hooks/category/use-update-category';
 import { dbKeys } from '@hooks/link/db-keys';
 import { useAddLink } from '@hooks/link/use-add-link';
 import { useFetchHtmlText } from '@hooks/use-fetch-html-text';
@@ -38,10 +37,8 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { orderbyQuery, tagsQuery } = useQueryString();
   const { user } = useAuth();
-  const addLink = useAddLink(orderbyQuery, tagsQuery);
 
   const { data: tags } = useCategories();
-  const updateCategory = useUpdateCategory();
 
   const {
     register,
@@ -53,6 +50,7 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
     resolver: yupResolver(schema),
   });
   const selectedTags = watch('tags', []);
+  const addLink = useAddLink(orderbyQuery, tagsQuery, selectedTags);
 
   const url = watch('url', '');
   const { htmlText: title, loading: htmlTextLoading } = useFetchHtmlText(url);
@@ -70,20 +68,6 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
       const link = formatLink(formData, user);
       addLink.mutate({ linkRef: db.collection(dbKeys.links).doc(), link });
 
-      if (addLink.isSuccess) {
-        selectedTags.forEach((selectedTag) => {
-          const prevTag = tags?.find(
-            (tag) => tag.name.toLocaleLowerCase() === selectedTag.toLocaleLowerCase()
-          );
-
-          if (prevTag) {
-            updateCategory.mutate({
-              prevCategory: prevTag,
-              categoryToUpdate: { count: prevTag.count + 1 },
-            });
-          }
-        });
-      }
       // Do not setLoading(false) because addLink will unmount this component (Modal).
       props.closeModal();
     },

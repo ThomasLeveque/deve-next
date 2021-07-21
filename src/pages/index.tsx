@@ -16,7 +16,6 @@ import SpinnerIcon from '@components/icons/spinner-icon';
 import LinkItem from '@components/link/link-item';
 import TagsFilterSidebar from '@components/tag/tags-filter-sidebar';
 
-import { useCategories } from '@hooks/category/use-categories';
 import { LINKS_PER_PAGE, useLinks } from '@hooks/link/use-links';
 import { OrderLinksKey, useQueryString } from '@hooks/use-query-string';
 
@@ -56,7 +55,6 @@ const Home: NextPage = () => {
     hasNextPage,
     isFetchingNextPage,
   } = useLinks(orderbyQuery, tagsQuery);
-  const { data: tags } = useCategories();
 
   const canInitialLinksLoadMore = useMemo(
     () => (links?.pages[0].data.length as number) >= LINKS_PER_PAGE,
@@ -110,17 +108,10 @@ const Home: NextPage = () => {
         </section>
       )}
       {tagsSidebarOpen ? (
-        <>
-          {!tags ? (
-            <SpinnerIcon className="w-8 m-auto mt-14" />
-          ) : (
-            <TagsFilterSidebar
-              tags={tags}
-              // -mx-5 px-5 to make ring visible because of overflow
-              className="-mx-5 px-5 tags-filter-sidebar-height sticky top-header py-8 overflow-y-auto"
-            />
-          )}
-        </>
+        <TagsFilterSidebar
+          // -mx-5 px-5 to make ring visible because of overflow
+          className="-mx-5 px-5 tags-filter-sidebar-height sticky top-header py-8 overflow-y-auto"
+        />
       ) : null}
     </div>
   );
