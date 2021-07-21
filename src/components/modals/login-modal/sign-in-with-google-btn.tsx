@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { useAuth } from '@hooks/auth/useAuth';
 
@@ -9,7 +9,7 @@ const SignInWithGoogleBtn: React.FC = () => {
 
   const { signInWithGoogle } = useAuth();
 
-  const handleSignInWithGoogle = async (): Promise<void> => {
+  const handleSignInWithGoogle = useCallback(async () => {
     try {
       setLoading(true);
       await signInWithGoogle();
@@ -17,7 +17,7 @@ const SignInWithGoogleBtn: React.FC = () => {
       console.error(err);
     }
     setLoading(false);
-  };
+  }, []);
 
   return (
     <Button

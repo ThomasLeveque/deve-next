@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -31,17 +31,17 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = (props) => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async ({ email }: ResetPasswordFormData) => {
+  const onSubmit = useCallback(async ({ email }: ResetPasswordFormData) => {
     try {
       setLoading(true);
       await auth.sendPasswordResetEmail(email);
       props.setStep(loginStep.LOGIN_WITH_EMAIL);
-      // Do not setLoading(false) because Signin will unmount this component.
+      // Do not setLoading(false) because reset password will unmount this component.
     } catch (err) {
       console.error(err);
       setLoading(false);
     }
-  };
+  }, []);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

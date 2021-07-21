@@ -27,4 +27,4 @@ const SpinnerIcon: React.FC<React.SVGAttributes<SVGElement>> = ({ className, ...
   );
 };
 
-export default SpinnerIcon;
+export default React.memo(SpinnerIcon);

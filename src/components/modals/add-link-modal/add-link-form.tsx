@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { FieldError, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -60,30 +60,35 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
     setValue('title', title);
   }, [title]);
 
-  const onSubmit = async (formData: LinkFormData) => {
-    if (!user) {
-      return;
-    }
-    setLoading(true);
+  const onSubmit = useCallback(
+    async (formData: LinkFormData) => {
+      if (!user) {
+        return;
+      }
+      setLoading(true);
 
-    selectedTags.forEach((selectedTag) => {
-      const prevTag = tags?.find(
-        (tag) => tag.name.toLocaleLowerCase() === selectedTag.toLocaleLowerCase()
-      );
+      const link = formatLink(formData, user);
+      addLink.mutate({ linkRef: db.collection(dbKeys.links).doc(), link });
 
-      if (prevTag) {
-        updateCategory.mutate({
-          prevCategory: prevTag,
-          categoryToUpdate: { count: prevTag.count + 1 },
+      if (addLink.isSuccess) {
+        selectedTags.forEach((selectedTag) => {
+          const prevTag = tags?.find(
+            (tag) => tag.name.toLocaleLowerCase() === selectedTag.toLocaleLowerCase()
+          );
+
+          if (prevTag) {
+            updateCategory.mutate({
+              prevCategory: prevTag,
+              categoryToUpdate: { count: prevTag.count + 1 },
+            });
+          }
         });
       }
-    });
-
-    // Do not setLoading(false) because addLink will unmount this component (Modal).
-    const link = formatLink(formData, user);
-    addLink.mutate({ linkRef: db.collection(dbKeys.links).doc(), link });
-    props.closeModal();
-  };
+      // Do not setLoading(false) because addLink will unmount this component (Modal).
+      props.closeModal();
+    },
+    [user, selectedTags, tags]
+  );
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -108,7 +113,7 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
         selectedTags={selectedTags}
         setSelectedTags={(tags) => setValue('tags', tags)}
         className="mb-8"
-        label="tags"
+        label="tags (max 4)"
         errorText={(errors.tags as unknown as FieldError)?.message}
       />
       <div className="flex justify-end">

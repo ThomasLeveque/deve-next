@@ -48,4 +48,4 @@ const AddCommentModal: React.FC = () => {
   ) : null;
 };
 
-export default AddCommentModal;
+export default React.memo(AddCommentModal);

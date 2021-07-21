@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -45,18 +45,21 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async (formData: CommentFormData) => {
-    if (!user) {
-      return;
-    }
-    const commentRef = db.collection(dbKeys.comments(linkId)).doc();
+  const onSubmit = useCallback(
+    async (formData: CommentFormData) => {
+      if (!user) {
+        return;
+      }
+      const commentRef = db.collection(dbKeys.comments(linkId)).doc();
 
-    const comment = formatComment(formData, user);
-    addLinkComment.mutate({ commentRef, comment });
+      const comment = formatComment(formData, user);
+      addLinkComment.mutate({ commentRef, comment });
 
-    updateLink.mutate({ commentCount: props.link.commentCount + 1 });
-    reset();
-  };
+      updateLink.mutate({ commentCount: props.link.commentCount + 1 });
+      reset();
+    },
+    [user, linkId]
+  );
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

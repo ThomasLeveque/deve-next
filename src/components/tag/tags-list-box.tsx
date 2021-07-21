@@ -65,9 +65,9 @@ const TagsListBox: React.FC<TagsListBoxProps> = (props) => {
 
   const addSelectedTags = useCallback(
     (tag: string) => {
-      props.setSelectedTags([...selectedTags, tag]);
-      // if (selectedTags.length < 4) {
-      // }
+      if (selectedTags.length < 4) {
+        props.setSelectedTags([...selectedTags, tag]);
+      }
     },
     [selectedTags]
   );
@@ -265,4 +265,4 @@ const TagsListBoxOption: React.FC<TagsListBoxOptionProps> = (props) => {
   );
 };
 
-export default TagsListBox;
+export default React.memo(TagsListBox);

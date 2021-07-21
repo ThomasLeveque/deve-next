@@ -8,7 +8,7 @@ import {
 import { AppConfigStore, useAppConfigStore } from '@store/app-config.store';
 import classNames from 'classnames';
 import { NextPage } from 'next';
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import Button from '@components/elements/button';
 import MenuDropdown, { MenuDropdownItemProps } from '@components/elements/menu-dropdown';
@@ -28,23 +28,26 @@ const Home: NextPage = () => {
 
   const { updateOrderbyQuery, orderbyQuery, tagsQuery, clearTagQuery } = useQueryString();
 
-  const orderLinksDropdownItems: Record<OrderLinksKey, MenuDropdownItemProps> = {
-    newest: {
-      text: 'Most recent',
-      onClick: () => updateOrderbyQuery('newest'),
-      icon: <SortDescendingIcon />,
-    },
-    oldest: {
-      text: 'Oldest',
-      onClick: () => updateOrderbyQuery('oldest'),
-      icon: <SortAscendingIcon />,
-    },
-    liked: {
-      text: 'Most liked',
-      onClick: () => updateOrderbyQuery('liked'),
-      icon: <FireIcon />,
-    },
-  };
+  const orderLinksDropdownItems: Record<OrderLinksKey, MenuDropdownItemProps> = useMemo(
+    () => ({
+      newest: {
+        text: 'Most recent',
+        onClick: () => updateOrderbyQuery('newest'),
+        icon: <SortDescendingIcon />,
+      },
+      oldest: {
+        text: 'Oldest',
+        onClick: () => updateOrderbyQuery('oldest'),
+        icon: <SortAscendingIcon />,
+      },
+      liked: {
+        text: 'Most liked',
+        onClick: () => updateOrderbyQuery('liked'),
+        icon: <FireIcon />,
+      },
+    }),
+    []
+  );
 
   const {
     data: links,

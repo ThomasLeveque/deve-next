@@ -72,4 +72,4 @@ const TagsFilterSidebar: React.FC<TagsFilterSidebarProps> = (props) => {
   );
 };
 
-export default TagsFilterSidebar;
+export default React.memo(TagsFilterSidebar);

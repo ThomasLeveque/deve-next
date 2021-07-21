@@ -5,4 +5,4 @@ const Separator: React.FC<{ className?: string }> = (props) => (
   <div className={classNames('w-full h-[1px] bg-gray-100', props.className)} />
 );
 
-export default Separator;
+export default React.memo(Separator);

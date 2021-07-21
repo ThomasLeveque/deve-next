@@ -59,4 +59,4 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>((props, re
   );
 });
 
-export default TextArea;
+export default React.memo(TextArea);

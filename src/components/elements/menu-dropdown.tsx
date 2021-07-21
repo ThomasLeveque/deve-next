@@ -82,4 +82,4 @@ const MenuDropdownItem: React.FC<MenuDropdownItemProps> = (props) => {
   );
 };
 
-export default MenuDropdown;
+export default React.memo(MenuDropdown);

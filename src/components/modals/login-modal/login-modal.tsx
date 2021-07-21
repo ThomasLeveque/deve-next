@@ -1,5 +1,5 @@
 import { ModalsStore, useModalsStore } from '@store/modals.store';
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
 import Button from '@components/elements/button';
 import Separator from '@components/elements/separator';
@@ -26,12 +26,12 @@ const LoginModal: React.FC = () => {
   const authModal = useModalsStore(authModalSelector);
   const toggleAuthModal = useModalsStore(toggleAuthModalSelector);
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     toggleAuthModal();
     setStep(loginStep.LOGIN_SELECTION);
-  };
+  }, []);
 
-  const renderTitle = (): string => {
+  const renderTitle = useMemo(() => {
     switch (step) {
       case loginStep.LOGIN_SELECTION:
         return 'Login';
@@ -42,9 +42,9 @@ const LoginModal: React.FC = () => {
       case loginStep.PASSWORD_RECOVERY:
         return 'Password recovery';
     }
-  };
+  }, [step]);
 
-  const renderContent = () => {
+  const renderContent = useMemo(() => {
     switch (step) {
       case loginStep.LOGIN_SELECTION:
         return (
@@ -73,13 +73,13 @@ const LoginModal: React.FC = () => {
       case loginStep.PASSWORD_RECOVERY:
         return <ResetPasswordForm setStep={setStep} />;
     }
-  };
+  }, [step]);
 
   return (
-    <Modal isOpen={authModal} closeModal={closeModal} title={renderTitle()}>
-      {renderContent()}
+    <Modal isOpen={authModal} closeModal={closeModal} title={renderTitle}>
+      {renderContent}
     </Modal>
   );
 };
 
-export default LoginModal;
+export default React.memo(LoginModal);

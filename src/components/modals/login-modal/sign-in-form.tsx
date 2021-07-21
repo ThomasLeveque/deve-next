@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -34,14 +34,14 @@ const SignInForm: React.FC<SignInFormProps> = (props) => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async ({ email, password }: SignInFormData) => {
+  const onSubmit = useCallback(async ({ email, password }: SignInFormData) => {
     setLoading(true);
     await signInWithEmail(email, password).catch((err) => {
       console.error(err);
       setLoading(false);
     });
     // Do not setLoading(false) because Signin will unmount this component.
-  };
+  }, []);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

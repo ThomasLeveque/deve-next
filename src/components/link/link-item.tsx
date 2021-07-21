@@ -3,7 +3,7 @@ import { FireIcon as FireIconSolid } from '@heroicons/react/solid';
 import { ModalsStore, useModalsStore } from '@store/modals.store';
 import classNames from 'classnames';
 import { format } from 'date-fns';
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 import TagListWrapper from '@components/tag/tag-list-wrapper';
 
@@ -58,7 +58,7 @@ const LinkItem: React.FC<LinkItemProps> = ({ link }) => {
     }
   }, [link.commentCount]);
 
-  const addVote = () => {
+  const addVote = useCallback(() => {
     const incrementedVoteLink: Partial<Document<Link>> = {
       voteCount: link.voteCount + 1,
       votes: [
@@ -67,15 +67,15 @@ const LinkItem: React.FC<LinkItemProps> = ({ link }) => {
       ],
     };
     updateLink.mutate(incrementedVoteLink);
-  };
+  }, [link, user]);
 
-  const removeVote = () => {
+  const removeVote = useCallback(() => {
     const decrementedVoteLink: Partial<Document<Link>> = {
       voteCount: link.voteCount - 1,
       votes: link.votes.filter((vote) => vote.voteBy.id !== user?.id),
     };
     updateLink.mutate(decrementedVoteLink);
-  };
+  }, [link, user]);
 
   return (
     <>
@@ -126,4 +126,4 @@ const LinkItem: React.FC<LinkItemProps> = ({ link }) => {
   );
 };
 
-export default LinkItem;
+export default React.memo(LinkItem);

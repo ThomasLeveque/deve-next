@@ -22,4 +22,4 @@ const AddLinkModal: React.FC = () => {
   );
 };
 
-export default AddLinkModal;
+export default React.memo(AddLinkModal);

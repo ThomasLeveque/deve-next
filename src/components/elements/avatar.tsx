@@ -21,4 +21,4 @@ const Avatar: React.FC = () => {
   );
 };
 
-export default Avatar;
+export default React.memo(Avatar);
