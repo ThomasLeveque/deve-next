@@ -54,7 +54,11 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>((props, re
           onKeyDown={props.onKeyDown}
         />
       </div>
-      {/* TODO: show error */}
+      {props.errorText ? (
+        <p className="absolute top-full right-1 mt-1 text-[10px] text-danger-400">
+          {props.errorText}
+        </p>
+      ) : null}
     </div>
   );
 });

@@ -92,7 +92,7 @@ const Home: NextPage = () => {
           </div>
           <ul className="grid grid-cols-2 gap-5">
             {links?.pages.map((page) =>
-              page.data.map((link) => <LinkItem key={link.id} link={link} />)
+              page?.data.map((link) => <LinkItem key={link.id} link={link} />)
             )}
           </ul>
           {canInitialLinksLoadMore ? (

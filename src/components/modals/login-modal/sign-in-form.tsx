@@ -16,8 +16,12 @@ import { formatError } from '@utils/format-string';
 import { loginStep } from './login-modal';
 
 const schema = yup.object().shape({
-  email: yup.string().email().required().max(255),
-  password: yup.string().required().min(6).max(255),
+  email: yup.string().email('Email must be a valid email').required('Email is required').max(255),
+  password: yup
+    .string()
+    .required('Password is required')
+    .min(6, 'Password must be at least 6 characters')
+    .max(255),
 });
 
 interface SignInFormProps {

@@ -8,6 +8,7 @@ import SignInWithGoogleBtn from '@components/modals/login-modal/sign-in-with-goo
 import { Modal } from '../modal';
 import ResetPasswordForm from './reset-password-form';
 import SignInForm from './sign-in-form';
+import SignInWithGithubBtn from './sign-in-with-github-btn';
 import SignUpForm from './sign-up-form';
 
 const authModalSelector = (state: ModalsStore) => state.authModal;
@@ -51,7 +52,7 @@ const LoginModal: React.FC = () => {
           <>
             <div className="grid gap-5">
               <SignInWithGoogleBtn />
-              <Button theme="black" text="login with github" fullWidth />
+              <SignInWithGithubBtn />
               <Button
                 text="login with email"
                 onClick={() => setStep(loginStep.LOGIN_WITH_EMAIL)}

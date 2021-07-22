@@ -1,4 +1,4 @@
-import { XIcon } from '@heroicons/react/outline';
+import { BellIcon, ShieldCheckIcon, XCircleIcon, XIcon } from '@heroicons/react/outline';
 import classNames from 'classnames';
 import React, { useMemo } from 'react';
 import toast, { ToastBar } from 'react-hot-toast';
@@ -20,14 +20,26 @@ const Toast: React.FC<ToastProps> = (props) => {
     }
   }, [props.toast.type]);
 
-  const title: string = useMemo(() => {
+  const title = useMemo(() => {
     switch (props.toast.type) {
       case 'error':
         return 'An error occurred';
       case 'success':
         return 'This is a success !';
       default:
-        return 'Notification';
+        // Use className to customize the title
+        return props.toast.className;
+    }
+  }, [props.toast.type]);
+
+  const icon = useMemo(() => {
+    switch (props.toast.type) {
+      case 'error':
+        return <XCircleIcon />;
+      case 'success':
+        return <ShieldCheckIcon />;
+      default:
+        return props.toast.icon;
     }
   }, [props.toast.type]);
 
@@ -39,13 +51,13 @@ const Toast: React.FC<ToastProps> = (props) => {
       {() => (
         <div
           className={classNames(
-            'max-w-xs w-full bg-white py-4 px-5 rounded-button shadow-lg relative',
+            'max-w-xs w-full bg-white py-4 px-5 rounded-button shadow-lg relative grid gap-2 grid-cols-[28px,1fr]',
             themeClasses
           )}
         >
-          {props.toast.icon}
+          {icon ?? <BellIcon />}
           <div className="grid gap-[6px] mr-4">
-            <p className="text-[11px] font-poppins-bold">{title}</p>
+            <p className="text-[11px] font-poppins-bold">{title ?? 'Notification'}</p>
             <p className="text-sm">{props.toast.message}</p>
           </div>
           <button

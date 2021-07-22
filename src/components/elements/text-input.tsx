@@ -108,7 +108,11 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>((props, ref
           </span>
         ) : null}
       </div>
-      {/* TODO: show error */}
+      {props.errorText ? (
+        <p className="absolute top-full right-1 mt-1 text-[10px] text-danger-400">
+          {props.errorText}
+        </p>
+      ) : null}
     </div>
   );
 });

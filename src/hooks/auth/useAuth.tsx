@@ -10,8 +10,6 @@ import { formatUser } from '@utils/format-user';
 import firebase, { auth, db } from '@utils/init-firebase';
 import { Document } from '@utils/shared-types';
 
-// USER DB //
-
 const createUser = async (
   userId: string,
   authUser: AuthUser,
@@ -28,8 +26,6 @@ const getUser = async (userId: string): Promise<Document<User>> => {
   return dataToDocument<User>(doc);
 };
 
-// AUTH CONTEXT | AUTH PROVIDER //
-
 type AuthContextType = {
   user: Document<User> | null;
   userLoaded: boolean;
@@ -40,6 +36,7 @@ type AuthContextType = {
   ) => Promise<void>;
   signInWithEmail: (email: string, password: string) => Promise<void>;
   signInWithGoogle: () => Promise<void>;
+  signInWithGithub: () => Promise<void>;
   signOut: () => Promise<void>;
 };
 
@@ -49,6 +46,7 @@ const authContext = createContext<AuthContextType>({
   signUpWithEmail: async () => undefined,
   signInWithEmail: async () => undefined,
   signInWithGoogle: async () => undefined,
+  signInWithGithub: async () => undefined,
   signOut: async () => undefined,
 });
 
@@ -100,6 +98,11 @@ const useProvideAuth = () => {
     return handleUser(authUser);
   };
 
+  const signInWithGithub = async (): Promise<void> => {
+    const { user: authUser } = await auth.signInWithPopup(new firebase.auth.GithubAuthProvider());
+    return handleUser(authUser);
+  };
+
   const signOut = async (): Promise<void> => {
     await auth.signOut();
     return handleUser(null);
@@ -118,7 +121,7 @@ const useProvideAuth = () => {
         unsubscribe();
       },
       (err) => {
-        toast.error(formatError(err));
+        toast.error(formatError<firebase.auth.Error>(err));
         console.error(err);
         setUserLoaded(true);
         unsubscribe();
@@ -134,6 +137,7 @@ const useProvideAuth = () => {
     signUpWithEmail,
     signInWithEmail,
     signInWithGoogle,
+    signInWithGithub,
     signOut,
   };
 };

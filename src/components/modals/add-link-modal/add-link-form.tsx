@@ -17,14 +17,19 @@ import { useQueryString } from '@hooks/use-query-string';
 import { LinkFormData } from '@data-types/link.type';
 
 import { formatLink } from '@utils/format-link';
+import { validUrlRegex } from '@utils/format-string';
 import { db } from '@utils/init-firebase';
 
 const schema = yup.object().shape({
-  url: yup.string().required('An url is required').max(255),
-  title: yup.string().required('A title is required').max(255),
+  url: yup
+    .string()
+    .required('Url is required')
+    .matches(validUrlRegex, { message: 'Url must be a valid url' })
+    .max(255),
+  title: yup.string().required('Title is required').max(255),
   tags: yup
     .array(yup.string())
-    .required('At least on tag required')
+    .required('At least 1 tag required')
     .min(1, 'At least 1 tag required')
     .max(4, 'No more than 4 tags'),
 });
@@ -55,7 +60,9 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
   const url = watch('url', '');
   const { htmlText: title, loading: htmlTextLoading } = useFetchHtmlText(url);
   useEffect(() => {
-    setValue('title', title);
+    if (title) {
+      setValue('title', title, { shouldValidate: true });
+    }
   }, [title]);
 
   const onSubmit = useCallback(
@@ -71,7 +78,7 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
       // Do not setLoading(false) because addLink will unmount this component (Modal).
       props.closeModal();
     },
-    [user, selectedTags, tags]
+    [user]
   );
 
   return (
@@ -95,7 +102,7 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
       <TagsListBox
         tags={tags}
         selectedTags={selectedTags}
-        setSelectedTags={(tags) => setValue('tags', tags)}
+        setSelectedTags={(tags) => setValue('tags', tags, { shouldValidate: true })}
         className="mb-8"
         label="tags (min 1, max 4)"
         errorText={(errors.tags as unknown as FieldError)?.message}

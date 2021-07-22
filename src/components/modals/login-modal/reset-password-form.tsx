@@ -15,7 +15,7 @@ import { auth } from '@utils/init-firebase';
 import { loginStep } from './login-modal';
 
 const schema = yup.object().shape({
-  email: yup.string().email().required().max(255),
+  email: yup.string().email('Email must be a valid email').required('Email is required').max(255),
 });
 
 interface ResetPasswordFormProps {

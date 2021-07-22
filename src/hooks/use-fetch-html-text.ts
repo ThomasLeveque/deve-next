@@ -6,12 +6,12 @@ import { isValidUrl } from '@utils/format-string';
 import { formatError } from './../utils/format-string';
 
 interface useFetchHtmlTextReturn {
-  htmlText: string;
+  htmlText: string | null;
   loading: boolean;
 }
 
 export const useFetchHtmlText = (url: string, htmlSelector = 'h1'): useFetchHtmlTextReturn => {
-  const [htmlText, setHtmlText] = useState('');
+  const [htmlText, setHtmlText] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export const useFetchHtmlText = (url: string, htmlSelector = 'h1'): useFetchHtml
           const htmlElement = doc.querySelector(htmlSelector);
           const htmlElementText = htmlElement?.innerHTML?.trim();
 
-          if (htmlElementText) {
+          if (htmlElement && htmlElementText) {
             setHtmlText(htmlElementText);
           }
         }

@@ -20,7 +20,7 @@ import { db } from '@utils/init-firebase';
 import { Document } from '@utils/shared-types';
 
 const schema = yup.object().shape({
-  text: yup.string().required('An text is required').max(255),
+  text: yup.string().required('Comment is required').max(255),
 });
 
 interface AddCommentFormProps {
@@ -65,7 +65,7 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <TextArea
         id="link-comment"
-        className="mb-6"
+        className="mb-8"
         placeholder="Leave your comment here..."
         {...register('text')}
         errorText={errors.text?.message}
