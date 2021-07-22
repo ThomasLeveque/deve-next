@@ -97,7 +97,7 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
         selectedTags={selectedTags}
         setSelectedTags={(tags) => setValue('tags', tags)}
         className="mb-8"
-        label="tags (max 4)"
+        label="tags (min 1, max 4)"
         errorText={(errors.tags as unknown as FieldError)?.message}
       />
       <div className="flex justify-end">

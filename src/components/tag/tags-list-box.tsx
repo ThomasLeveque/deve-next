@@ -85,15 +85,6 @@ const TagsListBox: React.FC<TagsListBoxProps> = (props) => {
     [searchTag, props.tags]
   );
 
-  const handleOutsideClick = (event: MouseEvent) => {
-    if (focusableWrapperRef.current?.contains(event.target as Node | null)) {
-      // inside click
-      return;
-    }
-    setFocusedTagIndex(0);
-    setIsOpen(false);
-  };
-
   const handleKeyPress = useCallback(
     (event: KeyboardEvent) => {
       if (isOpen) {
@@ -122,13 +113,6 @@ const TagsListBox: React.FC<TagsListBoxProps> = (props) => {
     },
     [filteredTags, isOpen, focusedTagIndex, isSelected]
   );
-
-  useEffect(() => {
-    document.addEventListener('mousedown', handleOutsideClick);
-    return () => {
-      document.removeEventListener('mousedown', handleOutsideClick);
-    };
-  }, []);
 
   useEffect(() => {
     document.addEventListener('keydown', handleKeyPress);
@@ -167,6 +151,7 @@ const TagsListBox: React.FC<TagsListBoxProps> = (props) => {
           ref={searchRef}
           placeholder="Search for tags..."
           id="search-new-tags"
+          className="z-30"
           type="search"
           autoComplete="off"
           onChange={(event) => {
@@ -189,48 +174,57 @@ const TagsListBox: React.FC<TagsListBoxProps> = (props) => {
           errorText={props.errorText}
         />
         {isOpen && (
-          <ul
-            ref={tagListRef}
-            className="absolute top-full w-full mt-2 rounded-button py-1 focus:outline-none shadow-lg max-h-60 overflow-auto bg-gray-100"
-          >
-            {!isTagExist && searchTag.length > 0 && (
-              <button
-                type="button"
-                onClick={() => {
-                  const tagName = searchTag.trim();
-                  addCategory.mutate({
-                    categoryRef: db.collection(dbKeys.categories).doc(),
-                    category: { name: tagName, count: 0 },
-                  });
-                  addSelectedTags(tagName);
-                  setSearchTag('');
-                  searchRef.current?.focus();
-                }}
-                className="grid grid-cols-[20px,1fr] gap-3 px-4 py-2 text-sm w-full hover:bg-primary"
-              >
-                <PlusIcon />
-                <p className="text-left">
-                  Create <span className="font-poppins-bold">{searchTag}</span> tag
-                </p>
-              </button>
-            )}
-            {filteredTags.map((tag, index) => (
-              <TagsListBoxOption
-                key={tag.id}
-                index={index}
-                tag={tag}
-                isSelected={isSelected}
-                addSelectedTags={(tag) => {
-                  addSelectedTags(tag);
-                  setSearchTag('');
-                  searchRef.current?.focus();
-                }}
-                removeSelectedTags={removeSelectedTags}
-                setCurrentIndex={setFocusedTagIndex}
-                currentIndex={focusedTagIndex}
-              />
-            ))}
-          </ul>
+          <>
+            <div
+              className="fixed inset-0 w-full h-full z-10"
+              onClick={() => {
+                setFocusedTagIndex(0);
+                setIsOpen(false);
+              }}
+            />
+            <ul
+              ref={tagListRef}
+              className="absolute z-30 top-full w-full mt-2 rounded-button py-1 focus:outline-none shadow-lg max-h-60 overflow-auto bg-gray-100"
+            >
+              {!isTagExist && searchTag.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const tagName = searchTag.trim();
+                    addCategory.mutate({
+                      categoryRef: db.collection(dbKeys.categories).doc(),
+                      category: { name: tagName, count: 0 },
+                    });
+                    addSelectedTags(tagName);
+                    setSearchTag('');
+                    searchRef.current?.focus();
+                  }}
+                  className="grid grid-cols-[20px,1fr] gap-3 px-4 py-2 text-sm w-full hover:bg-primary"
+                >
+                  <PlusIcon />
+                  <p className="text-left">
+                    Create <span className="font-poppins-bold">{searchTag}</span> tag
+                  </p>
+                </button>
+              )}
+              {filteredTags.map((tag, index) => (
+                <TagsListBoxOption
+                  key={tag.id}
+                  index={index}
+                  tag={tag}
+                  isSelected={isSelected}
+                  addSelectedTags={(tag) => {
+                    addSelectedTags(tag);
+                    setSearchTag('');
+                    searchRef.current?.focus();
+                  }}
+                  removeSelectedTags={removeSelectedTags}
+                  setCurrentIndex={setFocusedTagIndex}
+                  currentIndex={focusedTagIndex}
+                />
+              ))}
+            </ul>
+          </>
         )}
       </div>
     </div>
