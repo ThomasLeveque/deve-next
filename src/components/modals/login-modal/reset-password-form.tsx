@@ -1,6 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import * as yup from 'yup';
 
 import Button from '@components/elements/button';
@@ -8,6 +9,7 @@ import TextInput from '@components/elements/text-input';
 
 import { ResetPasswordFormData } from '@data-types/user.type';
 
+import { formatError } from '@utils/format-string';
 import { auth } from '@utils/init-firebase';
 
 import { loginStep } from './login-modal';
@@ -38,6 +40,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = (props) => {
       props.setStep(loginStep.LOGIN_WITH_EMAIL);
       // Do not setLoading(false) because reset password will unmount this component.
     } catch (err) {
+      toast.error(formatError(err));
       console.error(err);
       setLoading(false);
     }

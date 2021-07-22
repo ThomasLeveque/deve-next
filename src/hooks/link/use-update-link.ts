@@ -1,9 +1,11 @@
+import toast from 'react-hot-toast';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
 
 import { OrderLinksKey } from '@hooks/use-query-string';
 
 import { Link } from '@data-types/link.type';
 
+import { formatError } from '@utils/format-string';
 import { db } from '@utils/init-firebase';
 import { updateItemInsidePaginatedData } from '@utils/mutate-data';
 import { Document, PaginatedData } from '@utils/shared-types';
@@ -30,7 +32,7 @@ export const useUpdateLink = (
   tagsQuery: string[]
 ): UseMutationResult<
   InfiniteData<PaginatedData<Link>>,
-  unknown,
+  Error,
   Partial<Document<Link>>,
   InfiniteData<PaginatedData<Link>> | undefined
 > => {
@@ -56,6 +58,7 @@ export const useUpdateLink = (
         return previousLinks;
       },
       onError: (err, newDocLink, previousLinks) => {
+        toast.error(formatError(err));
         queryClient.setQueryData(linksKey, previousLinks);
       },
     }

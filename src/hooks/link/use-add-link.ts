@@ -1,4 +1,5 @@
 import { DocumentReference } from '@firebase/firestore-types';
+import toast from 'react-hot-toast';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
 
 import { queryKeys as categoryQueryKeys } from '@hooks/category/query-keys';
@@ -8,6 +9,7 @@ import { OrderLinksKey } from '@hooks/use-query-string';
 import { Category } from '@data-types/categorie.type';
 import { Link } from '@data-types/link.type';
 
+import { formatError } from '@utils/format-string';
 import { addItemToPaginatedData } from '@utils/mutate-data';
 import { PaginatedData, Document } from '@utils/shared-types';
 
@@ -27,7 +29,7 @@ export const useAddLink = (
   selectedTags: string[]
 ): UseMutationResult<
   InfiniteData<PaginatedData<Link>>,
-  unknown,
+  Error,
   { linkRef: DocumentReference; link: Link },
   InfiniteData<PaginatedData<Link>> | undefined
 > => {
@@ -68,6 +70,7 @@ export const useAddLink = (
       });
     },
     onError: (err, variables, previousLinks) => {
+      toast.error(formatError(err));
       queryClient.setQueryData(linksKey, previousLinks);
     },
   });

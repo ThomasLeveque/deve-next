@@ -1,6 +1,7 @@
 import { ModalsStore, useModalsStore } from '@store/modals.store';
 import classNames from 'classnames';
 import React, { useEffect } from 'react';
+import toast from 'react-hot-toast';
 
 import Header from '@components/header';
 

@@ -1,9 +1,11 @@
 import { User as AuthUser } from '@firebase/auth-types';
 import React, { createContext, useContext, memo, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 import { AdditionalUserData, User } from '@data-types/user.type';
 
 import { dataToDocument } from '@utils/format-document';
+import { formatError } from '@utils/format-string';
 import { formatUser } from '@utils/format-user';
 import firebase, { auth, db } from '@utils/init-firebase';
 import { Document } from '@utils/shared-types';
@@ -109,12 +111,14 @@ const useProvideAuth = () => {
         try {
           await handleUser(authUser);
         } catch (err) {
+          toast.error(formatError(err));
           console.error(err);
         }
         setUserLoaded(true);
         unsubscribe();
       },
       (err) => {
+        toast.error(formatError(err));
         console.error(err);
         setUserLoaded(true);
         unsubscribe();

@@ -1,9 +1,11 @@
 import { DocumentSnapshot } from '@firebase/firestore-types';
+import toast from 'react-hot-toast';
 import { useInfiniteQuery, UseInfiniteQueryResult } from 'react-query';
 
 import { Comment } from '@data-types/comment.type';
 
 import { dataToDocument } from '@utils/format-document';
+import { formatError } from '@utils/format-string';
 import { db } from '@utils/init-firebase';
 import { PaginatedData } from '@utils/shared-types';
 
@@ -15,29 +17,34 @@ export const COMMENTS_PER_PAGE = Number(process.env.NEXT_PUBLIC_COMMENTS_PER_PAG
 const getLinkComments = async (
   cursor: DocumentSnapshot,
   linkId: string
-): Promise<PaginatedData<Comment>> => {
-  const commentsRef = db.collection(dbKeys.comments(linkId));
+): Promise<PaginatedData<Comment> | undefined> => {
+  try {
+    const commentsRef = db.collection(dbKeys.comments(linkId));
 
-  const orderbyQuery = commentsRef.orderBy('createdAt', 'desc');
-  const query = cursor !== undefined ? orderbyQuery.startAfter(cursor) : orderbyQuery;
+    const orderbyQuery = commentsRef.orderBy('createdAt', 'desc');
+    const query = cursor !== undefined ? orderbyQuery.startAfter(cursor) : orderbyQuery;
 
-  const snapshot = await query.limit(COMMENTS_PER_PAGE).get();
-  const data = snapshot.docs.map((doc) => dataToDocument<Comment>(doc));
-  const nextCursor = snapshot.docs[snapshot.docs.length - 1];
-  return {
-    data,
-    cursor: nextCursor,
-  };
+    const snapshot = await query.limit(COMMENTS_PER_PAGE).get();
+    const data = snapshot.docs.map((doc) => dataToDocument<Comment>(doc));
+    const nextCursor = snapshot.docs[snapshot.docs.length - 1];
+    return {
+      data,
+      cursor: nextCursor,
+    };
+  } catch (err) {
+    toast.error(formatError(err));
+    console.error(err);
+  }
 };
 
 export const useLinkComments = (
   linkId: string | undefined
-): UseInfiniteQueryResult<PaginatedData<Comment>> =>
-  useInfiniteQuery<PaginatedData<Comment>>(
+): UseInfiniteQueryResult<PaginatedData<Comment> | undefined> =>
+  useInfiniteQuery<PaginatedData<Comment> | undefined>(
     queryKeys.linkComments(linkId as string),
     (context) => getLinkComments(context.pageParam, linkId as string),
     {
       enabled: !!linkId,
-      getNextPageParam: (lastPage) => lastPage.cursor,
+      getNextPageParam: (lastPage) => lastPage?.cursor,
     }
   );

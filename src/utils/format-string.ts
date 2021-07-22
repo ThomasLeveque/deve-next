@@ -18,3 +18,5 @@ export const isValidUrl = (url: string): boolean =>
   url.match(
     /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g
   ) !== null;
+
+export const formatError = (err: Error): string => err.message ?? err.toString();

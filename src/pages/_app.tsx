@@ -1,8 +1,10 @@
 import { AppProps } from 'next/app';
 import React from 'react';
+import { Toaster } from 'react-hot-toast';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 
+import Toast from '@components/elements/toast';
 import Layout from '@components/layout';
 
 import AuthProvider from '@hooks/auth/useAuth';
@@ -27,6 +29,14 @@ const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
           <ReactQueryDevtools initialIsOpen={false} />
         </Layout>
       </AuthProvider>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 5000,
+        }}
+      >
+        {(t) => <Toast toast={t} />}
+      </Toaster>
     </QueryClientProvider>
   );
 };

@@ -1,6 +1,9 @@
 import React, { useCallback, useState } from 'react';
+import toast from 'react-hot-toast';
 
 import { useAuth } from '@hooks/auth/useAuth';
+
+import { formatError } from '@utils/format-string';
 
 import Button from '../../elements/button';
 
@@ -14,9 +17,11 @@ const SignInWithGoogleBtn: React.FC = () => {
       setLoading(true);
       await signInWithGoogle();
     } catch (err) {
+      toast.error(formatError(err));
       console.error(err);
+      setLoading(false);
     }
-    setLoading(false);
+    // Do not setLoading(false) because Signin with google will unmount this component.
   }, []);
 
   return (

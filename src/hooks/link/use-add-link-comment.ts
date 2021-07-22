@@ -1,8 +1,10 @@
 import { DocumentReference } from '@firebase/firestore-types';
+import toast from 'react-hot-toast';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
 
 import { Comment } from '@data-types/comment.type';
 
+import { formatError } from '@utils/format-string';
 import { addItemToPaginatedData } from '@utils/mutate-data';
 import { PaginatedData, Document } from '@utils/shared-types';
 
@@ -20,7 +22,7 @@ export const useAddLinkComment = (
   linkId: string
 ): UseMutationResult<
   InfiniteData<PaginatedData<Comment>>,
-  unknown,
+  Error,
   { commentRef: DocumentReference; comment: Comment },
   InfiniteData<PaginatedData<Comment>> | undefined
 > => {
@@ -45,6 +47,7 @@ export const useAddLinkComment = (
       return previousComments;
     },
     onError: (err, variables, previousComments) => {
+      toast.error(formatError(err));
       queryClient.setQueryData(commentsKey, previousComments);
     },
   });

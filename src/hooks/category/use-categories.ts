@@ -1,21 +1,28 @@
+import toast from 'react-hot-toast';
 import { useQuery, UseQueryOptions, UseQueryResult } from 'react-query';
 
 import { Category } from '@data-types/categorie.type';
 
 import { dataToDocument } from '@utils/format-document';
+import { formatError } from '@utils/format-string';
 import { db } from '@utils/init-firebase';
 import { Document } from '@utils/shared-types';
 
 import { dbKeys } from './db-keys';
 import { queryKeys } from './query-keys';
 
-const getCategories = async (): Promise<Document<Category>[]> => {
-  const categoriesRef = db.collection(dbKeys.categories);
-  const snapshot = await categoriesRef.orderBy('count', 'desc').get();
-  return snapshot.docs.map((doc) => dataToDocument<Category>(doc));
+const getCategories = async (): Promise<Document<Category>[] | undefined> => {
+  try {
+    const categoriesRef = db.collection(dbKeys.categories);
+    const snapshot = await categoriesRef.orderBy('count', 'desc').get();
+    return snapshot.docs.map((doc) => dataToDocument<Category>(doc));
+  } catch (err) {
+    toast.error(formatError(err));
+    console.error(err);
+  }
 };
 
 export const useCategories = (
-  options?: UseQueryOptions<Document<Category>[]>
-): UseQueryResult<Document<Category>[]> =>
+  options?: UseQueryOptions<Document<Category>[] | undefined>
+): UseQueryResult<Document<Category>[] | undefined> =>
   useQuery(queryKeys.categories, () => getCategories(), options);

@@ -1,8 +1,10 @@
 import { DocumentReference } from '@firebase/firestore-types';
+import toast from 'react-hot-toast';
 import { useMutation, UseMutationResult, useQueryClient } from 'react-query';
 
 import { Category } from '@data-types/categorie.type';
 
+import { formatError } from '@utils/format-string';
 import { Document } from '@utils/shared-types';
 
 import { queryKeys } from './query-keys';
@@ -17,7 +19,7 @@ const addCategory = async (
 
 export const useAddCategory = (): UseMutationResult<
   Document<Category>[],
-  unknown,
+  Error,
   { categoryRef: DocumentReference; category: Category },
   Document<Category>[] | undefined
 > => {
@@ -40,6 +42,7 @@ export const useAddCategory = (): UseMutationResult<
       return previousCategories;
     },
     onError: (err, variables, previousCategories) => {
+      toast.error(formatError(err));
       queryClient.setQueryData(queryKeys.categories, previousCategories);
     },
   });

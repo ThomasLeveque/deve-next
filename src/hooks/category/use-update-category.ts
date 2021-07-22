@@ -1,7 +1,9 @@
+import toast from 'react-hot-toast';
 import { useMutation, UseMutationResult, useQueryClient } from 'react-query';
 
 import { Category } from '@data-types/categorie.type';
 
+import { formatError } from '@utils/format-string';
 import { db } from '@utils/init-firebase';
 import { updateItemInsideData } from '@utils/mutate-data';
 import { Document } from '@utils/shared-types';
@@ -20,7 +22,7 @@ const updateCategory = async (
 
 export const useUpdateCategory = (): UseMutationResult<
   Document<Category>[],
-  unknown,
+  Error,
   { prevCategory: Document<Category>; categoryToUpdate: Partial<Document<Category>> },
   Document<Category>[] | undefined
 > => {
@@ -44,6 +46,7 @@ export const useUpdateCategory = (): UseMutationResult<
         return previousCategories;
       },
       onError: (err, variables, previousCategories) => {
+        toast.error(formatError(err));
         queryClient.setQueryData(queryKeys.categories, previousCategories);
       },
     }

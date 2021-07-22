@@ -1,6 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import * as yup from 'yup';
 
 import Button from '@components/elements/button';
@@ -9,6 +10,8 @@ import TextInput from '@components/elements/text-input';
 import { useAuth } from '@hooks/auth/useAuth';
 
 import { SignInFormData } from '@data-types/user.type';
+
+import { formatError } from '@utils/format-string';
 
 import { loginStep } from './login-modal';
 
@@ -37,6 +40,7 @@ const SignInForm: React.FC<SignInFormProps> = (props) => {
   const onSubmit = useCallback(async ({ email, password }: SignInFormData) => {
     setLoading(true);
     await signInWithEmail(email, password).catch((err) => {
+      toast.error(formatError(err));
       console.error(err);
       setLoading(false);
     });
