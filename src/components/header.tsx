@@ -52,7 +52,7 @@ const Header: React.FC = () => {
         {user ? (
           <MenuDropdown customButton={<Avatar />} items={userDropdownItems} />
         ) : (
-          <Button theme="secondary" text="Login" onClick={toggleAuthModal} />
+          <Button theme="primary" text="Login" onClick={toggleAuthModal} />
         )}
       </div>
     </header>

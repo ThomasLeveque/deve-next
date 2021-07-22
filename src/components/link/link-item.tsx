@@ -101,7 +101,13 @@ const LinkItem: React.FC<LinkItemProps> = ({ link }) => {
         </TagListWrapper>
         <div className="flex mt-auto">
           <button
-            onClick={isLikedByMe ? removeVote : addVote}
+            onClick={() => {
+              if (user) {
+                isLikedByMe ? removeVote() : addVote();
+              } else {
+                toggleAuthModal();
+              }
+            }}
             className={classNames('flex items-center mr-5 hover:text-secondary', {
               'text-secondary': isLikedByMe,
             })}
