@@ -4,27 +4,11 @@ import toast from 'react-hot-toast';
 
 import { AdditionalUserData, User } from '@data-types/user.type';
 
-import { dataToDocument } from '@utils/format-document';
 import { formatError } from '@utils/format-string';
-import { formatUser } from '@utils/format-user';
-import firebase, { auth, db } from '@utils/init-firebase';
+import firebase, { auth } from '@utils/init-firebase';
 import { Document } from '@utils/shared-types';
 
-const createUser = async (
-  userId: string,
-  authUser: AuthUser,
-  additionnalData?: AdditionalUserData
-): Promise<void> => {
-  const userRef = db.collection('users').doc(userId);
-  const newUser = formatUser(authUser, additionnalData);
-  return userRef.set(newUser);
-};
-
-const getUser = async (userId: string): Promise<Document<User>> => {
-  const userRef = db.doc(`users/${userId}`);
-  const doc = await userRef.get();
-  return dataToDocument<User>(doc);
-};
+import { getUser, createUser } from './db';
 
 type AuthContextType = {
   user: Document<User> | null;

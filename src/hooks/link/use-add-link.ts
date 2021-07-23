@@ -15,7 +15,7 @@ import { PaginatedData, Document } from '@utils/shared-types';
 
 import { queryKeys } from './query-keys';
 
-const addLink = async (
+export const addLink = async (
   linkRef: DocumentReference,
   link: Link
 ): Promise<InfiniteData<PaginatedData<Link>>> => {
