@@ -101,7 +101,7 @@ const addLinkHandler: NextApiHandler = async (req: NextApiRequest, res: NextApiR
 
     return res.status(201).json({ message: 'link has been created', data: link });
   } catch (err) {
-    return res.status(400).json({ message: err.message });
+    return res.status(400).json({ message: err.message ?? err.toSring() });
   }
 };
 
