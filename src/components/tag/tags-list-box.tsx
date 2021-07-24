@@ -1,14 +1,17 @@
-import { CheckIcon, PlusIcon } from '@heroicons/react/outline';
+import { CheckIcon, PlusIcon, TrashIcon } from '@heroicons/react/outline';
 import classNames from 'classnames';
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 
 import Tag from '@components/elements/tag';
 import TextInput from '@components/elements/text-input';
 
+import { useAuth } from '@hooks/auth/useAuth';
 import { dbKeys } from '@hooks/category/db-keys';
 import { useAddCategory } from '@hooks/category/use-add-category';
+import { useRemoveCategory } from '@hooks/category/use-remove-category';
 
 import { Category } from '@data-types/categorie.type';
+import { User } from '@data-types/user.type';
 
 import { db } from '@utils/init-firebase';
 import { Document } from '@utils/shared-types';
@@ -23,6 +26,7 @@ interface TagsListBoxOptionProps {
   removeSelectedTags: (tag: string) => void;
   currentIndex: number;
   setCurrentIndex: (index: number) => void;
+  user: Document<User> | null;
 }
 
 interface TagsListBoxProps {
@@ -37,6 +41,7 @@ interface TagsListBoxProps {
 }
 
 const TagsListBox: React.FC<TagsListBoxProps> = (props) => {
+  const { user } = useAuth();
   const selectedTags = props.selectedTags ?? [];
 
   const [isOpen, setIsOpen] = useState(false);
@@ -186,6 +191,7 @@ const TagsListBox: React.FC<TagsListBoxProps> = (props) => {
               ref={tagListRef}
               className="absolute z-30 top-full w-full mt-2 rounded-button py-1 focus:outline-none shadow-lg max-h-60 overflow-auto bg-gray-100"
             >
+              {/* Add tag button */}
               {!isTagExist && searchTag.length > 0 && (
                 <button
                   type="button"
@@ -221,6 +227,7 @@ const TagsListBox: React.FC<TagsListBoxProps> = (props) => {
                   removeSelectedTags={removeSelectedTags}
                   setCurrentIndex={setFocusedTagIndex}
                   currentIndex={focusedTagIndex}
+                  user={user}
                 />
               ))}
             </ul>
@@ -232,7 +239,19 @@ const TagsListBox: React.FC<TagsListBoxProps> = (props) => {
 };
 
 const TagsListBoxOption: React.FC<TagsListBoxOptionProps> = (props) => {
+  const removeCategory = useRemoveCategory();
+
   const isSelected = props.isSelected(props.tag.name);
+  const canBeRemove = props.tag.count === 0 && props.user?.isAdmin;
+
+  const handleRemoveTag = useCallback((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.stopPropagation();
+    if (props.tag.id) {
+      props.removeSelectedTags(props.tag.name);
+      removeCategory.mutate(props.tag.id);
+    }
+  }, []);
+
   return (
     <li>
       <button
@@ -247,13 +266,23 @@ const TagsListBoxOption: React.FC<TagsListBoxOptionProps> = (props) => {
           'grid grid-cols-[20px,1fr] gap-3 px-4 py-2 text-sm w-full hover:bg-primary',
           {
             'bg-primary': props.index === props.currentIndex,
-          }
+          },
+          { 'grid-cols-[20px,1fr,20px]': canBeRemove }
         )}
       >
         <span>{isSelected && <CheckIcon />}</span>
         <p className="text-left">
           {props.tag.name} ({props.tag.count})
         </p>
+        {canBeRemove && (
+          <button
+            type="button"
+            onClick={handleRemoveTag}
+            className="hover:bg-black/10 rounded-[4px]"
+          >
+            <TrashIcon />
+          </button>
+        )}
       </button>
     </li>
   );

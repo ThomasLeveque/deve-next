@@ -21,6 +21,11 @@ export const updateItemInsideData = <Data>(
   return items;
 };
 
+export const removeItemInsideData = <Data>(
+  itemId: string,
+  items: Document<Data>[]
+): Document<Data>[] => items.filter((item) => item.id !== itemId);
+
 export const addItemToPaginatedData = <Data>(
   item: Document<Data>,
   items: InfiniteData<PaginatedData<Data>>,
