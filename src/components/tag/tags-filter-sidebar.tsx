@@ -17,7 +17,7 @@ interface TagsFilterSidebarProps {
 
 const TagsFilterSidebar: React.FC<TagsFilterSidebarProps> = React.memo((props) => {
   const { removeTagQuery, addTagQuery, tagsQuery } = useQueryString();
-  const { data: tags } = useCategories();
+  const { data: tags } = useCategories({ refetchOnMount: false });
 
   const [searchTag, setSearchTag] = useState('');
   const searchRef = useRef<HTMLInputElement>(null);

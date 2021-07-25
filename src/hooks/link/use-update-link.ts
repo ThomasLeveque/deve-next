@@ -1,7 +1,11 @@
 import toast from 'react-hot-toast';
-import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
-
-import { useQueryString } from '@hooks/use-query-string';
+import {
+  InfiniteData,
+  QueryKey,
+  useMutation,
+  UseMutationResult,
+  useQueryClient,
+} from 'react-query';
 
 import { Link } from '@data-types/link.type';
 
@@ -11,7 +15,6 @@ import { updateItemInsidePaginatedData } from '@utils/mutate-data';
 import { Document, PaginatedData } from '@utils/shared-types';
 
 import { dbKeys } from './db-keys';
-import { queryKeys } from './query-keys';
 
 const updateLink = async (
   linkId: string | undefined,
@@ -27,7 +30,8 @@ const updateLink = async (
 };
 
 export const useUpdateLink = (
-  link: Document<Link>
+  link: Document<Link>,
+  queryKey: QueryKey
 ): UseMutationResult<
   InfiniteData<PaginatedData<Link>>,
   Error,
@@ -35,19 +39,18 @@ export const useUpdateLink = (
   InfiniteData<PaginatedData<Link>> | undefined
 > => {
   const queryClient = useQueryClient();
-  const { orderbyQuery, tagsQuery } = useQueryString();
-  const linksKey = queryKeys.links(orderbyQuery, tagsQuery);
+
   return useMutation(
     (updateLinkData: Partial<Document<Link>>) => updateLink(link.id, updateLinkData),
     {
       onMutate: async (updateLinkData) => {
         const newDocLink: Document<Link> = { ...link, ...updateLinkData };
 
-        await queryClient.cancelQueries(linksKey);
+        await queryClient.cancelQueries(queryKey);
 
-        const previousLinks = queryClient.getQueryData<InfiniteData<PaginatedData<Link>>>(linksKey);
+        const previousLinks = queryClient.getQueryData<InfiniteData<PaginatedData<Link>>>(queryKey);
 
-        queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(linksKey, (oldLinks) => {
+        queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(queryKey, (oldLinks) => {
           if (oldLinks) {
             return updateItemInsidePaginatedData<Link>(newDocLink, oldLinks);
           }
@@ -58,7 +61,7 @@ export const useUpdateLink = (
       },
       onError: (err, newDocLink, previousLinks) => {
         toast.error(formatError(err));
-        queryClient.setQueryData(linksKey, previousLinks);
+        queryClient.setQueryData(queryKey, previousLinks);
       },
     }
   );

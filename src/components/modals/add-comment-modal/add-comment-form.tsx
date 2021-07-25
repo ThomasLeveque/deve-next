@@ -9,7 +9,7 @@ import TextArea from '@components/elements/textarea';
 import { useAuth } from '@hooks/auth/useAuth';
 import { dbKeys } from '@hooks/link/db-keys';
 import { useAddLinkComment } from '@hooks/link/use-add-link-comment';
-import { useUpdateLink } from '@hooks/link/use-update-link';
+import { useLinksQueryKey } from '@hooks/link/use-links-query-key';
 
 import { CommentFormData } from '@data-types/comment.type';
 import { Link } from '@data-types/link.type';
@@ -31,8 +31,9 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
   const { user } = useAuth();
   const linkId = props.link.id as string;
 
-  const addLinkComment = useAddLinkComment(linkId);
-  const updateLink = useUpdateLink(props.link);
+  const linksQueryKey = useLinksQueryKey(user?.id as string);
+
+  const addLinkComment = useAddLinkComment(props.link, linksQueryKey);
 
   const {
     register,
@@ -53,7 +54,6 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
       const comment = formatComment(formData, user);
       addLinkComment.mutate({ commentRef, comment });
 
-      updateLink.mutate({ commentCount: props.link.commentCount + 1 });
       reset();
     },
     [user, linkId]

@@ -1,14 +1,22 @@
 import { DocumentReference } from '@firebase/firestore-types';
 import toast from 'react-hot-toast';
-import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
+import {
+  InfiniteData,
+  QueryKey,
+  useMutation,
+  UseMutationResult,
+  useQueryClient,
+} from 'react-query';
 
 import { Comment } from '@data-types/comment.type';
+import { Link } from '@data-types/link.type';
 
 import { formatError } from '@utils/format-string';
 import { addItemToPaginatedData } from '@utils/mutate-data';
 import { PaginatedData, Document } from '@utils/shared-types';
 
 import { queryKeys } from './query-keys';
+import { useUpdateLink } from './use-update-link';
 
 const addLinkComment = async (
   commentRef: DocumentReference,
@@ -19,7 +27,8 @@ const addLinkComment = async (
 };
 
 export const useAddLinkComment = (
-  linkId: string
+  link: Document<Link>,
+  linksQueryKey: QueryKey
 ): UseMutationResult<
   InfiniteData<PaginatedData<Comment>>,
   Error,
@@ -27,7 +36,9 @@ export const useAddLinkComment = (
   InfiniteData<PaginatedData<Comment>> | undefined
 > => {
   const queryClient = useQueryClient();
-  const commentsKey = queryKeys.linkComments(linkId);
+  const commentsKey = queryKeys.linkComments(link.id as string);
+  const updateLink = useUpdateLink(link, linksQueryKey);
+
   return useMutation(({ commentRef, comment }) => addLinkComment(commentRef, comment), {
     onMutate: async ({ commentRef, comment }) => {
       const newComment: Document<Comment> = { id: commentRef.id, ...comment };
@@ -45,6 +56,9 @@ export const useAddLinkComment = (
       });
 
       return previousComments;
+    },
+    onSuccess: () => {
+      updateLink.mutate({ commentCount: link.commentCount + 1 });
     },
     onError: (err, variables, previousComments) => {
       toast.error(formatError(err));

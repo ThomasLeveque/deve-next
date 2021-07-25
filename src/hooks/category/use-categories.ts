@@ -1,5 +1,6 @@
+import { useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { useQuery, UseQueryOptions, UseQueryResult } from 'react-query';
+import { useQuery, useQueryClient, UseQueryOptions, UseQueryResult } from 'react-query';
 
 import { Category } from '@data-types/categorie.type';
 
@@ -26,3 +27,10 @@ export const useCategories = (
   options?: UseQueryOptions<Document<Category>[] | undefined>
 ): UseQueryResult<Document<Category>[] | undefined> =>
   useQuery(queryKeys.categories, () => getCategories(), options);
+
+export const usePrefetchCategories = (): void => {
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    queryClient.prefetchQuery(queryKeys.categories, () => getCategories());
+  }, []);
+};

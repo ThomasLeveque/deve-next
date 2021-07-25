@@ -55,17 +55,16 @@ const getLinks = async (
   }
 };
 
-export const useLinks = (
-  orderbyQuery: OrderLinksKey,
-  tagsQuery: string[]
-): UseInfiniteQueryResult<PaginatedData<Link> | undefined> =>
-  useInfiniteQuery<PaginatedData<Link> | undefined>(
+export const useLinks = (): UseInfiniteQueryResult<PaginatedData<Link> | undefined> => {
+  const { tagsQuery, orderbyQuery } = useQueryString();
+  return useInfiniteQuery<PaginatedData<Link> | undefined>(
     queryKeys.links(orderbyQuery, tagsQuery),
     (context) => getLinks(context.pageParam, orderbyQuery, tagsQuery),
     {
       getNextPageParam: (lastPage) => lastPage?.cursor,
     }
   );
+};
 
 export const usePrefetchLinks = (): void => {
   const queryClient = useQueryClient();

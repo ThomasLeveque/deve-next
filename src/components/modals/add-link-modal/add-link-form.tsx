@@ -11,6 +11,7 @@ import { useAuth } from '@hooks/auth/useAuth';
 import { useCategories } from '@hooks/category/use-categories';
 import { dbKeys } from '@hooks/link/db-keys';
 import { useAddLink } from '@hooks/link/use-add-link';
+import { useLinksQueryKey } from '@hooks/link/use-links-query-key';
 import { useFetchHtmlText } from '@hooks/use-fetch-html-text';
 
 import { LinkFormData } from '@data-types/link.type';
@@ -41,7 +42,9 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const { user } = useAuth();
 
-  const { data: tags } = useCategories();
+  const linksQueryKey = useLinksQueryKey(user?.id as string);
+
+  const { data: tags } = useCategories({ refetchOnMount: false });
 
   const {
     register,
@@ -53,7 +56,7 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
     resolver: yupResolver(schema),
   });
   const selectedTags = watch('tags', []);
-  const addLink = useAddLink(selectedTags);
+  const addLink = useAddLink(selectedTags, linksQueryKey);
 
   const url = watch('url', '');
   const { htmlText: title, loading: htmlTextLoading } = useFetchHtmlText(url);

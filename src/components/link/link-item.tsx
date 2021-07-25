@@ -4,6 +4,7 @@ import { ModalsStore, useModalsStore } from '@store/modals.store';
 import classNames from 'classnames';
 import { format } from 'date-fns';
 import React, { useCallback, useMemo } from 'react';
+import { QueryKey } from 'react-query';
 
 import TagListWrapper from '@components/tag/tag-list-wrapper';
 
@@ -24,6 +25,7 @@ const toggleAuthModalSelector = (state: ModalsStore) => state.toggleAuthModal;
 interface LinkItemProps {
   link: Document<Link>;
   isProfilLink?: boolean;
+  linksQueryKey: QueryKey;
 }
 
 const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
@@ -31,7 +33,7 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
 
   const { user } = useAuth();
   const { addTagQuery } = useQueryString();
-  const updateLink = useUpdateLink(link);
+  const updateLink = useUpdateLink(link, props.linksQueryKey);
 
   const setLinkToCommentModal = useModalsStore(setLinkToCommentModalSelector);
   const toggleAuthModal = useModalsStore(toggleAuthModalSelector);
@@ -97,7 +99,7 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
           </h2>
           <p className="text-xs group-hover:underline">On {getDomain(link.url)}</p>
         </a>
-        <TagListWrapper className={classNames({ 'mb-5': !isProfilLink })}>
+        <TagListWrapper className="mb-5">
           {link.categories.map((tag) => (
             <li key={`${link.id}-${tag}`}>
               <Tag
@@ -108,36 +110,34 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
             </li>
           ))}
         </TagListWrapper>
-        {isProfilLink ? null : (
-          <div className="flex mt-auto">
-            <button
-              onClick={() => {
-                if (user) {
-                  isLikedByMe ? removeVote() : addVote();
-                } else {
-                  toggleAuthModal();
-                }
-              }}
-              className={classNames('flex items-center mr-5 hover:text-secondary', {
-                'text-secondary': isLikedByMe,
-              })}
-            >
-              {isLikedByMe ? (
-                <FireIconSolid className="mr-[6px] w-6" />
-              ) : (
-                <FireIcon className="mr-[6px] w-6" />
-              )}
-              <span className="font-poppins-bold text-[11px]">{renderFires}</span>
-            </button>
-            <button
-              onClick={() => (user ? setLinkToCommentModal(link) : toggleAuthModal())}
-              className="flex items-center hover:text-secondary"
-            >
-              <AnnotationIcon className="mr-[6px] w-6" />
-              <span className="font-poppins-bold text-[11px]">{renderComments}</span>
-            </button>
-          </div>
-        )}
+        <div className="flex mt-auto">
+          <button
+            onClick={() => {
+              if (user) {
+                isLikedByMe ? removeVote() : addVote();
+              } else {
+                toggleAuthModal();
+              }
+            }}
+            className={classNames('flex items-center mr-5 hover:text-secondary', {
+              'text-secondary': isLikedByMe,
+            })}
+          >
+            {isLikedByMe ? (
+              <FireIconSolid className="mr-[6px] w-6" />
+            ) : (
+              <FireIcon className="mr-[6px] w-6" />
+            )}
+            <span className="font-poppins-bold text-[11px]">{renderFires}</span>
+          </button>
+          <button
+            onClick={() => (user ? setLinkToCommentModal(link) : toggleAuthModal())}
+            className="flex items-center hover:text-secondary"
+          >
+            <AnnotationIcon className="mr-[6px] w-6" />
+            <span className="font-poppins-bold text-[11px]">{renderComments}</span>
+          </button>
+        </div>
       </li>
     </>
   );

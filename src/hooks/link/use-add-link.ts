@@ -1,10 +1,15 @@
 import { DocumentReference } from '@firebase/firestore-types';
 import toast from 'react-hot-toast';
-import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
+import {
+  InfiniteData,
+  QueryKey,
+  useMutation,
+  UseMutationResult,
+  useQueryClient,
+} from 'react-query';
 
 import { queryKeys as categoryQueryKeys } from '@hooks/category/query-keys';
 import { useUpdateCategory } from '@hooks/category/use-update-category';
-import { useQueryString } from '@hooks/use-query-string';
 
 import { Category } from '@data-types/categorie.type';
 import { Link } from '@data-types/link.type';
@@ -12,8 +17,6 @@ import { Link } from '@data-types/link.type';
 import { formatError } from '@utils/format-string';
 import { addItemToPaginatedData } from '@utils/mutate-data';
 import { PaginatedData, Document } from '@utils/shared-types';
-
-import { queryKeys } from './query-keys';
 
 export const addLink = async (
   linkRef: DocumentReference,
@@ -24,7 +27,8 @@ export const addLink = async (
 };
 
 export const useAddLink = (
-  selectedTags: string[]
+  selectedTags: string[],
+  queryKey: QueryKey
 ): UseMutationResult<
   InfiniteData<PaginatedData<Link>>,
   Error,
@@ -32,19 +36,17 @@ export const useAddLink = (
   InfiniteData<PaginatedData<Link>> | undefined
 > => {
   const queryClient = useQueryClient();
-  const { orderbyQuery, tagsQuery } = useQueryString();
-  const linksKey = queryKeys.links(orderbyQuery, tagsQuery);
   const updateCategory = useUpdateCategory();
 
   return useMutation(({ linkRef, link }) => addLink(linkRef, link), {
     onMutate: async ({ linkRef, link }) => {
       const newLink: Document<Link> = { id: linkRef.id, ...link };
 
-      await queryClient.cancelQueries(linksKey);
+      await queryClient.cancelQueries(queryKey);
 
-      const previousLinks = queryClient.getQueryData<InfiniteData<PaginatedData<Link>>>(linksKey);
+      const previousLinks = queryClient.getQueryData<InfiniteData<PaginatedData<Link>>>(queryKey);
 
-      queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(linksKey, (oldLinks) => {
+      queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(queryKey, (oldLinks) => {
         if (oldLinks) {
           return addItemToPaginatedData(newLink, oldLinks);
         }
@@ -68,13 +70,10 @@ export const useAddLink = (
           });
         }
       });
-
-      // revalidate user-links query
-      queryClient.invalidateQueries('user-links');
     },
     onError: (err, variables, previousLinks) => {
       toast.error(formatError(err));
-      queryClient.setQueryData(linksKey, previousLinks);
+      queryClient.setQueryData(queryKey, previousLinks);
     },
   });
 };

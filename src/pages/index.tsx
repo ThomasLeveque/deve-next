@@ -10,6 +10,7 @@ import LinkItem from '@components/link/link-item';
 import OrderbyLinksDropdown from '@components/link/orderby-links-dropdown';
 import TagsFilterSidebar from '@components/tag/tags-filter-sidebar';
 
+import { queryKeys } from '@hooks/link/query-keys';
 import { useLinks } from '@hooks/link/use-links';
 import { useQueryString } from '@hooks/use-query-string';
 
@@ -22,12 +23,7 @@ const Home: NextPage = () => {
 
   const { orderbyQuery, tagsQuery, clearTagQuery } = useQueryString();
 
-  const {
-    data: links,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useLinks(orderbyQuery, tagsQuery);
+  const { data: links, fetchNextPage, hasNextPage, isFetchingNextPage } = useLinks();
 
   return (
     <div className={classNames({ 'grid grid-cols-[1fr,250px] gap-9': tagsSidebarOpen })}>
@@ -56,7 +52,13 @@ const Home: NextPage = () => {
           </div>
           <ul className="grid grid-cols-2 gap-5">
             {links?.pages?.map((page) =>
-              page?.data.map((link) => <LinkItem key={link.id} link={link} />)
+              page?.data.map((link) => (
+                <LinkItem
+                  key={link.id}
+                  link={link}
+                  linksQueryKey={queryKeys.links(orderbyQuery, tagsQuery)}
+                />
+              ))
             )}
           </ul>
           <Button
