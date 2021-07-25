@@ -1,23 +1,17 @@
-import {
-  ChevronDoubleLeftIcon,
-  ChevronDoubleRightIcon,
-  FireIcon,
-  SortAscendingIcon,
-  SortDescendingIcon,
-} from '@heroicons/react/outline';
+import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon } from '@heroicons/react/outline';
 import { AppConfigStore, useAppConfigStore } from '@store/app-config.store';
 import classNames from 'classnames';
 import { NextPage } from 'next';
-import React, { useMemo } from 'react';
+import React from 'react';
 
 import Button from '@components/elements/button';
-import MenuDropdown, { MenuDropdownItemProps } from '@components/elements/menu-dropdown';
 import SpinnerIcon from '@components/icons/spinner-icon';
 import LinkItem from '@components/link/link-item';
+import OrderbyLinksDropdown from '@components/link/orderby-links-dropdown';
 import TagsFilterSidebar from '@components/tag/tags-filter-sidebar';
 
 import { useLinks } from '@hooks/link/use-links';
-import { OrderLinksKey, useQueryString } from '@hooks/use-query-string';
+import { useQueryString } from '@hooks/use-query-string';
 
 const tagsSidebarOpenSelector = (state: AppConfigStore) => state.tagsSidebarOpen;
 const setTagsSidebarOpenSelector = (state: AppConfigStore) => state.setTagsSidebarOpen;
@@ -26,28 +20,7 @@ const Home: NextPage = () => {
   const tagsSidebarOpen = useAppConfigStore(tagsSidebarOpenSelector);
   const setTagsSidebarOpen = useAppConfigStore(setTagsSidebarOpenSelector);
 
-  const { updateOrderbyQuery, orderbyQuery, tagsQuery, clearTagQuery } = useQueryString();
-
-  const orderLinksDropdownItems: Record<OrderLinksKey, MenuDropdownItemProps> = useMemo(
-    () => ({
-      newest: {
-        text: 'Most recent',
-        onClick: () => updateOrderbyQuery('newest'),
-        icon: <SortDescendingIcon />,
-      },
-      oldest: {
-        text: 'Oldest',
-        onClick: () => updateOrderbyQuery('oldest'),
-        icon: <SortAscendingIcon />,
-      },
-      liked: {
-        text: 'Most liked',
-        onClick: () => updateOrderbyQuery('liked'),
-        icon: <FireIcon />,
-      },
-    }),
-    []
-  );
+  const { orderbyQuery, tagsQuery, clearTagQuery } = useQueryString();
 
   const {
     data: links,
@@ -63,11 +36,7 @@ const Home: NextPage = () => {
       ) : (
         <section className="my-8">
           <div className="mb-5 flex justify-between space-x-4">
-            <MenuDropdown
-              items={Object.values(orderLinksDropdownItems)}
-              dropdownPosition="left"
-              defaultButtonText={orderLinksDropdownItems[orderbyQuery].text}
-            />
+            <OrderbyLinksDropdown />
             <div className="flex space-x-4 flex-none">
               {tagsQuery.length > 0 && (
                 <Button
