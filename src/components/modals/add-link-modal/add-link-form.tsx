@@ -1,6 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { FieldError, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import * as yup from 'yup';
 
 import Button from '@components/elements/button';
@@ -17,7 +18,7 @@ import { useFetchHtmlText } from '@hooks/use-fetch-html-text';
 import { LinkFormData } from '@data-types/link.type';
 
 import { formatLink } from '@utils/format-link';
-import { validUrlRegex } from '@utils/format-string';
+import { formatError, validUrlRegex } from '@utils/format-string';
 import { db } from '@utils/init-firebase';
 
 const schema = yup.object().shape({
@@ -39,7 +40,6 @@ interface AddLinkFormProps {
 }
 
 const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
-  const [loading, setLoading] = useState<boolean>(false);
   const { user } = useAuth();
 
   const linksQueryKey = useLinksQueryKey(user?.id as string);
@@ -67,19 +67,32 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
   }, [title]);
 
   const onSubmit = useCallback(
-    async (formData: LinkFormData) => {
-      if (!user) {
-        return;
+    (formData: LinkFormData) => {
+      try {
+        if (!user) {
+          throw new Error('You must be login');
+        }
+
+        selectedTags.forEach((selectedTag) => {
+          const foundTag = tags?.find(
+            (tag) => tag.name.toLocaleLowerCase() === selectedTag.toLocaleLowerCase()
+          );
+          if (!foundTag) {
+            throw new Error(`The tag ${selectedTag} does not exist`);
+          }
+        });
+
+        const link = formatLink(formData, user);
+        addLink.mutate({ linkRef: db.collection(dbKeys.links).doc(), link });
+
+        // Do not setLoading(false) because addLink will unmount this component (Modal).
+        props.closeModal();
+      } catch (err) {
+        toast.error(formatError(err));
+        console.error(err);
       }
-      setLoading(true);
-
-      const link = formatLink(formData, user);
-      addLink.mutate({ linkRef: db.collection(dbKeys.links).doc(), link });
-
-      // Do not setLoading(false) because addLink will unmount this component (Modal).
-      props.closeModal();
     },
-    [user]
+    [user, tags, selectedTags]
   );
 
   return (
@@ -109,7 +122,7 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
         errorText={(errors.tags as unknown as FieldError)?.message}
       />
       <div className="flex justify-end">
-        <Button theme="secondary" text="Create" type="submit" loading={loading} />
+        <Button theme="secondary" text="Create" type="submit" />
       </div>
     </form>
   );

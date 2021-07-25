@@ -28,9 +28,9 @@ export const useRemoveCategory = (): UseMutationResult<
     onMutate: async (categoryId) => {
       await queryClient.cancelQueries(queryKeys.categories);
 
-      const previousCategories = queryClient.getQueryData<Document<Category>[]>(
-        queryKeys.categories
-      );
+      const previousCategories = [
+        ...(queryClient.getQueryData<Document<Category>[]>(queryKeys.categories) ?? []),
+      ];
 
       queryClient.setQueryData<Document<Category>[]>(queryKeys.categories, (oldCategories) =>
         removeItemInsideData<Category>(categoryId, oldCategories ?? [])

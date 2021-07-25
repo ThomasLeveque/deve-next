@@ -85,7 +85,7 @@ const addLinkHandler: NextApiHandler = async (req: NextApiRequest, res: NextApiR
     // Update every used category count
     categories.forEach((category) => {
       if (category.id === undefined) {
-        throw new Error(`The tag ${category.name} does not exist`);
+        throw new Error('One of the tags cannot be found');
       }
       const categoryRef = db.doc(categoryDbKey.category(category.id));
       const categoryToUpdate: Partial<Category> = { count: category.count + 1 };

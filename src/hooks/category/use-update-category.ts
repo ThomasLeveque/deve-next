@@ -35,10 +35,9 @@ export const useUpdateCategory = (): UseMutationResult<
 
         await queryClient.cancelQueries(queryKeys.categories);
 
-        const previousCategories = queryClient.getQueryData<Document<Category>[]>(
-          queryKeys.categories
-        );
-
+        const previousCategories = [
+          ...(queryClient.getQueryData<Document<Category>[]>(queryKeys.categories) ?? []),
+        ];
         queryClient.setQueryData<Document<Category>[]>(queryKeys.categories, (oldCategories) =>
           updateItemInsideData<Category>(newDocCategory, oldCategories ?? [])
         );

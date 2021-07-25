@@ -1,6 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import * as yup from 'yup';
 
 import Button from '@components/elements/button';
@@ -15,6 +16,7 @@ import { CommentFormData } from '@data-types/comment.type';
 import { Link } from '@data-types/link.type';
 
 import { formatComment } from '@utils/format-comment';
+import { formatError } from '@utils/format-string';
 import { db } from '@utils/init-firebase';
 import { Document } from '@utils/shared-types';
 
@@ -45,16 +47,21 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
   });
 
   const onSubmit = useCallback(
-    async (formData: CommentFormData) => {
-      if (!user) {
-        return;
+    (formData: CommentFormData) => {
+      try {
+        if (!user) {
+          throw new Error('You must be login');
+        }
+        const commentRef = db.collection(dbKeys.comments(linkId)).doc();
+
+        const comment = formatComment(formData, user);
+        addLinkComment.mutate({ commentRef, comment });
+
+        reset();
+      } catch (err) {
+        toast.error(formatError(err));
+        console.error(err);
       }
-      const commentRef = db.collection(dbKeys.comments(linkId)).doc();
-
-      const comment = formatComment(formData, user);
-      addLinkComment.mutate({ commentRef, comment });
-
-      reset();
     },
     [user, linkId]
   );
