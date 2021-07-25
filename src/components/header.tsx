@@ -13,8 +13,8 @@ import MenuDropdown, { MenuDropdownItemProps } from './elements/menu-dropdown';
 const toggleAuthModalSelector = (state: ModalsStore) => state.toggleAuthModal;
 const toggleAddLinkModalSelector = (state: ModalsStore) => state.toggleAddLinkModal;
 
-const Header: React.FC = () => {
-  const { signOut, user, userLoaded } = useAuth();
+const Header: React.FC = React.memo(() => {
+  const { signOut, user } = useAuth();
 
   const toggleAuthModal = useModalsStore(toggleAuthModalSelector);
   const toggleAddLinkModal = useModalsStore(toggleAddLinkModalSelector);
@@ -57,6 +57,6 @@ const Header: React.FC = () => {
       </div>
     </header>
   );
-};
+});
 
-export default React.memo(Header);
+export default Header;

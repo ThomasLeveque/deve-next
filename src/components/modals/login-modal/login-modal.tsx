@@ -21,7 +21,7 @@ export enum loginStep {
   PASSWORD_RECOVERY,
 }
 
-const LoginModal: React.FC = () => {
+const LoginModal: React.FC = React.memo(() => {
   const [step, setStep] = useState<loginStep>(loginStep.LOGIN_SELECTION);
 
   const authModal = useModalsStore(authModalSelector);
@@ -81,6 +81,6 @@ const LoginModal: React.FC = () => {
       {renderContent}
     </Modal>
   );
-};
+});
 
-export default React.memo(LoginModal);
+export default LoginModal;

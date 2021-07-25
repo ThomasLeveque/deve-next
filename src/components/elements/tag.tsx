@@ -11,7 +11,7 @@ interface TagProps {
   className?: string;
 }
 
-const Tag: React.FC<TagProps> = (props) => {
+const Tag: React.FC<TagProps> = React.memo((props) => {
   const isClosable = props.isClosable ?? false;
   const onClose = props.onClose ?? (() => null);
   const isColored = props.isColored ?? false;
@@ -41,6 +41,6 @@ const Tag: React.FC<TagProps> = (props) => {
       ) : null}
     </button>
   );
-};
+});
 
-export default React.memo(Tag);
+export default Tag;

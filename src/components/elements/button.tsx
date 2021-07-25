@@ -16,7 +16,7 @@ interface ButtonProps {
   theme?: 'primary' | 'secondary' | 'black' | 'gray';
 }
 
-const Button: React.FC<ButtonProps> = (props) => {
+const Button: React.FC<ButtonProps> = React.memo((props) => {
   const iconPosition = props.iconPosition ?? 'right';
   const fullWidth = props.fullWidth ?? false;
   const type = props.type ?? 'button';
@@ -78,6 +78,6 @@ const Button: React.FC<ButtonProps> = (props) => {
       )}
     </button>
   );
-};
+});
 
-export default React.memo(Button);
+export default Button;

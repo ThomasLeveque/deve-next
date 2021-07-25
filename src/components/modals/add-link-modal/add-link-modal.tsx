@@ -7,7 +7,7 @@ import AddLinkForm from './add-link-form';
 const addLinkModalSelector = (state: ModalsStore) => state.addLinkModal;
 const toggleAddLinkModalSelector = (state: ModalsStore) => state.toggleAddLinkModal;
 
-const AddLinkModal: React.FC = () => {
+const AddLinkModal: React.FC = React.memo(() => {
   const addLinkModal = useModalsStore(addLinkModalSelector);
   const toggleAddLinkModal = useModalsStore(toggleAddLinkModalSelector);
 
@@ -20,6 +20,6 @@ const AddLinkModal: React.FC = () => {
       <AddLinkForm closeModal={closeModal} />
     </Modal>
   );
-};
+});
 
-export default React.memo(AddLinkModal);
+export default AddLinkModal;

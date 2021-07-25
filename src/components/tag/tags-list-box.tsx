@@ -40,7 +40,7 @@ interface TagsListBoxProps {
   errorText?: string;
 }
 
-const TagsListBox: React.FC<TagsListBoxProps> = (props) => {
+const TagsListBox: React.FC<TagsListBoxProps> = React.memo((props) => {
   const { user } = useAuth();
   const selectedTags = props.selectedTags ?? [];
 
@@ -236,7 +236,7 @@ const TagsListBox: React.FC<TagsListBoxProps> = (props) => {
       </div>
     </div>
   );
-};
+});
 
 const TagsListBoxOption: React.FC<TagsListBoxOptionProps> = (props) => {
   const removeCategory = useRemoveCategory();
@@ -288,4 +288,4 @@ const TagsListBoxOption: React.FC<TagsListBoxOptionProps> = (props) => {
   );
 };
 
-export default React.memo(TagsListBox);
+export default TagsListBox;

@@ -15,7 +15,7 @@ import AddCommentForm from './add-comment-form';
 const linkToCommentModalSelector = (state: ModalsStore) => state.linkToCommentModal;
 const setLinkToCommentModalSelector = (state: ModalsStore) => state.setLinkToCommentModal;
 
-const AddCommentModal: React.FC = () => {
+const AddCommentModal: React.FC = React.memo(() => {
   const linkToCommentModal = useModalsStore(linkToCommentModalSelector);
   const setLinkToCommentModal = useModalsStore(setLinkToCommentModalSelector);
 
@@ -67,6 +67,6 @@ const AddCommentModal: React.FC = () => {
       )}
     </Modal>
   ) : null;
-};
+});
 
-export default React.memo(AddCommentModal);
+export default AddCommentModal;

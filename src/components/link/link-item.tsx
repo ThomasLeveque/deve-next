@@ -26,7 +26,7 @@ interface LinkItemProps {
   isProfilLink?: boolean;
 }
 
-const LinkItem: React.FC<LinkItemProps> = ({ link, ...props }) => {
+const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
   const isProfilLink = props.isProfilLink ?? false;
 
   const { user } = useAuth();
@@ -141,6 +141,6 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, ...props }) => {
       </li>
     </>
   );
-};
+});
 
-export default React.memo(LinkItem);
+export default LinkItem;

@@ -19,7 +19,7 @@ interface MenuDropdownProps {
   className?: string;
 }
 
-const MenuDropdown: React.FC<MenuDropdownProps> = (props) => {
+const MenuDropdown: React.FC<MenuDropdownProps> = React.memo((props) => {
   const dropdownPosition = props.dropdownPosition ?? 'right';
 
   return (
@@ -52,7 +52,7 @@ const MenuDropdown: React.FC<MenuDropdownProps> = (props) => {
       )}
     </Menu>
   );
-};
+});
 
 const MenuDropdownItem: React.FC<MenuDropdownItemProps> = (props) => {
   const withIcon = props.icon !== undefined;
@@ -82,4 +82,4 @@ const MenuDropdownItem: React.FC<MenuDropdownItemProps> = (props) => {
   );
 };
 
-export default React.memo(MenuDropdown);
+export default MenuDropdown;
