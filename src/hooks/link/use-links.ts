@@ -1,8 +1,9 @@
 import { Query, DocumentSnapshot } from '@firebase/firestore-types';
+import { useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { useInfiniteQuery, UseInfiniteQueryResult } from 'react-query';
+import { useInfiniteQuery, UseInfiniteQueryResult, useQueryClient } from 'react-query';
 
-import { OrderLinksKey } from '@hooks/use-query-string';
+import { OrderLinksKey, useQueryString } from '@hooks/use-query-string';
 
 import { Link } from '@data-types/link.type';
 
@@ -65,3 +66,13 @@ export const useLinks = (
       getNextPageParam: (lastPage) => lastPage?.cursor,
     }
   );
+
+export const usePrefetchLinks = (): void => {
+  const queryClient = useQueryClient();
+  const { tagsQuery, orderbyQuery } = useQueryString();
+  useEffect(() => {
+    queryClient.prefetchInfiniteQuery(queryKeys.links(orderbyQuery, tagsQuery), (context) =>
+      getLinks(context.pageParam, orderbyQuery, tagsQuery)
+    );
+  }, []);
+};

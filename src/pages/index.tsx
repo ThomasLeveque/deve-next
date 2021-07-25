@@ -16,7 +16,7 @@ import SpinnerIcon from '@components/icons/spinner-icon';
 import LinkItem from '@components/link/link-item';
 import TagsFilterSidebar from '@components/tag/tags-filter-sidebar';
 
-import { LINKS_PER_PAGE, useLinks } from '@hooks/link/use-links';
+import { useLinks } from '@hooks/link/use-links';
 import { OrderLinksKey, useQueryString } from '@hooks/use-query-string';
 
 const tagsSidebarOpenSelector = (state: AppConfigStore) => state.tagsSidebarOpen;
@@ -56,11 +56,6 @@ const Home: NextPage = () => {
     isFetchingNextPage,
   } = useLinks(orderbyQuery, tagsQuery);
 
-  const canInitialLinksLoadMore = useMemo(
-    () => (links?.pages[0].data.length as number) >= LINKS_PER_PAGE,
-    [links?.pages[0].data]
-  );
-
   return (
     <div className={classNames({ 'grid grid-cols-[1fr,250px] gap-9': tagsSidebarOpen })}>
       {!links ? (
@@ -91,26 +86,24 @@ const Home: NextPage = () => {
             </div>
           </div>
           <ul className="grid grid-cols-2 gap-5">
-            {links?.pages.map((page) =>
+            {links?.pages?.map((page) =>
               page?.data.map((link) => <LinkItem key={link.id} link={link} />)
             )}
           </ul>
-          {canInitialLinksLoadMore ? (
-            <Button
-              theme="secondary"
-              text={hasNextPage ? 'Load more' : 'No more links'}
-              className="mx-auto mt-8"
-              disabled={!hasNextPage}
-              loading={isFetchingNextPage}
-              onClick={fetchNextPage}
-            />
-          ) : null}
+          <Button
+            theme="secondary"
+            text={hasNextPage ? 'Load more' : 'No more links'}
+            className="mx-auto mt-8"
+            disabled={!hasNextPage}
+            loading={isFetchingNextPage}
+            onClick={fetchNextPage}
+          />
         </section>
       )}
       {tagsSidebarOpen ? (
         <TagsFilterSidebar
           // -mx-5 px-5 to make ring visible because of overflow
-          className="-mx-5 px-5 tags-filter-sidebar-height sticky top-header py-8 overflow-y-auto"
+          className="-mx-5 px-5 content-screen-height sticky top-header py-8 overflow-y-auto"
         />
       ) : null}
     </div>

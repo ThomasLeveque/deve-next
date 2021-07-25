@@ -4,7 +4,7 @@ import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 're
 
 import { queryKeys as categoryQueryKeys } from '@hooks/category/query-keys';
 import { useUpdateCategory } from '@hooks/category/use-update-category';
-import { OrderLinksKey } from '@hooks/use-query-string';
+import { useQueryString } from '@hooks/use-query-string';
 
 import { Category } from '@data-types/categorie.type';
 import { Link } from '@data-types/link.type';
@@ -24,8 +24,6 @@ export const addLink = async (
 };
 
 export const useAddLink = (
-  orderbyQuery: OrderLinksKey,
-  tagsQuery: string[],
   selectedTags: string[]
 ): UseMutationResult<
   InfiniteData<PaginatedData<Link>>,
@@ -34,6 +32,7 @@ export const useAddLink = (
   InfiniteData<PaginatedData<Link>> | undefined
 > => {
   const queryClient = useQueryClient();
+  const { orderbyQuery, tagsQuery } = useQueryString();
   const linksKey = queryKeys.links(orderbyQuery, tagsQuery);
   const updateCategory = useUpdateCategory();
 
@@ -55,6 +54,7 @@ export const useAddLink = (
       return previousLinks;
     },
     onSuccess: () => {
+      // Increment count of every used tags
       const tags = queryClient.getQueryData<Document<Category>[]>(categoryQueryKeys.categories);
       selectedTags.forEach((selectedTag) => {
         const prevTag = tags?.find(
@@ -68,6 +68,9 @@ export const useAddLink = (
           });
         }
       });
+
+      // revalidate user-links query
+      queryClient.invalidateQueries('user-links');
     },
     onError: (err, variables, previousLinks) => {
       toast.error(formatError(err));

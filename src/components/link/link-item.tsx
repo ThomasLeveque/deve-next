@@ -23,12 +23,15 @@ const toggleAuthModalSelector = (state: ModalsStore) => state.toggleAuthModal;
 
 interface LinkItemProps {
   link: Document<Link>;
+  isProfilLink?: boolean;
 }
 
-const LinkItem: React.FC<LinkItemProps> = ({ link }) => {
+const LinkItem: React.FC<LinkItemProps> = ({ link, ...props }) => {
+  const isProfilLink = props.isProfilLink ?? false;
+
   const { user } = useAuth();
-  const { addTagQuery, tagsQuery, orderbyQuery } = useQueryString();
-  const updateLink = useUpdateLink(link, orderbyQuery, tagsQuery);
+  const { addTagQuery } = useQueryString();
+  const updateLink = useUpdateLink(link);
 
   const setLinkToCommentModal = useModalsStore(setLinkToCommentModalSelector);
   const toggleAuthModal = useModalsStore(toggleAuthModalSelector);
@@ -81,9 +84,11 @@ const LinkItem: React.FC<LinkItemProps> = ({ link }) => {
     <>
       <li className="flex flex-col p-[30px] rounded-link-card bg-gray-100">
         <div className="mb-5">
-          <h3 className="font-poppins-bold text-[13px] mb-1">
-            Posted by {link.postedBy.displayName}
-          </h3>
+          {!isProfilLink && (
+            <h3 className="font-poppins-bold text-[13px] mb-1">
+              Posted by {link.postedBy.displayName}
+            </h3>
+          )}
           <p className="text-[10px] text-gray-400">{format(link.createdAt, 'MMMM d yyyy')}</p>
         </div>
         <a href={link.url} rel="noreferrer" target="_blank" className="mb-8 with-ring block group">
@@ -92,41 +97,47 @@ const LinkItem: React.FC<LinkItemProps> = ({ link }) => {
           </h2>
           <p className="text-xs group-hover:underline">On {getDomain(link.url)}</p>
         </a>
-        <TagListWrapper className="mb-5">
+        <TagListWrapper className={classNames({ 'mb-5': !isProfilLink })}>
           {link.categories.map((tag) => (
             <li key={`${link.id}-${tag}`}>
-              <Tag text={tag} isColored onClick={() => addTagQuery(tag)} />
+              <Tag
+                text={tag}
+                isColored
+                onClick={isProfilLink ? undefined : () => addTagQuery(tag)}
+              />
             </li>
           ))}
         </TagListWrapper>
-        <div className="flex mt-auto">
-          <button
-            onClick={() => {
-              if (user) {
-                isLikedByMe ? removeVote() : addVote();
-              } else {
-                toggleAuthModal();
-              }
-            }}
-            className={classNames('flex items-center mr-5 hover:text-secondary', {
-              'text-secondary': isLikedByMe,
-            })}
-          >
-            {isLikedByMe ? (
-              <FireIconSolid className="mr-[6px] w-6" />
-            ) : (
-              <FireIcon className="mr-[6px] w-6" />
-            )}
-            <span className="font-poppins-bold text-[11px]">{renderFires}</span>
-          </button>
-          <button
-            onClick={() => (user ? setLinkToCommentModal(link) : toggleAuthModal())}
-            className="flex items-center hover:text-secondary"
-          >
-            <AnnotationIcon className="mr-[6px] w-6" />
-            <span className="font-poppins-bold text-[11px]">{renderComments}</span>
-          </button>
-        </div>
+        {isProfilLink ? null : (
+          <div className="flex mt-auto">
+            <button
+              onClick={() => {
+                if (user) {
+                  isLikedByMe ? removeVote() : addVote();
+                } else {
+                  toggleAuthModal();
+                }
+              }}
+              className={classNames('flex items-center mr-5 hover:text-secondary', {
+                'text-secondary': isLikedByMe,
+              })}
+            >
+              {isLikedByMe ? (
+                <FireIconSolid className="mr-[6px] w-6" />
+              ) : (
+                <FireIcon className="mr-[6px] w-6" />
+              )}
+              <span className="font-poppins-bold text-[11px]">{renderFires}</span>
+            </button>
+            <button
+              onClick={() => (user ? setLinkToCommentModal(link) : toggleAuthModal())}
+              className="flex items-center hover:text-secondary"
+            >
+              <AnnotationIcon className="mr-[6px] w-6" />
+              <span className="font-poppins-bold text-[11px]">{renderComments}</span>
+            </button>
+          </div>
+        )}
       </li>
     </>
   );

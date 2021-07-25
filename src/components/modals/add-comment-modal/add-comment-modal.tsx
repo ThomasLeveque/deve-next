@@ -47,7 +47,7 @@ const AddCommentModal: React.FC = () => {
       {comments ? (
         <>
           <ul>
-            {comments?.pages.map((page) =>
+            {comments?.pages?.map((page) =>
               page?.data.map((comment) => <CommentItem key={comment.id} comment={comment} />)
             )}
           </ul>

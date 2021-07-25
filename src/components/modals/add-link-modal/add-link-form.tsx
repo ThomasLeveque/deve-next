@@ -12,7 +12,6 @@ import { useCategories } from '@hooks/category/use-categories';
 import { dbKeys } from '@hooks/link/db-keys';
 import { useAddLink } from '@hooks/link/use-add-link';
 import { useFetchHtmlText } from '@hooks/use-fetch-html-text';
-import { useQueryString } from '@hooks/use-query-string';
 
 import { LinkFormData } from '@data-types/link.type';
 
@@ -40,7 +39,6 @@ interface AddLinkFormProps {
 
 const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const { orderbyQuery, tagsQuery } = useQueryString();
   const { user } = useAuth();
 
   const { data: tags } = useCategories();
@@ -55,7 +53,7 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
     resolver: yupResolver(schema),
   });
   const selectedTags = watch('tags', []);
-  const addLink = useAddLink(orderbyQuery, tagsQuery, selectedTags);
+  const addLink = useAddLink(selectedTags);
 
   const url = watch('url', '');
   const { htmlText: title, loading: htmlTextLoading } = useFetchHtmlText(url);

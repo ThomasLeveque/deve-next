@@ -1,11 +1,11 @@
 import { ModalsStore, useModalsStore } from '@store/modals.store';
 import classNames from 'classnames';
 import React, { useEffect } from 'react';
-import toast from 'react-hot-toast';
 
 import Header from '@components/header';
 
 import { useAuth } from '@hooks/auth/useAuth';
+import { usePrefetchLinks } from '@hooks/link/use-links';
 
 import AddCommentModal from './modals/add-comment-modal/add-comment-modal';
 import AddLinkModal from './modals/add-link-modal/add-link-modal';
@@ -16,6 +16,7 @@ const toggleAuthModalSelector = (state: ModalsStore) => state.toggleAuthModal;
 
 const Layout: React.FC<{ className?: string }> = ({ className, children }) => {
   const { user } = useAuth();
+  usePrefetchLinks();
 
   const authModal = useModalsStore(authModalSelector);
   const toggleAuthModal = useModalsStore(toggleAuthModalSelector);

@@ -25,7 +25,7 @@ const TagsFilterSidebar: React.FC<TagsFilterSidebarProps> = React.memo((props) =
   return !tags ? (
     <SpinnerIcon className="w-8 m-auto mt-14" />
   ) : (
-    <aside className={classNames('', props.className)}>
+    <aside className={classNames(props.className)}>
       {tagsQuery.length > 0 && (
         <>
           <h3 className="text-center mb-5 font-poppins-bold text-lg">

@@ -1,7 +1,7 @@
 import toast from 'react-hot-toast';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
 
-import { OrderLinksKey } from '@hooks/use-query-string';
+import { useQueryString } from '@hooks/use-query-string';
 
 import { Link } from '@data-types/link.type';
 
@@ -27,9 +27,7 @@ const updateLink = async (
 };
 
 export const useUpdateLink = (
-  link: Document<Link>,
-  orderbyQuery: OrderLinksKey,
-  tagsQuery: string[]
+  link: Document<Link>
 ): UseMutationResult<
   InfiniteData<PaginatedData<Link>>,
   Error,
@@ -37,6 +35,7 @@ export const useUpdateLink = (
   InfiniteData<PaginatedData<Link>> | undefined
 > => {
   const queryClient = useQueryClient();
+  const { orderbyQuery, tagsQuery } = useQueryString();
   const linksKey = queryKeys.links(orderbyQuery, tagsQuery);
   return useMutation(
     (updateLinkData: Partial<Document<Link>>) => updateLink(link.id, updateLinkData),

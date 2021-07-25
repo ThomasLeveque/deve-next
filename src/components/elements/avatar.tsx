@@ -23,9 +23,9 @@ const Avatar: React.FC<AvatarProps> = React.memo((props) => {
     </button>
   ) : (
     <button
-      style={{ height: size, width: size }}
+      style={{ height: size, width: size, fontSize: size * 0.36 }}
       className={classNames(
-        'with-ring bg-gray-100 rounded-full grid place-items-center font-poppins-bold text-lg uppercase',
+        'with-ring bg-gray-100 rounded-full grid place-items-center font-poppins-bold uppercase',
         props.className
       )}
     >
