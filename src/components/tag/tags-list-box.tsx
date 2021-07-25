@@ -248,7 +248,7 @@ const TagsListBoxOption: React.FC<TagsListBoxOptionProps> = (props) => {
     event.stopPropagation();
     if (props.tag.id) {
       props.removeSelectedTags(props.tag.name);
-      removeCategory.mutate(props.tag.id);
+      removeCategory.mutate(props.tag);
     }
   }, []);
 

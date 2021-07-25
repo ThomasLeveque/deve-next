@@ -30,38 +30,42 @@ const updateLink = async (
 };
 
 export const useUpdateLink = (
-  link: Document<Link>,
+  prevLink: Document<Link>,
   queryKey: QueryKey
 ): UseMutationResult<
   InfiniteData<PaginatedData<Link>>,
   Error,
   Partial<Document<Link>>,
-  InfiniteData<PaginatedData<Link>> | undefined
+  Document<Link>
 > => {
   const queryClient = useQueryClient();
-
   return useMutation(
-    (updateLinkData: Partial<Document<Link>>) => updateLink(link.id, updateLinkData),
+    (linkToUpdate: Partial<Document<Link>>) => updateLink(prevLink.id, linkToUpdate),
     {
-      onMutate: async (updateLinkData) => {
-        const newDocLink: Document<Link> = { ...link, ...updateLinkData };
-
+      onMutate: async (linkToUpdate) => {
         await queryClient.cancelQueries(queryKey);
 
-        const previousLinks = queryClient.getQueryData<InfiniteData<PaginatedData<Link>>>(queryKey);
+        const newLink: Document<Link> = { ...prevLink, ...linkToUpdate };
 
-        queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(queryKey, (oldLinks) => {
-          if (oldLinks) {
-            return updateItemInsidePaginatedData<Link>(newDocLink, oldLinks);
-          }
-          return {} as InfiniteData<PaginatedData<Link>>;
-        });
+        queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(queryKey, (oldLinks) =>
+          updateItemInsidePaginatedData<Link>(
+            newLink,
+            oldLinks ?? ({} as InfiniteData<PaginatedData<Link>>)
+          )
+        );
 
-        return previousLinks;
+        return prevLink;
       },
-      onError: (err, newDocLink, previousLinks) => {
+      onError: (err, variables, prevLink) => {
         toast.error(formatError(err));
-        queryClient.setQueryData(queryKey, previousLinks);
+        if (prevLink) {
+          queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(queryKey, (oldLinks) =>
+            updateItemInsidePaginatedData<Link>(
+              prevLink,
+              oldLinks ?? ({} as InfiniteData<PaginatedData<Link>>)
+            )
+          );
+        }
       },
     }
   );

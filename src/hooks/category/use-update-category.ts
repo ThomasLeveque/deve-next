@@ -24,29 +24,30 @@ export const useUpdateCategory = (): UseMutationResult<
   Document<Category>[],
   Error,
   { prevCategory: Document<Category>; categoryToUpdate: Partial<Document<Category>> },
-  Document<Category>[] | undefined
+  Document<Category>
 > => {
   const queryClient = useQueryClient();
   return useMutation(
     ({ prevCategory, categoryToUpdate }) => updateCategory(prevCategory.id, categoryToUpdate),
     {
       onMutate: async ({ prevCategory, categoryToUpdate }) => {
-        const newDocCategory: Document<Category> = { ...prevCategory, ...categoryToUpdate };
+        const newCategory: Document<Category> = { ...prevCategory, ...categoryToUpdate };
 
         await queryClient.cancelQueries(queryKeys.categories);
 
-        const previousCategories = [
-          ...(queryClient.getQueryData<Document<Category>[]>(queryKeys.categories) ?? []),
-        ];
         queryClient.setQueryData<Document<Category>[]>(queryKeys.categories, (oldCategories) =>
-          updateItemInsideData<Category>(newDocCategory, oldCategories ?? [])
+          updateItemInsideData<Category>(newCategory, oldCategories ?? [])
         );
 
-        return previousCategories;
+        return prevCategory;
       },
-      onError: (err, variables, previousCategories) => {
+      onError: (err, variables, prevCategory) => {
         toast.error(formatError(err));
-        queryClient.setQueryData(queryKeys.categories, previousCategories);
+        if (prevCategory) {
+          queryClient.setQueryData<Document<Category>[]>(queryKeys.categories, (oldCategories) =>
+            updateItemInsideData<Category>(prevCategory, oldCategories ?? [])
+          );
+        }
       },
     }
   );

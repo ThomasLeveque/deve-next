@@ -5,7 +5,7 @@ import { Category } from '@data-types/categorie.type';
 
 import { formatError } from '@utils/format-string';
 import { db } from '@utils/init-firebase';
-import { removeItemInsideData } from '@utils/mutate-data';
+import { addItemInsideData, removeItemInsideData } from '@utils/mutate-data';
 import { Document } from '@utils/shared-types';
 
 import { dbKeys } from './db-keys';
@@ -20,27 +20,27 @@ const removeCategory = async (categoryId: string): Promise<Document<Category>[]>
 export const useRemoveCategory = (): UseMutationResult<
   Document<Category>[],
   Error,
-  string,
-  Document<Category>[] | undefined
+  Document<Category>,
+  Document<Category>
 > => {
   const queryClient = useQueryClient();
-  return useMutation((categoryId) => removeCategory(categoryId), {
-    onMutate: async (categoryId) => {
+  return useMutation((category) => removeCategory(category.id as string), {
+    onMutate: async (category) => {
       await queryClient.cancelQueries(queryKeys.categories);
 
-      const previousCategories = [
-        ...(queryClient.getQueryData<Document<Category>[]>(queryKeys.categories) ?? []),
-      ];
-
       queryClient.setQueryData<Document<Category>[]>(queryKeys.categories, (oldCategories) =>
-        removeItemInsideData<Category>(categoryId, oldCategories ?? [])
+        removeItemInsideData<Category>(category.id as string, oldCategories ?? [])
       );
 
-      return previousCategories;
+      return category;
     },
-    onError: (err, variables, previousCategories) => {
+    onError: (err, variables, removedCategory) => {
       toast.error(formatError(err));
-      queryClient.setQueryData(queryKeys.categories, previousCategories);
+      if (removedCategory) {
+        queryClient.setQueryData<Document<Category>[]>(queryKeys.categories, (oldCategories) =>
+          addItemInsideData<Category>(removedCategory, oldCategories ?? [], 'end')
+        );
+      }
     },
   });
 };

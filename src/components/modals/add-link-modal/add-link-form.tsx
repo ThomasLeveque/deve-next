@@ -56,7 +56,7 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
     resolver: yupResolver(schema),
   });
   const selectedTags = watch('tags', []);
-  const addLink = useAddLink(selectedTags, linksQueryKey);
+  const addLink = useAddLink(linksQueryKey);
 
   const url = watch('url', '');
   const { htmlText: title, loading: htmlTextLoading } = useFetchHtmlText(url);

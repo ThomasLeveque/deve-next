@@ -15,7 +15,7 @@ import { Category } from '@data-types/categorie.type';
 import { Link } from '@data-types/link.type';
 
 import { formatError } from '@utils/format-string';
-import { addItemToPaginatedData } from '@utils/mutate-data';
+import { addItemToPaginatedData, removeItemInsidePaginatedData } from '@utils/mutate-data';
 import { PaginatedData, Document } from '@utils/shared-types';
 
 export const addLink = async (
@@ -27,13 +27,12 @@ export const addLink = async (
 };
 
 export const useAddLink = (
-  selectedTags: string[],
   queryKey: QueryKey
 ): UseMutationResult<
   InfiniteData<PaginatedData<Link>>,
   Error,
   { linkRef: DocumentReference; link: Link },
-  InfiniteData<PaginatedData<Link>> | undefined
+  Document<Link>
 > => {
   const queryClient = useQueryClient();
   const updateCategory = useUpdateCategory();
@@ -44,21 +43,16 @@ export const useAddLink = (
 
       await queryClient.cancelQueries(queryKey);
 
-      const previousLinks = queryClient.getQueryData<InfiniteData<PaginatedData<Link>>>(queryKey);
+      queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(queryKey, (oldLinks) =>
+        addItemToPaginatedData(newLink, oldLinks ?? ({} as InfiniteData<PaginatedData<Link>>))
+      );
 
-      queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(queryKey, (oldLinks) => {
-        if (oldLinks) {
-          return addItemToPaginatedData(newLink, oldLinks);
-        }
-        return {} as InfiniteData<PaginatedData<Link>>;
-      });
-
-      return previousLinks;
+      return newLink;
     },
-    onSuccess: () => {
+    onSuccess: (data, variables, newLink) => {
       // Increment count of every used tags
       const tags = queryClient.getQueryData<Document<Category>[]>(categoryQueryKeys.categories);
-      selectedTags.forEach((selectedTag) => {
+      newLink?.categories.forEach((selectedTag) => {
         const prevTag = tags?.find(
           (tag) => tag.name.toLocaleLowerCase() === selectedTag.toLocaleLowerCase()
         );
@@ -71,9 +65,14 @@ export const useAddLink = (
         }
       });
     },
-    onError: (err, variables, previousLinks) => {
+    onError: (err, variables, newLink) => {
       toast.error(formatError(err));
-      queryClient.setQueryData(queryKey, previousLinks);
+      queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(queryKey, (oldLinks) =>
+        removeItemInsidePaginatedData(
+          newLink?.id as string,
+          oldLinks ?? ({} as InfiniteData<PaginatedData<Link>>)
+        )
+      );
     },
   });
 };

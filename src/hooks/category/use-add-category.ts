@@ -5,6 +5,7 @@ import { useMutation, UseMutationResult, useQueryClient } from 'react-query';
 import { Category } from '@data-types/categorie.type';
 
 import { formatError } from '@utils/format-string';
+import { addItemInsideData, removeItemInsideData } from '@utils/mutate-data';
 import { Document } from '@utils/shared-types';
 
 import { queryKeys } from './query-keys';
@@ -21,29 +22,26 @@ export const useAddCategory = (): UseMutationResult<
   Document<Category>[],
   Error,
   { categoryRef: DocumentReference; category: Category },
-  Document<Category>[] | undefined
+  Document<Category>
 > => {
   const queryClient = useQueryClient();
   return useMutation(({ categoryRef, category }) => addCategory(categoryRef, category), {
     onMutate: async ({ categoryRef, category }) => {
-      const newCategory = { id: categoryRef.id, ...category };
-
       await queryClient.cancelQueries(queryKeys.categories);
 
-      const previousCategories = [
-        ...(queryClient.getQueryData<Document<Category>[]>(queryKeys.categories) ?? []),
-      ];
+      const newCategory = { id: categoryRef.id, ...category };
 
-      queryClient.setQueryData<Document<Category>[]>(queryKeys.categories, (oldCategories) => [
-        ...(oldCategories ?? []),
-        newCategory,
-      ]);
+      queryClient.setQueryData<Document<Category>[]>(queryKeys.categories, (oldCategories) =>
+        addItemInsideData(newCategory, oldCategories ?? [], 'end')
+      );
 
-      return previousCategories;
+      return newCategory;
     },
-    onError: (err, variables, previousCategories) => {
+    onError: (err, variables, newCategory) => {
       toast.error(formatError(err));
-      queryClient.setQueryData(queryKeys.categories, previousCategories);
+      queryClient.setQueryData<Document<Category>[]>(queryKeys.categories, (oldCategories) =>
+        removeItemInsideData(newCategory?.id as string, oldCategories ?? [])
+      );
     },
   });
 };

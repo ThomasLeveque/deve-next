@@ -12,7 +12,7 @@ import { Comment } from '@data-types/comment.type';
 import { Link } from '@data-types/link.type';
 
 import { formatError } from '@utils/format-string';
-import { addItemToPaginatedData } from '@utils/mutate-data';
+import { addItemToPaginatedData, removeItemInsidePaginatedData } from '@utils/mutate-data';
 import { PaginatedData, Document } from '@utils/shared-types';
 
 import { queryKeys } from './query-keys';
@@ -33,7 +33,7 @@ export const useAddLinkComment = (
   InfiniteData<PaginatedData<Comment>>,
   Error,
   { commentRef: DocumentReference; comment: Comment },
-  InfiniteData<PaginatedData<Comment>> | undefined
+  Document<Comment>
 > => {
   const queryClient = useQueryClient();
   const commentsKey = queryKeys.linkComments(link.id as string);
@@ -45,24 +45,26 @@ export const useAddLinkComment = (
 
       await queryClient.cancelQueries(commentsKey);
 
-      const previousComments =
-        queryClient.getQueryData<InfiniteData<PaginatedData<Comment>>>(commentsKey);
+      queryClient.setQueryData<InfiniteData<PaginatedData<Comment>>>(commentsKey, (oldComments) =>
+        addItemToPaginatedData(
+          newComment,
+          oldComments ?? ({} as InfiniteData<PaginatedData<Comment>>)
+        )
+      );
 
-      queryClient.setQueryData<InfiniteData<PaginatedData<Comment>>>(commentsKey, (oldComments) => {
-        if (oldComments) {
-          return addItemToPaginatedData(newComment, oldComments);
-        }
-        return {} as InfiniteData<PaginatedData<Comment>>;
-      });
-
-      return previousComments;
+      return newComment;
     },
     onSuccess: () => {
       updateLink.mutate({ commentCount: link.commentCount + 1 });
     },
-    onError: (err, variables, previousComments) => {
+    onError: (err, variables, newComment) => {
       toast.error(formatError(err));
-      queryClient.setQueryData(commentsKey, previousComments);
+      queryClient.setQueryData<InfiniteData<PaginatedData<Comment>>>(commentsKey, (oldComments) =>
+        removeItemInsidePaginatedData(
+          newComment?.id as string,
+          oldComments ?? ({} as InfiniteData<PaginatedData<Comment>>)
+        )
+      );
     },
   });
 };
