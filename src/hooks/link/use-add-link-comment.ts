@@ -12,7 +12,7 @@ import { Comment } from '@data-types/comment.type';
 import { Link } from '@data-types/link.type';
 
 import { formatError } from '@utils/format-string';
-import { addItemToPaginatedData, removeItemInsidePaginatedData } from '@utils/mutate-data';
+import { addItemInsidePaginatedData, removeItemInsidePaginatedData } from '@utils/mutate-data';
 import { PaginatedData, Document } from '@utils/shared-types';
 
 import { queryKeys } from './query-keys';
@@ -46,10 +46,7 @@ export const useAddLinkComment = (
       await queryClient.cancelQueries(commentsKey);
 
       queryClient.setQueryData<InfiniteData<PaginatedData<Comment>>>(commentsKey, (oldComments) =>
-        addItemToPaginatedData(
-          newComment,
-          oldComments ?? ({} as InfiniteData<PaginatedData<Comment>>)
-        )
+        addItemInsidePaginatedData(newComment, oldComments)
       );
 
       return newComment;
@@ -60,10 +57,7 @@ export const useAddLinkComment = (
     onError: (err, variables, newComment) => {
       toast.error(formatError(err));
       queryClient.setQueryData<InfiniteData<PaginatedData<Comment>>>(commentsKey, (oldComments) =>
-        removeItemInsidePaginatedData(
-          newComment?.id as string,
-          oldComments ?? ({} as InfiniteData<PaginatedData<Comment>>)
-        )
+        removeItemInsidePaginatedData(newComment?.id as string, oldComments)
       );
     },
   });

@@ -32,7 +32,7 @@ export const useAddCategory = (): UseMutationResult<
       const newCategory = { id: categoryRef.id, ...category };
 
       queryClient.setQueryData<Document<Category>[]>(queryKeys.categories, (oldCategories) =>
-        addItemInsideData(newCategory, oldCategories ?? [], 'end')
+        addItemInsideData(newCategory, oldCategories, 'end')
       );
 
       return newCategory;
@@ -40,7 +40,7 @@ export const useAddCategory = (): UseMutationResult<
     onError: (err, variables, newCategory) => {
       toast.error(formatError(err));
       queryClient.setQueryData<Document<Category>[]>(queryKeys.categories, (oldCategories) =>
-        removeItemInsideData(newCategory?.id as string, oldCategories ?? [])
+        removeItemInsideData(newCategory?.id as string, oldCategories)
       );
     },
   });

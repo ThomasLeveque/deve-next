@@ -15,7 +15,7 @@ import { Category } from '@data-types/categorie.type';
 import { Link } from '@data-types/link.type';
 
 import { formatError } from '@utils/format-string';
-import { addItemToPaginatedData, removeItemInsidePaginatedData } from '@utils/mutate-data';
+import { addItemInsidePaginatedData, removeItemInsidePaginatedData } from '@utils/mutate-data';
 import { PaginatedData, Document } from '@utils/shared-types';
 
 export const addLink = async (
@@ -44,7 +44,7 @@ export const useAddLink = (
       await queryClient.cancelQueries(queryKey);
 
       queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(queryKey, (oldLinks) =>
-        addItemToPaginatedData(newLink, oldLinks ?? ({} as InfiniteData<PaginatedData<Link>>))
+        addItemInsidePaginatedData(newLink, oldLinks)
       );
 
       return newLink;
@@ -68,10 +68,7 @@ export const useAddLink = (
     onError: (err, variables, newLink) => {
       toast.error(formatError(err));
       queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(queryKey, (oldLinks) =>
-        removeItemInsidePaginatedData(
-          newLink?.id as string,
-          oldLinks ?? ({} as InfiniteData<PaginatedData<Link>>)
-        )
+        removeItemInsidePaginatedData(newLink?.id as string, oldLinks)
       );
     },
   });

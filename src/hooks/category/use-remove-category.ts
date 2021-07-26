@@ -29,7 +29,7 @@ export const useRemoveCategory = (): UseMutationResult<
       await queryClient.cancelQueries(queryKeys.categories);
 
       queryClient.setQueryData<Document<Category>[]>(queryKeys.categories, (oldCategories) =>
-        removeItemInsideData<Category>(category.id as string, oldCategories ?? [])
+        removeItemInsideData<Category>(category.id as string, oldCategories)
       );
 
       return category;
@@ -38,7 +38,7 @@ export const useRemoveCategory = (): UseMutationResult<
       toast.error(formatError(err));
       if (removedCategory) {
         queryClient.setQueryData<Document<Category>[]>(queryKeys.categories, (oldCategories) =>
-          addItemInsideData<Category>(removedCategory, oldCategories ?? [], 'end')
+          addItemInsideData<Category>(removedCategory, oldCategories, 'end')
         );
       }
     },

@@ -43,12 +43,11 @@ export const useLinkComments = (
   link: Document<Link> | null
 ): UseInfiniteQueryResult<PaginatedData<Comment> | undefined> => {
   const linkId = link?.id;
-  const commentCount = link?.commentCount ?? 0;
   return useInfiniteQuery<PaginatedData<Comment> | undefined>(
     queryKeys.linkComments(linkId as string),
     (context) => getLinkComments(context.pageParam, linkId as string),
     {
-      enabled: !!linkId && commentCount > 0,
+      enabled: !!linkId,
       getNextPageParam: (lastPage) => lastPage?.cursor,
     }
   );

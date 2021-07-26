@@ -36,7 +36,7 @@ export const useUpdateCategory = (): UseMutationResult<
         await queryClient.cancelQueries(queryKeys.categories);
 
         queryClient.setQueryData<Document<Category>[]>(queryKeys.categories, (oldCategories) =>
-          updateItemInsideData<Category>(newCategory, oldCategories ?? [])
+          updateItemInsideData<Category>(newCategory, oldCategories)
         );
 
         return prevCategory;
@@ -45,7 +45,7 @@ export const useUpdateCategory = (): UseMutationResult<
         toast.error(formatError(err));
         if (prevCategory) {
           queryClient.setQueryData<Document<Category>[]>(queryKeys.categories, (oldCategories) =>
-            updateItemInsideData<Category>(prevCategory, oldCategories ?? [])
+            updateItemInsideData<Category>(prevCategory, oldCategories)
           );
         }
       },

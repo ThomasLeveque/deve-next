@@ -48,10 +48,7 @@ export const useUpdateLink = (
         const newLink: Document<Link> = { ...prevLink, ...linkToUpdate };
 
         queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(queryKey, (oldLinks) =>
-          updateItemInsidePaginatedData<Link>(
-            newLink,
-            oldLinks ?? ({} as InfiniteData<PaginatedData<Link>>)
-          )
+          updateItemInsidePaginatedData<Link>(newLink, oldLinks)
         );
 
         return prevLink;
@@ -60,10 +57,7 @@ export const useUpdateLink = (
         toast.error(formatError(err));
         if (prevLink) {
           queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(queryKey, (oldLinks) =>
-            updateItemInsidePaginatedData<Link>(
-              prevLink,
-              oldLinks ?? ({} as InfiniteData<PaginatedData<Link>>)
-            )
+            updateItemInsidePaginatedData<Link>(prevLink, oldLinks)
           );
         }
       },
