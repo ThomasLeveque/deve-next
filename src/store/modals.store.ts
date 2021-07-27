@@ -11,6 +11,8 @@ export interface ModalsStore {
   toggleAddLinkModal: () => void;
   linkToCommentModal: Document<Link> | null;
   setLinkToCommentModal: (link: Document<Link> | null) => void;
+  linkToUpdateModal: Document<Link> | null;
+  setLinkToUpdateModal: (link: Document<Link> | null) => void;
 }
 
 export const useModalsStore = create<ModalsStore>((set) => ({
@@ -20,4 +22,6 @@ export const useModalsStore = create<ModalsStore>((set) => ({
   toggleAddLinkModal: () => set((state) => ({ addLinkModal: !state.addLinkModal })),
   linkToCommentModal: null,
   setLinkToCommentModal: (link) => set({ linkToCommentModal: link }),
+  linkToUpdateModal: null,
+  setLinkToUpdateModal: (link) => set({ linkToUpdateModal: link }),
 }));

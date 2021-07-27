@@ -17,3 +17,10 @@ export const formatLink = (formData: LinkFormData, author: Document<User>): Link
   createdAt: Date.now(),
   updatedAt: Date.now(),
 });
+
+export const formatUpdatedLink = (formData: LinkFormData): Partial<Document<Link>> => ({
+  url: formData.url,
+  description: formData.title,
+  categories: formData.tags,
+  updatedAt: Date.now(),
+});

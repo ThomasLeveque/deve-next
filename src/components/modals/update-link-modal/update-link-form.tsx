@@ -9,23 +9,23 @@ import TagsListBox from '@components/tag/tags-list-box';
 
 import { useAuth } from '@hooks/auth/useAuth';
 import { useCategories } from '@hooks/category/use-categories';
-import { dbKeys } from '@hooks/link/db-keys';
-import { useAddLink } from '@hooks/link/use-add-link';
 import { useLinksQueryKey } from '@hooks/link/use-links-query-key';
+import { useUpdateLink } from '@hooks/link/use-update-link';
 import { useFetchHtmlText } from '@hooks/use-fetch-html-text';
 
-import { LinkFormData } from '@data-types/link.type';
+import { Link, LinkFormData } from '@data-types/link.type';
 
-import { addLinkSchema } from '@utils/form-schemas';
-import { formatLink } from '@utils/format-link';
+import { updateLinkSchema } from '@utils/form-schemas';
+import { formatUpdatedLink } from '@utils/format-link';
 import { formatError } from '@utils/format-string';
-import { db } from '@utils/init-firebase';
+import { Document } from '@utils/shared-types';
 
 interface AddLinkFormProps {
   closeModal: () => void;
+  linkToUpdate: Document<Link>;
 }
 
-const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
+const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
   const { user } = useAuth();
 
   const linksQueryKey = useLinksQueryKey(user?.id as string);
@@ -38,14 +38,25 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
     setValue,
     watch,
     formState: { errors },
+    reset,
   } = useForm<LinkFormData>({
-    resolver: yupResolver(addLinkSchema),
+    resolver: yupResolver(updateLinkSchema),
+    defaultValues: {
+      url: props.linkToUpdate.url,
+      title: props.linkToUpdate.description,
+    },
   });
-  const selectedTags = watch('tags', []);
-  const addLink = useAddLink(linksQueryKey);
 
-  const url = watch('url', '');
-  const { htmlText: title, loading: htmlTextLoading } = useFetchHtmlText(url);
+  useEffect(() => {
+    setValue('tags', props.linkToUpdate.categories);
+  }, []);
+
+  const selectedTags = watch('tags', []);
+
+  const updateLink = useUpdateLink(props.linkToUpdate, linksQueryKey);
+
+  const url = watch('url');
+  const { htmlText: title, loading: htmlTextLoading } = useFetchHtmlText(url, false);
   useEffect(() => {
     if (title) {
       setValue('title', title, { shouldValidate: true });
@@ -67,9 +78,8 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
             throw new Error(`The tag ${selectedTag} does not exist`);
           }
         });
-
-        const link = formatLink(formData, user);
-        addLink.mutate({ linkRef: db.collection(dbKeys.links).doc(), link });
+        const updatedLink = formatUpdatedLink(formData);
+        updateLink.mutate(updatedLink);
 
         // Do not setLoading(false) because addLink will unmount this component (Modal).
         props.closeModal();
@@ -108,10 +118,21 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
         errorText={(errors.tags as unknown as FieldError)?.message}
       />
       <div className="flex justify-end">
-        <Button theme="secondary" text="Create" type="submit" />
+        <Button
+          text="Reset"
+          theme="gray"
+          onClick={() => {
+            reset({
+              url: props.linkToUpdate.url,
+              title: props.linkToUpdate.description,
+            });
+            setValue('tags', props.linkToUpdate.categories);
+          }}
+        />
+        <Button theme="secondary" text="Update" type="submit" className="ml-5" />
       </div>
     </form>
   );
 };
 
-export default AddLinkForm;
+export default UpdateLinkForm;

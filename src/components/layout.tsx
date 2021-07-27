@@ -10,6 +10,7 @@ import { usePrefetchCategories } from '@hooks/category/use-categories';
 import AddCommentModal from './modals/add-comment-modal/add-comment-modal';
 import AddLinkModal from './modals/add-link-modal/add-link-modal';
 import LoginModal from './modals/login-modal/login-modal';
+import UpdateLinkModal from './modals/update-link-modal/update-link-modal';
 
 const authModalSelector = (state: ModalsStore) => state.authModal;
 const toggleAuthModalSelector = (state: ModalsStore) => state.toggleAuthModal;
@@ -34,6 +35,7 @@ const Layout: React.FC<{ className?: string }> = ({ className, children }) => {
       <LoginModal />
       <AddLinkModal />
       <AddCommentModal />
+      <UpdateLinkModal />
     </>
   );
 };

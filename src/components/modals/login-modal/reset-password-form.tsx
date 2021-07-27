@@ -2,21 +2,17 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import * as yup from 'yup';
 
 import Button from '@components/elements/button';
 import TextInput from '@components/elements/text-input';
 
 import { ResetPasswordFormData } from '@data-types/user.type';
 
+import { resetPasswordSchema } from '@utils/form-schemas';
 import { formatError } from '@utils/format-string';
 import { auth } from '@utils/init-firebase';
 
 import { loginStep } from './login-modal';
-
-const schema = yup.object().shape({
-  email: yup.string().email('Email must be a valid email').required('Email is required').max(255),
-});
 
 interface ResetPasswordFormProps {
   setStep: (step: loginStep) => void;
@@ -30,7 +26,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = (props) => {
     handleSubmit,
     formState: { errors },
   } = useForm<ResetPasswordFormData>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(resetPasswordSchema),
   });
 
   const onSubmit = useCallback(async ({ email }: ResetPasswordFormData) => {

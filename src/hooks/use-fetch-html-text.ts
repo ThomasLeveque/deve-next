@@ -10,9 +10,14 @@ interface useFetchHtmlTextReturn {
   loading: boolean;
 }
 
-export const useFetchHtmlText = (url: string, htmlSelector = 'h1'): useFetchHtmlTextReturn => {
+export const useFetchHtmlText = (
+  url: string,
+  initialFetch = true,
+  htmlSelector = 'h1'
+): useFetchHtmlTextReturn => {
   const [htmlText, setHtmlText] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [shouldInitialFetch, setShouldInitialFetch] = useState(initialFetch);
 
   useEffect(() => {
     const asyncFetchHtmlText = async () => {
@@ -36,9 +41,10 @@ export const useFetchHtmlText = (url: string, htmlSelector = 'h1'): useFetchHtml
       }
       setLoading(false);
     };
-    if (isValidUrl(url)) {
+    if (isValidUrl(url) && shouldInitialFetch) {
       asyncFetchHtmlText();
     }
+    setShouldInitialFetch(true);
   }, [url]);
 
   return {

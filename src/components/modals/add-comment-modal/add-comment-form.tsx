@@ -2,7 +2,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import * as yup from 'yup';
 
 import Button from '@components/elements/button';
 import TextArea from '@components/elements/textarea';
@@ -15,14 +14,11 @@ import { useLinksQueryKey } from '@hooks/link/use-links-query-key';
 import { CommentFormData } from '@data-types/comment.type';
 import { Link } from '@data-types/link.type';
 
+import { addCommentSchema } from '@utils/form-schemas';
 import { formatComment } from '@utils/format-comment';
 import { formatError } from '@utils/format-string';
 import { db } from '@utils/init-firebase';
 import { Document } from '@utils/shared-types';
-
-const schema = yup.object().shape({
-  text: yup.string().required('Comment is required').max(255),
-});
 
 interface AddCommentFormProps {
   closeModal: () => void;
@@ -43,7 +39,7 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
     formState: { errors },
     reset,
   } = useForm<CommentFormData>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(addCommentSchema),
   });
 
   const onSubmit = useCallback(

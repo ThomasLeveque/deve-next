@@ -18,6 +18,7 @@ const Tag: React.FC<TagProps> = React.memo((props) => {
 
   return (
     <button
+      type="button"
       onClick={props.onClick}
       className={classNames(
         'rounded-tag py-[7px] px-[10px] inline-flex uppercase',

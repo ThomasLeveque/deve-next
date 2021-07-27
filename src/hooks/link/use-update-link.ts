@@ -7,6 +7,10 @@ import {
   useQueryClient,
 } from 'react-query';
 
+import { queryKeys as categoryQueryKeys } from '@hooks/category/query-keys';
+import { useUpdateCategory } from '@hooks/category/use-update-category';
+
+import { Category } from '@data-types/categorie.type';
 import { Link } from '@data-types/link.type';
 
 import { formatError } from '@utils/format-string';
@@ -39,6 +43,8 @@ export const useUpdateLink = (
   Document<Link>
 > => {
   const queryClient = useQueryClient();
+  const updateCategory = useUpdateCategory();
+
   return useMutation(
     (linkToUpdate: Partial<Document<Link>>) => updateLink(prevLink.id, linkToUpdate),
     {
@@ -52,6 +58,50 @@ export const useUpdateLink = (
         );
 
         return prevLink;
+      },
+      onSuccess: (data, linkToUpdate, prevLink) => {
+        if (linkToUpdate.categories) {
+          const tags = queryClient.getQueryData<Document<Category>[]>(categoryQueryKeys.categories);
+
+          const prevTags = prevLink?.categories ?? [];
+          const newTags = linkToUpdate.categories;
+
+          prevTags.forEach((prevTag) => {
+            const found = newTags.find(
+              (newTag) => newTag.toLocaleLowerCase() === prevTag.toLocaleLowerCase()
+            );
+            if (!found) {
+              // Removed item
+              const removedItem = tags?.find(
+                (tag) => tag.name.toLocaleLowerCase() === prevTag.toLocaleLowerCase()
+              );
+              if (removedItem) {
+                updateCategory.mutate({
+                  prevCategory: removedItem,
+                  categoryToUpdate: { count: removedItem.count - 1 },
+                });
+              }
+            }
+          });
+
+          newTags.forEach((newTag) => {
+            const found = prevTags.find(
+              (prevTag) => prevTag.toLocaleLowerCase() === newTag.toLocaleLowerCase()
+            );
+            if (!found) {
+              // Added item
+              const addedItem = tags?.find(
+                (tag) => tag.name.toLocaleLowerCase() === newTag.toLocaleLowerCase()
+              );
+              if (addedItem) {
+                updateCategory.mutate({
+                  prevCategory: addedItem,
+                  categoryToUpdate: { count: addedItem.count + 1 },
+                });
+              }
+            }
+          });
+        }
       },
       onError: (err, variables, prevLink) => {
         toast.error(formatError(err));

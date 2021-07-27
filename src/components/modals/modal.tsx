@@ -9,6 +9,7 @@ interface ModalProps {
   title?: string;
   description?: string;
   className?: string;
+  titleClassName?: string;
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -17,6 +18,7 @@ export const Modal: React.FC<ModalProps> = ({
   title,
   description,
   className,
+  titleClassName,
   children,
 }) => {
   return (
@@ -37,7 +39,12 @@ export const Modal: React.FC<ModalProps> = ({
             <XIcon className="w-6" />
           </button>
           {title !== undefined ? (
-            <Dialog.Title className="font-poppins-bold text-center text-4xl mb-8 mt-2">
+            <Dialog.Title
+              className={classNames(
+                'font-poppins-bold text-center text-4xl mb-8 mt-2 mx-4',
+                titleClassName
+              )}
+            >
               {title}
             </Dialog.Title>
           ) : null}

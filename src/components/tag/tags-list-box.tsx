@@ -77,8 +77,9 @@ const TagsListBox: React.FC<TagsListBoxProps> = React.memo((props) => {
     [selectedTags]
   );
   const removeSelectedTags = useCallback(
-    (tag: string) =>
-      props.setSelectedTags(selectedTags.filter((selectedTag) => selectedTag !== tag)),
+    (tag: string) => {
+      props.setSelectedTags(selectedTags.filter((selectedTag) => selectedTag !== tag));
+    },
     [selectedTags]
   );
 
@@ -140,13 +141,15 @@ const TagsListBox: React.FC<TagsListBoxProps> = React.memo((props) => {
       ) : null}
       {selectedTags.length > 0 && (
         <TagListWrapper className="mb-4">
-          {selectedTags.map((selectedTag) => (
+          {selectedTags.map((selectedTag, i) => (
             <Tag
               text={selectedTag}
-              key={selectedTag}
+              key={`${selectedTag}${i}`}
               isColored
               isClosable
-              onClose={() => removeSelectedTags(selectedTag)}
+              onClose={() => {
+                removeSelectedTags(selectedTag);
+              }}
             />
           ))}
         </TagListWrapper>

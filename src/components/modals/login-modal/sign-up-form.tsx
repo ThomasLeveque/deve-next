@@ -2,7 +2,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import * as yup from 'yup';
 
 import Button from '@components/elements/button';
 import TextInput from '@components/elements/text-input';
@@ -11,19 +10,10 @@ import { useAuth } from '@hooks/auth/useAuth';
 
 import { SignUpFormData } from '@data-types/user.type';
 
+import { signUpSchema } from '@utils/form-schemas';
 import { formatError } from '@utils/format-string';
 
 import { loginStep } from './login-modal';
-
-const schema = yup.object().shape({
-  displayName: yup.string().required('Username is required').max(255),
-  email: yup.string().email('Email must be a valid email').required('Email is required').max(255),
-  password: yup
-    .string()
-    .required('Password is required')
-    .min(6, 'Password must be at least 6 characters')
-    .max(255),
-});
 
 interface SignUpFormProps {
   setStep: (step: loginStep) => void;
@@ -39,7 +29,7 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
     handleSubmit,
     formState: { errors },
   } = useForm<SignUpFormData>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(signUpSchema),
   });
 
   const onSubmit = useCallback(async ({ displayName, email, password }: SignUpFormData) => {
