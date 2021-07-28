@@ -1,4 +1,4 @@
-import { AnnotationIcon, FireIcon, PencilAltIcon } from '@heroicons/react/outline';
+import { AnnotationIcon, FireIcon, PencilAltIcon, TrashIcon } from '@heroicons/react/outline';
 import { FireIcon as FireIconSolid } from '@heroicons/react/solid';
 import { ModalsStore, useModalsStore } from '@store/modals.store';
 import classNames from 'classnames';
@@ -21,6 +21,7 @@ import Tag from '../elements/tag';
 
 const setLinkToCommentModalSelector = (state: ModalsStore) => state.setLinkToCommentModal;
 const setLinkToUpdateModalSelector = (state: ModalsStore) => state.setLinkToUpdateModal;
+const setLinkToRemoveModalSelector = (state: ModalsStore) => state.setLinkToRemoveModal;
 const toggleAuthModalSelector = (state: ModalsStore) => state.toggleAuthModal;
 
 interface LinkItemProps {
@@ -38,6 +39,7 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
 
   const setLinkToCommentModal = useModalsStore(setLinkToCommentModalSelector);
   const setLinkToUpdateModal = useModalsStore(setLinkToUpdateModalSelector);
+  const setLinkToRemoveModal = useModalsStore(setLinkToRemoveModalSelector);
   const toggleAuthModal = useModalsStore(toggleAuthModalSelector);
 
   const isLikedByMe = useMemo(
@@ -45,7 +47,14 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
     [user, link]
   );
 
-  const canUpdateLink = useMemo(() => user?.isAdmin || link.postedBy.id === user?.id, [user, link]);
+  const canUpdateLinkData = useMemo(
+    () => user && (user.isAdmin || link.postedBy.id === user.id),
+    [user, link]
+  );
+  const canRemoveLink = useMemo(
+    () => user && (user.isAdmin || link.postedBy.id === user.id),
+    [user, link]
+  );
 
   const renderFires = useMemo(() => {
     if (link.voteCount === 0) {
@@ -88,7 +97,7 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
 
   return (
     <li className="flex flex-col p-[30px] rounded-link-card bg-gray-100 group">
-      <div className="mb-5 flex justify-between items-start space-x-3">
+      <div className="mb-5 flex justify-between items-start space-x-3 min-h-[20px]">
         <div>
           {!isProfilLink && (
             <h3 className="font-poppins-bold text-[13px] mb-1">
@@ -97,14 +106,24 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
           )}
           <p className="text-[10px] text-gray-400">{format(link.createdAt, 'MMMM d yyyy')}</p>
         </div>
-        {canUpdateLink && (
-          <button
-            className="hover:text-secondary group-hover:block hidden"
-            onClick={() => (user ? setLinkToUpdateModal(link) : toggleAuthModal())}
-          >
-            <PencilAltIcon className="w-5" />
-          </button>
-        )}
+        <div className="space-x-1 group-hover:flex hidden">
+          {canUpdateLinkData && (
+            <button
+              className="hover:text-secondary"
+              onClick={() => (canUpdateLinkData ? setLinkToUpdateModal(link) : toggleAuthModal())}
+            >
+              <PencilAltIcon className="w-5" />
+            </button>
+          )}
+          {canRemoveLink && (
+            <button
+              className="hover:text-secondary"
+              onClick={() => (canRemoveLink ? setLinkToRemoveModal(link) : toggleAuthModal())}
+            >
+              <TrashIcon className="w-5" />
+            </button>
+          )}
+        </div>
       </div>
       <a href={link.url} rel="noreferrer" target="_blank" className="mb-8 with-ring block group">
         <h2 className="text-3xl mb-2 font-poppins-bold group-hover:text-secondary">

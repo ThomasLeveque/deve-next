@@ -12,7 +12,7 @@ import { dbKeys } from './db-keys';
 import { queryKeys } from './query-keys';
 
 const removeCategory = async (categoryId: string): Promise<Document<Category>[]> => {
-  const categoryRef = db.collection(dbKeys.categories).doc(categoryId);
+  const categoryRef = db.doc(dbKeys.category(categoryId));
   await categoryRef.delete();
   return [];
 };

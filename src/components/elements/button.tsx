@@ -13,7 +13,7 @@ interface ButtonProps {
   icon?: JSX.Element;
   iconPosition?: 'left' | 'right';
   fullWidth?: boolean;
-  theme?: 'primary' | 'secondary' | 'black' | 'gray';
+  theme?: 'primary' | 'secondary' | 'black' | 'gray' | 'danger';
 }
 
 const Button: React.FC<ButtonProps> = React.memo((props) => {
@@ -36,6 +36,8 @@ const Button: React.FC<ButtonProps> = React.memo((props) => {
         return 'bg-black text-white';
       case 'gray':
         return 'bg-gray-100 text-black';
+      case 'danger':
+        return 'bg-danger-400 text-white';
     }
   }, [theme]);
 
