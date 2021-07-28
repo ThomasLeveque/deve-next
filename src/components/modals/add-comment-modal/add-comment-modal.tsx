@@ -48,7 +48,9 @@ const AddCommentModal: React.FC = React.memo(() => {
         <>
           <ul>
             {comments?.pages?.map((page) =>
-              page?.data.map((comment) => <CommentItem key={comment.id} comment={comment} />)
+              page?.data.map((comment) => (
+                <CommentItem key={comment.id} comment={comment} link={linkToCommentModal} />
+              ))
             )}
           </ul>
           {linkToCommentModal?.commentCount > COMMENTS_PER_PAGE ? (

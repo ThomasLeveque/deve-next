@@ -1,3 +1,4 @@
+import { ModalsStore, useModalsStore } from '@store/modals.store';
 import toast from 'react-hot-toast';
 import {
   InfiniteData,
@@ -19,6 +20,9 @@ import { updateItemInsidePaginatedData } from '@utils/mutate-data';
 import { Document, PaginatedData } from '@utils/shared-types';
 
 import { dbKeys } from './db-keys';
+
+const linkToCommentModalSelector = (state: ModalsStore) => state.linkToCommentModal;
+const setLinkToCommentModalSelector = (state: ModalsStore) => state.setLinkToCommentModal;
 
 const updateLink = async (
   linkId: string | undefined,
@@ -45,6 +49,9 @@ export const useUpdateLink = (
   const queryClient = useQueryClient();
   const updateCategory = useUpdateCategory();
 
+  const linkToCommentModal = useModalsStore(linkToCommentModalSelector);
+  const setLinkToCommentModal = useModalsStore(setLinkToCommentModalSelector);
+
   return useMutation(
     (linkToUpdate: Partial<Document<Link>>) => updateLink(prevLink.id, linkToUpdate),
     {
@@ -56,6 +63,10 @@ export const useUpdateLink = (
         queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(queryKey, (oldLinks) =>
           updateItemInsidePaginatedData<Link>(newLink, oldLinks)
         );
+
+        if (linkToCommentModal) {
+          setLinkToCommentModal(newLink);
+        }
 
         return prevLink;
       },
@@ -109,6 +120,10 @@ export const useUpdateLink = (
           queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(queryKey, (oldLinks) =>
             updateItemInsidePaginatedData<Link>(prevLink, oldLinks)
           );
+
+          if (linkToCommentModal) {
+            setLinkToCommentModal(prevLink);
+          }
         }
       },
     }

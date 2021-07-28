@@ -100,9 +100,7 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
       <div className="mb-5 flex justify-between items-start space-x-3 min-h-[20px]">
         <div>
           {!isProfilLink && (
-            <h3 className="font-poppins-bold text-[13px] mb-1">
-              Posted by {link.postedBy.displayName}
-            </h3>
+            <h3 className="font-poppins-bold text-[13px] mb-1">{link.postedBy.displayName}</h3>
           )}
           <p className="text-[10px] text-gray-400">{format(link.createdAt, 'MMMM d yyyy')}</p>
         </div>
