@@ -44,7 +44,7 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>((props, re
           minLength={props.minLength}
           autoComplete={props.autoComplete}
           className={classNames(
-            'bg-gray-100 w-full h-24 with-ring rounded-button placeholder-gray-400 text-sm px-5 py-4',
+            'bg-gray-100 w-full with-ring rounded-button placeholder-gray-400 text-sm px-5 py-4',
             props.textareaClassName
           )}
           value={props.value}

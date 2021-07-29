@@ -1,7 +1,11 @@
-import { TrashIcon } from '@heroicons/react/outline';
+import { Popover } from '@headlessui/react';
+import { PencilAltIcon, TrashIcon } from '@heroicons/react/outline';
 import { format } from 'date-fns';
 import React, { useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
+
+import Button from '@components/elements/button';
+import MyPopover from '@components/elements/popover';
 
 import { useAuth } from '@hooks/auth/useAuth';
 import { useLinksQueryKey } from '@hooks/link/use-links-query-key';
@@ -29,6 +33,8 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, link, isPreview = fa
     [user]
   );
 
+  const canUpdateComment = useMemo(() => user && user.id === comment.postedBy.id, [user]);
+
   return (
     <li className="group p-5 border border-gray-400/30 rounded-button">
       <div className="mb-2 flex justify-between items-start space-x-3 min-h-[18px]">
@@ -40,14 +46,28 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, link, isPreview = fa
             {format(comment.createdAt, 'MMMM d yyyy')}
           </p>
         </div>
-        {canRemoveComment && !isPreview && (
-          <button
-            className="hover:text-secondary group-hover:block hidden"
-            onClick={() => removeComment.mutate(comment)}
-          >
-            <TrashIcon className="w-[18px]" />
-          </button>
-        )}
+        <div className="space-x-1 group-hover:flex hidden">
+          {canUpdateComment && !isPreview && (
+            <button className="hover:text-secondary" onClick={() => {}}>
+              <PencilAltIcon className="w-[18px]" />
+            </button>
+          )}
+          {canRemoveComment && !isPreview && (
+            <MyPopover buttonItem={<TrashIcon className="w-[18px]" />}>
+              <div className="flex space-x-4">
+                <Popover.Button as={Button} text="Cancel" theme="gray" />
+                <Button
+                  theme="danger"
+                  text="Remove"
+                  type="button"
+                  onClick={() => {
+                    removeComment.mutate(comment);
+                  }}
+                />
+              </div>
+            </MyPopover>
+          )}
+        </div>
       </div>
 
       <ReactMarkdown linkTarget="_blank" className="prose prose-sm">
