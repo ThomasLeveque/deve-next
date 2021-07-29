@@ -46,10 +46,19 @@ module.exports = {
           900: '#CC7400',
         },
       },
+      typography: (theme) => ({
+        DEFAULT: {
+          css: {
+            strong: {
+              fontFamily: theme('fontFamily.poppins-bold'),
+            },
+          },
+        },
+      }),
     },
   },
   variants: {
     extend: {},
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/typography')],
 };

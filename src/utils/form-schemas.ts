@@ -28,9 +28,12 @@ export const signUpSchema = yup.object().shape({
   password: userPasswordSchema,
 });
 
-export const addCommentSchema = yup.object().shape({
-  text: yup.string().required('Comment is required').max(255),
-});
+export const commentMaxLength = 1000;
+const commentSchema = {
+  text: yup.string().required('Comment is required').max(commentMaxLength),
+};
+
+export const addCommentSchema = yup.object().shape(commentSchema);
 
 const linkSchema = {
   url: yup

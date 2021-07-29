@@ -48,17 +48,16 @@ export const useAddLinkComment = (
       queryClient.setQueryData<InfiniteData<PaginatedData<Comment>>>(commentsKey, (oldComments) =>
         addItemInsidePaginatedData(newComment, oldComments)
       );
+      updateLink.mutate({ commentCount: link.commentCount + 1 });
 
       return newComment;
-    },
-    onSuccess: () => {
-      updateLink.mutate({ commentCount: link.commentCount + 1 });
     },
     onError: (err, variables, newComment) => {
       toast.error(formatError(err));
       queryClient.setQueryData<InfiniteData<PaginatedData<Comment>>>(commentsKey, (oldComments) =>
         removeItemInsidePaginatedData(newComment?.id as string, oldComments)
       );
+      updateLink.mutate({ commentCount: link.commentCount - 1 });
     },
   });
 };

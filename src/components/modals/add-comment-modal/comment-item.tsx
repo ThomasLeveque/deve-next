@@ -1,8 +1,7 @@
 import { TrashIcon } from '@heroicons/react/outline';
 import { format } from 'date-fns';
 import React, { useMemo } from 'react';
-
-import Separator from '@components/elements/separator';
+import ReactMarkdown from 'react-markdown';
 
 import { useAuth } from '@hooks/auth/useAuth';
 import { useLinksQueryKey } from '@hooks/link/use-links-query-key';
@@ -16,9 +15,10 @@ import { Document } from '@utils/shared-types';
 interface CommentItemProps {
   comment: Document<Comment>;
   link: Document<Link>;
+  isPreview?: boolean;
 }
 
-const CommentItem: React.FC<CommentItemProps> = ({ comment, link }) => {
+const CommentItem: React.FC<CommentItemProps> = ({ comment, link, isPreview = false }) => {
   const { user } = useAuth();
   const linksQueryKey = useLinksQueryKey(user?.id as string);
 
@@ -30,8 +30,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, link }) => {
   );
 
   return (
-    <li className="first:mt-8 group">
-      <Separator className="my-5" />
+    <li className="group p-5 border border-gray-400/30 rounded-button">
       <div className="mb-2 flex justify-between items-start space-x-3 min-h-[18px]">
         <div className="flex text-[10px]">
           <h3 className="font-poppins-bold">{comment.postedBy.displayName}</h3>
@@ -41,7 +40,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, link }) => {
             {format(comment.createdAt, 'MMMM d yyyy')}
           </p>
         </div>
-        {canRemoveComment && (
+        {canRemoveComment && !isPreview && (
           <button
             className="hover:text-secondary group-hover:block hidden"
             onClick={() => removeComment.mutate(comment)}
@@ -50,7 +49,10 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, link }) => {
           </button>
         )}
       </div>
-      <h4 className="text-sm">{comment.text}</h4>
+
+      <ReactMarkdown linkTarget="_blank" className="prose prose-sm">
+        {comment.text}
+      </ReactMarkdown>
     </li>
   );
 };

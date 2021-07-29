@@ -31,7 +31,7 @@ const AddCommentModal: React.FC = React.memo(() => {
   };
 
   return linkToCommentModal ? (
-    <Modal isOpen={!!linkToCommentModal} closeModal={closeModal} className="max-w-xl">
+    <Modal isOpen={!!linkToCommentModal} closeModal={closeModal} className="max-w-2xl">
       <a
         href={linkToCommentModal.url}
         rel="noreferrer"
@@ -44,33 +44,33 @@ const AddCommentModal: React.FC = React.memo(() => {
         <p className="text-xs group-hover:underline">On {getDomain(linkToCommentModal.url)}</p>
       </a>
       <AddCommentForm link={linkToCommentModal} closeModal={closeModal} />
-      {comments ? (
+      {linkToCommentModal.commentCount > 0 ? (
         <>
-          <ul>
-            {comments?.pages?.map((page) =>
-              page?.data.map((comment) => (
-                <CommentItem key={comment.id} comment={comment} link={linkToCommentModal} />
-              ))
-            )}
-          </ul>
-          {linkToCommentModal?.commentCount > COMMENTS_PER_PAGE ? (
-            <Button
-              theme="secondary"
-              text={hasNextPage ? 'Load more' : 'No more comments'}
-              className="mx-auto mt-8"
-              disabled={!hasNextPage}
-              loading={isFetchingNextPage}
-              onClick={fetchNextPage}
-            />
-          ) : null}
-        </>
-      ) : (
-        <>
-          {linkToCommentModal.commentCount > 0 ? (
+          {comments ? (
+            <>
+              <ul className="mt-8 space-y-5">
+                {comments?.pages?.map((page) =>
+                  page?.data.map((comment) => (
+                    <CommentItem key={comment.id} comment={comment} link={linkToCommentModal} />
+                  ))
+                )}
+              </ul>
+              {linkToCommentModal?.commentCount > COMMENTS_PER_PAGE ? (
+                <Button
+                  theme="secondary"
+                  text={hasNextPage ? 'Load more' : 'No more comments'}
+                  className="mx-auto mt-8"
+                  disabled={!hasNextPage}
+                  loading={isFetchingNextPage}
+                  onClick={fetchNextPage}
+                />
+              ) : null}
+            </>
+          ) : (
             <SpinnerIcon className="w-8 m-auto mt-12" />
-          ) : null}
+          )}
         </>
-      )}
+      ) : null}
     </Modal>
   ) : null;
 });
