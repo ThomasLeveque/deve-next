@@ -2,52 +2,48 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import ReactMarkdown from 'react-markdown';
 
 import Button from '@components/elements/button';
 import TextArea from '@components/elements/textarea';
 
 import { useAuth } from '@hooks/auth/useAuth';
-import { dbKeys } from '@hooks/link/db-keys';
-import { useAddLinkComment } from '@hooks/link/use-add-link-comment';
-import { useLinksQueryKey } from '@hooks/link/use-links-query-key';
+import { useUpdateLinkComment } from '@hooks/link/use-update-link-comment';
 
-import { CommentFormData } from '@data-types/comment.type';
+import { Comment, CommentFormData } from '@data-types/comment.type';
 import { Link } from '@data-types/link.type';
-import { User } from '@data-types/user.type';
 
 import { addCommentSchema, commentMaxLength } from '@utils/form-schemas';
-import { formatComment } from '@utils/format-comment';
 import { formatError } from '@utils/format-string';
-import { db } from '@utils/init-firebase';
 import { Document } from '@utils/shared-types';
 
-import CommentItem from './comment-item';
-
-interface AddCommentFormProps {
+interface UpdateCommentFormProps {
+  commentToUpdate: Document<Comment>;
   link: Document<Link>;
+  closeUpdate: () => void;
 }
 
-const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
+const UpdateCommentForm: React.FC<UpdateCommentFormProps> = (props) => {
   const { user } = useAuth();
   const linkId = props.link.id as string;
 
   const [showPreview, setShowPreview] = useState(false);
 
-  const linksQueryKey = useLinksQueryKey(user?.id as string);
-
-  const addLinkComment = useAddLinkComment(props.link, linksQueryKey);
+  const updateLinkComment = useUpdateLinkComment(props.link, props.commentToUpdate);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
     watch,
   } = useForm<CommentFormData>({
     resolver: yupResolver(addCommentSchema),
+    defaultValues: {
+      text: props.commentToUpdate.text,
+    },
   });
 
-  const commentText = watch('text', '') ?? '';
+  const commentText = watch('text', props.commentToUpdate.text) ?? '';
 
   const onSubmit = useCallback(
     (formData: CommentFormData) => {
@@ -55,12 +51,11 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
         if (!user) {
           throw new Error('You must be login');
         }
-        const commentRef = db.collection(dbKeys.comments(linkId)).doc();
 
-        const comment = formatComment(formData, user);
-        addLinkComment.mutate({ commentRef, comment });
-
-        reset();
+        if (formData.text !== props.commentToUpdate.text) {
+          updateLinkComment.mutate(formData);
+        }
+        props.closeUpdate();
       } catch (err) {
         toast.error(formatError(err));
         console.error(err);
@@ -73,13 +68,9 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       {showPreview ? (
-        <ul>
-          <CommentItem
-            comment={formatComment({ text: commentText }, user as Document<User>)}
-            isPreview={true}
-            link={props.link}
-          />
-        </ul>
+        <ReactMarkdown linkTarget="_blank" className="prose prose-sm">
+          {commentText}
+        </ReactMarkdown>
       ) : (
         <>
           <TextArea
@@ -88,7 +79,7 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
             {...register('text')}
             errorText={errors.text?.message}
             maxLength={commentMaxLength}
-            textareaClassName="h-32"
+            textareaClassName="h-24"
           />
           <p className="mt-3 ml-1 text-xs">
             Characters left:{' '}
@@ -107,10 +98,10 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
             }
           }}
         />
-        <Button theme="secondary" text="Add" type="submit" />
+        <Button theme="secondary" text="Update" type="submit" />
       </div>
     </form>
   );
 };
 
-export default AddCommentForm;
+export default UpdateCommentForm;

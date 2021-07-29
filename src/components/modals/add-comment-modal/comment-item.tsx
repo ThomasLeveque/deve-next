@@ -1,7 +1,7 @@
 import { Popover } from '@headlessui/react';
-import { PencilAltIcon, TrashIcon } from '@heroicons/react/outline';
+import { PencilAltIcon, TrashIcon, XIcon } from '@heroicons/react/outline';
 import { format } from 'date-fns';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 
 import Button from '@components/elements/button';
@@ -16,6 +16,8 @@ import { Link } from '@data-types/link.type';
 
 import { Document } from '@utils/shared-types';
 
+import UpdateCommentForm from './update-comment-form';
+
 interface CommentItemProps {
   comment: Document<Comment>;
   link: Document<Link>;
@@ -25,6 +27,7 @@ interface CommentItemProps {
 const CommentItem: React.FC<CommentItemProps> = ({ comment, link, isPreview = false }) => {
   const { user } = useAuth();
   const linksQueryKey = useLinksQueryKey(user?.id as string);
+  const [updateComment, setUpdateComment] = useState(false);
 
   const removeComment = useRemoveLinkComment(link, linksQueryKey);
 
@@ -37,7 +40,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, link, isPreview = fa
 
   return (
     <li className="group p-5 border border-gray-400/30 rounded-button">
-      <div className="mb-2 flex justify-between items-start space-x-3 min-h-[18px]">
+      <div className="mb-3 flex justify-between items-start space-x-3 min-h-[18px]">
         <div className="flex text-[10px]">
           <h3 className="font-poppins-bold">{comment.postedBy.displayName}</h3>
 
@@ -48,8 +51,15 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, link, isPreview = fa
         </div>
         <div className="space-x-1 group-hover:flex hidden">
           {canUpdateComment && !isPreview && (
-            <button className="hover:text-secondary" onClick={() => {}}>
-              <PencilAltIcon className="w-[18px]" />
+            <button
+              className="hover:text-secondary"
+              onClick={() => setUpdateComment((prevUpdateComment) => !prevUpdateComment)}
+            >
+              {updateComment ? (
+                <XIcon className="w-[18px]" />
+              ) : (
+                <PencilAltIcon className="w-[18px]" />
+              )}
             </button>
           )}
           {canRemoveComment && !isPreview && (
@@ -70,9 +80,17 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, link, isPreview = fa
         </div>
       </div>
 
-      <ReactMarkdown linkTarget="_blank" className="prose prose-sm">
-        {comment.text}
-      </ReactMarkdown>
+      {updateComment ? (
+        <UpdateCommentForm
+          commentToUpdate={comment}
+          link={link}
+          closeUpdate={() => setUpdateComment(false)}
+        />
+      ) : (
+        <ReactMarkdown linkTarget="_blank" className="prose prose-sm">
+          {comment.text}
+        </ReactMarkdown>
+      )}
     </li>
   );
 };

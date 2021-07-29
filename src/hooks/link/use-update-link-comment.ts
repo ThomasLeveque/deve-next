@@ -12,7 +12,7 @@ import { Document, PaginatedData } from '@utils/shared-types';
 import { dbKeys } from './db-keys';
 import { queryKeys } from './query-keys';
 
-const removeLinkComment = async (
+const updateLinkComment = async (
   linkId: string | undefined,
   commentId: string | undefined,
   commentToUpdate: Partial<Document<Comment>>
@@ -38,7 +38,7 @@ export const useUpdateLinkComment = (
   const commentsKey = queryKeys.linkComments(link.id as string);
 
   return useMutation(
-    (commentToUpdate) => removeLinkComment(link.id, prevComment.id, commentToUpdate),
+    (commentToUpdate) => updateLinkComment(link.id, prevComment.id, commentToUpdate),
     {
       onMutate: async (commentToUpdate) => {
         await queryClient.cancelQueries(commentsKey);
