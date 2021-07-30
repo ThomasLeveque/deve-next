@@ -1,5 +1,4 @@
 import { format } from 'date-fns';
-import { NextPage } from 'next';
 import React from 'react';
 
 import Avatar from '@components/elements/avatar';
@@ -13,7 +12,9 @@ import { useAuth } from '@hooks/auth/useAuth';
 import { queryKeys } from '@hooks/link/query-keys';
 import { useUserLinks } from '@hooks/link/use-user-links';
 
-const Account: NextPage = () => {
+import { Page } from './_app';
+
+const Account: Page = () => {
   const { user } = useAuth();
 
   const {
@@ -88,5 +89,7 @@ const Account: NextPage = () => {
     </Protected>
   );
 };
+
+Account.title = 'Account - Deve-next';
 
 export default Account;

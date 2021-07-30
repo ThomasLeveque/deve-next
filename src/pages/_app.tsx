@@ -1,3 +1,4 @@
+import { NextPage } from 'next';
 import { AppProps } from 'next/app';
 import React from 'react';
 import { Toaster } from 'react-hot-toast';
@@ -20,11 +21,16 @@ const queryClient = new QueryClient({
   },
 });
 
-const MyApp = ({ Component, pageProps }: AppProps): JSX.Element => {
+export type Page<P = unknown> = NextPage<P> & {
+  title?: string;
+  description?: string;
+};
+
+const MyApp = ({ Component, pageProps }: AppProps & { Component: Page }): JSX.Element => {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <Layout>
+        <Layout title={Component.title} description={Component.description}>
           <Component {...pageProps} />
           <ReactQueryDevtools initialIsOpen={false} />
         </Layout>

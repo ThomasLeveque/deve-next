@@ -1,7 +1,6 @@
 import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon } from '@heroicons/react/outline';
 import { AppConfigStore, useAppConfigStore } from '@store/app-config.store';
 import classNames from 'classnames';
-import { NextPage } from 'next';
 import React from 'react';
 
 import Button from '@components/elements/button';
@@ -14,10 +13,12 @@ import { queryKeys } from '@hooks/link/query-keys';
 import { useLinks } from '@hooks/link/use-links';
 import { useQueryString } from '@hooks/use-query-string';
 
+import { Page } from './_app';
+
 const tagsSidebarOpenSelector = (state: AppConfigStore) => state.tagsSidebarOpen;
 const setTagsSidebarOpenSelector = (state: AppConfigStore) => state.setTagsSidebarOpen;
 
-const Home: NextPage = () => {
+const Home: Page = () => {
   const tagsSidebarOpen = useAppConfigStore(tagsSidebarOpenSelector);
   const setTagsSidebarOpen = useAppConfigStore(setTagsSidebarOpenSelector);
 
