@@ -63,7 +63,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, link, isPreview = fa
             </button>
           )}
           {canRemoveComment && !isPreview && (
-            <MyPopover buttonItem={<TrashIcon className="w-[18px]" />}>
+            <MyPopover buttonItem={<TrashIcon className="w-[18px] hover:text-secondary" />}>
               <div className="flex space-x-4">
                 <Popover.Button as={Button} text="Cancel" theme="gray" />
                 <Button
