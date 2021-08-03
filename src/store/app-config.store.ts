@@ -6,6 +6,6 @@ export interface AppConfigStore {
 }
 
 export const useAppConfigStore = create<AppConfigStore>((set) => ({
-  tagsSidebarOpen: true,
+  tagsSidebarOpen: false,
   setTagsSidebarOpen: (open) => set({ tagsSidebarOpen: open }),
 }));

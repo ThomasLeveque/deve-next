@@ -11,6 +11,7 @@ import TagsFilterSidebar from '@components/tag/tags-filter-sidebar';
 
 import { queryKeys } from '@hooks/link/query-keys';
 import { useLinks } from '@hooks/link/use-links';
+import { useMediaQuery } from '@hooks/use-media-query';
 import { useQueryString } from '@hooks/use-query-string';
 
 import { Page } from './_app';
@@ -21,13 +22,18 @@ const setTagsSidebarOpenSelector = (state: AppConfigStore) => state.setTagsSideb
 const Home: Page = () => {
   const tagsSidebarOpen = useAppConfigStore(tagsSidebarOpenSelector);
   const setTagsSidebarOpen = useAppConfigStore(setTagsSidebarOpenSelector);
+  const isMobileScreen = useMediaQuery('mobile');
 
   const { orderbyQuery, tagsQuery, clearTagQuery } = useQueryString();
 
   const { data: links, fetchNextPage, hasNextPage, isFetchingNextPage } = useLinks();
 
   return (
-    <div className={classNames({ 'grid grid-cols-[1fr,250px] gap-9': tagsSidebarOpen })}>
+    <div
+      className={classNames({
+        'grid grid-cols-[1fr,250px] gap-9': tagsSidebarOpen && !isMobileScreen,
+      })}
+    >
       {!links ? (
         <SpinnerIcon className="w-10 m-auto mt-14" />
       ) : (
@@ -51,7 +57,11 @@ const Home: Page = () => {
               />
             </div>
           </div>
-          <ul className="grid grid-cols-2 gap-5">
+          <ul
+            className={classNames('grid lg:grid-cols-2 gap-5', {
+              'md:grid-cols-2 xl:grid-cols-3': !tagsSidebarOpen,
+            })}
+          >
             {links?.pages?.map((page) =>
               page?.data.map((link) => (
                 <LinkItem
@@ -73,10 +83,35 @@ const Home: Page = () => {
         </section>
       )}
       {tagsSidebarOpen ? (
-        <TagsFilterSidebar
-          // -mx-5 px-5 to make ring visible because of overflow
-          className="-mx-5 px-5 content-screen-height sticky top-header py-8 overflow-y-auto"
-        />
+        <aside // -mx-5 px-5 to make ring visible because of overflow
+          className={classNames(
+            ' overflow-y-auto content-screen-height top-header',
+            {
+              'sticky px-5 -mx-5 py-8': !isMobileScreen,
+            },
+            { 'fixed right-0 top-0 bg-white px-8 pt-4 pb-8 shadow-lg': isMobileScreen }
+          )}
+        >
+          {isMobileScreen && tagsSidebarOpen && (
+            <div className="flex space-x-4 mb-5">
+              <Button
+                theme="secondary"
+                className="flex-none"
+                onClick={() => setTagsSidebarOpen(!tagsSidebarOpen)}
+                icon={tagsSidebarOpen ? <ChevronDoubleRightIcon /> : <ChevronDoubleLeftIcon />}
+              />
+              {tagsQuery.length > 0 && (
+                <Button
+                  theme="gray"
+                  className="flex-none"
+                  text="Clear tags"
+                  onClick={clearTagQuery}
+                />
+              )}
+            </div>
+          )}
+          <TagsFilterSidebar />
+        </aside>
       ) : null}
     </div>
   );

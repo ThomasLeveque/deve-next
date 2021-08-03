@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';
 
 import { useAuth } from '@hooks/auth/useAuth';
+import { useMediaQuery } from '@hooks/use-media-query';
 
 import Avatar from './elements/avatar';
 import Button from './elements/button';
@@ -18,6 +19,8 @@ const Header: React.FC = React.memo(() => {
 
   const toggleAuthModal = useModalsStore(toggleAuthModalSelector);
   const toggleAddLinkModal = useModalsStore(toggleAddLinkModalSelector);
+
+  const isSmallScreen = useMediaQuery('sm');
 
   const router = useRouter();
 
@@ -45,10 +48,11 @@ const Header: React.FC = React.memo(() => {
       <div className="grid grid-flow-col auto-cols-max items-center gap-4">
         <Button
           theme="secondary"
-          text="Add link"
+          text={isSmallScreen ? 'Add link' : undefined}
           icon={<PlusIcon />}
           onClick={user ? toggleAddLinkModal : toggleAuthModal}
         />
+
         {user ? (
           <MenuDropdown customButton={<Avatar />} items={userDropdownItems} />
         ) : (

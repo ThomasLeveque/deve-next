@@ -8,6 +8,11 @@ module.exports = {
       'poppins-bold': ['poppins-bold'],
     },
     extend: {
+      extend: {
+        screens: {
+          mobile: { max: '639px' },
+        },
+      },
       spacing: {
         header: '100px',
       },

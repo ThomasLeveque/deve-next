@@ -26,12 +26,12 @@ const Account: Page = () => {
 
   return (
     <Protected>
-      <div className="grid grid-cols-[250px,1fr] gap-9">
+      <div className="grid sm:grid-cols-[250px,1fr] gap-9">
         {user && (
           <>
-            <aside className="-mx-5 px-5 content-screen-height sticky top-header py-8 overflow-y-auto">
-              <Avatar className="mb-6 -ml-1" size={85} />
-              <ul className="space-y-5">
+            <aside className="-mx-5 px-5 sm:content-screen-height sm:sticky sm:top-header sm:pb-8 pt-8 sm:overflow-y-auto">
+              <Avatar disabled className="mb-6 mx-auto sm:-ml-1" size={85} />
+              <ul className="space-y-5 text-center sm:text-left">
                 <li>
                   <h3 className="text-[10px] font-poppins-bold uppercase mb-1">Username :</h3>
                   <h2 className="text-sm">{user.displayName}</h2>
@@ -42,7 +42,11 @@ const Account: Page = () => {
                 </li>
                 <li>
                   <h3 className="text-[10px] font-poppins-bold uppercase mb-2">Admin status :</h3>
-                  <ToggleSwitch disabled={true} checked={user.isAdmin} />
+                  <ToggleSwitch
+                    className="mx-auto sm:mx-0"
+                    disabled={true}
+                    checked={user.isAdmin}
+                  />
                 </li>
                 <li>
                   <h3 className="text-[10px] font-poppins-bold uppercase mb-1">Created at :</h3>
@@ -59,9 +63,9 @@ const Account: Page = () => {
             {!userLinks ? (
               <SpinnerIcon className="w-10 m-auto mt-14" />
             ) : (
-              <section className="my-8">
+              <section className="sm:mt-8 mb-8">
                 <h1 className="text-4xl mb-8 font-poppins-bold text-center">All your links</h1>
-                <ul className="grid grid-cols-2 gap-5">
+                <ul className="grid lg:grid-cols-2 gap-5">
                   {userLinks?.pages?.map((page) =>
                     page?.data.map((link) => (
                       <LinkItem

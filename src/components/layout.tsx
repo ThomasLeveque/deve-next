@@ -1,3 +1,4 @@
+import { AppConfigStore, useAppConfigStore } from '@store/app-config.store';
 import { ModalsStore, useModalsStore } from '@store/modals.store';
 import classNames from 'classnames';
 import Head from 'next/head';
@@ -7,6 +8,7 @@ import Header from '@components/header';
 
 import { useAuth } from '@hooks/auth/useAuth';
 import { usePrefetchCategories } from '@hooks/category/use-categories';
+import { useMediaQuery } from '@hooks/use-media-query';
 
 import AddCommentModal from './modals/add-comment-modal/add-comment-modal';
 import AddLinkModal from './modals/add-link-modal/add-link-modal';
@@ -23,8 +25,13 @@ interface LayoutProps {
   description?: string;
 }
 
+const setTagsSidebarOpenSelector = (state: AppConfigStore) => state.setTagsSidebarOpen;
+
 const Layout: React.FC<LayoutProps> = ({ className, children, ...props }) => {
   const { user } = useAuth();
+  const isMobileScreen = useMediaQuery('mobile');
+  const setTagsSidebarOpen = useAppConfigStore(setTagsSidebarOpenSelector);
+
   usePrefetchCategories();
 
   const authModal = useModalsStore(authModalSelector);
@@ -34,7 +41,11 @@ const Layout: React.FC<LayoutProps> = ({ className, children, ...props }) => {
     if (user && authModal) {
       toggleAuthModal();
     }
-  }, [user]);
+  }, [user, authModal]);
+
+  useEffect(() => {
+    setTagsSidebarOpen(!isMobileScreen);
+  }, [isMobileScreen]);
 
   const metaTitle = props.title ?? 'Deve-next';
   const metaDescription = props.description ?? 'The place to pratice technical watch';

@@ -28,7 +28,7 @@ export const Modal: React.FC<ModalProps> = ({
 
         <div
           className={classNames(
-            'bg-white max-w-lg w-full mx-auto rounded-modal z-20 p-10 relative',
+            'bg-white max-w-lg w-full mx-auto rounded-modal z-20 py-10 sm:px-10 px-8 relative',
             className
           )}
         >

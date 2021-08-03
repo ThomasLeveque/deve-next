@@ -7,6 +7,7 @@ interface ToggleSwitchProps {
   onChange?: (checked: boolean) => void;
   disabled?: boolean;
   screenReaderText?: string;
+  className?: string;
 }
 
 const ToggleSwitch: React.FC<ToggleSwitchProps> = (props) => {
@@ -20,7 +21,8 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = (props) => {
       className={classNames(
         'relative flex items-center px-1 h-[30px] w-[50px] rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none with-ring',
         props.checked ? 'bg-success-400 justify-end' : 'bg-danger-400 justify-start',
-        { 'opacity-50': disabled }
+        { 'opacity-50': disabled },
+        props.className
       )}
     >
       {props.screenReaderText !== undefined && (

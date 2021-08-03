@@ -117,15 +117,13 @@ const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
         label="tags (min 1, max 4)"
         errorText={(errors.tags as unknown as FieldError)?.message}
       />
-      <div className="flex justify-end space-x-5">
+      <div className="flex justify-end space-x-4">
         <Button
           text="Reset"
           theme="gray"
           onClick={() => {
-            reset({
-              url: props.linkToUpdate.url,
-              title: props.linkToUpdate.description,
-            });
+            setValue('url', props.linkToUpdate.url);
+            setValue('title', props.linkToUpdate.description);
             setValue('tags', props.linkToUpdate.categories);
           }}
         />

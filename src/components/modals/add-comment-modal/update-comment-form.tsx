@@ -88,7 +88,7 @@ const UpdateCommentForm: React.FC<UpdateCommentFormProps> = (props) => {
         </>
       )}
 
-      <div className="flex justify-end space-x-5 mt-8">
+      <div className="flex justify-end space-x-4 mt-8">
         <Button
           text={showPreview ? 'Edit' : 'Preview'}
           theme="gray"
