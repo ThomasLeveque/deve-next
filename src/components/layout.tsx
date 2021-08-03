@@ -10,6 +10,7 @@ import { useAuth } from '@hooks/auth/useAuth';
 import { usePrefetchCategories } from '@hooks/category/use-categories';
 import { useMediaQuery } from '@hooks/use-media-query';
 
+import BackToTop from './back-to-top';
 import AddCommentModal from './modals/add-comment-modal/add-comment-modal';
 import AddLinkModal from './modals/add-link-modal/add-link-modal';
 import LoginModal from './modals/login-modal/login-modal';
@@ -63,6 +64,7 @@ const Layout: React.FC<LayoutProps> = ({ className, children, ...props }) => {
       <AddCommentModal />
       <UpdateLinkModal />
       <RemoveLinkModal />
+      <BackToTop />
     </>
   );
 };

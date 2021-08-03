@@ -1,4 +1,4 @@
-import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon } from '@heroicons/react/outline';
+import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon } from '@heroicons/react/solid';
 import { AppConfigStore, useAppConfigStore } from '@store/app-config.store';
 import classNames from 'classnames';
 import React from 'react';

@@ -24,7 +24,7 @@ const getOrderbyDBQuery = (linksRef: Query, orderby: OrderLinksKey) => {
     case 'oldest':
       return linksRef.orderBy('createdAt', 'asc');
     case 'liked':
-      return linksRef.orderBy('voteCount', 'desc');
+      return linksRef.orderBy('voteCount', 'desc').orderBy('createdAt', 'desc');
   }
 };
 

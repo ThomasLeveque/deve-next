@@ -61,7 +61,7 @@ const Account: Page = () => {
               </ul>
             </aside>
             {!userLinks ? (
-              <SpinnerIcon className="w-10 m-auto mt-14" />
+              <SpinnerIcon className="w-10 m-auto my-8 sm:mt-14 " />
             ) : (
               <section className="sm:mt-8 mb-8">
                 <h1 className="text-4xl mb-8 font-poppins-bold text-center">All your links</h1>

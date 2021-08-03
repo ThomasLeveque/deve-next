@@ -13,3 +13,8 @@ export const formatComment = (formData: CommentFormData, author: Document<User>)
   createdAt: Date.now(),
   updatedAt: Date.now(),
 });
+
+export const formatUpdateComment = (formData: CommentFormData): Partial<Document<Comment>> => ({
+  text: formData.text,
+  updatedAt: Date.now(),
+});

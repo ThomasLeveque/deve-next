@@ -21,7 +21,7 @@ const OrderbyLinksDropdown: React.FC = React.memo(() => {
         icon: <SortAscendingIcon />,
       },
       liked: {
-        text: 'Most liked',
+        text: 'The hottest',
         onClick: () => updateOrderbyQuery('liked'),
         icon: <FireIcon />,
       },

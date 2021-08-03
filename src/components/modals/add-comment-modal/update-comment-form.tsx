@@ -14,6 +14,7 @@ import { Comment, CommentFormData } from '@data-types/comment.type';
 import { Link } from '@data-types/link.type';
 
 import { addCommentSchema, commentMaxLength } from '@utils/form-schemas';
+import { formatUpdateComment } from '@utils/format-comment';
 import { formatError } from '@utils/format-string';
 import { Document } from '@utils/shared-types';
 
@@ -53,7 +54,8 @@ const UpdateCommentForm: React.FC<UpdateCommentFormProps> = (props) => {
         }
 
         if (formData.text !== props.commentToUpdate.text) {
-          updateLinkComment.mutate(formData);
+          const updatedComment = formatUpdateComment(formData);
+          updateLinkComment.mutate(updatedComment);
         }
         props.closeUpdate();
       } catch (err) {

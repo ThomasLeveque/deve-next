@@ -58,11 +58,9 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
 
   const renderFires = useMemo(() => {
     if (link.voteCount === 0) {
-      return 'This is fire !';
-    } else if (link.voteCount === 1) {
-      return `${link.voteCount} fire`;
+      return 'Hot stuff';
     } else {
-      return `${link.voteCount} fires`;
+      return `${link.voteCount}`;
     }
   }, [link.voteCount]);
 
@@ -136,7 +134,7 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
           </li>
         ))}
       </TagListWrapper>
-      <div className="flex mt-auto">
+      <div className="flex mt-auto space-x-5">
         <button
           onClick={() => {
             if (user) {
@@ -145,22 +143,18 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
               toggleAuthModal();
             }
           }}
-          className={classNames('flex items-center mr-5 hover:text-secondary', {
+          className={classNames('flex items-center space-x-[6px] hover:text-secondary', {
             'text-secondary': isLikedByMe,
           })}
         >
-          {isLikedByMe ? (
-            <FireIconSolid className="mr-[6px] w-6" />
-          ) : (
-            <FireIcon className="mr-[6px] w-6" />
-          )}
+          {isLikedByMe ? <FireIconSolid className="w-6" /> : <FireIcon className="w-6" />}
           <span className="font-poppins-bold text-[11px]">{renderFires}</span>
         </button>
         <button
           onClick={() => (user ? setLinkToCommentModal(link) : toggleAuthModal())}
-          className="flex items-center hover:text-secondary"
+          className="flex items-center space-x-[6px] hover:text-secondary"
         >
-          <AnnotationIcon className="mr-[6px] w-6" />
+          <AnnotationIcon className="w-6" />
           <span className="font-poppins-bold text-[11px]">{renderComments}</span>
         </button>
       </div>
