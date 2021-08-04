@@ -123,7 +123,11 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
         </div>
       </div>
       <a href={link.url} rel="noreferrer" target="_blank" className="mb-8 with-ring block">
-        <h2 className="text-3xl mb-2 font-poppins-bold group-hover:text-secondary">
+        <h2
+          className={classNames('text-3xl mb-2 font-poppins-bold group-hover:text-secondary', {
+            '!text-2xl': link.description.length > 60,
+          })}
+        >
           {link.description}
         </h2>
         <p className="text-xs group-hover:underline">On {getDomain(link.url)}</p>
