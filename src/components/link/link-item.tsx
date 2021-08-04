@@ -26,6 +26,7 @@ const toggleAuthModalSelector = (state: ModalsStore) => state.toggleAuthModal;
 
 interface LinkItemProps {
   link: Document<Link>;
+  // To know if the component is used inside the profil page
   isProfilLink?: boolean;
   linksQueryKey: QueryKey;
 }
@@ -130,7 +131,12 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
       <TagListWrapper className="mb-5">
         {link.categories.map((tag) => (
           <li key={`${link.id}-${tag}`}>
-            <Tag text={tag} isColored onClick={isProfilLink ? undefined : () => addTagQuery(tag)} />
+            <Tag
+              text={tag}
+              isColored
+              disabled={isProfilLink}
+              onClick={isProfilLink ? undefined : () => addTagQuery(tag)}
+            />
           </li>
         ))}
       </TagListWrapper>
@@ -143,7 +149,7 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
               toggleAuthModal();
             }
           }}
-          className={classNames('flex items-center space-x-[6px] hover:text-secondary', {
+          className={classNames('flex items-center space-x-[6px] hover:text-secondary with-ring', {
             'text-secondary': isLikedByMe,
           })}
         >
@@ -152,7 +158,7 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
         </button>
         <button
           onClick={() => (user ? setLinkToCommentModal(link) : toggleAuthModal())}
-          className="flex items-center space-x-[6px] hover:text-secondary"
+          className="flex items-center space-x-[6px] hover:text-secondary with-ring"
         >
           <AnnotationIcon className="w-6" />
           <span className="font-poppins-bold text-[11px]">{renderComments}</span>

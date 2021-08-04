@@ -9,17 +9,20 @@ interface TagProps {
   isClosable?: boolean;
   onClose?: () => void;
   className?: string;
+  disabled?: boolean;
 }
 
 const Tag: React.FC<TagProps> = React.memo((props) => {
   const isClosable = props.isClosable ?? false;
   const onClose = props.onClose ?? (() => null);
   const isColored = props.isColored ?? false;
+  const disabled = props.disabled ?? false;
 
   return (
     <button
       type="button"
       onClick={props.onClick}
+      disabled={disabled}
       className={classNames(
         'rounded-tag py-[7px] px-[10px] inline-flex uppercase',
         isColored ? 'bg-primary text-black' : 'bg-gray-400/40 text-black',
