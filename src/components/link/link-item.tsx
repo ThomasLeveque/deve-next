@@ -102,7 +102,7 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
           )}
           <p className="text-[10px] text-gray-400">{format(link.createdAt, 'MMMM d yyyy')}</p>
         </div>
-        <div className="space-x-1 group-hover:flex hidden">
+        <div className="space-x-1 group-hover:flex flex lg:hidden">
           {canUpdateLinkData && (
             <button
               className="hover:text-secondary"
@@ -121,7 +121,7 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
           )}
         </div>
       </div>
-      <a href={link.url} rel="noreferrer" target="_blank" className="mb-8 with-ring block group">
+      <a href={link.url} rel="noreferrer" target="_blank" className="mb-8 with-ring block">
         <h2 className="text-3xl mb-2 font-poppins-bold group-hover:text-secondary">
           {link.description}
         </h2>

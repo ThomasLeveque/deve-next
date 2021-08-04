@@ -49,7 +49,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, link, isPreview = fa
             {format(comment.createdAt, 'MMMM d yyyy')}
           </p>
         </div>
-        <div className="space-x-1 group-hover:flex hidden">
+        <div className="space-x-1 group-hover:flex flex lg:hidden">
           {canUpdateComment && !isPreview && (
             <button
               className="hover:text-secondary"
