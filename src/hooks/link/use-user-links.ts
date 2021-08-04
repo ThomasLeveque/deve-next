@@ -1,4 +1,13 @@
-import { DocumentSnapshot } from '@firebase/firestore-types';
+import {
+  QueryDocumentSnapshot,
+  collection,
+  where,
+  startAfter,
+  orderBy,
+  limit,
+  query,
+  getDocs,
+} from 'firebase/firestore';
 import toast from 'react-hot-toast';
 import { useInfiniteQuery, UseInfiniteQueryResult } from 'react-query';
 
@@ -14,17 +23,25 @@ import { queryKeys } from './query-keys';
 
 export const USER_LINKS_PER_PAGE = Number(process.env.NEXT_PUBLIC_LINKS_PER_PAGE) ?? 20;
 
+const getStartAfterDBQuery = (cursor: QueryDocumentSnapshot) =>
+  cursor !== undefined ? [startAfter(cursor)] : [];
+
 const getUserLinks = async (
-  cursor: DocumentSnapshot,
+  cursor: QueryDocumentSnapshot,
   userId: string
 ): Promise<PaginatedData<Link> | undefined> => {
   try {
-    const userlinksRef = db.collection(dbKeys.links);
-    const whereQuery = userlinksRef.where('postedBy.id', '==', userId);
-    const orderbyQuery = whereQuery.orderBy('createdAt', 'desc');
-    const query = cursor !== undefined ? orderbyQuery.startAfter(cursor) : orderbyQuery;
+    const userLinksRef = collection(db, dbKeys.links);
 
-    const snapshot = await query.limit(USER_LINKS_PER_PAGE).get();
+    const q = query(
+      userLinksRef,
+      where('postedBy.id', '==', userId),
+      orderBy('createdAt', 'desc'),
+      ...getStartAfterDBQuery(cursor),
+      limit(USER_LINKS_PER_PAGE)
+    );
+
+    const snapshot = await getDocs(q);
     const data = snapshot.docs.map((doc) => dataToDocument<Link>(doc));
     const nextCursor = snapshot.docs[snapshot.docs.length - 1];
     return {

@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { doc, collection } from 'firebase/firestore';
 import React, { useEffect, useCallback } from 'react';
 import { FieldError, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -67,9 +68,9 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
             throw new Error(`The tag ${selectedTag} does not exist`);
           }
         });
-
+        const linkRef = doc(collection(db, dbKeys.links));
         const link = formatLink(formData, user);
-        addLink.mutate({ linkRef: db.collection(dbKeys.links).doc(), link });
+        addLink.mutate({ linkRef, link });
 
         // Do not setLoading(false) because addLink will unmount this component (Modal).
         props.closeModal();

@@ -1,3 +1,4 @@
+import { doc, updateDoc } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 import { useMutation, UseMutationResult, useQueryClient } from 'react-query';
 
@@ -15,8 +16,11 @@ const updateCategory = async (
   categoryId: string | undefined,
   categoryToUpdate: Partial<Document<Category>>
 ): Promise<Document<Category>[]> => {
-  const categoryRef = db.collection(dbKeys.categories).doc(categoryId);
-  await categoryRef.update(categoryToUpdate);
+  if (!categoryId) {
+    throw new Error('This tag does not exist');
+  }
+  const categoryRef = doc(db, dbKeys.category(categoryId));
+  await updateDoc(categoryRef, categoryToUpdate);
   return [];
 };
 

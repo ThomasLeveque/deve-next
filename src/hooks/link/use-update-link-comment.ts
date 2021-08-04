@@ -1,3 +1,4 @@
+import { updateDoc, doc } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
 
@@ -20,8 +21,8 @@ const updateLinkComment = async (
   if (!linkId || !commentId) {
     throw new Error('This link or comment does not exist');
   }
-
-  await db.doc(dbKeys.comment(linkId, commentId)).update(commentToUpdate);
+  const commentRef = doc(db, dbKeys.comment(linkId, commentId));
+  await updateDoc(commentRef, commentToUpdate);
   return {} as InfiniteData<PaginatedData<Comment>>;
 };
 

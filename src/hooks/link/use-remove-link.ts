@@ -1,3 +1,4 @@
+import { doc, deleteDoc } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 import {
   InfiniteData,
@@ -21,8 +22,8 @@ import { Document, PaginatedData } from '@utils/shared-types';
 import { dbKeys } from './db-keys';
 
 const removeLink = async (linkId: string): Promise<InfiniteData<PaginatedData<Link>>> => {
-  const linkRef = db.doc(dbKeys.link(linkId));
-  await linkRef.delete();
+  const linkRef = doc(db, dbKeys.link(linkId));
+  await deleteDoc(linkRef);
   return {} as InfiniteData<PaginatedData<Link>>;
 };
 

@@ -1,4 +1,13 @@
-import { Query, DocumentSnapshot } from '@firebase/firestore-types';
+import {
+  query,
+  QueryDocumentSnapshot,
+  where,
+  orderBy,
+  limit,
+  getDocs,
+  collection,
+  startAfter,
+} from 'firebase/firestore';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useInfiniteQuery, UseInfiniteQueryResult, useQueryClient } from 'react-query';
@@ -17,32 +26,40 @@ import { queryKeys } from './query-keys';
 
 export const LINKS_PER_PAGE = Number(process.env.NEXT_PUBLIC_LINKS_PER_PAGE) ?? 20;
 
-const getOrderbyDBQuery = (linksRef: Query, orderby: OrderLinksKey) => {
+const getOrderbyDBQuery = (orderby: OrderLinksKey) => {
   switch (orderby) {
     case 'newest':
-      return linksRef.orderBy('createdAt', 'desc');
+      return [orderBy('createdAt', 'desc')];
     case 'oldest':
-      return linksRef.orderBy('createdAt', 'asc');
+      return [orderBy('createdAt', 'asc')];
     case 'liked':
-      return linksRef.orderBy('voteCount', 'desc').orderBy('createdAt', 'desc');
+      return [orderBy('voteCount', 'desc'), orderBy('createdAt', 'desc')];
   }
 };
 
-const getTagsDBQuery = (linksRef: Query, tags: string[]) =>
-  tags.length > 0 ? linksRef.where('categories', 'array-contains-any', tags) : linksRef;
+const getTagsDBQuery = (tags: string[]) =>
+  tags.length > 0 ? [where('categories', 'array-contains-any', tags)] : [];
+
+const getStartAfterDBQuery = (cursor: QueryDocumentSnapshot) =>
+  cursor !== undefined ? [startAfter(cursor)] : [];
 
 const getLinks = async (
-  cursor: DocumentSnapshot,
+  cursor: QueryDocumentSnapshot,
   orderby: OrderLinksKey,
   tags: string[]
 ): Promise<PaginatedData<Link> | undefined> => {
   try {
-    const linksRef = db.collection(dbKeys.links);
-    const tagsQuery = getTagsDBQuery(linksRef, tags);
-    const orderbyQuery = getOrderbyDBQuery(tagsQuery, orderby);
-    const query = cursor !== undefined ? orderbyQuery.startAfter(cursor) : orderbyQuery;
+    const linksRef = collection(db, dbKeys.links);
 
-    const snapshot = await query.limit(LINKS_PER_PAGE).get();
+    const q = query(
+      linksRef,
+      ...getTagsDBQuery(tags),
+      ...getOrderbyDBQuery(orderby),
+      ...getStartAfterDBQuery(cursor),
+      limit(LINKS_PER_PAGE)
+    );
+
+    const snapshot = await getDocs(q);
     const data = snapshot.docs.map((doc) => dataToDocument<Link>(doc));
     const nextCursor = snapshot.docs[snapshot.docs.length - 1];
     return {

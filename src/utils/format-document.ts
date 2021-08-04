@@ -1,9 +1,11 @@
-import { DocumentSnapshot } from '@firebase/firestore-types';
+import { QueryDocumentSnapshot, DocumentSnapshot } from 'firebase/firestore';
 
 import { Document } from '@utils/shared-types';
 
-export const dataToDocument = <Data>(doc: DocumentSnapshot): Document<Data> => ({
+export const dataToDocument = <Data>(
+  doc: QueryDocumentSnapshot | DocumentSnapshot
+): Document<Data> => ({
   id: doc.id,
-  exists: doc.exists,
+  exists: doc.exists(),
   ...(doc.data() as Data),
 });

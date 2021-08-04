@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { doc, collection } from 'firebase/firestore';
 import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -55,7 +56,7 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
         if (!user) {
           throw new Error('You must be login');
         }
-        const commentRef = db.collection(dbKeys.comments(linkId)).doc();
+        const commentRef = doc(collection(db, dbKeys.comments(linkId)));
 
         const comment = formatComment(formData, user);
         addLinkComment.mutate({ commentRef, comment });

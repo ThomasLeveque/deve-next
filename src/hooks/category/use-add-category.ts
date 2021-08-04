@@ -1,4 +1,4 @@
-import { DocumentReference } from '@firebase/firestore-types';
+import { DocumentReference, setDoc } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 import { useMutation, UseMutationResult, useQueryClient } from 'react-query';
 
@@ -14,7 +14,7 @@ const addCategory = async (
   categoryRef: DocumentReference,
   category: Category
 ): Promise<Document<Category>[]> => {
-  await categoryRef.set(category);
+  await setDoc(categoryRef, category);
   return [];
 };
 

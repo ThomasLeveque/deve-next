@@ -1,4 +1,5 @@
 import { ModalsStore, useModalsStore } from '@store/modals.store';
+import { updateDoc, doc } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 import {
   InfiniteData,
@@ -31,9 +32,8 @@ const updateLink = async (
   if (!linkId) {
     throw new Error('This link does not exist');
   }
-
-  const linkRef = db.doc(dbKeys.link(linkId));
-  await linkRef.update(linkToUpdate);
+  const linkRef = doc(db, dbKeys.link(linkId));
+  await updateDoc(linkRef, linkToUpdate);
   return {} as InfiniteData<PaginatedData<Link>>;
 };
 

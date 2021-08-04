@@ -1,5 +1,6 @@
 import { CheckIcon, PlusIcon, TrashIcon } from '@heroicons/react/outline';
 import classNames from 'classnames';
+import { doc, collection } from 'firebase/firestore';
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 
 import Tag from '@components/elements/tag';
@@ -200,8 +201,9 @@ const TagsListBox: React.FC<TagsListBoxProps> = React.memo((props) => {
                   type="button"
                   onClick={() => {
                     const tagName = searchTag.trim();
+                    const categoryRef = doc(collection(db, dbKeys.categories));
                     addCategory.mutate({
-                      categoryRef: db.collection(dbKeys.categories).doc(),
+                      categoryRef,
                       category: { name: tagName, count: 0 },
                     });
                     addSelectedTags(tagName);

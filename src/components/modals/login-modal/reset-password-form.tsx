@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { sendPasswordResetEmail } from 'firebase/auth';
 import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -32,7 +33,8 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = (props) => {
   const onSubmit = useCallback(async ({ email }: ResetPasswordFormData) => {
     try {
       setLoading(true);
-      await auth.sendPasswordResetEmail(email);
+      await sendPasswordResetEmail(auth, email);
+      toast.success('An email have been send to you to reset your password.');
       props.setStep(loginStep.LOGIN_WITH_EMAIL);
       // Do not setLoading(false) because reset password will unmount this component.
     } catch (err) {

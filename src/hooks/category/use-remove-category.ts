@@ -1,3 +1,4 @@
+import { deleteDoc, doc } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 import { useMutation, UseMutationResult, useQueryClient } from 'react-query';
 
@@ -12,8 +13,8 @@ import { dbKeys } from './db-keys';
 import { queryKeys } from './query-keys';
 
 const removeCategory = async (categoryId: string): Promise<Document<Category>[]> => {
-  const categoryRef = db.doc(dbKeys.category(categoryId));
-  await categoryRef.delete();
+  const categoryRef = doc(db, dbKeys.category(categoryId));
+  await deleteDoc(categoryRef);
   return [];
 };
 

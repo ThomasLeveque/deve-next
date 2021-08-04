@@ -1,11 +1,20 @@
-import { User as AuthUser } from '@firebase/auth-types';
+import {
+  User as AuthUser,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+  GithubAuthProvider,
+  createUserWithEmailAndPassword,
+  signOut as firebaseSignOut,
+} from 'firebase/auth';
 import React, { createContext, useContext, memo, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 import { AdditionalUserData, User } from '@data-types/user.type';
 
 import { formatError } from '@utils/format-string';
-import firebase, { auth } from '@utils/init-firebase';
+import { auth } from '@utils/init-firebase';
 import { Document } from '@utils/shared-types';
 
 import { getUser, createUser } from './db';
@@ -68,32 +77,33 @@ const useProvideAuth = () => {
     password: string,
     additionalData: AdditionalUserData
   ): Promise<void> => {
-    const { user: authUser } = await auth.createUserWithEmailAndPassword(email, password);
+    const { user: authUser } = await createUserWithEmailAndPassword(auth, email, password);
     return handleUser(authUser, { displayName: additionalData.displayName });
   };
 
   const signInWithEmail = async (email: string, password: string): Promise<void> => {
-    const { user: authUser } = await auth.signInWithEmailAndPassword(email, password);
+    const { user: authUser } = await signInWithEmailAndPassword(auth, email, password);
     return handleUser(authUser);
   };
 
   const signInWithGoogle = async (): Promise<void> => {
-    const { user: authUser } = await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+    const { user: authUser } = await signInWithPopup(auth, new GoogleAuthProvider());
     return handleUser(authUser);
   };
 
   const signInWithGithub = async (): Promise<void> => {
-    const { user: authUser } = await auth.signInWithPopup(new firebase.auth.GithubAuthProvider());
+    const { user: authUser } = await signInWithPopup(auth, new GithubAuthProvider());
     return handleUser(authUser);
   };
 
   const signOut = async (): Promise<void> => {
-    await auth.signOut();
+    await firebaseSignOut(auth);
     return handleUser(null);
   };
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(
+    const unsubscribe = onAuthStateChanged(
+      auth,
       async (authUser: AuthUser | null) => {
         try {
           await handleUser(authUser);
@@ -105,7 +115,7 @@ const useProvideAuth = () => {
         unsubscribe();
       },
       (err) => {
-        toast.error(formatError<firebase.auth.Error>(err));
+        toast.error(formatError<Error>(err));
         console.error(err);
         setUserLoaded(true);
         unsubscribe();

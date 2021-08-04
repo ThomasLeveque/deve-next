@@ -1,3 +1,4 @@
+import { collection, orderBy, getDocs, query } from 'firebase/firestore';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useQuery, useQueryClient, UseQueryOptions, UseQueryResult } from 'react-query';
@@ -14,8 +15,9 @@ import { queryKeys } from './query-keys';
 
 const getCategories = async (): Promise<Document<Category>[] | undefined> => {
   try {
-    const categoriesRef = db.collection(dbKeys.categories);
-    const snapshot = await categoriesRef.orderBy('count', 'desc').get();
+    const categoriesRef = collection(db, dbKeys.categories);
+    const q = query(categoriesRef, orderBy('count', 'desc'));
+    const snapshot = await getDocs(q);
     return snapshot.docs.map((doc) => dataToDocument<Category>(doc));
   } catch (err) {
     toast.error(formatError(err));

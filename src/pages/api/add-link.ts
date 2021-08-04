@@ -1,16 +1,18 @@
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { collection, doc, getDocs, query, where, writeBatch } from 'firebase/firestore';
 import type { NextApiRequest, NextApiResponse, NextApiHandler } from 'next';
 
 import { getUser } from '@hooks/auth/db';
 import { dbKeys as categoryDbKey } from '@hooks/category/db-keys';
 import { dbKeys as linkDbKey } from '@hooks/link/db-keys';
 
+import { Category } from '@data-types/categorie.type';
+
 import { dataToDocument } from '@utils/format-document';
 import { formatLink } from '@utils/format-link';
 import { isValidUrl } from '@utils/format-string';
 import { auth, db } from '@utils/init-firebase';
 import { Document } from '@utils/shared-types';
-
-import { Category } from './../../data-types/categorie.type';
 
 interface addLinkHandlerReqBody {
   email: string;
@@ -60,7 +62,7 @@ const addLinkHandler: NextApiHandler = async (req: NextApiRequest, res: NextApiR
     }
 
     // Authenticate the user
-    const { user: authUser } = await auth.signInWithEmailAndPassword(email, password);
+    const { user: authUser } = await signInWithEmailAndPassword(auth, email, password);
     if (!authUser) {
       throw new Error('User not found');
     }
@@ -70,31 +72,32 @@ const addLinkHandler: NextApiHandler = async (req: NextApiRequest, res: NextApiR
 
     // Get all categories that match the given tags
     const promiseCategories = tags.map(async (tag) => {
-      const snapshot = await db.collection(categoryDbKey.categories).where('name', '==', tag).get();
+      const q = query(collection(db, categoryDbKey.categories), where('name', '==', tag));
+      const snapshot = await getDocs(q);
       const category = snapshot.docs[0];
       if (category === undefined) {
         throw new Error(`The tag ${tag} does not exist`);
       }
 
-      return dataToDocument<Category>(snapshot.docs[0]);
+      return dataToDocument<Category>(category);
     });
     const categories: Document<Category>[] = await Promise.all(promiseCategories);
 
-    const batch = db.batch();
+    const batch = writeBatch(db);
 
     // Update every used category count
     categories.forEach((category) => {
       if (category.id === undefined) {
         throw new Error('One of the tags cannot be found');
       }
-      const categoryRef = db.doc(categoryDbKey.category(category.id));
+      const categoryRef = doc(db, categoryDbKey.category(category.id));
       const categoryToUpdate: Partial<Category> = { count: category.count + 1 };
       batch.update(categoryRef, categoryToUpdate);
     });
 
     // Add the new link
     const link = formatLink({ url, title, tags }, user);
-    const linkRef = db.collection(linkDbKey.links).doc();
+    const linkRef = doc(collection(db, linkDbKey.links));
     batch.set(linkRef, link);
 
     await batch.commit();

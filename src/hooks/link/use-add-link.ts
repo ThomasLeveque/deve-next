@@ -1,4 +1,4 @@
-import { DocumentReference } from '@firebase/firestore-types';
+import { DocumentReference, setDoc } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 import {
   InfiniteData,
@@ -22,7 +22,7 @@ export const addLink = async (
   linkRef: DocumentReference,
   link: Link
 ): Promise<InfiniteData<PaginatedData<Link>>> => {
-  await linkRef.set(link);
+  await setDoc(linkRef, link);
   return {} as InfiniteData<PaginatedData<Link>>;
 };
 

@@ -1,4 +1,4 @@
-import { DocumentSnapshot } from '@firebase/firestore-types';
+import { QueryDocumentSnapshot } from 'firebase/firestore';
 
 export type Document<Data> = Data & {
   id?: string;
@@ -7,5 +7,5 @@ export type Document<Data> = Data & {
 
 export type PaginatedData<Data> = {
   data: Document<Data>[];
-  cursor: DocumentSnapshot;
+  cursor: QueryDocumentSnapshot;
 };

@@ -1,4 +1,4 @@
-import { User as AuthUser } from '@firebase/auth-types';
+import { User as AuthUser } from 'firebase/auth';
 
 import { AdditionalUserData, User } from '@data-types/user.type';
 

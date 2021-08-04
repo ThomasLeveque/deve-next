@@ -1,4 +1,12 @@
-import { DocumentSnapshot } from '@firebase/firestore-types';
+import {
+  QueryDocumentSnapshot,
+  collection,
+  orderBy,
+  startAfter,
+  query,
+  getDocs,
+  limit,
+} from 'firebase/firestore';
 import toast from 'react-hot-toast';
 import { useInfiniteQuery, UseInfiniteQueryResult } from 'react-query';
 
@@ -17,16 +25,23 @@ import { queryKeys } from './query-keys';
 export const COMMENTS_PER_PAGE = Number(process.env.NEXT_PUBLIC_COMMENTS_PER_PAGE) ?? 20;
 
 const getLinkComments = async (
-  cursor: DocumentSnapshot,
+  cursor: QueryDocumentSnapshot,
   linkId: string
 ): Promise<PaginatedData<Comment> | undefined> => {
   try {
-    const commentsRef = db.collection(dbKeys.comments(linkId));
+    const commentsRef = collection(db, dbKeys.comments(linkId));
 
-    const orderbyQuery = commentsRef.orderBy('createdAt', 'desc');
-    const query = cursor !== undefined ? orderbyQuery.startAfter(cursor) : orderbyQuery;
+    const q =
+      cursor !== undefined
+        ? query(
+            commentsRef,
+            orderBy('createdAt', 'desc'),
+            startAfter(cursor),
+            limit(COMMENTS_PER_PAGE)
+          )
+        : query(commentsRef, orderBy('createdAt', 'desc'), limit(COMMENTS_PER_PAGE));
 
-    const snapshot = await query.limit(COMMENTS_PER_PAGE).get();
+    const snapshot = await getDocs(q);
     const data = snapshot.docs.map((doc) => dataToDocument<Comment>(doc));
     const nextCursor = snapshot.docs[snapshot.docs.length - 1];
     return {
