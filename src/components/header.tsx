@@ -41,23 +41,25 @@ const Header: React.FC = React.memo(() => {
   );
 
   return (
-    <header className="xl:container xl:mx-auto h-header px-5 flex justify-between items-center sticky top-0 bg-white z-30">
-      <Link href="/">
-        <a className="font-poppins-bold text-2xl with-ring">Deve-next</a>
-      </Link>
-      <div className="grid grid-flow-col auto-cols-max items-center gap-4">
-        <Button
-          theme="secondary"
-          text={isSmallScreen ? 'Add link' : undefined}
-          icon={<PlusIcon />}
-          onClick={user ? toggleAddLinkModal : toggleAuthModal}
-        />
+    <header className="sticky top-0 bg-white z-30">
+      <div className="xl:container xl:mx-auto h-header flex justify-between items-center px-5">
+        <Link href="/">
+          <a className="font-poppins-bold text-2xl with-ring">Deve-next</a>
+        </Link>
+        <div className="grid grid-flow-col auto-cols-max items-center gap-4">
+          <Button
+            theme="secondary"
+            text={isSmallScreen ? 'Add link' : undefined}
+            icon={<PlusIcon />}
+            onClick={user ? toggleAddLinkModal : toggleAuthModal}
+          />
 
-        {user ? (
-          <MenuDropdown customButton={<Avatar />} items={userDropdownItems} />
-        ) : (
-          <Button theme="primary" text="Login" onClick={toggleAuthModal} />
-        )}
+          {user ? (
+            <MenuDropdown customButton={<Avatar />} items={userDropdownItems} />
+          ) : (
+            <Button theme="primary" text="Login" onClick={toggleAuthModal} />
+          )}
+        </div>
       </div>
     </header>
   );

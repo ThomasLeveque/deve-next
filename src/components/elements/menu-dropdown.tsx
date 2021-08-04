@@ -40,7 +40,7 @@ const MenuDropdown: React.FC<MenuDropdownProps> = React.memo((props) => {
 
           <Menu.Items
             className={classNames(
-              'absolute bg-gray-100 mt-2 rounded-button py-1 focus:outline-none shadow-lg',
+              'absolute bg-gray-100 mt-2 rounded-button overflow-hidden py-1 focus:outline-none shadow-lg',
               dropdownPosition === 'right' ? 'right-0 origin-top-right' : 'left-0 origin-top-left'
             )}
           >

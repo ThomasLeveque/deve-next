@@ -24,7 +24,7 @@ const TagsFilterSidebar: React.FC<TagsFilterSidebarProps> = React.memo((props) =
 
   return !tags ? (
     <div className="w-sidebar">
-      <SpinnerIcon className="w-8 m-auto mt-14" />
+      <SpinnerIcon className="w-8 m-auto mt-6" />
     </div>
   ) : (
     <div className={classNames('w-sidebar', props.className)}>

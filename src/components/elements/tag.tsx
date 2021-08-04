@@ -22,7 +22,7 @@ const Tag: React.FC<TagProps> = React.memo((props) => {
       onClick={props.onClick}
       className={classNames(
         'rounded-tag py-[7px] px-[10px] inline-flex uppercase',
-        isColored ? 'bg-primary text-black' : 'bg-black text-white',
+        isColored ? 'bg-primary text-black' : 'bg-gray-400/40 text-black',
         {
           'cursor-default': props.onClick === undefined,
           'with-ring': props.onClick !== undefined,
