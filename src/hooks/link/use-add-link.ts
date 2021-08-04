@@ -1,4 +1,4 @@
-import { DocumentReference, setDoc } from 'firebase/firestore';
+import { DocumentReference, setDoc } from 'firebase/firestore/lite';
 import toast from 'react-hot-toast';
 import {
   InfiniteData,

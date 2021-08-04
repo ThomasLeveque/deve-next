@@ -1,4 +1,4 @@
-import { QueryDocumentSnapshot } from 'firebase/firestore';
+import { QueryDocumentSnapshot } from 'firebase/firestore/lite';
 
 export type Document<Data> = Data & {
   id?: string;

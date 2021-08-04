@@ -38,7 +38,6 @@ const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
     setValue,
     watch,
     formState: { errors },
-    reset,
   } = useForm<LinkFormData>({
     resolver: yupResolver(updateLinkSchema),
     defaultValues: {

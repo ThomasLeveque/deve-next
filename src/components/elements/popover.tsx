@@ -8,7 +8,7 @@ interface MyPopoverProps {
   className?: string;
 }
 
-const MyPopover: React.FC<MyPopoverProps> = (props, ref) => {
+const MyPopover: React.FC<MyPopoverProps> = (props) => {
   const position = props.position ?? 'top-left';
 
   const positionClassNames = useMemo(() => {

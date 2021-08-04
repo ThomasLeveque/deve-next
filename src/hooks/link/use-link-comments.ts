@@ -6,7 +6,7 @@ import {
   query,
   getDocs,
   limit,
-} from 'firebase/firestore';
+} from 'firebase/firestore/lite';
 import toast from 'react-hot-toast';
 import { useInfiniteQuery, UseInfiniteQueryResult } from 'react-query';
 

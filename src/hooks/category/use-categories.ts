@@ -1,4 +1,4 @@
-import { collection, orderBy, getDocs, query } from 'firebase/firestore';
+import { collection, orderBy, getDocs, query } from 'firebase/firestore/lite';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useQuery, useQueryClient, UseQueryOptions, UseQueryResult } from 'react-query';

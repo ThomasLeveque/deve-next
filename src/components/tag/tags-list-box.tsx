@@ -1,6 +1,6 @@
 import { CheckIcon, PlusIcon, TrashIcon } from '@heroicons/react/outline';
 import classNames from 'classnames';
-import { doc, collection } from 'firebase/firestore';
+import { doc, collection } from 'firebase/firestore/lite';
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 
 import Tag from '@components/elements/tag';

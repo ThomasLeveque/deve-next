@@ -1,5 +1,5 @@
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { collection, doc, getDocs, query, where, writeBatch } from 'firebase/firestore';
+import { collection, doc, getDocs, query, where, writeBatch } from 'firebase/firestore/lite';
 import type { NextApiRequest, NextApiResponse, NextApiHandler } from 'next';
 
 import { getUser } from '@hooks/auth/db';

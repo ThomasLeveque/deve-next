@@ -1,4 +1,4 @@
-import { updateDoc, doc } from 'firebase/firestore';
+import { updateDoc, doc } from 'firebase/firestore/lite';
 import toast from 'react-hot-toast';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
 

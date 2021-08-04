@@ -7,7 +7,7 @@ import {
   getDocs,
   collection,
   startAfter,
-} from 'firebase/firestore';
+} from 'firebase/firestore/lite';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useInfiniteQuery, UseInfiniteQueryResult, useQueryClient } from 'react-query';

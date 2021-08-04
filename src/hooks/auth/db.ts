@@ -1,5 +1,5 @@
 import { User as AuthUser } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore/lite';
 
 import { AdditionalUserData, User } from '@data-types/user.type';
 

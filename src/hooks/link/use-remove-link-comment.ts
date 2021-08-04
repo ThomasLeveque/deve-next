@@ -1,4 +1,4 @@
-import { deleteDoc, doc } from 'firebase/firestore';
+import { deleteDoc, doc } from 'firebase/firestore/lite';
 import toast from 'react-hot-toast';
 import {
   InfiniteData,

@@ -1,4 +1,4 @@
-import { QueryDocumentSnapshot, DocumentSnapshot } from 'firebase/firestore';
+import { QueryDocumentSnapshot, DocumentSnapshot } from 'firebase/firestore/lite';
 
 import { Document } from '@utils/shared-types';
 

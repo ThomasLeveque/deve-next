@@ -43,7 +43,7 @@ const AddCommentModal: React.FC = React.memo(() => {
         </h2>
         <p className="text-xs group-hover:underline">On {getDomain(linkToCommentModal.url)}</p>
       </a>
-      <AddCommentForm link={linkToCommentModal} closeModal={closeModal} />
+      <AddCommentForm link={linkToCommentModal} />
       {linkToCommentModal.commentCount > 0 ? (
         <>
           {comments ? (

@@ -1,4 +1,4 @@
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore/lite';
 import toast from 'react-hot-toast';
 import { useMutation, UseMutationResult, useQueryClient } from 'react-query';
 

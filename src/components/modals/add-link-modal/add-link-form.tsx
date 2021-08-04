@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { doc, collection } from 'firebase/firestore';
+import { doc, collection } from 'firebase/firestore/lite';
 import React, { useEffect, useCallback } from 'react';
 import { FieldError, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
