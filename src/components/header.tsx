@@ -44,7 +44,10 @@ const Header: React.FC = React.memo(() => {
     <header className="sticky top-0 bg-white z-30">
       <div className="xl:container xl:mx-auto h-header flex justify-between items-center px-5">
         <Link href="/">
-          <a className="font-poppins-bold text-2xl with-ring">Deve-next</a>
+          <a className="font-poppins-bold text-3xl with-ring group hover:text-secondary">
+            <span className="lg:group-hover:hidden">DN</span>
+            <span className="lg:group-hover:block hidden">Deve-Next</span>
+          </a>
         </Link>
         <div className="grid grid-flow-col auto-cols-max items-center gap-4">
           <Button

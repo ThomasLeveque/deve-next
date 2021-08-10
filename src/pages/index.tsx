@@ -45,7 +45,7 @@ const Home: Page = () => {
                 <Button
                   theme="gray"
                   className="flex-none"
-                  text="Clear tags"
+                  text={isMobileScreen ? 'Clear' : 'Clear tags'}
                   onClick={clearTagQuery}
                 />
               )}
