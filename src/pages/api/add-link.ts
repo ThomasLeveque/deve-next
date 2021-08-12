@@ -30,7 +30,7 @@ const addLinkHandler: NextApiHandler = async (req: NextApiRequest, res: NextApiR
   }
 
   try {
-    const { email, password, url, title, tags } = req.body as addLinkHandlerReqBody;
+    const { email, password, url, title, tags } = JSON.parse(req.body) as addLinkHandlerReqBody;
 
     // Handle fields errors
     if (!email) {
