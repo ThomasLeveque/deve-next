@@ -38,6 +38,14 @@
   input[type='search']::-webkit-search-results-decoration {
     -webkit-appearance: none;
   }
+
+  svg {
+    @apply max-w-full max-h-full;
+  }
+
+  .menu-dropdown-button {
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+  }
 }
 @layer components {
 }

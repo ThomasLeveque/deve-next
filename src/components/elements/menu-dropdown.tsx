@@ -17,6 +17,7 @@ interface MenuDropdownProps {
   items: MenuDropdownItemProps[];
   dropdownPosition?: 'left' | 'right';
   className?: string;
+  buttonClassName?: string;
 }
 
 const MenuDropdown: React.FC<MenuDropdownProps> = React.memo((props) => {
@@ -27,9 +28,17 @@ const MenuDropdown: React.FC<MenuDropdownProps> = React.memo((props) => {
       {({ open }) => (
         <>
           {props.customButton !== undefined ? (
-            <Menu.Button as="div">{props.customButton}</Menu.Button>
+            <Menu.Button
+              as="div"
+              className={classNames('menu-dropdown-button', props.buttonClassName)}
+            >
+              {props.customButton}
+            </Menu.Button>
           ) : (
-            <Menu.Button as="div" className="inline-flex">
+            <Menu.Button
+              as="div"
+              className={classNames('inline-flex menu-dropdown-button', props.buttonClassName)}
+            >
               <Button
                 theme="gray"
                 text={props.defaultButtonText}

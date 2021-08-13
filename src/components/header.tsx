@@ -58,7 +58,11 @@ const Header: React.FC = React.memo(() => {
           />
 
           {user ? (
-            <MenuDropdown customButton={<Avatar />} items={userDropdownItems} />
+            <MenuDropdown
+              customButton={<Avatar />}
+              buttonClassName="rounded-full"
+              items={userDropdownItems}
+            />
           ) : (
             <Button theme="primary" text="Login" onClick={toggleAuthModal} />
           )}

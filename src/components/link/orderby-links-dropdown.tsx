@@ -31,6 +31,7 @@ const OrderbyLinksDropdown: React.FC = React.memo(() => {
 
   return (
     <MenuDropdown
+      buttonClassName="rounded-button"
       items={Object.values(orderLinksDropdownItems)}
       dropdownPosition="left"
       defaultButtonText={orderLinksDropdownItems[orderbyQuery].text}

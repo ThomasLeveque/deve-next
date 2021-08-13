@@ -34,11 +34,11 @@ const Account: Page = () => {
               <ul className="space-y-5 text-center sm:text-left">
                 <li>
                   <h3 className="text-[10px] font-poppins-bold uppercase mb-1">Username :</h3>
-                  <h2 className="text-sm">{user.displayName}</h2>
+                  <h2 className="text-sm break-all">{user.displayName}</h2>
                 </li>
                 <li>
                   <h3 className="text-[10px] font-poppins-bold uppercase mb-1">Email :</h3>
-                  <h2 className="text-sm">{user.email}</h2>
+                  <h2 className="text-sm break-all">{user.email}</h2>
                 </li>
                 <li>
                   <h3 className="text-[10px] font-poppins-bold uppercase mb-2">Admin status :</h3>
