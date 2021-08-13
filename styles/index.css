@@ -25,6 +25,17 @@
       U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
   }
 
+  html {
+    min-width: 350px;
+    scroll-behavior: smooth;
+  }
+
+  #__next {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
   button:focus,
   input:focus,
   a:focus,
@@ -55,5 +66,12 @@
   }
   .content-screen-height {
     height: calc(100vh - theme('spacing.header'));
+  }
+
+  .link-item-link:hover h2 {
+    @apply text-secondary;
+  }
+  .link-item-link:hover p {
+    @apply underline;
   }
 }

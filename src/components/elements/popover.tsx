@@ -1,4 +1,4 @@
-import { Popover } from '@headlessui/react';
+import { Popover, Transition } from '@headlessui/react';
 import classNames from 'classnames';
 import React, { useMemo } from 'react';
 
@@ -28,15 +28,24 @@ const MyPopover: React.FC<MyPopoverProps> = (props) => {
     <Popover className="relative flex">
       <Popover.Button>{props.buttonItem}</Popover.Button>
 
-      <Popover.Panel
-        className={classNames(
-          'absolute z-10 bg-white rounded-button p-4 focus:outline-none shadow-lg',
-          props.className,
-          positionClassNames
-        )}
+      <Transition
+        enter="transition duration-100 ease-out"
+        enterFrom="transform scale-95 opacity-0"
+        enterTo="transform scale-100 opacity-100"
+        leave="transition duration-75 ease-out"
+        leaveFrom="transform scale-100 opacity-100"
+        leaveTo="transform scale-95 opacity-0"
       >
-        {props.children}
-      </Popover.Panel>
+        <Popover.Panel
+          className={classNames(
+            'absolute z-10 bg-white rounded-button p-4 focus:outline-none shadow-lg',
+            props.className,
+            positionClassNames
+          )}
+        >
+          {props.children}
+        </Popover.Panel>
+      </Transition>
     </Popover>
   );
 };

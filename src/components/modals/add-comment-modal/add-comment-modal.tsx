@@ -38,7 +38,7 @@ const AddCommentModal: React.FC = React.memo(() => {
         target="_blank"
         className="mb-6 mr-8 with-ring block group"
       >
-        <h2 className="text-3xl mb-2 font-poppins-bold group-hover:text-secondary">
+        <h2 className="text-3xl mb-2 font-poppins-bold group-hover:text-secondary break-words">
           {linkToCommentModal.description}
         </h2>
         <p className="text-xs group-hover:underline">On {getDomain(linkToCommentModal.url)}</p>
@@ -55,7 +55,7 @@ const AddCommentModal: React.FC = React.memo(() => {
                   ))
                 )}
               </ul>
-              {linkToCommentModal?.commentCount > COMMENTS_PER_PAGE ? (
+              {linkToCommentModal.commentCount > COMMENTS_PER_PAGE ? (
                 <Button
                   theme="secondary"
                   text={hasNextPage ? 'Load more' : 'No more comments'}

@@ -122,18 +122,20 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
           )}
         </div>
       </div>
-      <a href={link.url} rel="noreferrer" target="_blank" className="mb-8 with-ring block">
+      <a
+        href={link.url}
+        rel="noreferrer"
+        target="_blank"
+        className="mb-8 with-ring link-item-link block"
+      >
         <h2
-          className={classNames(
-            'text-3xl mb-2 font-poppins-bold group-hover:text-secondary break-words',
-            {
-              '!text-2xl': link.description.length > 60,
-            }
-          )}
+          className={classNames('text-3xl mb-2 font-poppins-bold break-words', {
+            '!text-2xl': link.description.length > 60,
+          })}
         >
           {link.description}
         </h2>
-        <p className="text-xs group-hover:underline">On {getDomain(link.url)}</p>
+        <p className="text-xs">On {getDomain(link.url)}</p>
       </a>
       <TagListWrapper className="mb-5">
         {link.categories.map((tag) => (

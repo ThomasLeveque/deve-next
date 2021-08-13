@@ -1,3 +1,4 @@
+import { Transition } from '@headlessui/react';
 import { CheckIcon, PlusIcon, TrashIcon } from '@heroicons/react/outline';
 import classNames from 'classnames';
 import { doc, collection } from 'firebase/firestore/lite';
@@ -182,62 +183,68 @@ const TagsListBox: React.FC<TagsListBoxProps> = React.memo((props) => {
           }}
           errorText={props.errorText}
         />
-        {isOpen && (
-          <>
-            <div
-              className="fixed inset-0 w-full h-full z-10"
-              onClick={() => {
-                setFocusedTagIndex(0);
-                setIsOpen(false);
-              }}
-            />
-            <ul
-              ref={tagListRef}
-              className="absolute z-30 top-full w-full mt-2 rounded-button py-1 focus:outline-none shadow-lg max-h-60 overflow-auto bg-gray-100"
-            >
-              {/* Add tag button */}
-              {!isTagExist && searchTag.length > 0 && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    const tagName = searchTag.trim();
-                    const categoryRef = doc(collection(db, dbKeys.categories));
-                    addCategory.mutate({
-                      categoryRef,
-                      category: { name: tagName, count: 0 },
-                    });
-                    addSelectedTags(tagName);
-                    setSearchTag('');
-                    searchRef.current?.focus();
-                  }}
-                  className="grid grid-cols-[20px,1fr] gap-3 px-4 py-2 text-sm w-full hover:bg-primary"
-                >
-                  <PlusIcon />
-                  <p className="text-left">
-                    Create <span className="font-poppins-bold">{searchTag}</span> tag
-                  </p>
-                </button>
-              )}
-              {filteredTags.map((tag, index) => (
-                <TagsListBoxOption
-                  key={tag.id}
-                  index={index}
-                  tag={tag}
-                  isSelected={isSelected}
-                  addSelectedTags={(tag) => {
-                    addSelectedTags(tag);
-                    setSearchTag('');
-                    searchRef.current?.focus();
-                  }}
-                  removeSelectedTags={removeSelectedTags}
-                  setCurrentIndex={setFocusedTagIndex}
-                  currentIndex={focusedTagIndex}
-                  user={user}
-                />
-              ))}
-            </ul>
-          </>
-        )}
+        <Transition
+          show={isOpen}
+          enter="transition duration-100 ease-out"
+          enterFrom="transform scale-95 opacity-0"
+          enterTo="transform scale-100 opacity-100"
+          leave="transition duration-75 ease-out"
+          leaveFrom="transform scale-100 opacity-100"
+          leaveTo="transform scale-95 opacity-0"
+        >
+          <div
+            className="fixed inset-0 w-full h-full z-10"
+            onClick={() => {
+              setFocusedTagIndex(0);
+              setIsOpen(false);
+            }}
+          />
+          <ul
+            ref={tagListRef}
+            className="absolute z-30 top-full w-full mt-2 rounded-button py-1 focus:outline-none shadow-lg max-h-60 overflow-auto bg-gray-100"
+          >
+            {/* Add tag button */}
+            {!isTagExist && searchTag.length > 0 && (
+              <button
+                type="button"
+                onClick={() => {
+                  const tagName = searchTag.trim();
+                  const categoryRef = doc(collection(db, dbKeys.categories));
+                  addCategory.mutate({
+                    categoryRef,
+                    category: { name: tagName, count: 0 },
+                  });
+                  addSelectedTags(tagName);
+                  setSearchTag('');
+                  searchRef.current?.focus();
+                }}
+                className="grid grid-cols-[20px,1fr] gap-3 px-4 py-2 text-sm w-full hover:bg-primary"
+              >
+                <PlusIcon />
+                <p className="text-left">
+                  Create <span className="font-poppins-bold">{searchTag}</span> tag
+                </p>
+              </button>
+            )}
+            {filteredTags.map((tag, index) => (
+              <TagsListBoxOption
+                key={tag.id}
+                index={index}
+                tag={tag}
+                isSelected={isSelected}
+                addSelectedTags={(tag) => {
+                  addSelectedTags(tag);
+                  setSearchTag('');
+                  searchRef.current?.focus();
+                }}
+                removeSelectedTags={removeSelectedTags}
+                setCurrentIndex={setFocusedTagIndex}
+                currentIndex={focusedTagIndex}
+                user={user}
+              />
+            ))}
+          </ul>
+        </Transition>
       </div>
     </div>
   );
