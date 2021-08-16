@@ -28,17 +28,11 @@ const MenuDropdown: React.FC<MenuDropdownProps> = React.memo((props) => {
       {({ open }) => (
         <>
           {props.customButton !== undefined ? (
-            <Menu.Button
-              as="div"
-              className={classNames('menu-dropdown-button', props.buttonClassName)}
-            >
+            <Menu.Button as="div" className={classNames(props.buttonClassName)}>
               {props.customButton}
             </Menu.Button>
           ) : (
-            <Menu.Button
-              as="div"
-              className={classNames('inline-flex menu-dropdown-button', props.buttonClassName)}
-            >
+            <Menu.Button as="div" className={classNames('inline-flex', props.buttonClassName)}>
               <Button
                 theme="gray"
                 text={props.defaultButtonText}
