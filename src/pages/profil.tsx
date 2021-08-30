@@ -65,7 +65,7 @@ const Account: Page = () => {
             ) : (
               <section className="sm:mt-8 mb-8">
                 <h1 className="text-4xl mb-8 font-poppins-bold text-center">All your links</h1>
-                <ul className="grid lg:grid-cols-2 gap-5">
+                <ul className="grid grid-cols-1 lg:grid-cols-2 gap-5">
                   {userLinks?.pages?.map((page) =>
                     page?.data.map((link) => (
                       <LinkItem

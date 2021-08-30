@@ -58,8 +58,8 @@ const Home: Page = () => {
             </div>
           </div>
           <ul
-            className={classNames('grid lg:grid-cols-2 gap-5', {
-              'md:grid-cols-2 xl:grid-cols-3': !tagsSidebarOpen,
+            className={classNames('grid grid-cols-1 lg:grid-cols-2 gap-5', {
+              'md:grid md:grid-cols-2 xl:grid-cols-3': !tagsSidebarOpen,
             })}
           >
             {links?.pages?.map((page) =>
