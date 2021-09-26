@@ -46,7 +46,7 @@ export const useUpdateCategory = (): UseMutationResult<
         return prevCategory;
       },
       onError: (err, variables, prevCategory) => {
-        toast.error(formatError(err));
+        toast.error(formatError(err as Error));
         if (prevCategory) {
           queryClient.setQueryData<Document<Category>[]>(queryKeys.categories, (oldCategories) =>
             updateItemInsideData<Category>(prevCategory, oldCategories)

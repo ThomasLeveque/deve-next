@@ -66,7 +66,7 @@ export const useAddLink = (
       });
     },
     onError: (err, variables, newLink) => {
-      toast.error(formatError(err));
+      toast.error(formatError(err as Error));
       queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(queryKey, (oldLinks) =>
         removeItemInsidePaginatedData(newLink?.id as string, oldLinks)
       );

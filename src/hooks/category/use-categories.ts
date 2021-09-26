@@ -20,7 +20,7 @@ const getCategories = async (): Promise<Document<Category>[] | undefined> => {
     const snapshot = await getDocs(q);
     return snapshot.docs.map((doc) => dataToDocument<Category>(doc));
   } catch (err) {
-    toast.error(formatError(err));
+    toast.error(formatError(err as Error));
     console.error(err);
   }
 };

@@ -60,7 +60,7 @@ export const useRemoveLink = (
       });
     },
     onError: (err, variables, removedLink) => {
-      toast.error(formatError(err));
+      toast.error(formatError(err as Error));
       if (removedLink) {
         queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(queryKey, (oldLinks) =>
           addItemInsidePaginatedData(removedLink, oldLinks)

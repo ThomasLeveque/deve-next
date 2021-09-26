@@ -17,7 +17,7 @@ const SignInWithGoogleBtn: React.FC = () => {
       setLoading(true);
       await signInWithGoogle();
     } catch (err) {
-      toast.error(formatError(err));
+      toast.error(formatError(err as Error));
       console.error(err);
       setLoading(false);
     }

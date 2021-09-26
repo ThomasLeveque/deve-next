@@ -35,7 +35,7 @@ const SignUpForm: React.FC<SignUpFormProps> = (props) => {
   const onSubmit = useCallback(async ({ displayName, email, password }: SignUpFormData) => {
     setLoading(true);
     await signUpWithEmail(email, password, { displayName }).catch((err) => {
-      toast.error(formatError(err));
+      toast.error(formatError(err as Error));
       console.error(err);
       setLoading(false);
     });

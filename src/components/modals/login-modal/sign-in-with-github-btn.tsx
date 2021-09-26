@@ -17,7 +17,7 @@ const SignInWithGithubBtn: React.FC = () => {
       setLoading(true);
       await signInWithGithub();
     } catch (err) {
-      toast.error(formatError(err));
+      toast.error(formatError(err as Error));
       console.error(err);
       setLoading(false);
     }

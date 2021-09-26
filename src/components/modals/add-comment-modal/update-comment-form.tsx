@@ -59,7 +59,7 @@ const UpdateCommentForm: React.FC<UpdateCommentFormProps> = (props) => {
         }
         props.closeUpdate();
       } catch (err) {
-        toast.error(formatError(err));
+        toast.error(formatError(err as Error));
         console.error(err);
       }
       setShowPreview(false);

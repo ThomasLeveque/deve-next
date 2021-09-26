@@ -19,5 +19,4 @@ export const validUrlRegex =
 
 export const isValidUrl = (url: string): boolean => url.match(validUrlRegex) !== null;
 
-export const formatError = <ErrorType extends { message: string }>(err: ErrorType): string =>
-  err.message ?? err.toString();
+export const formatError = (err: Error): string => err.message ?? err.toString();

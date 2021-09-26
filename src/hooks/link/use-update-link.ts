@@ -115,7 +115,7 @@ export const useUpdateLink = (
         }
       },
       onError: (err, variables, prevLink) => {
-        toast.error(formatError(err));
+        toast.error(formatError(err as Error));
         if (prevLink) {
           queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(queryKey, (oldLinks) =>
             updateItemInsidePaginatedData<Link>(prevLink, oldLinks)

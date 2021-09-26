@@ -53,7 +53,7 @@ export const useUpdateLinkComment = (
         return prevComment;
       },
       onError: (err, variables, prevComment) => {
-        toast.error(formatError(err));
+        toast.error(formatError(err as Error));
         if (prevComment) {
           queryClient.setQueryData<InfiniteData<PaginatedData<Comment>>>(
             commentsKey,

@@ -108,14 +108,14 @@ const useProvideAuth = () => {
         try {
           await handleUser(authUser);
         } catch (err) {
-          toast.error(formatError(err));
+          toast.error(formatError(err as Error));
           console.error(err);
         }
         setUserLoaded(true);
         unsubscribe();
       },
       (err) => {
-        toast.error(formatError<Error>(err));
+        toast.error(formatError(err as Error));
         console.error(err);
         setUserLoaded(true);
         unsubscribe();

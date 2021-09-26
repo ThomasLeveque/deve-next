@@ -49,7 +49,7 @@ const getUserLinks = async (
       cursor: nextCursor,
     };
   } catch (err) {
-    toast.error(formatError(err));
+    toast.error(formatError(err as Error));
     console.error(err);
   }
 };

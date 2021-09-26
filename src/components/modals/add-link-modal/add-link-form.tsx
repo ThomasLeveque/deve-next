@@ -75,7 +75,7 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
         // Do not setLoading(false) because addLink will unmount this component (Modal).
         props.closeModal();
       } catch (err) {
-        toast.error(formatError(err));
+        toast.error(formatError(err as Error));
         console.error(err);
       }
     },

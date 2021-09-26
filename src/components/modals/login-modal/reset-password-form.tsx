@@ -38,7 +38,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = (props) => {
       props.setStep(loginStep.LOGIN_WITH_EMAIL);
       // Do not setLoading(false) because reset password will unmount this component.
     } catch (err) {
-      toast.error(formatError(err));
+      toast.error(formatError(err as Error));
       console.error(err);
       setLoading(false);
     }

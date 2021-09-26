@@ -36,7 +36,7 @@ export const useFetchHtmlText = (
           }
         }
       } catch (err) {
-        toast.error(formatError(err));
+        toast.error(formatError(err as Error));
         console.error(err);
       }
       setLoading(false);

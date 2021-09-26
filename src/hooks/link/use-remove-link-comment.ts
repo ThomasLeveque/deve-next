@@ -57,7 +57,7 @@ export const useRemoveLinkComment = (
       return comment;
     },
     onError: (err, variables, removedComment) => {
-      toast.error(formatError(err));
+      toast.error(formatError(err as Error));
       if (removedComment) {
         queryClient.setQueryData<InfiniteData<PaginatedData<Comment>>>(commentsKey, (oldComments) =>
           addItemInsidePaginatedData(removedComment, oldComments)

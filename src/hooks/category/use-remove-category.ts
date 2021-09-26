@@ -36,7 +36,7 @@ export const useRemoveCategory = (): UseMutationResult<
       return category;
     },
     onError: (err, variables, removedCategory) => {
-      toast.error(formatError(err));
+      toast.error(formatError(err as Error));
       if (removedCategory) {
         queryClient.setQueryData<Document<Category>[]>(queryKeys.categories, (oldCategories) =>
           addItemInsideData<Category>(removedCategory, oldCategories, 'end')
