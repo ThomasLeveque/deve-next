@@ -1,5 +1,5 @@
-import { AppConfigStore, useAppConfigStore } from '@store/app-config.store';
-import { ModalsStore, useModalsStore } from '@store/modals.store';
+import { useTagsSidebarOpen } from '@store/app-config.store';
+import { useAuthModalOpen } from '@store/modals.store';
 import classNames from 'classnames';
 import Head from 'next/head';
 import React, { useEffect } from 'react';
@@ -17,32 +17,26 @@ import LoginModal from './modals/login-modal/login-modal';
 import RemoveLinkModal from './modals/remove-link-modal/remove-link-modal';
 import UpdateLinkModal from './modals/update-link-modal/update-link-modal';
 
-const authModalSelector = (state: ModalsStore) => state.authModal;
-const toggleAuthModalSelector = (state: ModalsStore) => state.toggleAuthModal;
-
 interface LayoutProps {
   className?: string;
   title?: string;
   description?: string;
 }
 
-const setTagsSidebarOpenSelector = (state: AppConfigStore) => state.setTagsSidebarOpen;
-
 const Layout: React.FC<LayoutProps> = ({ className, children, ...props }) => {
   const { user } = useAuth();
   const isMobileScreen = useMediaQuery('mobile');
-  const setTagsSidebarOpen = useAppConfigStore(setTagsSidebarOpenSelector);
+  const setTagsSidebarOpen = useTagsSidebarOpen()[1];
 
   usePrefetchCategories();
 
-  const authModal = useModalsStore(authModalSelector);
-  const toggleAuthModal = useModalsStore(toggleAuthModalSelector);
+  const [authModalOpen, setAuthModalOpen] = useAuthModalOpen();
 
   useEffect(() => {
-    if (user && authModal) {
-      toggleAuthModal();
+    if (user && authModalOpen) {
+      setAuthModalOpen(false);
     }
-  }, [user, authModal]);
+  }, [user, authModalOpen]);
 
   useEffect(() => {
     setTagsSidebarOpen(!isMobileScreen);

@@ -1,4 +1,4 @@
-import { ModalsStore, useModalsStore } from '@store/modals.store';
+import { useLinkToCommentModal } from '@store/modals.store';
 import { updateDoc, doc } from 'firebase/firestore/lite';
 import toast from 'react-hot-toast';
 import {
@@ -21,9 +21,6 @@ import { updateItemInsidePaginatedData } from '@utils/mutate-data';
 import { Document, PaginatedData } from '@utils/shared-types';
 
 import { dbKeys } from './db-keys';
-
-const linkToCommentModalSelector = (state: ModalsStore) => state.linkToCommentModal;
-const setLinkToCommentModalSelector = (state: ModalsStore) => state.setLinkToCommentModal;
 
 const updateLink = async (
   linkId: string | undefined,
@@ -49,8 +46,7 @@ export const useUpdateLink = (
   const queryClient = useQueryClient();
   const updateCategory = useUpdateCategory();
 
-  const linkToCommentModal = useModalsStore(linkToCommentModalSelector);
-  const setLinkToCommentModal = useModalsStore(setLinkToCommentModalSelector);
+  const [linkToCommentModal, setLinkToCommentModal] = useLinkToCommentModal();
 
   return useMutation(
     (linkToUpdate: Partial<Document<Link>>) => updateLink(prevLink.id, linkToUpdate),

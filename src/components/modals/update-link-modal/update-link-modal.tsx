@@ -1,15 +1,11 @@
-import { ModalsStore, useModalsStore } from '@store/modals.store';
+import { useLinkToUpdateModal } from '@store/modals.store';
 import React from 'react';
 
 import { Modal } from '../modal';
 import UpdateLinkForm from './update-link-form';
 
-const linkToUpdateModalSelector = (state: ModalsStore) => state.linkToUpdateModal;
-const setLinkToUpdateModalSelector = (state: ModalsStore) => state.setLinkToUpdateModal;
-
 const UpdateLinkModal: React.FC = React.memo(() => {
-  const linkToUpdateModal = useModalsStore(linkToUpdateModalSelector);
-  const setLinkToUpdateModal = useModalsStore(setLinkToUpdateModalSelector);
+  const [linkToUpdateModal, setLinkToUpdateModal] = useLinkToUpdateModal();
 
   const closeModal = () => {
     setLinkToUpdateModal(null);

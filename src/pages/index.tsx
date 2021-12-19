@@ -1,5 +1,5 @@
 import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon } from '@heroicons/react/solid';
-import { AppConfigStore, useAppConfigStore } from '@store/app-config.store';
+import { useTagsSidebarOpen } from '@store/app-config.store';
 import classNames from 'classnames';
 import React from 'react';
 
@@ -16,12 +16,9 @@ import { useQueryString } from '@hooks/use-query-string';
 
 import { Page } from './_app';
 
-const tagsSidebarOpenSelector = (state: AppConfigStore) => state.tagsSidebarOpen;
-const setTagsSidebarOpenSelector = (state: AppConfigStore) => state.setTagsSidebarOpen;
-
 const Home: Page = () => {
-  const tagsSidebarOpen = useAppConfigStore(tagsSidebarOpenSelector);
-  const setTagsSidebarOpen = useAppConfigStore(setTagsSidebarOpenSelector);
+  const [tagsSidebarOpen, setTagsSidebarOpen] = useTagsSidebarOpen();
+
   const isMobileScreen = useMediaQuery('mobile');
 
   const { orderbyQuery, tagsQuery, clearTagQuery } = useQueryString();

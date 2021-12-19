@@ -1,5 +1,5 @@
 import { ExternalLinkIcon, LogoutIcon, PlusIcon, UserCircleIcon } from '@heroicons/react/outline';
-import { ModalsStore, useModalsStore } from '@store/modals.store';
+import { useAuthModalOpen, useAddLinkModalOpen } from '@store/modals.store';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';
@@ -11,14 +11,11 @@ import Avatar from './elements/avatar';
 import Button from './elements/button';
 import MenuDropdown, { MenuDropdownItemProps } from './elements/menu-dropdown';
 
-const toggleAuthModalSelector = (state: ModalsStore) => state.toggleAuthModal;
-const toggleAddLinkModalSelector = (state: ModalsStore) => state.toggleAddLinkModal;
-
 const Header: React.FC = React.memo(() => {
   const { signOut, user } = useAuth();
 
-  const toggleAuthModal = useModalsStore(toggleAuthModalSelector);
-  const toggleAddLinkModal = useModalsStore(toggleAddLinkModalSelector);
+  const setAuthModalOpen = useAuthModalOpen()[1];
+  const setAddLinkModalOpen = useAddLinkModalOpen()[1];
 
   const isSmallScreen = useMediaQuery('sm');
 
@@ -63,13 +60,13 @@ const Header: React.FC = React.memo(() => {
             theme="secondary"
             text={isSmallScreen ? 'Add link' : undefined}
             icon={<PlusIcon />}
-            onClick={user ? toggleAddLinkModal : toggleAuthModal}
+            onClick={() => (user ? setAddLinkModalOpen(true) : setAuthModalOpen(true))}
           />
 
           {user ? (
             <MenuDropdown customButton={<Avatar />} items={userDropdownItems} />
           ) : (
-            <Button theme="primary" text="Login" onClick={toggleAuthModal} />
+            <Button theme="primary" text="Login" onClick={() => setAuthModalOpen(true)} />
           )}
         </div>
       </div>

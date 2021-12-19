@@ -1,4 +1,4 @@
-import { ModalsStore, useModalsStore } from '@store/modals.store';
+import { useAuthModalOpen } from '@store/modals.store';
 import React, { useCallback, useMemo, useState } from 'react';
 
 import Button from '@components/elements/button';
@@ -11,9 +11,6 @@ import SignInForm from './sign-in-form';
 import SignInWithGithubBtn from './sign-in-with-github-btn';
 import SignUpForm from './sign-up-form';
 
-const authModalSelector = (state: ModalsStore) => state.authModal;
-const toggleAuthModalSelector = (state: ModalsStore) => state.toggleAuthModal;
-
 export enum loginStep {
   LOGIN_SELECTION = 0,
   LOGIN_WITH_EMAIL,
@@ -24,11 +21,10 @@ export enum loginStep {
 const LoginModal: React.FC = React.memo(() => {
   const [step, setStep] = useState<loginStep>(loginStep.LOGIN_SELECTION);
 
-  const authModal = useModalsStore(authModalSelector);
-  const toggleAuthModal = useModalsStore(toggleAuthModalSelector);
+  const [authModalOpen, setAuthModalOpen] = useAuthModalOpen();
 
   const closeModal = useCallback(() => {
-    toggleAuthModal();
+    setAuthModalOpen(false);
     setStep(loginStep.LOGIN_SELECTION);
   }, []);
 
@@ -77,7 +73,7 @@ const LoginModal: React.FC = React.memo(() => {
   }, [step]);
 
   return (
-    <Modal isOpen={authModal} closeModal={closeModal} title={renderTitle}>
+    <Modal isOpen={authModalOpen} closeModal={closeModal} title={renderTitle}>
       {renderContent}
     </Modal>
   );

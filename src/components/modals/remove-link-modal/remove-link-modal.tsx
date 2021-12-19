@@ -1,4 +1,4 @@
-import { ModalsStore, useModalsStore } from '@store/modals.store';
+import { useLinkToRemoveModal } from '@store/modals.store';
 import React from 'react';
 
 import Button from '@components/elements/button';
@@ -9,12 +9,8 @@ import { useRemoveLink } from '@hooks/link/use-remove-link';
 
 import { Modal } from '../modal';
 
-const linkToRemoveModalSelector = (state: ModalsStore) => state.linkToRemoveModal;
-const setLinkToRemoveModalSelector = (state: ModalsStore) => state.setLinkToRemoveModal;
-
 const RemoveLinkModal: React.FC = React.memo(() => {
-  const linkToRemoveModal = useModalsStore(linkToRemoveModalSelector);
-  const setLinkToRemoveModal = useModalsStore(setLinkToRemoveModalSelector);
+  const [linkToRemoveModal, setLinkToRemoveModal] = useLinkToRemoveModal();
 
   const { user } = useAuth();
   const linksQueryKeys = useLinksQueryKey(user?.id as string);

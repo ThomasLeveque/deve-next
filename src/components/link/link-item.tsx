@@ -1,6 +1,11 @@
 import { AnnotationIcon, FireIcon, PencilAltIcon, TrashIcon } from '@heroicons/react/outline';
 import { FireIcon as FireIconSolid } from '@heroicons/react/solid';
-import { ModalsStore, useModalsStore } from '@store/modals.store';
+import {
+  useAuthModalOpen,
+  useLinkToCommentModal,
+  useLinkToRemoveModal,
+  useLinkToUpdateModal,
+} from '@store/modals.store';
 import classNames from 'classnames';
 import { format } from 'date-fns';
 import React, { useCallback, useMemo } from 'react';
@@ -19,11 +24,6 @@ import { Document } from '@utils/shared-types';
 
 import Tag from '../elements/tag';
 
-const setLinkToCommentModalSelector = (state: ModalsStore) => state.setLinkToCommentModal;
-const setLinkToUpdateModalSelector = (state: ModalsStore) => state.setLinkToUpdateModal;
-const setLinkToRemoveModalSelector = (state: ModalsStore) => state.setLinkToRemoveModal;
-const toggleAuthModalSelector = (state: ModalsStore) => state.toggleAuthModal;
-
 interface LinkItemProps {
   link: Document<Link>;
   // To know if the component is used inside the profil page
@@ -38,10 +38,10 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
   const { addTagQuery } = useQueryString();
   const updateLink = useUpdateLink(link, props.linksQueryKey);
 
-  const setLinkToCommentModal = useModalsStore(setLinkToCommentModalSelector);
-  const setLinkToUpdateModal = useModalsStore(setLinkToUpdateModalSelector);
-  const setLinkToRemoveModal = useModalsStore(setLinkToRemoveModalSelector);
-  const toggleAuthModal = useModalsStore(toggleAuthModalSelector);
+  const setLinkToCommentModal = useLinkToCommentModal()[1];
+  const setLinkToUpdateModal = useLinkToUpdateModal()[1];
+  const setLinkToRemoveModal = useLinkToRemoveModal()[1];
+  const setAuthModalOpen = useAuthModalOpen()[1];
 
   const isLikedByMe = useMemo(
     () => !!link.votes.find((vote) => vote.voteBy.id === user?.id),
@@ -107,7 +107,9 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
           {canUpdateLinkData && (
             <button
               className="hover:text-secondary"
-              onClick={() => (canUpdateLinkData ? setLinkToUpdateModal(link) : toggleAuthModal())}
+              onClick={() =>
+                canUpdateLinkData ? setLinkToUpdateModal(link) : setAuthModalOpen(true)
+              }
             >
               <PencilAltIcon className="w-5" />
             </button>
@@ -115,7 +117,7 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
           {canRemoveLink && (
             <button
               className="hover:text-secondary"
-              onClick={() => (canRemoveLink ? setLinkToRemoveModal(link) : toggleAuthModal())}
+              onClick={() => (canRemoveLink ? setLinkToRemoveModal(link) : setAuthModalOpen(true))}
             >
               <TrashIcon className="w-5" />
             </button>
@@ -155,7 +157,7 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
             if (user) {
               isLikedByMe ? removeVote() : addVote();
             } else {
-              toggleAuthModal();
+              setAuthModalOpen(true);
             }
           }}
           className={classNames('flex items-center space-x-[6px] hover:text-secondary with-ring', {
@@ -166,7 +168,7 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
           <span className="font-poppins-bold text-[11px]">{renderFires}</span>
         </button>
         <button
-          onClick={() => (user ? setLinkToCommentModal(link) : toggleAuthModal())}
+          onClick={() => (user ? setLinkToCommentModal(link) : setAuthModalOpen(true))}
           className="flex items-center space-x-[6px] hover:text-secondary with-ring"
         >
           <AnnotationIcon className="w-6" />

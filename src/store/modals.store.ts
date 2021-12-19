@@ -1,31 +1,31 @@
-import create from 'zustand';
+import { atom, SetStateAction, useAtom } from 'jotai';
 
 import { Link } from '@data-types/link.type';
 
 import { Document } from '@utils/shared-types';
 
-export interface ModalsStore {
-  authModal: boolean;
-  toggleAuthModal: () => void;
-  addLinkModal: boolean;
-  toggleAddLinkModal: () => void;
-  linkToCommentModal: Document<Link> | null;
-  setLinkToCommentModal: (link: Document<Link> | null) => void;
-  linkToUpdateModal: Document<Link> | null;
-  setLinkToUpdateModal: (link: Document<Link> | null) => void;
-  linkToRemoveModal: Document<Link> | null;
-  setLinkToRemoveModal: (link: Document<Link> | null) => void;
-}
+const authModalOpenAtom = atom(false);
+export const useAuthModalOpen = (): [boolean, (update: SetStateAction<boolean>) => void] =>
+  useAtom(authModalOpenAtom);
 
-export const useModalsStore = create<ModalsStore>((set) => ({
-  authModal: false,
-  toggleAuthModal: () => set((state) => ({ authModal: !state.authModal })),
-  addLinkModal: false,
-  toggleAddLinkModal: () => set((state) => ({ addLinkModal: !state.addLinkModal })),
-  linkToCommentModal: null,
-  setLinkToCommentModal: (link) => set({ linkToCommentModal: link }),
-  linkToUpdateModal: null,
-  setLinkToUpdateModal: (link) => set({ linkToUpdateModal: link }),
-  linkToRemoveModal: null,
-  setLinkToRemoveModal: (link) => set({ linkToRemoveModal: link }),
-}));
+const addLinkModalOpenAtom = atom(false);
+export const useAddLinkModalOpen = (): [boolean, (update: SetStateAction<boolean>) => void] =>
+  useAtom(addLinkModalOpenAtom);
+
+const linkToCommentModalAtom = atom<Document<Link> | null>(null);
+export const useLinkToCommentModal = (): [
+  Document<Link> | null,
+  (update: SetStateAction<Document<Link> | null>) => void
+] => useAtom(linkToCommentModalAtom);
+
+const linkToUpdateModalAtom = atom<Document<Link> | null>(null);
+export const useLinkToUpdateModal = (): [
+  Document<Link> | null,
+  (update: SetStateAction<Document<Link> | null>) => void
+] => useAtom(linkToUpdateModalAtom);
+
+const linkToRemoveModalAtom = atom<Document<Link> | null>(null);
+export const useLinkToRemoveModal = (): [
+  Document<Link> | null,
+  (update: SetStateAction<Document<Link> | null>) => void
+] => useAtom(linkToRemoveModalAtom);

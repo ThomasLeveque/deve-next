@@ -1,4 +1,4 @@
-import { ModalsStore, useModalsStore } from '@store/modals.store';
+import { useLinkToCommentModal } from '@store/modals.store';
 import React from 'react';
 
 import Button from '@components/elements/button';
@@ -12,12 +12,8 @@ import { getDomain } from '@utils/format-string';
 import { Modal } from '../modal';
 import AddCommentForm from './add-comment-form';
 
-const linkToCommentModalSelector = (state: ModalsStore) => state.linkToCommentModal;
-const setLinkToCommentModalSelector = (state: ModalsStore) => state.setLinkToCommentModal;
-
 const AddCommentModal: React.FC = React.memo(() => {
-  const linkToCommentModal = useModalsStore(linkToCommentModalSelector);
-  const setLinkToCommentModal = useModalsStore(setLinkToCommentModalSelector);
+  const [linkToCommentModal, setLinkToCommentModal] = useLinkToCommentModal();
 
   const {
     data: comments,
