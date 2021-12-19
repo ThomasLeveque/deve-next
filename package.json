@@ -11,6 +11,7 @@
     "@headlessui/react": "^1.2.0",
     "@heroicons/react": "^1.0.1",
     "@hookform/resolvers": "^2.6.0",
+    "@supabase/supabase-js": "^1.28.5",
     "@tailwindcss/typography": "^0.4.1",
     "classnames": "^2.3.1",
     "date-fns": "^2.22.1",

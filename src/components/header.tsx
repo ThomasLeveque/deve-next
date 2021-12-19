@@ -1,5 +1,6 @@
 import { ExternalLinkIcon, LogoutIcon, PlusIcon, UserCircleIcon } from '@heroicons/react/outline';
 import { useAuthModalOpen, useAddLinkModalOpen } from '@store/modals.store';
+import { useProfile } from '@store/profile.store';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';
@@ -7,12 +8,16 @@ import React, { useMemo } from 'react';
 import { useAuth } from '@hooks/auth/useAuth';
 import { useMediaQuery } from '@hooks/use-media-query';
 
+import { supabase } from '@utils/init-supabase';
+
 import Avatar from './elements/avatar';
 import Button from './elements/button';
 import MenuDropdown, { MenuDropdownItemProps } from './elements/menu-dropdown';
 
 const Header: React.FC = React.memo(() => {
   const { signOut, user } = useAuth();
+
+  const profile = useProfile()[0];
 
   const setAuthModalOpen = useAuthModalOpen()[1];
   const setAddLinkModalOpen = useAddLinkModalOpen()[1];
@@ -62,6 +67,25 @@ const Header: React.FC = React.memo(() => {
             icon={<PlusIcon />}
             onClick={() => (user ? setAddLinkModalOpen(true) : setAuthModalOpen(true))}
           />
+
+          <Button
+            theme="secondary"
+            text="SB Github"
+            onClick={() => {
+              supabase.auth.signIn({
+                provider: 'github',
+              });
+            }}
+          />
+          <Button
+            theme="secondary"
+            text="SB logout"
+            onClick={() => {
+              supabase.auth.signOut();
+            }}
+          />
+
+          {profile && <p>{profile.username}</p>}
 
           {user ? (
             <MenuDropdown customButton={<Avatar />} items={userDropdownItems} />

@@ -9,6 +9,7 @@ import Toast from '@components/elements/toast';
 import Layout from '@components/layout';
 
 import AuthProvider from '@hooks/auth/useAuth';
+import { useSupabaseAuth } from '@hooks/supabaseAuth/useSupabaseAuth';
 
 import '../../styles/index.css';
 
@@ -27,6 +28,8 @@ export type Page<P = unknown> = NextPage<P> & {
 };
 
 const MyApp = ({ Component, pageProps }: AppProps & { Component: Page }): JSX.Element => {
+  useSupabaseAuth();
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
