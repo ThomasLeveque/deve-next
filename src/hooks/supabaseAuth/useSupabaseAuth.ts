@@ -5,10 +5,14 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@utils/init-supabase';
 
 const getProfile = async (session: Session): Promise<Profile | null> => {
+  if (!session.user?.id) {
+    throw new Error('Session user not found');
+  }
+
   const profile = await supabase
     .from<Profile>('profiles')
     .select('*')
-    .eq('id', session.user?.id ?? '')
+    .eq('id', session.user.id)
     .single();
   return profile.data;
 };
@@ -27,7 +31,7 @@ export const useSupabaseAuth = (): void => {
         .upsert([
           {
             id: session?.user?.id,
-            username: session?.user?.user_metadata.user_name,
+            username: session?.user?.user_metadata.name,
             email: session?.user?.email,
             avatarUrl: session?.user?.user_metadata.avatar_url,
           },
