@@ -1,6 +1,6 @@
 import { NextPage } from 'next';
 import { AppProps } from 'next/app';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
@@ -10,6 +10,8 @@ import Layout from '@components/layout';
 
 import AuthProvider from '@hooks/auth/useAuth';
 import { useSupabaseAuth } from '@hooks/supabaseAuth/useSupabaseAuth';
+
+import { runMigrations } from '@utils/migrations';
 
 import '../../styles/index.css';
 
@@ -29,6 +31,11 @@ export type Page<P = unknown> = NextPage<P> & {
 
 const MyApp = ({ Component, pageProps }: AppProps & { Component: Page }): JSX.Element => {
   useSupabaseAuth();
+
+  useEffect(() => {
+    // TODO: to remove
+    runMigrations();
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
