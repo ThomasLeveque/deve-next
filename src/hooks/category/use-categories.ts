@@ -13,7 +13,7 @@ import { Document } from '@utils/shared-types';
 import { dbKeys } from './db-keys';
 import { queryKeys } from './query-keys';
 
-const getCategories = async (): Promise<Document<Category>[] | undefined> => {
+export const getCategories = async (): Promise<Document<Category>[] | undefined> => {
   try {
     const categoriesRef = collection(db, dbKeys.categories);
     const q = query(categoriesRef, orderBy('count', 'desc'));

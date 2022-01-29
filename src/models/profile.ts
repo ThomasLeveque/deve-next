@@ -4,6 +4,6 @@ export interface Profile {
   email: string;
   avatarUrl: string;
   role: 'editor' | 'admin';
-  createdAt: number;
-  updatedAt: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
