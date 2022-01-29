@@ -11,6 +11,7 @@ module.exports = {
   importOrder: [
     '^@components/(.*)$',
     '^@hooks/(.*)$',
+    '^@models/(.*)$',
     '^@data-types/(.*)$',
     '^@utils/(.*)$',
     '^[./]',

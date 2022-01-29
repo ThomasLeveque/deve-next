@@ -9,3 +9,5 @@ export type PaginatedData<Data> = {
   data: Document<Data>[];
   cursor: QueryDocumentSnapshot;
 };
+
+export type Nullable<T> = T | null | undefined;

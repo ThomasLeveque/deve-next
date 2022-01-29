@@ -1,13 +1,6 @@
 import { atom, SetStateAction, useAtom } from 'jotai';
 
-export interface Profile {
-  id: string;
-  username: string;
-  email: string;
-  avatarUrl: string;
-  createdAt: number;
-  updatedAt: number;
-}
+import { Profile } from '@models/profile';
 
 const profileAtom = atom<Profile | null>(null);
 
