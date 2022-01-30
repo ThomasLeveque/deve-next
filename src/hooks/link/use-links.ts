@@ -19,12 +19,19 @@ import { Link } from '@data-types/link.type';
 import { dataToDocument } from '@utils/format-document';
 import { formatError } from '@utils/format-string';
 import { db } from '@utils/init-firebase';
-import { PaginatedData } from '@utils/shared-types';
+import { PaginatedData, Document } from '@utils/shared-types';
 
 import { dbKeys } from './db-keys';
 import { queryKeys } from './query-keys';
 
 export const LINKS_PER_PAGE = Number(process.env.NEXT_PUBLIC_LINKS_PER_PAGE) ?? 20;
+
+export const getFirebaseLinks = async (): Promise<Document<Link[]> | undefined> => {
+  const LinksRef = collection(db, 'links');
+  const q = query(LinksRef, orderBy('createdAt', 'desc'));
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map((doc) => dataToDocument<Link>(doc));
+};
 
 const getOrderbyDBQuery = (orderby: OrderLinksKey) => {
   switch (orderby) {
