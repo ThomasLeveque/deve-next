@@ -24,6 +24,15 @@ import { queryKeys } from './query-keys';
 
 export const COMMENTS_PER_PAGE = Number(process.env.NEXT_PUBLIC_COMMENTS_PER_PAGE) ?? 20;
 
+export const getFirebaseLinkComments = async (
+  linkId: string
+): Promise<Document<Comment>[] | undefined> => {
+  const commentsRef = collection(db, dbKeys.comments(linkId));
+  const q = query(commentsRef, orderBy('createdAt', 'desc'));
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map((doc) => dataToDocument<Comment>(doc));
+};
+
 const getLinkComments = async (
   cursor: QueryDocumentSnapshot,
   linkId: string

@@ -26,7 +26,7 @@ import { queryKeys } from './query-keys';
 
 export const LINKS_PER_PAGE = Number(process.env.NEXT_PUBLIC_LINKS_PER_PAGE) ?? 20;
 
-export const getFirebaseLinks = async (): Promise<Document<Link[]> | undefined> => {
+export const getFirebaseLinks = async (): Promise<Document<Link>[] | undefined> => {
   const LinksRef = collection(db, 'links');
   const q = query(LinksRef, orderBy('createdAt', 'desc'));
   const snapshot = await getDocs(q);

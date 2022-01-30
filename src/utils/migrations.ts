@@ -1,8 +1,11 @@
 import { getCategories } from '@hooks/category/use-categories';
+import { getFirebaseLinkComments } from '@hooks/link/use-link-comments';
 import { getFirebaseLinks } from '@hooks/link/use-links';
 
+import { Comment } from '@models/comment';
 import { Link } from '@models/link';
 import { Tag } from '@models/tag';
+import { Vote } from '@models/vote';
 
 import { supabase } from './init-supabase';
 
@@ -54,7 +57,7 @@ const tagsMigrations = async () => {
   }
 };
 
-const linksMigrations = async () => {
+const linksMigrations = async (userId: string) => {
   try {
     const MIGRATIONS_ID = 'links-migration';
     const migrationAlreadyExists = await getMigration(MIGRATIONS_ID);
@@ -66,11 +69,11 @@ const linksMigrations = async () => {
     console.log('RUN LINKS MIGRATIONS');
 
     const tags = await getSupabaseTags();
-    const links = await getFirebaseLinks();
+    const firebaseLinks = await getFirebaseLinks();
 
-    if (links && tags) {
-      const linksPromise = links.map(async (link) => {
-        const linkSupabaseTags = link.categories
+    if (firebaseLinks && tags) {
+      const linksPromise = firebaseLinks.map(async (firebaseLink) => {
+        const linkSupabaseTags = firebaseLink.categories
           .filter((category) => {
             const foundCategory = tags.find(
               (tag) => tag.name.toLowerCase() === category.toLowerCase()
@@ -92,19 +95,46 @@ const linksMigrations = async () => {
         const resp = await supabase
           .from<Link>('links')
           .insert({
-            url: link.url,
-            description: link.description,
-            userId: '735c71f0-2bcc-478f-94f5-5b55363b23ec',
+            url: firebaseLink.url,
+            description: firebaseLink.description,
+            userId: userId,
           })
           .single();
 
         if (resp.data) {
           const newLink = resp.data as Link;
-          return supabase
+
+          // links tags many to many relation
+          await supabase
             .from<{ linkId: number; tagId: number }>('links_tags')
             .insert(
               linkSupabaseTags.map((supabaseTag) => ({ linkId: newLink.id, tagId: supabaseTag.id }))
             );
+
+          // link comments one to many relation
+          if (firebaseLink.id) {
+            const firebaseLinkComments = await getFirebaseLinkComments(firebaseLink.id);
+
+            if (firebaseLinkComments) {
+              const supabaseLinkComments: Partial<Comment>[] = firebaseLinkComments.map(
+                (firebaseLinkComment) => ({
+                  userId: userId,
+                  linkId: newLink.id,
+                  text: firebaseLinkComment.text,
+                })
+              );
+
+              await supabase.from<Comment>('comments').insert(supabaseLinkComments);
+            }
+          }
+
+          // link votes one to many relation
+          if (firebaseLink.voteCount > 0) {
+            await supabase.from<Vote>('votes').insert({
+              linkId: newLink.id,
+              userId: userId,
+            });
+          }
         }
       });
 
@@ -116,27 +146,7 @@ const linksMigrations = async () => {
   }
 };
 
-const commentsMigrations = async () => {
-  const MIGRATIONS_ID = 'comments-migration';
-  const migrationAlreadyExists = await getMigration(MIGRATIONS_ID);
-
-  if (migrationAlreadyExists) {
-    return;
-  }
-  return createMigration(MIGRATIONS_ID);
-};
-
-const votesMigrations = async () => {
-  const MIGRATIONS_ID = 'votes-migration';
-  const migrationAlreadyExists = await getMigration(MIGRATIONS_ID);
-
-  if (migrationAlreadyExists) {
-    return;
-  }
-  return createMigration(MIGRATIONS_ID);
-};
-
-export const runMigrations = async (): Promise<void> => {
+export const runMigrations = async (userId: string): Promise<void> => {
   await tagsMigrations();
-  await linksMigrations();
+  await linksMigrations(userId);
 };

@@ -1,3 +1,4 @@
+import { useProfile } from '@store/profile.store';
 import { NextPage } from 'next';
 import { AppProps } from 'next/app';
 import React, { useEffect } from 'react';
@@ -32,10 +33,13 @@ export type Page<P = unknown> = NextPage<P> & {
 const MyApp = ({ Component, pageProps }: AppProps & { Component: Page }): JSX.Element => {
   useSupabaseAuth();
 
+  // TODO: to remove
+  const profile = useProfile()[0];
   useEffect(() => {
-    // TODO: to remove
-    runMigrations();
-  }, []);
+    if (profile) {
+      runMigrations(profile.id);
+    }
+  }, [profile]);
 
   return (
     <QueryClientProvider client={queryClient}>
