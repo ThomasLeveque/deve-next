@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
 
-import { useAuth } from '@hooks/auth/useAuth';
+import { useAuth } from '@api/auth/useAuth';
 
 import { formatError } from '@utils/format-string';
 

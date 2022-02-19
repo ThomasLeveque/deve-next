@@ -7,7 +7,8 @@ import toast from 'react-hot-toast';
 import Button from '@components/elements/button';
 import TextArea from '@components/elements/textarea';
 
-import { useAuth } from '@hooks/auth/useAuth';
+import { useAuth } from '@api/auth/useAuth';
+
 import { dbKeys } from '@hooks/link/db-keys';
 import { useAddLinkComment } from '@hooks/link/use-add-link-comment';
 import { useLinksQueryKey } from '@hooks/link/use-links-query-key';

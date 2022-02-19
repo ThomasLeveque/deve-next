@@ -7,7 +7,8 @@ import ReactMarkdown from 'react-markdown';
 import Button from '@components/elements/button';
 import MyPopover from '@components/elements/popover';
 
-import { useAuth } from '@hooks/auth/useAuth';
+import { useAuth } from '@api/auth/useAuth';
+
 import { useLinksQueryKey } from '@hooks/link/use-links-query-key';
 import { useRemoveLinkComment } from '@hooks/link/use-remove-link-comment';
 

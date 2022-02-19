@@ -4,12 +4,13 @@ module.exports = {
   semi: true,
   trailingComma: 'es5',
   singleQuote: true,
-  printWidth: 100,
+  printWidth: 120,
   tabWidth: 2,
   useTabs: false,
   // match tsconfig.json paths
   importOrder: [
     '^@components/(.*)$',
+    '^@api/(.*)$',
     '^@hooks/(.*)$',
     '^@models/(.*)$',
     '^@data-types/(.*)$',

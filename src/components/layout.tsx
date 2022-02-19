@@ -6,7 +6,8 @@ import React, { useEffect } from 'react';
 
 import Header from '@components/header';
 
-import { useAuth } from '@hooks/auth/useAuth';
+import { useAuth } from '@api/auth/useAuth';
+
 import { usePrefetchCategories } from '@hooks/category/use-categories';
 import { useMediaQuery } from '@hooks/use-media-query';
 

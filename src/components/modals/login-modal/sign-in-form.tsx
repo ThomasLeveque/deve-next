@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 import Button from '@components/elements/button';
 import TextInput from '@components/elements/text-input';
 
-import { useAuth } from '@hooks/auth/useAuth';
+import { useAuth } from '@api/auth/useAuth';
 
 import { SignInFormData } from '@data-types/user.type';
 

@@ -8,7 +8,8 @@ import SpinnerIcon from '@components/icons/spinner-icon';
 import LinkItem from '@components/link/link-item';
 import Protected from '@components/protected';
 
-import { useAuth } from '@hooks/auth/useAuth';
+import { useAuth } from '@api/auth/useAuth';
+
 import { queryKeys } from '@hooks/link/query-keys';
 import { useUserLinks } from '@hooks/link/use-user-links';
 

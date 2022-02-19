@@ -7,7 +7,8 @@ import ReactMarkdown from 'react-markdown';
 import Button from '@components/elements/button';
 import TextArea from '@components/elements/textarea';
 
-import { useAuth } from '@hooks/auth/useAuth';
+import { useAuth } from '@api/auth/useAuth';
+
 import { useUpdateLinkComment } from '@hooks/link/use-update-link-comment';
 
 import { Comment, CommentFormData } from '@data-types/comment.type';

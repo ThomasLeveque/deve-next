@@ -2,7 +2,8 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { collection, doc, getDocs, query, where, writeBatch } from 'firebase/firestore/lite';
 import type { NextApiRequest, NextApiResponse, NextApiHandler } from 'next';
 
-import { getUser } from '@hooks/auth/db';
+import { getUser } from '@api/auth/db';
+
 import { dbKeys as categoryDbKey } from '@hooks/category/db-keys';
 import { dbKeys as linkDbKey } from '@hooks/link/db-keys';
 

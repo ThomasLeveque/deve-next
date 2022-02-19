@@ -7,7 +7,8 @@ import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import Tag from '@components/elements/tag';
 import TextInput from '@components/elements/text-input';
 
-import { useAuth } from '@hooks/auth/useAuth';
+import { useAuth } from '@api/auth/useAuth';
+
 import { dbKeys } from '@hooks/category/db-keys';
 import { useAddCategory } from '@hooks/category/use-add-category';
 import { useRemoveCategory } from '@hooks/category/use-remove-category';

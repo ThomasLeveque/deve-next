@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import Image from 'next/image';
 import React, { useMemo } from 'react';
 
-import { useAuth } from '@hooks/auth/useAuth';
+import { useAuth } from '@api/auth/useAuth';
 
 import { getInitials } from '@utils/format-string';
 

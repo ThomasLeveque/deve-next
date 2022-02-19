@@ -8,7 +8,8 @@ import Button from '@components/elements/button';
 import TextInput from '@components/elements/text-input';
 import TagsListBox from '@components/tag/tags-list-box';
 
-import { useAuth } from '@hooks/auth/useAuth';
+import { useAuth } from '@api/auth/useAuth';
+
 import { useCategories } from '@hooks/category/use-categories';
 import { dbKeys } from '@hooks/link/db-keys';
 import { useAddLink } from '@hooks/link/use-add-link';

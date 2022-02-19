@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';
 
-import { useAuth } from '@hooks/auth/useAuth';
+import { useAuth } from '@api/auth/useAuth';
+
 import { useMediaQuery } from '@hooks/use-media-query';
 
 import { supabase } from '@utils/init-supabase';

@@ -20,7 +20,8 @@
       "@models/*": ["src/models/*"],
       "@data-types/*": ["src/data-types/*"],
       "@hooks/*": ["src/hooks/*"],
-      "@store/*": ["src/store/*"]
+      "@store/*": ["src/store/*"],
+      "@api/*": ["src/api/*"]
     }
   },
   "exclude": ["node_modules"],
