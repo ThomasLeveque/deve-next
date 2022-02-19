@@ -9,8 +9,9 @@ import LinkItem from '@components/link/link-item';
 import OrderbyLinksDropdown from '@components/link/orderby-links-dropdown';
 import TagsFilterSidebar from '@components/tag/tags-filter-sidebar';
 
-import { queryKeys } from '@hooks/link/query-keys';
-import { useLinks } from '@hooks/link/use-links';
+import { queryKeys } from '@api/link/query-keys';
+import { useLinks } from '@api/link/use-links';
+
 import { useMediaQuery } from '@hooks/use-media-query';
 import { useQueryString } from '@hooks/use-query-string';
 

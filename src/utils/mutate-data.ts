@@ -1,6 +1,6 @@
 import { InfiniteData } from 'react-query';
 
-import { PaginatedData, Document } from '@utils/shared-types';
+import { PaginatedData, Document, Nullable } from '@utils/shared-types';
 
 const initialPaginatedData = {
   pages: [],
@@ -49,17 +49,17 @@ export const removeItemInsidePaginatedData = <Data>(
   return items;
 };
 
-export const addItemInsideData = <Data>(
-  item: Document<Data>,
-  items: Document<Data>[] | undefined,
+export const addItemInsideData = <DataType>(
+  item: DataType,
+  items: Nullable<DataType[]>,
   newItemPosition: 'start' | 'end' = 'start'
-): Document<Data>[] =>
+): Document<DataType>[] =>
   items ? (newItemPosition === 'start' ? [item, ...items] : [...items, item]) : [];
 
-export const updateItemInsideData = <Data>(
-  item: Document<Data>,
-  items: Document<Data>[] | undefined
-): Document<Data>[] => {
+export const updateItemInsideData = <DataType extends { id: number }>(
+  item: DataType,
+  items: DataType[] | undefined
+): DataType[] => {
   if (!items) return [];
 
   const itemIndex = items.findIndex((i) => i.id === item.id);
@@ -67,7 +67,7 @@ export const updateItemInsideData = <Data>(
   return items;
 };
 
-export const removeItemInsideData = <Data>(
-  itemId: string,
-  items: Document<Data>[] | undefined
-): Document<Data>[] => (items ? items.filter((item) => item.id !== itemId) : []);
+export const removeItemInsideData = <DataType extends { id: number }>(
+  itemId: number,
+  items: DataType[] | undefined
+): DataType[] => (items ? items.filter((item) => item.id !== itemId) : []);

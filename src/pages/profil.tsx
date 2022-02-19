@@ -9,9 +9,8 @@ import LinkItem from '@components/link/link-item';
 import Protected from '@components/protected';
 
 import { useAuth } from '@api/auth/useAuth';
-
-import { queryKeys } from '@hooks/link/query-keys';
-import { useUserLinks } from '@hooks/link/use-user-links';
+import { queryKeys } from '@api/link/query-keys';
+import { useUserLinks } from '@api/link/use-user-links';
 
 import { Page } from './_app';
 
