@@ -20,12 +20,12 @@ const addTag = async (tagToAdd: Partial<Tag>): Promise<Tag> => {
   return newTag;
 };
 
-export const useAddTag = (): UseMutationResult<Tag, Error, { tagToAdd: Partial<Tag> }, Tag> => {
+export const useAddTag = (): UseMutationResult<Tag, Error, Partial<Tag>, Tag> => {
   const queryClient = useQueryClient();
-  return useMutation(({ tagToAdd }) => addTag(tagToAdd), {
-    onSuccess: (tagToAdd) => {
+  return useMutation((tagToAdd) => addTag(tagToAdd), {
+    onSuccess: (newTag) => {
       queryClient.setQueryData<Tag[]>(queryKeys.tags, (oldTags) =>
-        addItemInsideData(tagToAdd, oldTags, 'end')
+        addItemInsideData(newTag, oldTags, 'end')
       );
     },
     onError: (err) => {

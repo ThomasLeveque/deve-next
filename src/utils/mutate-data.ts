@@ -7,11 +7,11 @@ const initialPaginatedData = {
   pageParams: [],
 };
 
-export const addItemInsidePaginatedData = <Data>(
-  item: Document<Data>,
-  items: InfiniteData<PaginatedData<Data>> | undefined,
+export const addItemInsidePaginatedData = <DataType>(
+  item: DataType,
+  items: InfiniteData<PaginatedData<DataType>> | undefined,
   pageIndex = 0
-): InfiniteData<PaginatedData<Data>> => {
+): InfiniteData<PaginatedData<DataType>> => {
   if (!items) {
     return initialPaginatedData;
   }
@@ -21,10 +21,10 @@ export const addItemInsidePaginatedData = <Data>(
   return items;
 };
 
-export const updateItemInsidePaginatedData = <Data>(
-  item: Document<Data>,
-  items: InfiniteData<PaginatedData<Data>> | undefined
-): InfiniteData<PaginatedData<Data>> => {
+export const updateItemInsidePaginatedData = <DataType extends { id: number }>(
+  item: DataType,
+  items: InfiniteData<PaginatedData<DataType>> | undefined
+): InfiniteData<PaginatedData<DataType>> => {
   if (!items) {
     return initialPaginatedData;
   }
@@ -35,10 +35,10 @@ export const updateItemInsidePaginatedData = <Data>(
   return items;
 };
 
-export const removeItemInsidePaginatedData = <Data>(
-  itemId: string,
-  items: InfiniteData<PaginatedData<Data>> | undefined
-): InfiniteData<PaginatedData<Data>> => {
+export const removeItemInsidePaginatedData = <DataType extends { id: number }>(
+  itemId: number,
+  items: InfiniteData<PaginatedData<DataType>> | undefined
+): InfiniteData<PaginatedData<DataType>> => {
   if (!items) {
     return initialPaginatedData;
   }

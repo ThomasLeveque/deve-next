@@ -1,15 +1,43 @@
-import { getCategories } from '@hooks/category/use-categories';
-import { getFirebaseLinkComments } from '@hooks/link/use-link-comments';
-import { getFirebaseLinks } from '@hooks/link/use-links';
+import { collection, getDocs, orderBy, query } from 'firebase/firestore/lite';
 
 import { Comment } from '@models/comment';
 import { Link } from '@models/link';
 import { Tag } from '@models/tag';
 import { Vote } from '@models/vote';
 
+import { db } from './init-firebase';
 import { supabase } from './init-supabase';
 
-// UTILS //
+// FIREBASE UTILS //
+
+export const dataToDocument = <Data>(doc: any): any => ({
+  id: doc.id,
+  exists: doc.exists(),
+  ...(doc.data() as Data),
+});
+
+export const getCategories = async () => {
+  const categoriesRef = collection(db, 'categories');
+  const q = query(categoriesRef, orderBy('count', 'desc'));
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map((doc) => dataToDocument(doc));
+};
+
+export const getFirebaseLinkComments = async (linkId: string) => {
+  const commentsRef = collection(db, `links/${linkId}/comments`);
+  const q = query(commentsRef, orderBy('createdAt', 'desc'));
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map((doc) => dataToDocument<Comment>(doc));
+};
+
+export const getFirebaseLinks = async () => {
+  const LinksRef = collection(db, 'links');
+  const q = query(LinksRef, orderBy('createdAt', 'desc'));
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map((doc) => dataToDocument<Link>(doc));
+};
+
+// SUPABASE UTILS //
 
 const getSupabaseTags = async () => {
   const resp = await supabase.from<Tag>('tags').select('*');
