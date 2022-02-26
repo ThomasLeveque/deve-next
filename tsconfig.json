@@ -22,7 +22,8 @@
       "@hooks/*": ["src/hooks/*"],
       "@store/*": ["src/store/*"],
       "@api/*": ["src/api/*"]
-    }
+    },
+    "incremental": true
   },
   "exclude": ["node_modules"],
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
