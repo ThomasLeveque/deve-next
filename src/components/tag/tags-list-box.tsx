@@ -57,16 +57,12 @@ const TagsListBox: React.FC<TagsListBoxProps> = React.memo((props) => {
   const addCategory = useAddCategory();
 
   const isSelected = useCallback(
-    (tag: string) =>
-      !!selectedTags.find(
-        (selectedTag) => selectedTag.toLocaleLowerCase() === tag.toLocaleLowerCase()
-      ),
+    (tag: string) => !!selectedTags.find((selectedTag) => selectedTag.toLocaleLowerCase() === tag.toLocaleLowerCase()),
     [selectedTags]
   );
 
   const isTagExist = useMemo(
-    () =>
-      !!props.tags?.find((tag) => tag.name.toLocaleLowerCase() === searchTag.toLocaleLowerCase()),
+    () => !!props.tags?.find((tag) => tag.name.toLocaleLowerCase() === searchTag.toLocaleLowerCase()),
     [props.tags, searchTag]
   );
 
@@ -86,10 +82,7 @@ const TagsListBox: React.FC<TagsListBoxProps> = React.memo((props) => {
   );
 
   const filteredTags = useMemo(
-    () =>
-      props.tags?.filter((tag) =>
-        tag.name.toLocaleLowerCase().includes(searchTag.toLocaleLowerCase())
-      ) ?? [],
+    () => props.tags?.filter((tag) => tag.name.toLocaleLowerCase().includes(searchTag.toLocaleLowerCase())) ?? [],
     [searchTag, props.tags]
   );
 
@@ -98,14 +91,10 @@ const TagsListBox: React.FC<TagsListBoxProps> = React.memo((props) => {
       if (isOpen) {
         switch (event.key) {
           case 'ArrowDown':
-            setFocusedTagIndex((prevIndex) =>
-              prevIndex === filteredTags.length - 1 ? 0 : prevIndex + 1
-            );
+            setFocusedTagIndex((prevIndex) => (prevIndex === filteredTags.length - 1 ? 0 : prevIndex + 1));
             break;
           case 'ArrowUp':
-            setFocusedTagIndex((prevIndex) =>
-              prevIndex === 0 ? filteredTags.length - 1 : prevIndex - 1
-            );
+            setFocusedTagIndex((prevIndex) => (prevIndex === 0 ? filteredTags.length - 1 : prevIndex - 1));
             break;
           case 'Enter': {
             if (filteredTags[focusedTagIndex]) {
@@ -186,11 +175,11 @@ const TagsListBox: React.FC<TagsListBoxProps> = React.memo((props) => {
         <Transition
           show={isOpen}
           enter="transition duration-100 ease-out"
-          enterFrom="transform scale-95 opacity-0"
-          enterTo="transform scale-100 opacity-100"
+          enterFrom="scale-95 opacity-0"
+          enterTo="scale-100 opacity-100"
           leave="transition duration-75 ease-out"
-          leaveFrom="transform scale-100 opacity-100"
-          leaveTo="transform scale-95 opacity-0"
+          leaveFrom="scale-100 opacity-100"
+          leaveTo="scale-95 opacity-0"
         >
           <div
             className="fixed inset-0 w-full h-full z-10"
@@ -269,9 +258,7 @@ const TagsListBoxOption: React.FC<TagsListBoxOptionProps> = (props) => {
       <button
         type="button"
         onClick={() => {
-          isSelected
-            ? props.removeSelectedTags(props.tag.name)
-            : props.addSelectedTags(props.tag.name);
+          isSelected ? props.removeSelectedTags(props.tag.name) : props.addSelectedTags(props.tag.name);
           props.setCurrentIndex(props.index);
         }}
         className={classNames(
@@ -287,11 +274,7 @@ const TagsListBoxOption: React.FC<TagsListBoxOptionProps> = (props) => {
           {props.tag.name} ({props.tag.count})
         </p>
         {canBeRemove && (
-          <button
-            type="button"
-            onClick={handleRemoveTag}
-            className="hover:bg-black/10 rounded-[4px]"
-          >
+          <button type="button" onClick={handleRemoveTag} className="hover:bg-black/10 rounded-[4px]">
             <TrashIcon />
           </button>
         )}
