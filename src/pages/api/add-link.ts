@@ -3,9 +3,8 @@ import { collection, doc, getDocs, query, where, writeBatch } from 'firebase/fir
 import type { NextApiRequest, NextApiResponse, NextApiHandler } from 'next';
 
 import { getUser } from '@api/auth/db';
-
-import { dbKeys as categoryDbKey } from '@hooks/category/db-keys';
-import { dbKeys as linkDbKey } from '@hooks/link/db-keys';
+import { dbKeys as categoryDbKey } from '@api/category/db-keys';
+import { dbKeys as linkDbKey } from '@api/link/db-keys';
 
 import { Category } from '@data-types/categorie.type';
 

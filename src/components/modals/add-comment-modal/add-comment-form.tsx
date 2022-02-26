@@ -8,10 +8,9 @@ import Button from '@components/elements/button';
 import TextArea from '@components/elements/textarea';
 
 import { useAuth } from '@api/auth/useAuth';
-
-import { dbKeys } from '@hooks/link/db-keys';
-import { useAddLinkComment } from '@hooks/link/use-add-link-comment';
-import { useLinksQueryKey } from '@hooks/link/use-links-query-key';
+import { dbKeys } from '@api/link/db-keys';
+import { useAddLinkComment } from '@api/link/use-add-link-comment';
+import { useLinksQueryKey } from '@api/link/use-links-query-key';
 
 import { CommentFormData } from '@data-types/comment.type';
 import { Link } from '@data-types/link.type';
@@ -92,8 +91,8 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
             maxLength={commentMaxLength}
             textareaClassName="h-32"
           />
-          <p className="mt-3 ml-1 text-xs">
-            Characters left:{' '}
+          <p className="mt-3 ml-1 text-xs space-x-1">
+            <span>Characters left:</span>
             <span className="font-poppins-bold">{commentMaxLength - commentText.length}</span>
           </p>
         </>

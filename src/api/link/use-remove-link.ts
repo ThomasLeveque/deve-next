@@ -8,8 +8,8 @@ import {
   useQueryClient,
 } from 'react-query';
 
-import { queryKeys as categoryQueryKeys } from '@hooks/category/query-keys';
-import { useUpdateCategory } from '@hooks/category/use-update-category';
+import { queryKeys as categoryQueryKeys } from '@api/category/query-keys';
+import { useUpdateCategory } from '@api/category/use-update-category';
 
 import { Category } from '@data-types/categorie.type';
 import { Link } from '@data-types/link.type';

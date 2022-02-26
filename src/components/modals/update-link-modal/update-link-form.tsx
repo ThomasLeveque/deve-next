@@ -8,10 +8,10 @@ import TextInput from '@components/elements/text-input';
 import TagsListBox from '@components/tag/tags-list-box';
 
 import { useAuth } from '@api/auth/useAuth';
+import { useCategories } from '@api/category/use-categories';
+import { useLinksQueryKey } from '@api/link/use-links-query-key';
+import { useUpdateLink } from '@api/link/use-update-link';
 
-import { useCategories } from '@hooks/category/use-categories';
-import { useLinksQueryKey } from '@hooks/link/use-links-query-key';
-import { useUpdateLink } from '@hooks/link/use-update-link';
 import { useFetchHtmlText } from '@hooks/use-fetch-html-text';
 
 import { Link, LinkFormData } from '@data-types/link.type';

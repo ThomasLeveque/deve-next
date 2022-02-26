@@ -10,8 +10,7 @@ import Toast from '@components/elements/toast';
 import Layout from '@components/layout';
 
 import AuthProvider from '@api/auth/useAuth';
-
-import { useSupabaseAuth } from '@hooks/supabaseAuth/useSupabaseAuth';
+import { useSupabaseAuth } from '@api/supabaseAuth/useSupabaseAuth';
 
 import { runMigrations } from '@utils/migrations';
 

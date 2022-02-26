@@ -3,7 +3,8 @@ import React, { useState, useRef } from 'react';
 
 import SpinnerIcon from '@components/icons/spinner-icon';
 
-import { useCategories } from '@hooks/category/use-categories';
+import { useCategories } from '@api/category/use-categories';
+
 import { useQueryString } from '@hooks/use-query-string';
 
 import Separator from '../elements/separator';

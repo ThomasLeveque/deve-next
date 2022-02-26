@@ -8,10 +8,9 @@ import Tag from '@components/elements/tag';
 import TextInput from '@components/elements/text-input';
 
 import { useAuth } from '@api/auth/useAuth';
-
-import { dbKeys } from '@hooks/category/db-keys';
-import { useAddCategory } from '@hooks/category/use-add-category';
-import { useRemoveCategory } from '@hooks/category/use-remove-category';
+import { dbKeys } from '@api/category/db-keys';
+import { useAddCategory } from '@api/category/use-add-category';
+import { useRemoveCategory } from '@api/category/use-remove-category';
 
 import { Category } from '@data-types/categorie.type';
 import { User } from '@data-types/user.type';

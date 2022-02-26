@@ -4,9 +4,8 @@ import React from 'react';
 import Button from '@components/elements/button';
 
 import { useAuth } from '@api/auth/useAuth';
-
-import { useLinksQueryKey } from '@hooks/link/use-links-query-key';
-import { useRemoveLink } from '@hooks/link/use-remove-link';
+import { useLinksQueryKey } from '@api/link/use-links-query-key';
+import { useRemoveLink } from '@api/link/use-remove-link';
 
 import { Modal } from '../modal';
 

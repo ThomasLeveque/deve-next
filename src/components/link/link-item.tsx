@@ -14,8 +14,8 @@ import { QueryKey } from 'react-query';
 import TagListWrapper from '@components/tag/tag-list-wrapper';
 
 import { useAuth } from '@api/auth/useAuth';
+import { useUpdateLink } from '@api/link/use-update-link';
 
-import { useUpdateLink } from '@hooks/link/use-update-link';
 import { useQueryString } from '@hooks/use-query-string';
 
 import { Link } from '@data-types/link.type';
