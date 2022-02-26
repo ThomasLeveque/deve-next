@@ -1,26 +1,22 @@
+import { Link } from '@data-types/link.type';
+import { OrderLinksKey, useQueryString } from '@hooks/use-query-string';
+import { dataToDocument } from '@utils/format-document';
+import { formatError } from '@utils/format-string';
+import { db } from '@utils/init-firebase';
+import { Document, PaginatedData } from '@utils/shared-types';
 import {
+  collection,
+  getDocs,
+  limit,
+  orderBy,
   query,
   QueryDocumentSnapshot,
-  where,
-  orderBy,
-  limit,
-  getDocs,
-  collection,
   startAfter,
+  where,
 } from 'firebase/firestore/lite';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useInfiniteQuery, UseInfiniteQueryResult, useQueryClient } from 'react-query';
-
-import { OrderLinksKey, useQueryString } from '@hooks/use-query-string';
-
-import { Link } from '@data-types/link.type';
-
-import { dataToDocument } from '@utils/format-document';
-import { formatError } from '@utils/format-string';
-import { db } from '@utils/init-firebase';
-import { PaginatedData, Document } from '@utils/shared-types';
-
 import { dbKeys } from './db-keys';
 import { queryKeys } from './query-keys';
 
@@ -44,11 +40,9 @@ const getOrderbyDBQuery = (orderby: OrderLinksKey) => {
   }
 };
 
-const getTagsDBQuery = (tags: string[]) =>
-  tags.length > 0 ? [where('categories', 'array-contains-any', tags)] : [];
+const getTagsDBQuery = (tags: string[]) => (tags.length > 0 ? [where('categories', 'array-contains-any', tags)] : []);
 
-const getStartAfterDBQuery = (cursor: QueryDocumentSnapshot) =>
-  cursor !== undefined ? [startAfter(cursor)] : [];
+const getStartAfterDBQuery = (cursor: QueryDocumentSnapshot) => (cursor !== undefined ? [startAfter(cursor)] : []);
 
 const getLinks = async (
   cursor: QueryDocumentSnapshot,

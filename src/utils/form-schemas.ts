@@ -1,13 +1,8 @@
 import * as yup from 'yup';
-
 import { validUrlRegex } from './format-string';
 
 const userDisplayNameSchema = yup.string().required('Username is required').max(255);
-const userEmailSchema = yup
-  .string()
-  .email('Email must be a valid email')
-  .required('Email is required')
-  .max(255);
+const userEmailSchema = yup.string().email('Email must be a valid email').required('Email is required').max(255);
 const userPasswordSchema = yup
   .string()
   .required('Password is required')
@@ -36,11 +31,7 @@ const commentSchema = {
 export const addCommentSchema = yup.object().shape(commentSchema);
 
 const linkSchema = {
-  url: yup
-    .string()
-    .required('Url is required')
-    .matches(validUrlRegex, { message: 'Url must be a valid url' })
-    .max(255),
+  url: yup.string().required('Url is required').matches(validUrlRegex, { message: 'Url must be a valid url' }).max(255),
   title: yup.string().required('Title is required').max(255),
   tags: yup
     .array(yup.string())

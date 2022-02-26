@@ -1,7 +1,6 @@
 import { ArrowSmUpIcon } from '@heroicons/react/outline';
 import React from 'react';
 import { useInView } from 'react-intersection-observer';
-
 import Button from './elements/button';
 
 const BackToTop: React.FC = () => {

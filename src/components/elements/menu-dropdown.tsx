@@ -2,7 +2,6 @@ import { Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/outline';
 import classNames from 'classnames';
 import React from 'react';
-
 import Button from './button';
 
 export interface MenuDropdownItemProps {
@@ -52,7 +51,7 @@ const MenuDropdown: React.FC<MenuDropdownProps> = React.memo((props) => {
           >
             <Menu.Items
               className={classNames(
-                'absolute bg-gray-100 mt-2 rounded-button overflow-hidden py-1 focus:outline-none shadow-lg',
+                'absolute mt-2 overflow-hidden rounded-button bg-gray-100 py-1 shadow-lg focus:outline-none',
                 dropdownPosition === 'right' ? 'right-0 origin-top-right' : 'left-0 origin-top-left'
               )}
             >

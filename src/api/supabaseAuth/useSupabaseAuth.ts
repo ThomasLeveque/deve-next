@@ -1,11 +1,9 @@
+import { Profile } from '@models/profile';
 import { useProfile } from '@store/profile.store';
 import { User } from '@supabase/supabase-js';
-import { useEffect } from 'react';
-
-import { Profile } from '@models/profile';
-
 import { supabase } from '@utils/init-supabase';
 import { Nullable } from '@utils/shared-types';
+import { useEffect } from 'react';
 
 const getUserProfile = async (user: User): Promise<Profile | null> => {
   const profile = await supabase.from<Profile>('profiles').select('*').eq('id', user.id).single();

@@ -1,10 +1,8 @@
-import { useAuthModalOpen } from '@store/modals.store';
-import React, { useCallback, useMemo, useState } from 'react';
-
 import Button from '@components/elements/button';
 import Separator from '@components/elements/separator';
 import SignInWithGoogleBtn from '@components/modals/login-modal/sign-in-with-google-btn';
-
+import { useAuthModalOpen } from '@store/modals.store';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Modal } from '../modal';
 import ResetPasswordForm from './reset-password-form';
 import SignInForm from './sign-in-form';
@@ -49,18 +47,10 @@ const LoginModal: React.FC = React.memo(() => {
             <div className="grid gap-5">
               <SignInWithGoogleBtn />
               <SignInWithGithubBtn />
-              <Button
-                text="login with email"
-                onClick={() => setStep(loginStep.LOGIN_WITH_EMAIL)}
-                fullWidth
-              />
+              <Button text="login with email" onClick={() => setStep(loginStep.LOGIN_WITH_EMAIL)} fullWidth />
             </div>
             <Separator className="my-7" />
-            <Button
-              text="join next-deve"
-              onClick={() => setStep(loginStep.JOIN_NEXT_DEVE)}
-              fullWidth
-            />
+            <Button text="join next-deve" onClick={() => setStep(loginStep.JOIN_NEXT_DEVE)} fullWidth />
           </>
         );
       case loginStep.LOGIN_WITH_EMAIL:

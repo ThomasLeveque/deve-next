@@ -1,10 +1,8 @@
-import { collection, getDocs, orderBy, query } from 'firebase/firestore/lite';
-
 import { Comment } from '@models/comment';
 import { Link } from '@models/link';
 import { Tag } from '@models/tag';
 import { Vote } from '@models/vote';
-
+import { collection, getDocs, orderBy, query } from 'firebase/firestore/lite';
 import { db } from './init-firebase';
 import { supabase } from './init-supabase';
 
@@ -74,9 +72,7 @@ const tagsMigrations = async () => {
     const categories = await getCategories();
 
     if (categories && categories.length > 0) {
-      await supabase
-        .from<Tag>('tags')
-        .insert(categories.map((category) => ({ name: category.name })));
+      await supabase.from<Tag>('tags').insert(categories.map((category) => ({ name: category.name })));
 
       return createMigration(MIGRATIONS_ID);
     }
@@ -103,9 +99,7 @@ const linksMigrations = async (userId: string) => {
       const linksPromise = firebaseLinks.map(async (firebaseLink) => {
         const linkSupabaseTags = firebaseLink.categories
           .filter((category) => {
-            const foundCategory = tags.find(
-              (tag) => tag.name.toLowerCase() === category.toLowerCase()
-            );
+            const foundCategory = tags.find((tag) => tag.name.toLowerCase() === category.toLowerCase());
 
             if (foundCategory) {
               return true;
@@ -114,9 +108,7 @@ const linksMigrations = async (userId: string) => {
             }
           })
           .map((category) => {
-            const usedSupabaseTag = tags.find(
-              (tag) => tag.name.toLowerCase() === category.toLowerCase()
-            );
+            const usedSupabaseTag = tags.find((tag) => tag.name.toLowerCase() === category.toLowerCase());
             return usedSupabaseTag as Tag;
           });
 
@@ -135,22 +127,18 @@ const linksMigrations = async (userId: string) => {
           // links tags many to many relation
           await supabase
             .from<{ linkId: number; tagId: number }>('links_tags')
-            .insert(
-              linkSupabaseTags.map((supabaseTag) => ({ linkId: newLink.id, tagId: supabaseTag.id }))
-            );
+            .insert(linkSupabaseTags.map((supabaseTag) => ({ linkId: newLink.id, tagId: supabaseTag.id })));
 
           // link comments one to many relation
           if (firebaseLink.id) {
             const firebaseLinkComments = await getFirebaseLinkComments(firebaseLink.id);
 
             if (firebaseLinkComments) {
-              const supabaseLinkComments: Partial<Comment>[] = firebaseLinkComments.map(
-                (firebaseLinkComment) => ({
-                  userId: userId,
-                  linkId: newLink.id,
-                  text: firebaseLinkComment.text,
-                })
-              );
+              const supabaseLinkComments: Partial<Comment>[] = firebaseLinkComments.map((firebaseLinkComment) => ({
+                userId: userId,
+                linkId: newLink.id,
+                text: firebaseLinkComment.text,
+              }));
 
               await supabase.from<Comment>('comments').insert(supabaseLinkComments);
             }

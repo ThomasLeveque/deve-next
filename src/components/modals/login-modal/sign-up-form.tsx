@@ -1,18 +1,13 @@
+import { useAuth } from '@api/auth/useAuth';
+import Button from '@components/elements/button';
+import TextInput from '@components/elements/text-input';
+import { SignUpFormData } from '@data-types/user.type';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { signUpSchema } from '@utils/form-schemas';
+import { formatError } from '@utils/format-string';
 import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-
-import Button from '@components/elements/button';
-import TextInput from '@components/elements/text-input';
-
-import { useAuth } from '@api/auth/useAuth';
-
-import { SignUpFormData } from '@data-types/user.type';
-
-import { signUpSchema } from '@utils/form-schemas';
-import { formatError } from '@utils/format-string';
-
 import { loginStep } from './login-modal';
 
 interface SignUpFormProps {

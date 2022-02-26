@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 type screenType = 'mobile' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 

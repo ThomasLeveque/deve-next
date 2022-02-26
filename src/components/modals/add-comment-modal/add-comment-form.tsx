@@ -1,27 +1,22 @@
-import { yupResolver } from '@hookform/resolvers/yup';
-import { doc, collection } from 'firebase/firestore/lite';
-import React, { useCallback, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
-
-import Button from '@components/elements/button';
-import TextArea from '@components/elements/textarea';
-
 import { useAuth } from '@api/auth/useAuth';
 import { dbKeys } from '@api/link/db-keys';
 import { useAddLinkComment } from '@api/link/use-add-link-comment';
 import { useLinksQueryKey } from '@api/link/use-links-query-key';
-
+import Button from '@components/elements/button';
+import TextArea from '@components/elements/textarea';
 import { CommentFormData } from '@data-types/comment.type';
 import { Link } from '@data-types/link.type';
 import { User } from '@data-types/user.type';
-
+import { yupResolver } from '@hookform/resolvers/yup';
 import { addCommentSchema, commentMaxLength } from '@utils/form-schemas';
 import { formatComment } from '@utils/format-comment';
 import { formatError } from '@utils/format-string';
 import { db } from '@utils/init-firebase';
 import { Document } from '@utils/shared-types';
-
+import { collection, doc } from 'firebase/firestore/lite';
+import React, { useCallback, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import CommentItem from './comment-item';
 
 interface AddCommentFormProps {
@@ -91,14 +86,14 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
             maxLength={commentMaxLength}
             textareaClassName="h-32"
           />
-          <p className="mt-3 ml-1 text-xs space-x-1">
+          <p className="mt-3 ml-1 space-x-1 text-xs">
             <span>Characters left:</span>
             <span className="font-poppins-bold">{commentMaxLength - commentText.length}</span>
           </p>
         </>
       )}
 
-      <div className="flex justify-end space-x-4 mt-8">
+      <div className="mt-8 flex justify-end space-x-4">
         <Button
           text={showPreview ? 'Edit' : 'Preview'}
           theme="gray"

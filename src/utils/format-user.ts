@@ -1,6 +1,5 @@
-import { User as AuthUser } from 'firebase/auth';
-
 import { AdditionalUserData, User } from '@data-types/user.type';
+import { User as AuthUser } from 'firebase/auth';
 
 export const formatUser = (authUser: AuthUser, additionalData?: AdditionalUserData): User => ({
   email: authUser.email,

@@ -1,9 +1,7 @@
-import { FireIcon, SortAscendingIcon, SortDescendingIcon } from '@heroicons/react/outline';
-import React, { useMemo } from 'react';
-
 import MenuDropdown, { MenuDropdownItemProps } from '@components/elements/menu-dropdown';
-
+import { FireIcon, SortAscendingIcon, SortDescendingIcon } from '@heroicons/react/outline';
 import { OrderLinksKey, useQueryString } from '@hooks/use-query-string';
+import React, { useMemo } from 'react';
 
 const OrderbyLinksDropdown: React.FC = React.memo(() => {
   const { updateOrderbyQuery, orderbyQuery } = useQueryString();

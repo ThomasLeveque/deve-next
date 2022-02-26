@@ -1,21 +1,16 @@
-import { Popover } from '@headlessui/react';
-import { PencilAltIcon, TrashIcon, XIcon } from '@heroicons/react/outline';
-import { format } from 'date-fns';
-import React, { useMemo, useState } from 'react';
-import ReactMarkdown from 'react-markdown';
-
-import Button from '@components/elements/button';
-import MyPopover from '@components/elements/popover';
-
 import { useAuth } from '@api/auth/useAuth';
 import { useLinksQueryKey } from '@api/link/use-links-query-key';
 import { useRemoveLinkComment } from '@api/link/use-remove-link-comment';
-
+import Button from '@components/elements/button';
+import MyPopover from '@components/elements/popover';
 import { Comment } from '@data-types/comment.type';
 import { Link } from '@data-types/link.type';
-
+import { Popover } from '@headlessui/react';
+import { PencilAltIcon, TrashIcon, XIcon } from '@heroicons/react/outline';
 import { Document } from '@utils/shared-types';
-
+import { format } from 'date-fns';
+import React, { useMemo, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 import UpdateCommentForm from './update-comment-form';
 
 interface CommentItemProps {
@@ -33,14 +28,14 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, link, isPreview = fa
 
   const canRemoveComment = useMemo(
     () => user && (user.isAdmin || user.id === comment.postedBy.id),
-    [user]
+    [user, comment.postedBy.id]
   );
 
-  const canUpdateComment = useMemo(() => user && user.id === comment.postedBy.id, [user]);
+  const canUpdateComment = useMemo(() => user && user.id === comment.postedBy.id, [user, comment.postedBy.id]);
 
   return (
-    <li className="group p-5 border border-gray-400/30 rounded-button">
-      <div className="mb-3 flex justify-between items-start space-x-3 min-h-[18px]">
+    <li className="group rounded-button border border-gray-400/30 p-5">
+      <div className="mb-3 flex min-h-[18px] items-start justify-between space-x-3">
         <div className="flex text-[10px]">
           <h3 className="font-poppins-bold">{comment.postedBy.displayName}</h3>
 
@@ -49,17 +44,13 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, link, isPreview = fa
             {format(comment.createdAt, 'MMMM d yyyy')}
           </p>
         </div>
-        <div className="space-x-1 group-hover:flex flex lg:hidden">
+        <div className="flex space-x-1 group-hover:flex lg:hidden">
           {canUpdateComment && !isPreview && (
             <button
               className="hover:text-secondary"
               onClick={() => setUpdateComment((prevUpdateComment) => !prevUpdateComment)}
             >
-              {updateComment ? (
-                <XIcon className="w-[18px]" />
-              ) : (
-                <PencilAltIcon className="w-[18px]" />
-              )}
+              {updateComment ? <XIcon className="w-[18px]" /> : <PencilAltIcon className="w-[18px]" />}
             </button>
           )}
           {canRemoveComment && !isPreview && (
@@ -81,11 +72,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, link, isPreview = fa
       </div>
 
       {updateComment ? (
-        <UpdateCommentForm
-          commentToUpdate={comment}
-          link={link}
-          closeUpdate={() => setUpdateComment(false)}
-        />
+        <UpdateCommentForm commentToUpdate={comment} link={link} closeUpdate={() => setUpdateComment(false)} />
       ) : (
         <ReactMarkdown linkTarget="_blank" className="prose prose-sm">
           {comment.text}

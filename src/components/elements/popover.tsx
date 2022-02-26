@@ -38,7 +38,7 @@ const MyPopover: React.FC<MyPopoverProps> = (props) => {
       >
         <Popover.Panel
           className={classNames(
-            'absolute z-10 bg-white rounded-button p-4 focus:outline-none shadow-lg',
+            'absolute z-10 rounded-button bg-white p-4 shadow-lg focus:outline-none',
             props.className,
             positionClassNames
           )}

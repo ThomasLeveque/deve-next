@@ -1,26 +1,17 @@
-import { useLinkToCommentModal } from '@store/modals.store';
-import React from 'react';
-
+import { COMMENTS_PER_PAGE, useLinkComments } from '@api/link/use-link-comments';
 import Button from '@components/elements/button';
 import SpinnerIcon from '@components/icons/spinner-icon';
 import CommentItem from '@components/modals/add-comment-modal/comment-item';
-
-import { COMMENTS_PER_PAGE, useLinkComments } from '@api/link/use-link-comments';
-
+import { useLinkToCommentModal } from '@store/modals.store';
 import { getDomain } from '@utils/format-string';
-
+import React from 'react';
 import { Modal } from '../modal';
 import AddCommentForm from './add-comment-form';
 
 const AddCommentModal: React.FC = React.memo(() => {
   const [linkToCommentModal, setLinkToCommentModal] = useLinkToCommentModal();
 
-  const {
-    data: comments,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = useLinkComments(linkToCommentModal);
+  const { data: comments, fetchNextPage, hasNextPage, isFetchingNextPage } = useLinkComments(linkToCommentModal);
 
   const closeModal = () => {
     setLinkToCommentModal(null);
@@ -28,13 +19,8 @@ const AddCommentModal: React.FC = React.memo(() => {
 
   return linkToCommentModal ? (
     <Modal isOpen={!!linkToCommentModal} closeModal={closeModal} className="max-w-2xl">
-      <a
-        href={linkToCommentModal.url}
-        rel="noreferrer"
-        target="_blank"
-        className="mb-6 mr-8 with-ring block group"
-      >
-        <h2 className="text-3xl mb-2 font-poppins-bold group-hover:text-secondary break-words">
+      <a href={linkToCommentModal.url} rel="noreferrer" target="_blank" className="with-ring group mb-6 mr-8 block">
+        <h2 className="mb-2 break-words font-poppins-bold text-3xl group-hover:text-secondary">
           {linkToCommentModal.description}
         </h2>
         <p className="text-xs group-hover:underline">On {getDomain(linkToCommentModal.url)}</p>
@@ -63,7 +49,7 @@ const AddCommentModal: React.FC = React.memo(() => {
               ) : null}
             </>
           ) : (
-            <SpinnerIcon className="w-8 m-auto mt-12" />
+            <SpinnerIcon className="m-auto mt-12 w-8" />
           )}
         </>
       ) : null}

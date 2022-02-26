@@ -1,8 +1,6 @@
 import { User } from '@data-types/user.type';
-
 import { Document } from '@utils/shared-types';
-
-import { CommentFormData, Comment } from './../data-types/comment.type';
+import { Comment, CommentFormData } from './../data-types/comment.type';
 
 export const formatComment = (formData: CommentFormData, author: Document<User>): Comment => ({
   text: formData.text,

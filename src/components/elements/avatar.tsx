@@ -1,10 +1,8 @@
+import { useAuth } from '@api/auth/useAuth';
+import { getInitials } from '@utils/format-string';
 import classNames from 'classnames';
 import Image from 'next/image';
 import React, { useMemo } from 'react';
-
-import { useAuth } from '@api/auth/useAuth';
-
-import { getInitials } from '@utils/format-string';
 
 interface AvatarProps {
   className?: string;
@@ -23,19 +21,19 @@ const Avatar: React.FC<AvatarProps> = React.memo((props) => {
     <button
       disabled={disabled}
       className={classNames(
-        'flex with-ring rounded-full overflow-hidden',
+        'with-ring flex overflow-hidden rounded-full',
         { 'cursor-default': disabled },
         props.className
       )}
     >
-      <Image src={user?.photoURL} height={size} width={size} priority />
+      <Image src={user?.photoURL} height={size} width={size} priority alt="Avatar image" />
     </button>
   ) : (
     <button
       disabled={disabled}
       style={{ height: size, width: size, fontSize: size * 0.36 }}
       className={classNames(
-        'with-ring bg-gray-100 rounded-full grid place-items-center font-poppins-bold uppercase',
+        'with-ring grid place-items-center rounded-full bg-gray-100 font-poppins-bold uppercase',
         { 'cursor-default': disabled },
         props.className
       )}

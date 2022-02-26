@@ -1,28 +1,22 @@
+import { useAuth } from '@api/auth/useAuth';
+import { useUpdateLink } from '@api/link/use-update-link';
+import TagListWrapper from '@components/tag/tag-list-wrapper';
+import { Link } from '@data-types/link.type';
 import { AnnotationIcon, FireIcon, PencilAltIcon, TrashIcon } from '@heroicons/react/outline';
 import { FireIcon as FireIconSolid } from '@heroicons/react/solid';
+import { useQueryString } from '@hooks/use-query-string';
 import {
   useAuthModalOpen,
   useLinkToCommentModal,
   useLinkToRemoveModal,
   useLinkToUpdateModal,
 } from '@store/modals.store';
+import { getDomain } from '@utils/format-string';
+import { Document } from '@utils/shared-types';
 import classNames from 'classnames';
 import { format } from 'date-fns';
 import React, { useCallback, useMemo } from 'react';
 import { QueryKey } from 'react-query';
-
-import TagListWrapper from '@components/tag/tag-list-wrapper';
-
-import { useAuth } from '@api/auth/useAuth';
-import { useUpdateLink } from '@api/link/use-update-link';
-
-import { useQueryString } from '@hooks/use-query-string';
-
-import { Link } from '@data-types/link.type';
-
-import { getDomain } from '@utils/format-string';
-import { Document } from '@utils/shared-types';
-
 import Tag from '../elements/tag';
 
 interface LinkItemProps {
@@ -44,19 +38,10 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
   const setLinkToRemoveModal = useLinkToRemoveModal()[1];
   const setAuthModalOpen = useAuthModalOpen()[1];
 
-  const isLikedByMe = useMemo(
-    () => !!link.votes.find((vote) => vote.voteBy.id === user?.id),
-    [user, link]
-  );
+  const isLikedByMe = useMemo(() => !!link.votes.find((vote) => vote.voteBy.id === user?.id), [user, link]);
 
-  const canUpdateLinkData = useMemo(
-    () => user && (user.isAdmin || link.postedBy.id === user.id),
-    [user, link]
-  );
-  const canRemoveLink = useMemo(
-    () => user && (user.isAdmin || link.postedBy.id === user.id),
-    [user, link]
-  );
+  const canUpdateLinkData = useMemo(() => user && (user.isAdmin || link.postedBy.id === user.id), [user, link]);
+  const canRemoveLink = useMemo(() => user && (user.isAdmin || link.postedBy.id === user.id), [user, link]);
 
   const renderFires = useMemo(() => {
     if (link.voteCount === 0) {
@@ -79,10 +64,7 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
   const addVote = useCallback(() => {
     const incrementedVoteLink: Partial<Document<Link>> = {
       voteCount: link.voteCount + 1,
-      votes: [
-        ...link.votes,
-        { voteBy: { id: user?.id ?? '', displayName: user?.displayName ?? '' } },
-      ],
+      votes: [...link.votes, { voteBy: { id: user?.id ?? '', displayName: user?.displayName ?? '' } }],
     };
     updateLink.mutate(incrementedVoteLink);
   }, [link, user]);
@@ -96,21 +78,17 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
   }, [link, user]);
 
   return (
-    <li className="flex flex-col p-[30px] rounded-link-card bg-gray-100 group">
-      <div className="mb-5 flex justify-between items-start space-x-3 min-h-[20px]">
+    <li className="group flex flex-col rounded-link-card bg-gray-100 p-[30px]">
+      <div className="mb-5 flex min-h-[20px] items-start justify-between space-x-3">
         <div>
-          {!isProfilLink && (
-            <h3 className="font-poppins-bold text-[13px] mb-1">{link.postedBy.displayName}</h3>
-          )}
+          {!isProfilLink && <h3 className="mb-1 font-poppins-bold text-[13px]">{link.postedBy.displayName}</h3>}
           <p className="text-[10px] text-gray-400">{format(link.createdAt, 'MMMM d yyyy')}</p>
         </div>
-        <div className="space-x-1 group-hover:flex flex lg:hidden">
+        <div className="flex space-x-1 group-hover:flex lg:hidden">
           {canUpdateLinkData && (
             <button
               className="hover:text-secondary"
-              onClick={() =>
-                canUpdateLinkData ? setLinkToUpdateModal(link) : setAuthModalOpen(true)
-              }
+              onClick={() => (canUpdateLinkData ? setLinkToUpdateModal(link) : setAuthModalOpen(true))}
             >
               <PencilAltIcon className="w-5" />
             </button>
@@ -125,14 +103,9 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
           )}
         </div>
       </div>
-      <a
-        href={link.url}
-        rel="noreferrer"
-        target="_blank"
-        className="mb-8 with-ring link-item-link block"
-      >
+      <a href={link.url} rel="noreferrer" target="_blank" className="with-ring link-item-link mb-8 block">
         <h2
-          className={classNames('text-3xl mb-2 font-poppins-bold break-words', {
+          className={classNames('mb-2 break-words font-poppins-bold text-3xl', {
             '!text-2xl': link.description.length > 60,
           })}
         >
@@ -152,7 +125,7 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
           </li>
         ))}
       </TagListWrapper>
-      <div className="flex mt-auto space-x-5">
+      <div className="mt-auto flex space-x-5">
         <button
           onClick={() => {
             if (user) {
@@ -161,7 +134,7 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
               setAuthModalOpen(true);
             }
           }}
-          className={classNames('flex items-center space-x-[6px] hover:text-secondary with-ring', {
+          className={classNames('with-ring flex items-center space-x-[6px] hover:text-secondary', {
             'text-secondary': isLikedByMe,
           })}
         >
@@ -170,7 +143,7 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
         </button>
         <button
           onClick={() => (user ? setLinkToCommentModal(link) : setAuthModalOpen(true))}
-          className="flex items-center space-x-[6px] hover:text-secondary with-ring"
+          className="with-ring flex items-center space-x-[6px] hover:text-secondary"
         >
           <AnnotationIcon className="w-6" />
           <span className="font-poppins-bold text-[11px]">{renderComments}</span>

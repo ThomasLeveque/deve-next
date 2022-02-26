@@ -1,19 +1,13 @@
-import { DocumentReference, setDoc } from 'firebase/firestore/lite';
-import toast from 'react-hot-toast';
-import { useMutation, UseMutationResult, useQueryClient } from 'react-query';
-
 import { Category } from '@data-types/categorie.type';
-
 import { formatError } from '@utils/format-string';
 import { addItemInsideData, removeItemInsideData } from '@utils/mutate-data';
 import { Document } from '@utils/shared-types';
-
+import { DocumentReference, setDoc } from 'firebase/firestore/lite';
+import toast from 'react-hot-toast';
+import { useMutation, UseMutationResult, useQueryClient } from 'react-query';
 import { queryKeys } from './query-keys';
 
-const addCategory = async (
-  categoryRef: DocumentReference,
-  category: Category
-): Promise<Document<Category>[]> => {
+const addCategory = async (categoryRef: DocumentReference, category: Category): Promise<Document<Category>[]> => {
   await setDoc(categoryRef, category);
   return [];
 };

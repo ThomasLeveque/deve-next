@@ -1,13 +1,10 @@
-import toast from 'react-hot-toast';
-import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
-
 import { Comment } from '@models/comment';
-
 import { formatError } from '@utils/format-string';
 import { supabase } from '@utils/init-supabase';
 import { addItemInsidePaginatedData } from '@utils/mutate-data';
 import { PaginatedData } from '@utils/shared-types';
-
+import toast from 'react-hot-toast';
+import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
 import { dbKeys } from './db-keys';
 import { queryKeys } from './query-keys';
 
@@ -21,16 +18,13 @@ const addComment = async (commentToAdd: Partial<Comment>): Promise<Comment> => {
   return newComment;
 };
 
-export const useAddLinkComment = (
-  linkId: number
-): UseMutationResult<Comment, Error, Partial<Comment>, Comment> => {
+export const useAddLinkComment = (linkId: number): UseMutationResult<Comment, Error, Partial<Comment>, Comment> => {
   const queryClient = useQueryClient();
 
   return useMutation((commentToAdd) => addComment(commentToAdd), {
     onSuccess: async (newComment) => {
-      queryClient.setQueryData<InfiniteData<PaginatedData<Comment>>>(
-        queryKeys.comments(linkId),
-        (oldComments) => addItemInsidePaginatedData(newComment, oldComments)
+      queryClient.setQueryData<InfiniteData<PaginatedData<Comment>>>(queryKeys.comments(linkId), (oldComments) =>
+        addItemInsidePaginatedData(newComment, oldComments)
       );
     },
     onError: (err) => {

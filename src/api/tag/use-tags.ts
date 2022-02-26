@@ -1,13 +1,10 @@
-import { useEffect } from 'react';
-import toast from 'react-hot-toast';
-import { useQuery, useQueryClient, UseQueryOptions, UseQueryResult } from 'react-query';
-
 import { Tag } from '@models/tag';
-
 import { formatError } from '@utils/format-string';
 import { supabase } from '@utils/init-supabase';
 import { Nullable } from '@utils/shared-types';
-
+import { useEffect } from 'react';
+import toast from 'react-hot-toast';
+import { useQuery, useQueryClient, UseQueryOptions, UseQueryResult } from 'react-query';
 import { dbKeys } from './db-keys';
 import { queryKeys } from './query-keys';
 
@@ -21,9 +18,8 @@ export const getTags = async (): Promise<Nullable<Tag[]>> => {
   }
 };
 
-export const useTags = (
-  options?: UseQueryOptions<Nullable<Tag[]>>
-): UseQueryResult<Nullable<Tag[]>> => useQuery(queryKeys.tags, () => getTags(), options);
+export const useTags = (options?: UseQueryOptions<Nullable<Tag[]>>): UseQueryResult<Nullable<Tag[]>> =>
+  useQuery(queryKeys.tags, () => getTags(), options);
 
 export const usePrefetchTags = (): void => {
   const queryClient = useQueryClient();

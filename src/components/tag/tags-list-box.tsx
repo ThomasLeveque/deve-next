@@ -1,23 +1,18 @@
-import { Transition } from '@headlessui/react';
-import { CheckIcon, PlusIcon, TrashIcon } from '@heroicons/react/outline';
-import classNames from 'classnames';
-import { doc, collection } from 'firebase/firestore/lite';
-import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-
-import Tag from '@components/elements/tag';
-import TextInput from '@components/elements/text-input';
-
 import { useAuth } from '@api/auth/useAuth';
 import { dbKeys } from '@api/category/db-keys';
 import { useAddCategory } from '@api/category/use-add-category';
 import { useRemoveCategory } from '@api/category/use-remove-category';
-
+import Tag from '@components/elements/tag';
+import TextInput from '@components/elements/text-input';
 import { Category } from '@data-types/categorie.type';
 import { User } from '@data-types/user.type';
-
+import { Transition } from '@headlessui/react';
+import { CheckIcon, PlusIcon, TrashIcon } from '@heroicons/react/outline';
 import { db } from '@utils/init-firebase';
 import { Document } from '@utils/shared-types';
-
+import classNames from 'classnames';
+import { collection, doc } from 'firebase/firestore/lite';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import TagListWrapper from './tag-list-wrapper';
 
 interface TagsListBoxOptionProps {
@@ -123,7 +118,7 @@ const TagsListBox: React.FC<TagsListBoxProps> = React.memo((props) => {
       {props.label !== undefined ? (
         <label
           className={classNames(
-            'font-poppins-bold text-[10px] uppercase text-black mb-[6px] ml-1 block',
+            'mb-[6px] ml-1 block font-poppins-bold text-[10px] uppercase text-black',
             props.labelClassName
           )}
         >
@@ -182,7 +177,7 @@ const TagsListBox: React.FC<TagsListBoxProps> = React.memo((props) => {
           leaveTo="scale-95 opacity-0"
         >
           <div
-            className="fixed inset-0 w-full h-full z-10"
+            className="fixed inset-0 z-10 h-full w-full"
             onClick={() => {
               setFocusedTagIndex(0);
               setIsOpen(false);
@@ -190,7 +185,7 @@ const TagsListBox: React.FC<TagsListBoxProps> = React.memo((props) => {
           />
           <ul
             ref={tagListRef}
-            className="absolute z-30 top-full w-full mt-2 rounded-button py-1 focus:outline-none shadow-lg max-h-60 overflow-auto bg-gray-100"
+            className="absolute top-full z-30 mt-2 max-h-60 w-full overflow-auto rounded-button bg-gray-100 py-1 shadow-lg focus:outline-none"
           >
             {/* Add tag button */}
             {!isTagExist && searchTag.length > 0 && (
@@ -207,7 +202,7 @@ const TagsListBox: React.FC<TagsListBoxProps> = React.memo((props) => {
                   setSearchTag('');
                   searchRef.current?.focus();
                 }}
-                className="grid grid-cols-[20px,1fr] gap-3 px-4 py-2 text-sm w-full hover:bg-primary"
+                className="grid w-full grid-cols-[20px,1fr] gap-3 px-4 py-2 text-sm hover:bg-primary"
               >
                 <PlusIcon />
                 <p className="text-left">
@@ -262,7 +257,7 @@ const TagsListBoxOption: React.FC<TagsListBoxOptionProps> = (props) => {
           props.setCurrentIndex(props.index);
         }}
         className={classNames(
-          'grid grid-cols-[20px,1fr] gap-3 px-4 py-2 text-sm w-full hover:bg-primary',
+          'grid w-full grid-cols-[20px,1fr] gap-3 px-4 py-2 text-sm hover:bg-primary',
           {
             'bg-primary': props.index === props.currentIndex,
           },
@@ -274,7 +269,7 @@ const TagsListBoxOption: React.FC<TagsListBoxOptionProps> = (props) => {
           {props.tag.name} ({props.tag.count})
         </p>
         {canBeRemove && (
-          <button type="button" onClick={handleRemoveTag} className="hover:bg-black/10 rounded-[4px]">
+          <button type="button" onClick={handleRemoveTag} className="rounded-[4px] hover:bg-black/10">
             <TrashIcon />
           </button>
         )}

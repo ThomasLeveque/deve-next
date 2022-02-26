@@ -1,28 +1,15 @@
-import toast from 'react-hot-toast';
-import {
-  InfiniteData,
-  QueryKey,
-  useMutation,
-  UseMutationResult,
-  useQueryClient,
-} from 'react-query';
-
 import { Comment } from '@models/comment';
-
 import { formatError } from '@utils/format-string';
 import { supabase } from '@utils/init-supabase';
-import { removeItemInsidePaginatedData, addItemInsidePaginatedData } from '@utils/mutate-data';
-import { Document, PaginatedData } from '@utils/shared-types';
-
+import { removeItemInsidePaginatedData } from '@utils/mutate-data';
+import { PaginatedData } from '@utils/shared-types';
+import toast from 'react-hot-toast';
+import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
 import { dbKeys } from './db-keys';
 import { queryKeys } from './query-keys';
 
 const removeLinkComment = async (commentId: number): Promise<number> => {
-  const response = await supabase
-    .from<Comment>(dbKeys.comments)
-    .delete()
-    .eq('id', commentId)
-    .single();
+  const response = await supabase.from<Comment>(dbKeys.comments).delete().eq('id', commentId).single();
   const removedComment = response.data;
 
   if (!removedComment || response.error) {
@@ -31,16 +18,13 @@ const removeLinkComment = async (commentId: number): Promise<number> => {
   return removedComment.id;
 };
 
-export const useRemoveLinkComment = (
-  linkId: number
-): UseMutationResult<number, Error, number, Comment> => {
+export const useRemoveLinkComment = (linkId: number): UseMutationResult<number, Error, number, Comment> => {
   const queryClient = useQueryClient();
 
   return useMutation((commentId) => removeLinkComment(commentId), {
     onSuccess: async (removedCommentId) => {
-      queryClient.setQueryData<InfiniteData<PaginatedData<Comment>>>(
-        queryKeys.comments(linkId),
-        (oldComments) => removeItemInsidePaginatedData(removedCommentId, oldComments)
+      queryClient.setQueryData<InfiniteData<PaginatedData<Comment>>>(queryKeys.comments(linkId), (oldComments) =>
+        removeItemInsidePaginatedData(removedCommentId, oldComments)
       );
     },
     onError: (err) => {

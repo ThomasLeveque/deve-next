@@ -1,7 +1,6 @@
+import SpinnerIcon from '@components/icons/spinner-icon';
 import classNames from 'classnames';
 import React, { useMemo } from 'react';
-
-import SpinnerIcon from '@components/icons/spinner-icon';
 
 interface ButtonProps {
   onClick?: () => void;
@@ -44,7 +43,7 @@ const Button: React.FC<ButtonProps> = React.memo((props) => {
   return (
     <button
       className={classNames(
-        'rounded-button disabled:opacity-40 disabled:cursor-not-allowed h-[46px] font-poppins-bold text-xs uppercase flex justify-center items-center with-ring',
+        'with-ring flex h-[46px] items-center justify-center rounded-button font-poppins-bold text-xs uppercase disabled:cursor-not-allowed disabled:opacity-40',
         { 'w-full': fullWidth },
         { 'px-5': !isOnlyIcon },
         { 'w-[46px]': isOnlyIcon },
@@ -69,9 +68,7 @@ const Button: React.FC<ButtonProps> = React.memo((props) => {
               )}
             >
               {props.text}
-              <span className={iconPosition === 'left' ? 'order-first' : 'order-last'}>
-                {props.icon}
-              </span>
+              <span className={iconPosition === 'left' ? 'order-first' : 'order-last'}>{props.icon}</span>
             </div>
           ) : null}
           {isOnlyText ? props.text : null}

@@ -1,27 +1,15 @@
-import { DocumentReference, setDoc } from 'firebase/firestore/lite';
-import toast from 'react-hot-toast';
-import {
-  InfiniteData,
-  QueryKey,
-  useMutation,
-  UseMutationResult,
-  useQueryClient,
-} from 'react-query';
-
 import { queryKeys as categoryQueryKeys } from '@api/category/query-keys';
 import { useUpdateCategory } from '@api/category/use-update-category';
-
 import { Category } from '@data-types/categorie.type';
 import { Link } from '@data-types/link.type';
-
 import { formatError } from '@utils/format-string';
 import { addItemInsidePaginatedData, removeItemInsidePaginatedData } from '@utils/mutate-data';
-import { PaginatedData, Document } from '@utils/shared-types';
+import { Document, PaginatedData } from '@utils/shared-types';
+import { DocumentReference, setDoc } from 'firebase/firestore/lite';
+import toast from 'react-hot-toast';
+import { InfiniteData, QueryKey, useMutation, UseMutationResult, useQueryClient } from 'react-query';
 
-export const addLink = async (
-  linkRef: DocumentReference,
-  link: Link
-): Promise<InfiniteData<PaginatedData<Link>>> => {
+export const addLink = async (linkRef: DocumentReference, link: Link): Promise<InfiniteData<PaginatedData<Link>>> => {
   await setDoc(linkRef, link);
   return {} as InfiniteData<PaginatedData<Link>>;
 };
@@ -53,9 +41,7 @@ export const useAddLink = (
       // Increment count of every used tags
       const tags = queryClient.getQueryData<Document<Category>[]>(categoryQueryKeys.categories);
       newLink?.categories.forEach((selectedTag) => {
-        const prevTag = tags?.find(
-          (tag) => tag.name.toLocaleLowerCase() === selectedTag.toLocaleLowerCase()
-        );
+        const prevTag = tags?.find((tag) => tag.name.toLocaleLowerCase() === selectedTag.toLocaleLowerCase());
 
         if (prevTag) {
           updateCategory.mutate({

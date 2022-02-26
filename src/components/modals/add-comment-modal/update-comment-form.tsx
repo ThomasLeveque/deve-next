@@ -1,22 +1,18 @@
-import { yupResolver } from '@hookform/resolvers/yup';
-import React, { useCallback, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
-import ReactMarkdown from 'react-markdown';
-
-import Button from '@components/elements/button';
-import TextArea from '@components/elements/textarea';
-
 import { useAuth } from '@api/auth/useAuth';
 import { useUpdateLinkComment } from '@api/link/use-update-link-comment';
-
+import Button from '@components/elements/button';
+import TextArea from '@components/elements/textarea';
 import { Comment, CommentFormData } from '@data-types/comment.type';
 import { Link } from '@data-types/link.type';
-
+import { yupResolver } from '@hookform/resolvers/yup';
 import { addCommentSchema, commentMaxLength } from '@utils/form-schemas';
 import { formatUpdateComment } from '@utils/format-comment';
 import { formatError } from '@utils/format-string';
 import { Document } from '@utils/shared-types';
+import React, { useCallback, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import ReactMarkdown from 'react-markdown';
 
 interface UpdateCommentFormProps {
   commentToUpdate: Document<Comment>;
@@ -64,7 +60,7 @@ const UpdateCommentForm: React.FC<UpdateCommentFormProps> = (props) => {
       }
       setShowPreview(false);
     },
-    [user, linkId]
+    [user, linkId, props.commentToUpdate.text]
   );
 
   return (
@@ -84,13 +80,12 @@ const UpdateCommentForm: React.FC<UpdateCommentFormProps> = (props) => {
             textareaClassName="h-24"
           />
           <p className="mt-3 ml-1 text-xs">
-            Characters left:{' '}
-            <span className="font-poppins-bold">{commentMaxLength - commentText.length}</span>
+            Characters left: <span className="font-poppins-bold">{commentMaxLength - commentText.length}</span>
           </p>
         </>
       )}
 
-      <div className="flex justify-end space-x-4 mt-8">
+      <div className="mt-8 flex justify-end space-x-4">
         <Button
           text={showPreview ? 'Edit' : 'Preview'}
           theme="gray"

@@ -1,6 +1,5 @@
-import { atom, SetStateAction, useAtom } from 'jotai';
-
 import { Profile } from '@models/profile';
+import { atom, SetStateAction, useAtom } from 'jotai';
 
 const profileAtom = atom<Profile | null>(null);
 

@@ -1,32 +1,25 @@
-import {
-  User as AuthUser,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider,
-  GithubAuthProvider,
-  createUserWithEmailAndPassword,
-  signOut as firebaseSignOut,
-} from 'firebase/auth';
-import React, { createContext, useContext, memo, useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
-
 import { AdditionalUserData, User } from '@data-types/user.type';
-
 import { formatError } from '@utils/format-string';
 import { auth } from '@utils/init-firebase';
 import { Document } from '@utils/shared-types';
-
-import { getUser, createUser } from './db';
+import {
+  createUserWithEmailAndPassword,
+  GithubAuthProvider,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut as firebaseSignOut,
+  User as AuthUser,
+} from 'firebase/auth';
+import React, { createContext, memo, useContext, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { createUser, getUser } from './db';
 
 type AuthContextType = {
   user: Document<User> | null;
   userLoaded: boolean;
-  signUpWithEmail: (
-    email: string,
-    password: string,
-    additionalData: AdditionalUserData
-  ) => Promise<void>;
+  signUpWithEmail: (email: string, password: string, additionalData: AdditionalUserData) => Promise<void>;
   signInWithEmail: (email: string, password: string) => Promise<void>;
   signInWithGoogle: () => Promise<void>;
   signInWithGithub: () => Promise<void>;
@@ -55,10 +48,7 @@ const useProvideAuth = () => {
   const [user, setUser] = useState<Document<User> | null>(null);
   const [userLoaded, setUserLoaded] = useState(false);
 
-  const handleUser = async (
-    authUser: AuthUser | null,
-    additionalData?: AdditionalUserData
-  ): Promise<void> => {
+  const handleUser = async (authUser: AuthUser | null, additionalData?: AdditionalUserData): Promise<void> => {
     if (authUser) {
       let userData = await getUser(authUser.uid);
 

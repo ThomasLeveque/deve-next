@@ -1,6 +1,5 @@
 import { Link, LinkFormData } from '@data-types/link.type';
 import { User } from '@data-types/user.type';
-
 import { Document } from '@utils/shared-types';
 
 export const formatLink = (formData: LinkFormData, author: Document<User>): Link => ({

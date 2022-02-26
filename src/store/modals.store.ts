@@ -1,12 +1,9 @@
+import { Link } from '@data-types/link.type';
+import { Document } from '@utils/shared-types';
 import { atom, SetStateAction, useAtom } from 'jotai';
 
-import { Link } from '@data-types/link.type';
-
-import { Document } from '@utils/shared-types';
-
 const authModalOpenAtom = atom(false);
-export const useAuthModalOpen = (): [boolean, (update: SetStateAction<boolean>) => void] =>
-  useAtom(authModalOpenAtom);
+export const useAuthModalOpen = (): [boolean, (update: SetStateAction<boolean>) => void] => useAtom(authModalOpenAtom);
 
 const addLinkModalOpenAtom = atom(false);
 export const useAddLinkModalOpen = (): [boolean, (update: SetStateAction<boolean>) => void] =>

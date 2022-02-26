@@ -1,12 +1,8 @@
-import classNames from 'classnames';
-import React, { useState, useRef } from 'react';
-
-import SpinnerIcon from '@components/icons/spinner-icon';
-
 import { useCategories } from '@api/category/use-categories';
-
+import SpinnerIcon from '@components/icons/spinner-icon';
 import { useQueryString } from '@hooks/use-query-string';
-
+import classNames from 'classnames';
+import React, { useRef, useState } from 'react';
 import Separator from '../elements/separator';
 import Tag from '../elements/tag';
 import TextInput from '../elements/text-input';
@@ -25,15 +21,13 @@ const TagsFilterSidebar: React.FC<TagsFilterSidebarProps> = React.memo((props) =
 
   return !tags ? (
     <div className="w-sidebar">
-      <SpinnerIcon className="w-8 m-auto mt-6" />
+      <SpinnerIcon className="m-auto mt-6 w-8" />
     </div>
   ) : (
     <div className={classNames('w-sidebar', props.className)}>
       {tagsQuery.length > 0 && (
         <>
-          <h3 className="text-center mb-5 font-poppins-bold text-lg">
-            Selected tags ({tagsQuery.length}) :
-          </h3>
+          <h3 className="mb-5 text-center font-poppins-bold text-lg">Selected tags ({tagsQuery.length}) :</h3>
           <TagListWrapper className="justify-end">
             {tagsQuery?.map((tag) => (
               <li key={tag}>
@@ -44,7 +38,7 @@ const TagsFilterSidebar: React.FC<TagsFilterSidebarProps> = React.memo((props) =
           <Separator className="my-8" />
         </>
       )}
-      <h3 className="text-center mb-5 font-poppins-bold text-lg">Filter by tags (max 10) :</h3>
+      <h3 className="mb-5 text-center font-poppins-bold text-lg">Filter by tags (max 10) :</h3>
       <TextInput
         ref={searchRef}
         placeholder="Search for a tag..."
@@ -62,9 +56,7 @@ const TagsFilterSidebar: React.FC<TagsFilterSidebarProps> = React.memo((props) =
         {tags
           .filter(
             (tag) =>
-              !tagsQuery.includes(tag.name) &&
-              tag.name.toLowerCase().includes(searchTag.toLowerCase()) &&
-              tag.count > 0
+              !tagsQuery.includes(tag.name) && tag.name.toLowerCase().includes(searchTag.toLowerCase()) && tag.count > 0
           )
           .map((tag) => (
             <li key={tag.id}>

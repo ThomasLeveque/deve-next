@@ -1,12 +1,9 @@
-import { useLinkToRemoveModal } from '@store/modals.store';
-import React from 'react';
-
-import Button from '@components/elements/button';
-
 import { useAuth } from '@api/auth/useAuth';
 import { useLinksQueryKey } from '@api/link/use-links-query-key';
 import { useRemoveLink } from '@api/link/use-remove-link';
-
+import Button from '@components/elements/button';
+import { useLinkToRemoveModal } from '@store/modals.store';
+import React from 'react';
 import { Modal } from '../modal';
 
 const RemoveLinkModal: React.FC = React.memo(() => {
@@ -21,12 +18,7 @@ const RemoveLinkModal: React.FC = React.memo(() => {
   };
 
   return linkToRemoveModal ? (
-    <Modal
-      isOpen={!!linkToRemoveModal}
-      closeModal={closeModal}
-      title="Are you sure ?"
-      className="max-w-md"
-    >
+    <Modal isOpen={!!linkToRemoveModal} closeModal={closeModal} title="Are you sure ?" className="max-w-md">
       <div className="flex space-x-5">
         <Button text="Cancel" fullWidth theme="gray" onClick={closeModal} />
         <Button

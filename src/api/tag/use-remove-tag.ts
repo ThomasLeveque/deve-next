@@ -1,12 +1,9 @@
-import toast from 'react-hot-toast';
-import { useMutation, UseMutationResult, useQueryClient } from 'react-query';
-
 import { Tag } from '@models/tag';
-
 import { formatError } from '@utils/format-string';
 import { supabase } from '@utils/init-supabase';
 import { removeItemInsideData } from '@utils/mutate-data';
-
+import toast from 'react-hot-toast';
+import { useMutation, UseMutationResult, useQueryClient } from 'react-query';
 import { dbKeys } from './db-keys';
 import { queryKeys } from './query-keys';
 
@@ -24,9 +21,7 @@ export const useRemoveTag = (): UseMutationResult<number, Error, number, Tag> =>
   const queryClient = useQueryClient();
   return useMutation((tagId) => removeTag(tagId), {
     onSuccess: async (removedTagId) => {
-      queryClient.setQueryData<Tag[]>(queryKeys.tags, (oldTags) =>
-        removeItemInsideData<Tag>(removedTagId, oldTags)
-      );
+      queryClient.setQueryData<Tag[]>(queryKeys.tags, (oldTags) => removeItemInsideData<Tag>(removedTagId, oldTags));
     },
     onError: (err) => {
       toast.error(formatError(err));

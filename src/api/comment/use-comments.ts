@@ -1,22 +1,16 @@
-import toast from 'react-hot-toast';
-import { useInfiniteQuery, UseInfiniteQueryResult } from 'react-query';
-
 import { Comment } from '@models/comment';
 import { Link } from '@models/link';
-
 import { formatError } from '@utils/format-string';
 import { supabase } from '@utils/init-supabase';
-import { PaginatedData, Nullable } from '@utils/shared-types';
-
+import { Nullable, PaginatedData } from '@utils/shared-types';
+import toast from 'react-hot-toast';
+import { useInfiniteQuery, UseInfiniteQueryResult } from 'react-query';
 import { dbKeys } from './db-keys';
 import { queryKeys } from './query-keys';
 
 export const COMMENTS_PER_PAGE = Number(process.env.NEXT_PUBLIC_COMMENTS_PER_PAGE) ?? 20;
 
-const getComments = async (
-  cursor = 0,
-  linkId: number
-): Promise<PaginatedData<Comment> | undefined> => {
+const getComments = async (cursor = 0, linkId: number): Promise<PaginatedData<Comment> | undefined> => {
   try {
     const nextCursor = cursor + COMMENTS_PER_PAGE;
     const response = await supabase
@@ -40,9 +34,7 @@ const getComments = async (
   }
 };
 
-export const useComments = (
-  link: Nullable<Link>
-): UseInfiniteQueryResult<Nullable<PaginatedData<Comment>>> => {
+export const useComments = (link: Nullable<Link>): UseInfiniteQueryResult<Nullable<PaginatedData<Comment>>> => {
   const linkId = link?.id;
   return useInfiniteQuery<Nullable<PaginatedData<Comment>>>(
     queryKeys.comments(linkId as number),

@@ -1,8 +1,6 @@
+import { isValidUrl } from '@utils/format-string';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-
-import { isValidUrl } from '@utils/format-string';
-
 import { formatError } from './../utils/format-string';
 
 interface useFetchHtmlTextReturn {
@@ -10,11 +8,7 @@ interface useFetchHtmlTextReturn {
   loading: boolean;
 }
 
-export const useFetchHtmlText = (
-  url: string,
-  initialFetch = true,
-  htmlSelector = 'h1'
-): useFetchHtmlTextReturn => {
+export const useFetchHtmlText = (url: string, initialFetch = true, htmlSelector = 'h1'): useFetchHtmlTextReturn => {
   const [htmlText, setHtmlText] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [shouldInitialFetch, setShouldInitialFetch] = useState(initialFetch);

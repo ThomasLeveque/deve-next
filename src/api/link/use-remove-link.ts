@@ -1,24 +1,14 @@
-import { doc, deleteDoc } from 'firebase/firestore/lite';
-import toast from 'react-hot-toast';
-import {
-  InfiniteData,
-  QueryKey,
-  useMutation,
-  UseMutationResult,
-  useQueryClient,
-} from 'react-query';
-
 import { queryKeys as categoryQueryKeys } from '@api/category/query-keys';
 import { useUpdateCategory } from '@api/category/use-update-category';
-
 import { Category } from '@data-types/categorie.type';
 import { Link } from '@data-types/link.type';
-
 import { formatError } from '@utils/format-string';
 import { db } from '@utils/init-firebase';
-import { removeItemInsidePaginatedData, addItemInsidePaginatedData } from '@utils/mutate-data';
+import { addItemInsidePaginatedData, removeItemInsidePaginatedData } from '@utils/mutate-data';
 import { Document, PaginatedData } from '@utils/shared-types';
-
+import { deleteDoc, doc } from 'firebase/firestore/lite';
+import toast from 'react-hot-toast';
+import { InfiniteData, QueryKey, useMutation, UseMutationResult, useQueryClient } from 'react-query';
 import { dbKeys } from './db-keys';
 
 const removeLink = async (linkId: string): Promise<InfiniteData<PaginatedData<Link>>> => {
@@ -47,9 +37,7 @@ export const useRemoveLink = (
       // Decrement count of every used tags
       const tags = queryClient.getQueryData<Document<Category>[]>(categoryQueryKeys.categories);
       removedLink?.categories.forEach((selectedTag) => {
-        const prevTag = tags?.find(
-          (tag) => tag.name.toLocaleLowerCase() === selectedTag.toLocaleLowerCase()
-        );
+        const prevTag = tags?.find((tag) => tag.name.toLocaleLowerCase() === selectedTag.toLocaleLowerCase());
 
         if (prevTag) {
           updateCategory.mutate({

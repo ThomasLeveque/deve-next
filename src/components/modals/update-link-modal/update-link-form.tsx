@@ -1,25 +1,20 @@
-import { yupResolver } from '@hookform/resolvers/yup';
-import React, { useEffect, useCallback } from 'react';
-import { FieldError, useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
-
-import Button from '@components/elements/button';
-import TextInput from '@components/elements/text-input';
-import TagsListBox from '@components/tag/tags-list-box';
-
 import { useAuth } from '@api/auth/useAuth';
 import { useCategories } from '@api/category/use-categories';
 import { useLinksQueryKey } from '@api/link/use-links-query-key';
 import { useUpdateLink } from '@api/link/use-update-link';
-
-import { useFetchHtmlText } from '@hooks/use-fetch-html-text';
-
+import Button from '@components/elements/button';
+import TextInput from '@components/elements/text-input';
+import TagsListBox from '@components/tag/tags-list-box';
 import { Link, LinkFormData } from '@data-types/link.type';
-
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useFetchHtmlText } from '@hooks/use-fetch-html-text';
 import { updateLinkSchema } from '@utils/form-schemas';
 import { formatUpdatedLink } from '@utils/format-link';
 import { formatError } from '@utils/format-string';
 import { Document } from '@utils/shared-types';
+import React, { useCallback, useEffect } from 'react';
+import { FieldError, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 
 interface AddLinkFormProps {
   closeModal: () => void;
@@ -71,9 +66,7 @@ const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
         }
 
         selectedTags.forEach((selectedTag) => {
-          const foundTag = tags?.find(
-            (tag) => tag.name.toLocaleLowerCase() === selectedTag.toLocaleLowerCase()
-          );
+          const foundTag = tags?.find((tag) => tag.name.toLocaleLowerCase() === selectedTag.toLocaleLowerCase());
           if (!foundTag) {
             throw new Error(`The tag ${selectedTag} does not exist`);
           }

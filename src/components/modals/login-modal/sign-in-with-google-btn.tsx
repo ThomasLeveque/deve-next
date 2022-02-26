@@ -1,10 +1,7 @@
+import { useAuth } from '@api/auth/useAuth';
+import { formatError } from '@utils/format-string';
 import React, { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
-
-import { useAuth } from '@api/auth/useAuth';
-
-import { formatError } from '@utils/format-string';
-
 import Button from '../../elements/button';
 
 const SignInWithGoogleBtn: React.FC = () => {
@@ -25,13 +22,7 @@ const SignInWithGoogleBtn: React.FC = () => {
   }, []);
 
   return (
-    <Button
-      theme="secondary"
-      text="login with google"
-      loading={loading}
-      fullWidth
-      onClick={handleSignInWithGoogle}
-    />
+    <Button theme="secondary" text="login with google" loading={loading} fullWidth onClick={handleSignInWithGoogle} />
   );
 };
 

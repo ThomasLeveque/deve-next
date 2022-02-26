@@ -1,27 +1,22 @@
-import { yupResolver } from '@hookform/resolvers/yup';
-import { doc, collection } from 'firebase/firestore/lite';
-import React, { useEffect, useCallback } from 'react';
-import { FieldError, useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
-
-import Button from '@components/elements/button';
-import TextInput from '@components/elements/text-input';
-import TagsListBox from '@components/tag/tags-list-box';
-
 import { useAuth } from '@api/auth/useAuth';
 import { useCategories } from '@api/category/use-categories';
 import { dbKeys } from '@api/link/db-keys';
 import { useAddLink } from '@api/link/use-add-link';
 import { useLinksQueryKey } from '@api/link/use-links-query-key';
-
-import { useFetchHtmlText } from '@hooks/use-fetch-html-text';
-
+import Button from '@components/elements/button';
+import TextInput from '@components/elements/text-input';
+import TagsListBox from '@components/tag/tags-list-box';
 import { LinkFormData } from '@data-types/link.type';
-
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useFetchHtmlText } from '@hooks/use-fetch-html-text';
 import { addLinkSchema } from '@utils/form-schemas';
 import { formatLink } from '@utils/format-link';
 import { formatError } from '@utils/format-string';
 import { db } from '@utils/init-firebase';
+import { collection, doc } from 'firebase/firestore/lite';
+import React, { useCallback, useEffect } from 'react';
+import { FieldError, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 
 interface AddLinkFormProps {
   closeModal: () => void;
@@ -62,9 +57,7 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
         }
 
         selectedTags.forEach((selectedTag) => {
-          const foundTag = tags?.find(
-            (tag) => tag.name.toLocaleLowerCase() === selectedTag.toLocaleLowerCase()
-          );
+          const foundTag = tags?.find((tag) => tag.name.toLocaleLowerCase() === selectedTag.toLocaleLowerCase());
           if (!foundTag) {
             throw new Error(`The tag ${selectedTag} does not exist`);
           }

@@ -1,6 +1,6 @@
 import { EyeIcon, EyeOffIcon, SearchIcon, XCircleIcon } from '@heroicons/react/outline';
 import classNames from 'classnames';
-import React, { useState, useCallback, ChangeEvent, FocusEvent, KeyboardEvent } from 'react';
+import React, { ChangeEvent, FocusEvent, KeyboardEvent, useCallback, useState } from 'react';
 
 interface TextInputProps {
   id: string;
@@ -35,10 +35,7 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>((props, ref
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const toggleShowPassword = useCallback(
-    () => setShowPassword((prevShowPassword) => !prevShowPassword),
-    [showPassword]
-  );
+  const toggleShowPassword = useCallback(() => setShowPassword((prevShowPassword) => !prevShowPassword), []);
 
   return (
     <div className={classNames('relative flex flex-wrap', props.className)}>
@@ -46,29 +43,29 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>((props, ref
         <label
           htmlFor={props.id}
           className={classNames(
-            'font-poppins-bold text-[10px] uppercase text-black mb-[6px] ml-1 block',
+            'mb-[6px] ml-1 block font-poppins-bold text-[10px] uppercase text-black',
             props.labelClassName
           )}
         >
           {props.label}
         </label>
       ) : null}
-      <div className="relative flex items-center w-full">
+      <div className="relative flex w-full items-center">
         {props.type === 'search' ? (
           <SearchIcon
-            className="w-6 absolute left-4 cursor-text"
+            className="absolute left-4 w-6 cursor-text"
             onClick={() => {
               (ref as React.MutableRefObject<HTMLInputElement | null>)?.current?.focus();
             }}
           />
         ) : null}
         {props.type === 'search' && props.value?.length ? (
-          <XCircleIcon onClick={clearValue} className="w-6 absolute right-4 cursor-pointer" />
+          <XCircleIcon onClick={clearValue} className="absolute right-4 w-6 cursor-pointer" />
         ) : null}
         {withResetPassword ? (
           <a
             href="#"
-            className="absolute bottom-full right-0 font-poppins-bold text-[10px] mb-2 mr-1 hover:underline focus:underline"
+            className="absolute bottom-full right-0 mb-2 mr-1 font-poppins-bold text-[10px] hover:underline focus:underline"
             onClick={(event) => {
               event.preventDefault();
               goToResetPassword();
@@ -87,7 +84,7 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>((props, ref
           minLength={props.minLength}
           autoComplete={props.autoComplete}
           className={classNames(
-            'bg-gray-100 w-full h-[50px] with-ring rounded-button placeholder-gray-400 text-sm px-5',
+            'with-ring h-[50px] w-full rounded-button bg-gray-100 px-5 text-sm placeholder-gray-400',
             { 'pr-12': type === 'password' },
             { 'px-12': type === 'search' },
             props.inputClassName
@@ -99,19 +96,13 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>((props, ref
           onKeyDown={props.onKeyDown}
         />
         {props.type === 'password' && withShowPassword ? (
-          <span className="w-6 absolute right-4 cursor-pointer">
-            {showPassword ? (
-              <EyeOffIcon onClick={toggleShowPassword} />
-            ) : (
-              <EyeIcon onClick={toggleShowPassword} />
-            )}
+          <span className="absolute right-4 w-6 cursor-pointer">
+            {showPassword ? <EyeOffIcon onClick={toggleShowPassword} /> : <EyeIcon onClick={toggleShowPassword} />}
           </span>
         ) : null}
       </div>
       {props.errorText ? (
-        <p className="absolute top-full right-1 mt-1 text-[10px] text-danger-400">
-          {props.errorText}
-        </p>
+        <p className="absolute top-full right-1 mt-1 text-[10px] text-danger-400">{props.errorText}</p>
       ) : null}
     </div>
   );

@@ -1,19 +1,15 @@
+import AuthProvider from '@api/auth/useAuth';
+import { useSupabaseAuth } from '@api/supabaseAuth/useSupabaseAuth';
+import Toast from '@components/elements/toast';
+import Layout from '@components/layout';
 import { useProfile } from '@store/profile.store';
+import { runMigrations } from '@utils/migrations';
 import { NextPage } from 'next';
 import { AppProps } from 'next/app';
 import React, { useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
-
-import Toast from '@components/elements/toast';
-import Layout from '@components/layout';
-
-import AuthProvider from '@api/auth/useAuth';
-import { useSupabaseAuth } from '@api/supabaseAuth/useSupabaseAuth';
-
-import { runMigrations } from '@utils/migrations';
-
 import '../../styles/index.css';
 
 const queryClient = new QueryClient({

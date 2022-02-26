@@ -1,13 +1,10 @@
-import { User as AuthUser } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore/lite';
-
 import { AdditionalUserData, User } from '@data-types/user.type';
-
 import { dataToDocument } from '@utils/format-document';
 import { formatUser } from '@utils/format-user';
 import { db } from '@utils/init-firebase';
 import { Document } from '@utils/shared-types';
-
+import { User as AuthUser } from 'firebase/auth';
+import { doc, getDoc, setDoc } from 'firebase/firestore/lite';
 import { dbKeys } from './db-keys';
 
 export const createUser = async (

@@ -1,21 +1,12 @@
-import { deleteDoc, doc } from 'firebase/firestore/lite';
-import toast from 'react-hot-toast';
-import {
-  InfiniteData,
-  QueryKey,
-  useMutation,
-  UseMutationResult,
-  useQueryClient,
-} from 'react-query';
-
 import { Comment } from '@data-types/comment.type';
 import { Link } from '@data-types/link.type';
-
 import { formatError } from '@utils/format-string';
 import { db } from '@utils/init-firebase';
-import { removeItemInsidePaginatedData, addItemInsidePaginatedData } from '@utils/mutate-data';
+import { addItemInsidePaginatedData, removeItemInsidePaginatedData } from '@utils/mutate-data';
 import { Document, PaginatedData } from '@utils/shared-types';
-
+import { deleteDoc, doc } from 'firebase/firestore/lite';
+import toast from 'react-hot-toast';
+import { InfiniteData, QueryKey, useMutation, UseMutationResult, useQueryClient } from 'react-query';
 import { dbKeys } from './db-keys';
 import { queryKeys } from './query-keys';
 import { useUpdateLink } from './use-update-link';
@@ -35,12 +26,7 @@ const removeLinkComment = async (
 export const useRemoveLinkComment = (
   link: Document<Link>,
   linksQueryKey: QueryKey
-): UseMutationResult<
-  InfiniteData<PaginatedData<Comment>>,
-  Error,
-  Document<Comment>,
-  Document<Comment>
-> => {
+): UseMutationResult<InfiniteData<PaginatedData<Comment>>, Error, Document<Comment>, Document<Comment>> => {
   const queryClient = useQueryClient();
   const commentsKey = queryKeys.linkComments(link.id as string);
   const updateLink = useUpdateLink(link, linksQueryKey);

@@ -1,18 +1,14 @@
+import Button from '@components/elements/button';
+import TextInput from '@components/elements/text-input';
+import { ResetPasswordFormData } from '@data-types/user.type';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { resetPasswordSchema } from '@utils/form-schemas';
+import { formatError } from '@utils/format-string';
+import { auth } from '@utils/init-firebase';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-
-import Button from '@components/elements/button';
-import TextInput from '@components/elements/text-input';
-
-import { ResetPasswordFormData } from '@data-types/user.type';
-
-import { resetPasswordSchema } from '@utils/form-schemas';
-import { formatError } from '@utils/format-string';
-import { auth } from '@utils/init-firebase';
-
 import { loginStep } from './login-modal';
 
 interface ResetPasswordFormProps {
@@ -55,11 +51,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = (props) => {
         errorText={errors.email?.message}
       />
       <div className="flex justify-end space-x-4">
-        <Button
-          text="Back"
-          theme="gray"
-          onClick={() => props.setStep(loginStep.LOGIN_WITH_EMAIL)}
-        />
+        <Button text="Back" theme="gray" onClick={() => props.setStep(loginStep.LOGIN_WITH_EMAIL)} />
         <Button theme="secondary" text="Continue" type="submit" loading={loading} />
       </div>
     </form>

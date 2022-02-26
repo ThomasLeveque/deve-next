@@ -27,14 +27,14 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>((props, re
         <label
           htmlFor={props.id}
           className={classNames(
-            'font-poppins-bold text-[10px] uppercase text-black mb-[6px] ml-1 block',
+            'mb-[6px] ml-1 block font-poppins-bold text-[10px] uppercase text-black',
             props.labelClassName
           )}
         >
           {props.label}
         </label>
       ) : null}
-      <div className="relative flex items-center w-full">
+      <div className="relative flex w-full items-center">
         <textarea
           ref={ref}
           id={props.id}
@@ -44,7 +44,7 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>((props, re
           minLength={props.minLength}
           autoComplete={props.autoComplete}
           className={classNames(
-            'bg-gray-100 w-full with-ring rounded-button placeholder-gray-400 text-sm px-5 py-4',
+            'with-ring w-full rounded-button bg-gray-100 px-5 py-4 text-sm placeholder-gray-400',
             props.textareaClassName
           )}
           value={props.value}
@@ -55,9 +55,7 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>((props, re
         />
       </div>
       {props.errorText ? (
-        <p className="absolute top-full right-1 mt-1 text-[10px] text-danger-400">
-          {props.errorText}
-        </p>
+        <p className="absolute top-full right-1 mt-1 text-[10px] text-danger-400">{props.errorText}</p>
       ) : null}
     </div>
   );

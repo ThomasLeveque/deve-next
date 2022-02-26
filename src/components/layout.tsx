@@ -1,16 +1,12 @@
+import { useAuth } from '@api/auth/useAuth';
+import { usePrefetchCategories } from '@api/category/use-categories';
+import Header from '@components/header';
+import { useMediaQuery } from '@hooks/use-media-query';
 import { useTagsSidebarOpen } from '@store/app-config.store';
 import { useAuthModalOpen } from '@store/modals.store';
 import classNames from 'classnames';
 import Head from 'next/head';
 import React, { useEffect } from 'react';
-
-import Header from '@components/header';
-
-import { useAuth } from '@api/auth/useAuth';
-import { usePrefetchCategories } from '@api/category/use-categories';
-
-import { useMediaQuery } from '@hooks/use-media-query';
-
 import BackToTop from './back-to-top';
 import AddCommentModal from './modals/add-comment-modal/add-comment-modal';
 import AddLinkModal from './modals/add-link-modal/add-link-modal';
@@ -53,7 +49,7 @@ const Layout: React.FC<LayoutProps> = ({ className, children, ...props }) => {
         <meta content={metaDescription} name="description" />
       </Head>
       <Header />
-      <main className={classNames('xl:container xl:mx-auto px-5', className)}>{children}</main>
+      <main className={classNames('px-5 xl:container xl:mx-auto', className)}>{children}</main>
       <LoginModal />
       <AddLinkModal />
       <AddCommentModal />

@@ -30,7 +30,7 @@ const Toast: React.FC<ToastProps> = (props) => {
         // Use className to customize the title
         return props.toast.className;
     }
-  }, [props.toast.type]);
+  }, [props.toast.type, props.toast.className]);
 
   const icon = useMemo(() => {
     switch (props.toast.type) {
@@ -41,28 +41,25 @@ const Toast: React.FC<ToastProps> = (props) => {
       default:
         return props.toast.icon;
     }
-  }, [props.toast.type]);
+  }, [props.toast.type, props.toast.icon]);
 
   return (
-    <ToastBar
-      toast={props.toast}
-      style={{ padding: 0, backgroundColor: 'transparent', zIndex: 100 }}
-    >
+    <ToastBar toast={props.toast} style={{ padding: 0, backgroundColor: 'transparent', zIndex: 100 }}>
       {() => (
         <div
           className={classNames(
-            'max-w-xs w-full bg-white py-4 px-5 rounded-button shadow-lg relative grid gap-2 grid-cols-[28px,1fr]',
+            'relative grid w-full max-w-xs grid-cols-[28px,1fr] gap-2 rounded-button bg-white py-4 px-5 shadow-lg',
             themeClasses
           )}
         >
           {icon ?? <BellIcon />}
-          <div className="grid gap-[6px] mr-4">
-            <p className="text-[11px] font-poppins-bold">{title ?? 'Notification'}</p>
+          <div className="mr-4 grid gap-[6px]">
+            <p className="font-poppins-bold text-[11px]">{title ?? 'Notification'}</p>
             <p className="text-sm">{props.toast.message}</p>
           </div>
           <button
             onClick={() => toast.dismiss(props.toast.id)}
-            className="absolute top-2 right-2 hover:bg-white/20 rounded-[4px]"
+            className="absolute top-2 right-2 rounded-[4px] hover:bg-white/20"
           >
             <XIcon className="w-[18px]" />
           </button>

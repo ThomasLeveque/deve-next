@@ -1,14 +1,11 @@
-import { deleteDoc, doc } from 'firebase/firestore/lite';
-import toast from 'react-hot-toast';
-import { useMutation, UseMutationResult, useQueryClient } from 'react-query';
-
 import { Category } from '@data-types/categorie.type';
-
 import { formatError } from '@utils/format-string';
 import { db } from '@utils/init-firebase';
 import { addItemInsideData, removeItemInsideData } from '@utils/mutate-data';
 import { Document } from '@utils/shared-types';
-
+import { deleteDoc, doc } from 'firebase/firestore/lite';
+import toast from 'react-hot-toast';
+import { useMutation, UseMutationResult, useQueryClient } from 'react-query';
 import { dbKeys } from './db-keys';
 import { queryKeys } from './query-keys';
 

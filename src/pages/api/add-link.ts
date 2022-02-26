@@ -1,18 +1,15 @@
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { collection, doc, getDocs, query, where, writeBatch } from 'firebase/firestore/lite';
-import type { NextApiRequest, NextApiResponse, NextApiHandler } from 'next';
-
 import { getUser } from '@api/auth/db';
 import { dbKeys as categoryDbKey } from '@api/category/db-keys';
 import { dbKeys as linkDbKey } from '@api/link/db-keys';
-
 import { Category } from '@data-types/categorie.type';
-
 import { dataToDocument } from '@utils/format-document';
 import { formatLink } from '@utils/format-link';
 import { isValidUrl } from '@utils/format-string';
 import { auth, db } from '@utils/init-firebase';
 import { Document } from '@utils/shared-types';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { collection, doc, getDocs, query, where, writeBatch } from 'firebase/firestore/lite';
+import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 
 interface addLinkHandlerReqBody {
   email: string;
