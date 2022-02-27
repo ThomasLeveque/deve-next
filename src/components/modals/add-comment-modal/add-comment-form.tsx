@@ -1,7 +1,7 @@
 import { useAuth } from '@api/auth/useAuth';
-import { dbKeys } from '@api/link/db-keys';
-import { useAddLinkComment } from '@api/link/use-add-link-comment';
-import { useLinksQueryKey } from '@api/link/use-links-query-key';
+import { dbKeys } from '@api/old-link/db-keys';
+import { useAddLinkComment } from '@api/old-link/use-add-link-comment';
+import { useLinksQueryKey } from '@api/old-link/use-links-query-key';
 import Button from '@components/elements/button';
 import TextArea from '@components/elements/textarea';
 import { CommentFormData } from '@data-types/comment.type';

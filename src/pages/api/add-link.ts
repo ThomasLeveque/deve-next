@@ -1,6 +1,6 @@
 import { getUser } from '@api/auth/db';
 import { dbKeys as categoryDbKey } from '@api/category/db-keys';
-import { dbKeys as linkDbKey } from '@api/link/db-keys';
+import { dbKeys as linkDbKey } from '@api/old-link/db-keys';
 import { Category } from '@data-types/categorie.type';
 import { dataToDocument } from '@utils/format-document';
 import { formatLink } from '@utils/format-link';

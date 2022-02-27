@@ -1,5 +1,6 @@
 import { useAuth } from '@api/auth/useAuth';
 import { usePrefetchCategories } from '@api/category/use-categories';
+import { useLinks } from '@api/link/use-links';
 import Header from '@components/header';
 import { useMediaQuery } from '@hooks/use-media-query';
 import { useTagsSidebarOpen } from '@store/app-config.store';
@@ -24,6 +25,8 @@ const Layout: React.FC<LayoutProps> = ({ className, children, ...props }) => {
   const { user } = useAuth();
   const isMobileScreen = useMediaQuery('mobile');
   const setTagsSidebarOpen = useTagsSidebarOpen()[1];
+
+  useLinks();
 
   usePrefetchCategories();
 

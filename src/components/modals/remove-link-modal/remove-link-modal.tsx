@@ -1,6 +1,6 @@
 import { useAuth } from '@api/auth/useAuth';
-import { useLinksQueryKey } from '@api/link/use-links-query-key';
-import { useRemoveLink } from '@api/link/use-remove-link';
+import { useLinksQueryKey } from '@api/old-link/use-links-query-key';
+import { useRemoveLink } from '@api/old-link/use-remove-link';
 import Button from '@components/elements/button';
 import { useLinkToRemoveModal } from '@store/modals.store';
 import React from 'react';

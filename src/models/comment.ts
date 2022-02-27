@@ -5,9 +5,9 @@ export interface Comment {
   id: number;
   text: string;
   linkId: number;
-  links: Link;
+  link: Link;
   userId: string;
-  profiles: Profile;
+  user: Profile;
   createdAt: Date;
   updatedAt: Date;
 }

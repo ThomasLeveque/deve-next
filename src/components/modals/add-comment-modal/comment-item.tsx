@@ -1,6 +1,6 @@
 import { useAuth } from '@api/auth/useAuth';
-import { useLinksQueryKey } from '@api/link/use-links-query-key';
-import { useRemoveLinkComment } from '@api/link/use-remove-link-comment';
+import { useLinksQueryKey } from '@api/old-link/use-links-query-key';
+import { useRemoveLinkComment } from '@api/old-link/use-remove-link-comment';
 import Button from '@components/elements/button';
 import MyPopover from '@components/elements/popover';
 import { Comment } from '@data-types/comment.type';

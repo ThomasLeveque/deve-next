@@ -11,7 +11,12 @@ import { queryKeys } from './query-keys';
 export const getTags = async (): Promise<Nullable<Tag[]>> => {
   try {
     const response = await supabase.from<Tag>(dbKeys.tags).select('*');
-    return response.data;
+    const tags = response.data;
+
+    if (!tags) {
+      throw new Error('Cannot get tags, try to reload the page');
+    }
+    return tags;
   } catch (err) {
     toast.error(formatError(err as Error));
     console.error(err);

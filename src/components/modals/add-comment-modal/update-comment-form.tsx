@@ -1,5 +1,5 @@
 import { useAuth } from '@api/auth/useAuth';
-import { useUpdateLinkComment } from '@api/link/use-update-link-comment';
+import { useUpdateLinkComment } from '@api/old-link/use-update-link-comment';
 import Button from '@components/elements/button';
 import TextArea from '@components/elements/textarea';
 import { Comment, CommentFormData } from '@data-types/comment.type';

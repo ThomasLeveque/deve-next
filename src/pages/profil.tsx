@@ -1,6 +1,6 @@
 import { useAuth } from '@api/auth/useAuth';
-import { queryKeys } from '@api/link/query-keys';
-import { useUserLinks } from '@api/link/use-user-links';
+import { queryKeys } from '@api/old-link/query-keys';
+import { useUserLinks } from '@api/old-link/use-user-links';
 import Avatar from '@components/elements/avatar';
 import Button from '@components/elements/button';
 import ToggleSwitch from '@components/elements/toggle-switch';

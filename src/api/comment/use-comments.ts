@@ -12,7 +12,7 @@ export const COMMENTS_PER_PAGE = Number(process.env.NEXT_PUBLIC_COMMENTS_PER_PAG
 
 const getComments = async (cursor = 0, linkId: number): Promise<PaginatedData<Comment> | undefined> => {
   try {
-    const nextCursor = cursor + COMMENTS_PER_PAGE;
+    const nextCursor = cursor + COMMENTS_PER_PAGE - 1;
     const response = await supabase
       .from<Comment>(dbKeys.comments)
       .select('*')

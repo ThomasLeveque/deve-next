@@ -1,5 +1,5 @@
-import { queryKeys } from '@api/link/query-keys';
-import { useLinks } from '@api/link/use-links';
+import { queryKeys } from '@api/old-link/query-keys';
+import { useLinks } from '@api/old-link/use-links';
 import Button from '@components/elements/button';
 import SpinnerIcon from '@components/icons/spinner-icon';
 import LinkItem from '@components/link/link-item';

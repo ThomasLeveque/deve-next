@@ -1,5 +1,5 @@
 import { useAuth } from '@api/auth/useAuth';
-import { useUpdateLink } from '@api/link/use-update-link';
+import { useUpdateLink } from '@api/old-link/use-update-link';
 import TagListWrapper from '@components/tag/tag-list-wrapper';
 import { Link } from '@data-types/link.type';
 import { AnnotationIcon, FireIcon, PencilAltIcon, TrashIcon } from '@heroicons/react/outline';

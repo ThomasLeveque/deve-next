@@ -1,70 +1,50 @@
-import { Link } from '@data-types/link.type';
 import { OrderLinksKey, useQueryString } from '@hooks/use-query-string';
-import { dataToDocument } from '@utils/format-document';
+import { Link } from '@models/link';
 import { formatError } from '@utils/format-string';
-import { db } from '@utils/init-firebase';
-import { Document, PaginatedData } from '@utils/shared-types';
-import {
-  collection,
-  getDocs,
-  limit,
-  orderBy,
-  query,
-  QueryDocumentSnapshot,
-  startAfter,
-  where,
-} from 'firebase/firestore/lite';
-import { useEffect } from 'react';
+import { supabase } from '@utils/init-supabase';
+import { PaginatedData } from '@utils/shared-types';
+import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
-import { useInfiniteQuery, UseInfiniteQueryResult, useQueryClient } from 'react-query';
+import { useInfiniteQuery, UseInfiniteQueryResult } from 'react-query';
 import { dbKeys } from './db-keys';
 import { queryKeys } from './query-keys';
 
 export const LINKS_PER_PAGE = Number(process.env.NEXT_PUBLIC_LINKS_PER_PAGE) ?? 20;
 
-export const getFirebaseLinks = async (): Promise<Document<Link>[] | undefined> => {
-  const LinksRef = collection(db, 'links');
-  const q = query(LinksRef, orderBy('createdAt', 'desc'));
-  const snapshot = await getDocs(q);
-  return snapshot.docs.map((doc) => dataToDocument<Link>(doc));
-};
-
-const getOrderbyDBQuery = (orderby: OrderLinksKey) => {
-  switch (orderby) {
-    case 'newest':
-      return [orderBy('createdAt', 'desc')];
-    case 'oldest':
-      return [orderBy('createdAt', 'asc')];
-    case 'liked':
-      return [orderBy('voteCount', 'desc'), orderBy('createdAt', 'desc')];
-  }
-};
-
-const getTagsDBQuery = (tags: string[]) => (tags.length > 0 ? [where('categories', 'array-contains-any', tags)] : []);
-
-const getStartAfterDBQuery = (cursor: QueryDocumentSnapshot) => (cursor !== undefined ? [startAfter(cursor)] : []);
-
 const getLinks = async (
-  cursor: QueryDocumentSnapshot,
+  cursor = 0,
   orderby: OrderLinksKey,
   tags: string[]
 ): Promise<PaginatedData<Link> | undefined> => {
   try {
-    const linksRef = collection(db, dbKeys.links);
+    const nextCursor = cursor + LINKS_PER_PAGE - 1;
+    let query = supabase.from(dbKeys.links).select(dbKeys.selectLinks);
 
-    const q = query(
-      linksRef,
-      ...getTagsDBQuery(tags),
-      ...getOrderbyDBQuery(orderby),
-      ...getStartAfterDBQuery(cursor),
-      limit(LINKS_PER_PAGE)
-    );
+    if (tags.length > 0) {
+      query = query.in('tags.name', tags);
+    }
 
-    const snapshot = await getDocs(q);
-    const data = snapshot.docs.map((doc) => dataToDocument<Link>(doc));
-    const nextCursor = snapshot.docs[snapshot.docs.length - 1];
+    if (orderby === 'newest') {
+      query = query.order('createdAt', { ascending: false });
+    }
+
+    if (orderby === 'oldest') {
+      query = query.order('createdAt', { ascending: true });
+    }
+
+    if (orderby === 'liked') {
+      query = query.order('votesCount', { ascending: false }).order('createdAt', { ascending: false });
+    }
+
+    const response = await query.range(cursor, nextCursor);
+    const links = response.data;
+
+    if (!links) {
+      throw new Error('Cannot get user links, try to reload the page');
+    }
+
     return {
-      data,
+      data: links,
       cursor: nextCursor,
     };
   } catch (err) {
@@ -75,21 +55,13 @@ const getLinks = async (
 
 export const useLinks = (): UseInfiniteQueryResult<PaginatedData<Link> | undefined> => {
   const { tagsQuery, orderbyQuery } = useQueryString();
+  const router = useRouter();
   return useInfiniteQuery<PaginatedData<Link> | undefined>(
     queryKeys.links(orderbyQuery, tagsQuery),
     (context) => getLinks(context.pageParam, orderbyQuery, tagsQuery),
     {
+      enabled: router.isReady,
       getNextPageParam: (lastPage) => lastPage?.cursor,
     }
   );
-};
-
-export const usePrefetchLinks = (): void => {
-  const queryClient = useQueryClient();
-  const { tagsQuery, orderbyQuery } = useQueryString();
-  useEffect(() => {
-    queryClient.prefetchInfiniteQuery(queryKeys.links(orderbyQuery, tagsQuery), (context) =>
-      getLinks(context.pageParam, orderbyQuery, tagsQuery)
-    );
-  }, []);
 };

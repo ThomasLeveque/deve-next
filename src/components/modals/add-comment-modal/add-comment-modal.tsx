@@ -1,4 +1,4 @@
-import { COMMENTS_PER_PAGE, useLinkComments } from '@api/link/use-link-comments';
+import { COMMENTS_PER_PAGE, useLinkComments } from '@api/old-link/use-link-comments';
 import Button from '@components/elements/button';
 import SpinnerIcon from '@components/icons/spinner-icon';
 import CommentItem from '@components/modals/add-comment-modal/comment-item';

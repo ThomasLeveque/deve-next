@@ -1,7 +1,7 @@
 import { useAuth } from '@api/auth/useAuth';
 import { useCategories } from '@api/category/use-categories';
-import { useLinksQueryKey } from '@api/link/use-links-query-key';
-import { useUpdateLink } from '@api/link/use-update-link';
+import { useLinksQueryKey } from '@api/old-link/use-links-query-key';
+import { useUpdateLink } from '@api/old-link/use-update-link';
 import Button from '@components/elements/button';
 import TextInput from '@components/elements/text-input';
 import TagsListBox from '@components/tag/tags-list-box';
