@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "tsc": "yarn tsc --noEmit",
+    "tsc-check": "yarn tsc --noEmit",
     "prettier": "npx prettier --write .",
     "prettier-check": "npx prettier --check .",
     "up": "yarn-upgrade-all",
