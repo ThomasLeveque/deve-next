@@ -1,16 +1,50 @@
-import { Link as FirebaseLink } from '@data-types/link.type';
 import { Comment } from '@models/comment';
 import { Link } from '@models/link';
 import { Tag } from '@models/tag';
 import { Vote } from '@models/vote';
 import { collection, DocumentSnapshot, getDocs, orderBy, query, QueryDocumentSnapshot } from 'firebase/firestore/lite';
-import { Category } from './../data-types/categorie.type';
-import { Comment as FirebaseComment } from './../data-types/comment.type';
 import { db } from './init-firebase';
 import { supabase } from './init-supabase';
-import { Document } from './shared-types';
 
 // FIREBASE UTILS //
+
+interface PostedByUser {
+  id: string;
+  displayName: string;
+}
+
+type Document<Data> = Data & {
+  id?: string;
+  exists?: boolean;
+};
+
+interface Category {
+  name: string;
+  count: number;
+}
+
+export interface FirebaseVote {
+  voteBy: PostedByUser;
+}
+
+export interface FirebaseLink {
+  url: string;
+  description: string;
+  categories: string[];
+  postedBy: PostedByUser;
+  voteCount: number;
+  commentCount: number;
+  votes: FirebaseVote[];
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface FirebaseComment {
+  postedBy: PostedByUser;
+  createdAt: number;
+  updatedAt: number;
+  text: string;
+}
 
 export const dataToDocument = <Data>(doc: QueryDocumentSnapshot | DocumentSnapshot): Document<Data> => ({
   id: doc.id,
