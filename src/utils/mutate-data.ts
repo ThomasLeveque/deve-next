@@ -1,4 +1,4 @@
-import { Document, Nullable, PaginatedData } from '@utils/shared-types';
+import { Nullable, PaginatedData } from '@utils/shared-types';
 import { InfiniteData } from 'react-query';
 
 const initialPaginatedData = {
@@ -52,7 +52,7 @@ export const addItemInsideData = <DataType>(
   item: DataType,
   items: Nullable<DataType[]>,
   newItemPosition: 'start' | 'end' = 'start'
-): Document<DataType>[] => (items ? (newItemPosition === 'start' ? [item, ...items] : [...items, item]) : []);
+): DataType[] => (items ? (newItemPosition === 'start' ? [item, ...items] : [...items, item]) : []);
 
 export const updateItemInsideData = <DataType extends { id: number }>(
   item: DataType,
