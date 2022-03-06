@@ -21,7 +21,7 @@ export const addItemInsidePaginatedData = <DataType>(
 };
 
 export const updateItemInsidePaginatedData = <DataType extends { id: number }>(
-  item: DataType,
+  item: Partial<DataType> & { id: number },
   items: InfiniteData<PaginatedData<DataType>> | undefined
 ): InfiniteData<PaginatedData<DataType>> => {
   if (!items) {
@@ -30,7 +30,8 @@ export const updateItemInsidePaginatedData = <DataType extends { id: number }>(
 
   const pageIndex = items.pages.findIndex((page) => page.data.find((d) => d.id === item.id));
   const itemIndex = items.pages[pageIndex].data.findIndex((d) => d.id === item.id);
-  items.pages[pageIndex].data[itemIndex] = item;
+  const previousItem = items.pages[pageIndex].data[itemIndex];
+  items.pages[pageIndex].data[itemIndex] = { ...previousItem, ...item };
   return items;
 };
 
@@ -55,13 +56,14 @@ export const addItemInsideData = <DataType>(
 ): DataType[] => (items ? (newItemPosition === 'start' ? [item, ...items] : [...items, item]) : []);
 
 export const updateItemInsideData = <DataType extends { id: number }>(
-  item: DataType,
+  item: Partial<DataType> & { id: number },
   items: DataType[] | undefined
 ): DataType[] => {
   if (!items) return [];
 
   const itemIndex = items.findIndex((i) => i.id === item.id);
-  items[itemIndex] = item;
+  const previousItem = items[itemIndex];
+  items[itemIndex] = { ...previousItem, ...item };
   return items;
 };
 

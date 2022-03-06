@@ -5,9 +5,10 @@ import { supabase } from '@utils/init-supabase';
 import { updateItemInsidePaginatedData } from '@utils/mutate-data';
 import { PaginatedData } from '@utils/shared-types';
 import toast from 'react-hot-toast';
-import { InfiniteData, QueryKey, useMutation, UseMutationResult, useQueryClient } from 'react-query';
+import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
 import { LinksTags } from './../../models/link';
 import { dbKeys } from './db-keys';
+import { useLinksQueryKey } from './use-links-query-key';
 
 export const updateLink = async (linkId: number, linkToUpdate: Partial<Link>, tags: Tag[]): Promise<Link> => {
   const { data: updatedLink, error: updatedLinkError } = await supabase
@@ -58,10 +59,15 @@ export const updateLink = async (linkId: number, linkToUpdate: Partial<Link>, ta
   return updatedLink;
 };
 
-export const useUpdateLink = (
-  queryKey: QueryKey
-): UseMutationResult<Link, Error, { linkId: number; linkToAdd: Partial<Link>; tags: Tag[] }, Link> => {
+export const useUpdateLink = (): UseMutationResult<
+  Link,
+  Error,
+  { linkId: number; linkToAdd: Partial<Link>; tags: Tag[] },
+  Link
+> => {
   const queryClient = useQueryClient();
+
+  const queryKey = useLinksQueryKey();
 
   return useMutation(({ linkId, linkToAdd, tags }) => updateLink(linkId, linkToAdd, tags), {
     onSuccess: (updatedLink) => {

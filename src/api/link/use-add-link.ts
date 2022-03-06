@@ -5,9 +5,10 @@ import { supabase } from '@utils/init-supabase';
 import { addItemInsidePaginatedData } from '@utils/mutate-data';
 import { PaginatedData } from '@utils/shared-types';
 import toast from 'react-hot-toast';
-import { InfiniteData, QueryKey, useMutation, UseMutationResult, useQueryClient } from 'react-query';
+import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
 import { LinksTags } from './../../models/link';
 import { dbKeys } from './db-keys';
+import { useLinksQueryKey } from './use-links-query-key';
 
 export const addLink = async (linkToAdd: Partial<Link>, tags: Tag[]): Promise<Link> => {
   const { data: newLink, error: newLinkError } = await supabase.from<Link>(dbKeys.links).insert(linkToAdd).single();
@@ -35,10 +36,10 @@ export const addLink = async (linkToAdd: Partial<Link>, tags: Tag[]): Promise<Li
   return newLink;
 };
 
-export const useAddLink = (
-  queryKey: QueryKey
-): UseMutationResult<Link, Error, { linkToAdd: Partial<Link>; tags: Tag[] }, Link> => {
+export const useAddLink = (): UseMutationResult<Link, Error, { linkToAdd: Partial<Link>; tags: Tag[] }, Link> => {
   const queryClient = useQueryClient();
+
+  const queryKey = useLinksQueryKey();
 
   return useMutation(({ linkToAdd, tags }) => addLink(linkToAdd, tags), {
     onSuccess: (newLink) => {

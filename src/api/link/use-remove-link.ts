@@ -6,10 +6,11 @@ import { supabase } from '@utils/init-supabase';
 import { removeItemInsidePaginatedData } from '@utils/mutate-data';
 import { PaginatedData } from '@utils/shared-types';
 import toast from 'react-hot-toast';
-import { InfiniteData, QueryKey, useMutation, UseMutationResult, useQueryClient } from 'react-query';
+import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
 import { dbKeys as commentDbKeys } from '../comment/db-keys';
 import { LinksTags } from './../../models/link';
 import { dbKeys } from './db-keys';
+import { useLinksQueryKey } from './use-links-query-key';
 
 export const removeLink = async (linkId: number): Promise<number> => {
   await Promise.all([
@@ -31,8 +32,10 @@ export const removeLink = async (linkId: number): Promise<number> => {
   return removedLink.id;
 };
 
-export const useRemoveLink = (queryKey: QueryKey): UseMutationResult<number, Error, number, Link> => {
+export const useRemoveLink = (): UseMutationResult<number, Error, number, Link> => {
   const queryClient = useQueryClient();
+
+  const queryKey = useLinksQueryKey();
 
   return useMutation((linkId) => removeLink(linkId), {
     onSuccess: (removedLinkId) => {
