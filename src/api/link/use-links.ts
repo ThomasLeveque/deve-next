@@ -40,7 +40,7 @@ const getLinks = async (
     const links = response.data;
 
     if (!links) {
-      throw new Error('Cannot get user links, try to reload the page');
+      throw new Error('Cannot get links, try to reload the page');
     }
 
     return {

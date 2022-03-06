@@ -7,12 +7,21 @@ export interface Link {
   description: string;
   url: string;
   userId: string;
-  user: Profile;
-  tags: Tag[];
-  comments: Comment[];
+  user?: Profile;
+  tags?: Tag[];
+  comments?: Comment[];
   commentsCount: number;
-  votes: Vote[];
+  votes?: Vote[];
   votesCount: number;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface LinksTags {
+  id: number;
+  linkId: number;
+  Link?: Link;
+  tagId: number;
+  Tag?: Tag;
+  createdAt: Date;
 }

@@ -6,6 +6,6 @@ export interface Vote {
   linkId: number;
   link: Link;
   userId: string;
-  user: Profile;
+  user?: Profile;
   createdAt: Date;
 }
