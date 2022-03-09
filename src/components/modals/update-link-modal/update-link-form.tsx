@@ -77,7 +77,7 @@ const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
           linkToAdd: {
             url: formData.url,
             description: formData.title,
-            updatedAt: new Date(),
+            updatedAt: new Date().toISOString(),
           },
           tags: updatedTags,
         });
@@ -121,7 +121,7 @@ const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
         />
       )}
       <div className="flex justify-end space-x-4">
-        <Button text="Reset" theme="gray" onClick={reset} />
+        <Button text="Reset" theme="gray" onClick={() => reset()} />
         <Button theme="secondary" text="Update" type="submit" loading={updateLink.isLoading} />
       </div>
     </form>

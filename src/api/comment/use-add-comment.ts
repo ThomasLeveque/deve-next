@@ -14,7 +14,7 @@ const addComment = async (commentToAdd: Partial<Comment>): Promise<Comment> => {
   const response = await supabase
     .from<Comment>(dbKeys.comments)
     .insert(commentToAdd)
-    .select(`*, link:links(commentsCount)`)
+    .select(`*, link:links(commentsCount), user:profiles(*)`)
     .single();
   const newComment = response.data;
 

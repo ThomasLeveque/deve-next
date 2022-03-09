@@ -1,4 +1,4 @@
-import { ExternalLinkIcon, LogoutIcon, PlusIcon, UserCircleIcon } from '@heroicons/react/outline';
+import { LogoutIcon, PlusIcon, UserCircleIcon } from '@heroicons/react/outline';
 import { useMediaQuery } from '@hooks/use-media-query';
 import { useAddLinkModalOpen, useAuthModalOpen } from '@store/modals.store';
 import { useProfile } from '@store/profile.store';
@@ -29,7 +29,7 @@ const Header: React.FC = React.memo(() => {
       },
       {
         text: 'Logout',
-        onClick: supabase.auth.signOut,
+        onClick: () => supabase.auth.signOut(),
         icon: <LogoutIcon />,
       },
     ],
@@ -46,14 +46,14 @@ const Header: React.FC = React.memo(() => {
           </a>
         </Link>
         <div className="grid auto-cols-max grid-flow-col items-center gap-5">
-          <a
+          {/* <a
             href="https://chrome.google.com/webstore/detail/deve-next/oihbbilgakjdkeplfkgibndcnhpaphed"
             rel="noreferrer"
             className="hidden items-center text-sm hover:underline focus:underline lg:flex"
             target="_blank"
           >
             Get the chrome extension <ExternalLinkIcon className="ml-1 w-4" />
-          </a>
+          </a> */}
 
           <Button
             theme="secondary"

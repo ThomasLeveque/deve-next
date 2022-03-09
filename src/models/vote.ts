@@ -7,5 +7,5 @@ export interface Vote {
   link: Link;
   userId: string;
   user?: Profile;
-  createdAt: Date;
+  createdAt: string;
 }

@@ -37,11 +37,11 @@ const Account: Page = () => {
                 </li>
                 <li>
                   <h3 className="mb-1 font-poppins-bold text-[10px] uppercase">Created at :</h3>
-                  <h2 className="text-sm">{format(profile.createdAt, 'MMMM d yyyy')}</h2>
+                  <h2 className="text-sm">{format(new Date(profile.createdAt), 'MMMM d yyyy')}</h2>
                 </li>
                 <li>
                   <h3 className="mb-1 font-poppins-bold text-[10px] uppercase">Last updated at :</h3>
-                  <h2 className="text-sm">{format(profile.updatedAt, 'MMMM d yyyy')}</h2>
+                  <h2 className="text-sm">{format(new Date(profile.updatedAt), 'MMMM d yyyy')}</h2>
                 </li>
               </ul>
             </aside>

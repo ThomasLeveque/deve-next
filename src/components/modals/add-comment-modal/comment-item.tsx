@@ -37,7 +37,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, linkId, isPreview = 
 
           <p className="text-gray-400">
             <span className="mx-2">-</span>
-            {format(comment.createdAt, 'MMMM d yyyy')}
+            {format(new Date(comment.createdAt), 'MMMM d yyyy')}
           </p>
         </div>
         <div className="flex space-x-1 group-hover:flex lg:hidden">
@@ -56,6 +56,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, linkId, isPreview = 
                 <Button
                   theme="danger"
                   text="Remove"
+                  loading={removeComment.isLoading}
                   type="button"
                   onClick={() => {
                     removeComment.mutate(comment.id);

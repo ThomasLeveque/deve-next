@@ -54,7 +54,7 @@ const UpdateCommentForm: React.FC<UpdateCommentFormProps> = (props) => {
             commentId: props.commentToUpdate.id,
             commentToUpdate: {
               text: formData.text,
-              updatedAt: new Date(),
+              updatedAt: new Date().toISOString(),
             },
           });
         }

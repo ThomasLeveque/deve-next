@@ -9,6 +9,6 @@ export interface Comment {
   link?: Nullable<Link>;
   userId: string;
   user?: Nullable<Profile>;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }

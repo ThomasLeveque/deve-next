@@ -158,8 +158,8 @@ const linksMigrations = async (userId: string) => {
             userId: userId,
             votesCount: firebaseLink.voteCount,
             commentsCount: firebaseLink.commentCount,
-            createdAt: new Date(firebaseLink.createdAt),
-            updatedAt: new Date(firebaseLink.updatedAt),
+            createdAt: new Date(firebaseLink.createdAt).toISOString(),
+            updatedAt: new Date(firebaseLink.updatedAt).toISOString(),
           })
           .single();
 
@@ -180,8 +180,8 @@ const linksMigrations = async (userId: string) => {
                 userId: userId,
                 linkId: newLink.id,
                 text: firebaseLinkComment.text,
-                createdAt: new Date(firebaseLinkComment.createdAt),
-                updatedAt: new Date(firebaseLinkComment.updatedAt),
+                createdAt: new Date(firebaseLinkComment.createdAt).toISOString(),
+                updatedAt: new Date(firebaseLinkComment.updatedAt).toISOString(),
               }));
 
               await supabase.from<Comment>('comments').insert(supabaseLinkComments);

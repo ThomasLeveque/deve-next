@@ -15,6 +15,7 @@ const getComments = async (cursor = 0, linkId: number): Promise<PaginatedData<Co
     const response = await supabase
       .from<Comment>(dbKeys.comments)
       .select('*, user:profiles(*)')
+      .order('createdAt', { ascending: false })
       .eq('linkId', linkId)
       .range(cursor, nextCursor);
     const comments = response.data;

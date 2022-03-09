@@ -71,7 +71,7 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, isProfilLink = fal
       <div className="mb-5 flex min-h-[20px] items-start justify-between space-x-3">
         <div>
           {!isProfilLink && <h3 className="mb-1 font-poppins-bold text-[13px]">{link.user?.username}</h3>}
-          <p className="text-[10px] text-gray-400">{format(link.createdAt, 'MMMM d yyyy')}</p>
+          <p className="text-[10px] text-gray-400">{format(new Date(link.createdAt), 'MMMM d yyyy')}</p>
         </div>
         <div className="flex space-x-1 group-hover:flex lg:hidden">
           {canUpdateLinkData && (
@@ -104,7 +104,7 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, isProfilLink = fal
       </a>
       <TagListWrapper className="mb-5">
         {link.tags?.map((tag) => (
-          <li key={`${link.id}-${tag}`}>
+          <li key={tag.id}>
             <Tag
               text={tag.name}
               isColored

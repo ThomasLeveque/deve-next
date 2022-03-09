@@ -13,8 +13,8 @@ export interface Link {
   commentsCount: number;
   votes?: Vote[];
   votesCount: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface LinksTags {
@@ -23,5 +23,5 @@ export interface LinksTags {
   Link?: Link;
   tagId: number;
   Tag?: Tag;
-  createdAt: Date;
+  createdAt: string;
 }

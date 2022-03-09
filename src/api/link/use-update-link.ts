@@ -22,7 +22,7 @@ export const updateLink = async (linkId: number, linkToUpdate: Partial<Link>, ta
     throw new Error('Error during updating a link, please try again');
   }
 
-  const linksTagsToRemove = updatedLink.tags?.filter((tag) => !tags.includes(tag));
+  const linksTagsToRemove = updatedLink.tags?.filter((tag) => !tags.map((t) => t.id).includes(tag.id));
 
   if (linksTagsToRemove && linksTagsToRemove.length > 0) {
     try {
@@ -39,7 +39,7 @@ export const updateLink = async (linkId: number, linkToUpdate: Partial<Link>, ta
     }
   }
 
-  const linksTagsToAdd = tags?.filter((tag) => !updatedLink.tags?.includes(tag));
+  const linksTagsToAdd = tags?.filter((tag) => !updatedLink.tags?.map((t) => t.id)?.includes(tag.id));
 
   if (linksTagsToAdd && linksTagsToAdd.length > 0) {
     const { error: linksTagsToAddError } = await supabase.from<LinksTags>(dbKeys.linksTags).insert(

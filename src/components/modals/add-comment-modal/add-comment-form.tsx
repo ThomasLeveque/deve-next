@@ -71,8 +71,8 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
               userId: profile?.id,
               linkId: props.linkId,
               user: profile,
-              createdAt: new Date(),
-              updatedAt: new Date(),
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
             }}
             isPreview={true}
             linkId={props.linkId}
