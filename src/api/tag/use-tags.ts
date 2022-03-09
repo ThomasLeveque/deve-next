@@ -10,7 +10,7 @@ import { queryKeys } from './query-keys';
 
 export const getTags = async (): Promise<Nullable<Tag[]>> => {
   try {
-    const response = await supabase.from<Tag>(dbKeys.tags).select('*');
+    const response = await supabase.from<Tag>(dbKeys.tags).select('*, links(*)');
     const tags = response.data;
 
     if (!tags) {

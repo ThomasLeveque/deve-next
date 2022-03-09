@@ -1,33 +1,32 @@
-import { useAuth } from '@api/auth/useAuth';
-import { useCategories } from '@api/category/use-categories';
-import { useLinksQueryKey } from '@api/link/use-links-query-key';
-import { dbKeys } from '@api/old-link/db-keys';
-import { useAddLink } from '@api/old-link/use-add-link';
+import { useAddLink } from '@api/link/use-add-link';
+import { useTags } from '@api/tag/use-tags';
 import Button from '@components/elements/button';
 import TextInput from '@components/elements/text-input';
 import TagsListBox from '@components/tag/tags-list-box';
-import { LinkFormData } from '@data-types/link.type';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useFetchHtmlText } from '@hooks/use-fetch-html-text';
+import { Tag } from '@models/tag';
+import { useProfile } from '@store/profile.store';
 import { addLinkSchema } from '@utils/form-schemas';
-import { formatLink } from '@utils/format-link';
 import { formatError } from '@utils/format-string';
-import { db } from '@utils/init-firebase';
-import { collection, doc } from 'firebase/firestore/lite';
 import React, { useCallback, useEffect } from 'react';
 import { FieldError, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+
+interface LinkFormData {
+  url: string;
+  title: string;
+  tagsIds: number[];
+}
 
 interface AddLinkFormProps {
   closeModal: () => void;
 }
 
 const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
-  const { user } = useAuth();
+  const [profile] = useProfile();
 
-  const linksQueryKey = useLinksQueryKey(user?.id as string);
-
-  const { data: tags } = useCategories({ refetchOnMount: false });
+  const { data: tags } = useTags({ refetchOnMount: false });
 
   const {
     register,
@@ -38,8 +37,8 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
   } = useForm<LinkFormData>({
     resolver: yupResolver(addLinkSchema),
   });
-  const selectedTags = watch('tags', []);
-  const addLink = useAddLink(linksQueryKey);
+  const selectedTagsIds = watch('tagsIds', []);
+  const addLink = useAddLink();
 
   const url = watch('url', '');
   const { htmlText: title, loading: htmlTextLoading } = useFetchHtmlText(url);
@@ -50,21 +49,27 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
   }, [title]);
 
   const onSubmit = useCallback(
-    (formData: LinkFormData) => {
+    async (formData: LinkFormData) => {
       try {
-        if (!user) {
+        if (!profile) {
           throw new Error('You must be login');
         }
 
-        selectedTags.forEach((selectedTag) => {
-          const foundTag = tags?.find((tag) => tag.name.toLocaleLowerCase() === selectedTag.toLocaleLowerCase());
-          if (!foundTag) {
-            throw new Error(`The tag ${selectedTag} does not exist`);
+        const selectedTags: Tag[] = [];
+        selectedTagsIds.forEach((selectedTagId) => {
+          const foundTag = tags?.find((tag) => tag.id === selectedTagId);
+          if (foundTag) {
+            selectedTags.push(foundTag);
           }
         });
-        const linkRef = doc(collection(db, dbKeys.links));
-        const link = formatLink(formData, user);
-        addLink.mutate({ linkRef, link });
+        await addLink.mutateAsync({
+          linkToAdd: {
+            url: formData.url,
+            description: formData.title,
+            userId: profile.id,
+          },
+          tags: selectedTags,
+        });
 
         // Do not setLoading(false) because addLink will unmount this component (Modal).
         props.closeModal();
@@ -73,7 +78,7 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
         console.error(err);
       }
     },
-    [user, tags, selectedTags]
+    [profile, tags, selectedTagsIds]
   );
 
   return (
@@ -94,16 +99,18 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
         {...register('title')}
         errorText={errors.title?.message}
       />
-      <TagsListBox
-        tags={tags}
-        selectedTags={selectedTags}
-        setSelectedTags={(tags) => setValue('tags', tags, { shouldValidate: true })}
-        className="mb-8"
-        label="tags (min 1, max 4)"
-        errorText={(errors.tags as unknown as FieldError)?.message}
-      />
+      {tags && (
+        <TagsListBox
+          tags={tags}
+          selectedTags={selectedTagsIds}
+          setSelectedTags={(tagsIds) => setValue('tagsIds', tagsIds, { shouldValidate: true })}
+          className="mb-8"
+          label="tags (min 1, max 4)"
+          errorText={(errors.tagsIds as unknown as FieldError)?.message}
+        />
+      )}
       <div className="flex justify-end">
-        <Button theme="secondary" text="Create" type="submit" />
+        <Button theme="secondary" text="Create" type="submit" loading={addLink.isLoading} />
       </div>
     </form>
   );

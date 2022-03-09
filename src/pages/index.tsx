@@ -1,5 +1,4 @@
-import { queryKeys } from '@api/old-link/query-keys';
-import { useLinks } from '@api/old-link/use-links';
+import { useLinks } from '@api/link/use-links';
 import Button from '@components/elements/button';
 import SpinnerIcon from '@components/icons/spinner-icon';
 import LinkItem from '@components/link/link-item';
@@ -18,7 +17,7 @@ const Home: Page = () => {
 
   const isMobileScreen = useMediaQuery('mobile');
 
-  const { orderbyQuery, tagsQuery, clearTagQuery } = useQueryString();
+  const { tagsQuery, clearTagQuery } = useQueryString();
 
   const { data: links, fetchNextPage, hasNextPage, isFetchingNextPage } = useLinks();
 
@@ -56,11 +55,7 @@ const Home: Page = () => {
               'md:grid md:grid-cols-2 xl:grid-cols-3 ': !tagsSidebarOpen,
             })}
           >
-            {links?.pages?.map((page) =>
-              page?.data.map((link) => (
-                <LinkItem key={link.id} link={link} linksQueryKey={queryKeys.links(orderbyQuery, tagsQuery)} />
-              ))
-            )}
+            {links?.pages?.map((page) => page?.data.map((link) => <LinkItem key={link.id} link={link} />))}
           </ul>
           <Button
             theme="secondary"

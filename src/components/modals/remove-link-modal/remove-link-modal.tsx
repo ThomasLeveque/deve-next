@@ -1,6 +1,4 @@
-import { useAuth } from '@api/auth/useAuth';
-import { useLinksQueryKey } from '@api/old-link/use-links-query-key';
-import { useRemoveLink } from '@api/old-link/use-remove-link';
+import { useRemoveLink } from '@api/link/use-remove-link';
 import Button from '@components/elements/button';
 import { useLinkToRemoveModal } from '@store/modals.store';
 import React from 'react';
@@ -9,9 +7,7 @@ import { Modal } from '../modal';
 const RemoveLinkModal: React.FC = React.memo(() => {
   const [linkToRemoveModal, setLinkToRemoveModal] = useLinkToRemoveModal();
 
-  const { user } = useAuth();
-  const linksQueryKeys = useLinksQueryKey(user?.id as string);
-  const removeLink = useRemoveLink(linksQueryKeys);
+  const removeLink = useRemoveLink();
 
   const closeModal = () => {
     setLinkToRemoveModal(null);
@@ -26,8 +22,9 @@ const RemoveLinkModal: React.FC = React.memo(() => {
           fullWidth
           text="Remove"
           type="button"
-          onClick={() => {
-            removeLink.mutate(linkToRemoveModal);
+          loading={removeLink.isLoading}
+          onClick={async () => {
+            await removeLink.mutateAsync(linkToRemoveModal.id);
             closeModal();
           }}
         />

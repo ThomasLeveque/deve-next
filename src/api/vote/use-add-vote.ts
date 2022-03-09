@@ -10,11 +10,7 @@ import { useLinksQueryKey } from '../link/use-links-query-key';
 import { dbKeys } from './db-keys';
 
 const addVote = async (voteToAdd: Partial<Vote>): Promise<Vote> => {
-  const response = await supabase
-    .from<Vote>(dbKeys.votes)
-    .insert(voteToAdd)
-    .select(`*, link:links(votesCount)`)
-    .single();
+  const response = await supabase.from<Vote>(dbKeys.votes).insert(voteToAdd).single();
   const newVote = response.data;
 
   if (!newVote || response.error) {
@@ -23,15 +19,18 @@ const addVote = async (voteToAdd: Partial<Vote>): Promise<Vote> => {
   return newVote;
 };
 
-export const useAddLinkComment = (linkId: number): UseMutationResult<Vote, Error, Partial<Vote>, Vote> => {
+export const useAddLinkVote = (link: Link): UseMutationResult<Vote, Error, Partial<Vote>, Vote> => {
   const queryClient = useQueryClient();
 
   const linksQueryKey = useLinksQueryKey();
 
   return useMutation((voteToAdd) => addVote(voteToAdd), {
     onSuccess: async (newVote) => {
+      link.votesCount += 1;
+      link.votes?.push(newVote);
+
       queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(linksQueryKey, (oldLinks) =>
-        updateItemInsidePaginatedData({ id: linkId, votesCount: (newVote.link?.votesCount ?? 0) + 1 }, oldLinks)
+        updateItemInsidePaginatedData(link, oldLinks)
       );
     },
     onError: (err) => {

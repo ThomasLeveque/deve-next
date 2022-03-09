@@ -1,4 +1,3 @@
-import AuthProvider from '@api/auth/useAuth';
 import { useSupabaseAuth } from '@api/supabaseAuth/useSupabaseAuth';
 import Toast from '@components/elements/toast';
 import Layout from '@components/layout';
@@ -40,12 +39,10 @@ const MyApp = ({ Component, pageProps }: AppProps & { Component: Page }): JSX.El
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <Layout title={Component.title} description={Component.description}>
-          <Component {...pageProps} />
-          <ReactQueryDevtools initialIsOpen={false} />
-        </Layout>
-      </AuthProvider>
+      <Layout title={Component.title} description={Component.description}>
+        <Component {...pageProps} />
+        <ReactQueryDevtools initialIsOpen={false} />
+      </Layout>
       <Toaster
         position="top-right"
         toastOptions={{

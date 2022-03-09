@@ -1,10 +1,9 @@
-import { useAuth } from '@api/auth/useAuth';
-import { usePrefetchCategories } from '@api/category/use-categories';
-import { useLinks } from '@api/link/use-links';
+import { usePrefetchTags } from '@api/tag/use-tags';
 import Header from '@components/header';
 import { useMediaQuery } from '@hooks/use-media-query';
 import { useTagsSidebarOpen } from '@store/app-config.store';
 import { useAuthModalOpen } from '@store/modals.store';
+import { useProfile } from '@store/profile.store';
 import classNames from 'classnames';
 import Head from 'next/head';
 import React, { useEffect } from 'react';
@@ -22,25 +21,23 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ className, children, ...props }) => {
-  const { user } = useAuth();
+  const [profile] = useProfile();
   const isMobileScreen = useMediaQuery('mobile');
   const setTagsSidebarOpen = useTagsSidebarOpen()[1];
 
-  useLinks();
-
-  usePrefetchCategories();
+  usePrefetchTags();
 
   const [authModalOpen, setAuthModalOpen] = useAuthModalOpen();
 
   useEffect(() => {
-    if (user && authModalOpen) {
+    if (profile && authModalOpen) {
       setAuthModalOpen(false);
     }
-  }, [user, authModalOpen]);
+  }, [profile, authModalOpen, setAuthModalOpen]);
 
   useEffect(() => {
     setTagsSidebarOpen(!isMobileScreen);
-  }, [isMobileScreen]);
+  }, [isMobileScreen, setTagsSidebarOpen]);
 
   const metaTitle = props.title ?? 'Deve-next';
   const metaDescription = props.description ?? 'The place to pratice technical watch';

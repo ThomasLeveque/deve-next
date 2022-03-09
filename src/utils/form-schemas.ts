@@ -34,7 +34,7 @@ const linkSchema = {
   url: yup.string().required('Url is required').matches(validUrlRegex, { message: 'Url must be a valid url' }).max(255),
   title: yup.string().required('Title is required').max(255),
   tags: yup
-    .array(yup.string())
+    .array(yup.object())
     .required('At least 1 tag required')
     .min(1, 'At least 1 tag required')
     .max(4, 'No more than 4 tags'),

@@ -1,32 +1,32 @@
-import { useAuth } from '@api/auth/useAuth';
-import { useUpdateLinkComment } from '@api/old-link/use-update-link-comment';
+import { useUpdateLinkComment } from '@api/comment/use-update-comment';
 import Button from '@components/elements/button';
 import TextArea from '@components/elements/textarea';
-import { Comment, CommentFormData } from '@data-types/comment.type';
-import { Link } from '@data-types/link.type';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Comment } from '@models/comment';
+import { useProfile } from '@store/profile.store';
 import { addCommentSchema, commentMaxLength } from '@utils/form-schemas';
-import { formatUpdateComment } from '@utils/format-comment';
 import { formatError } from '@utils/format-string';
-import { Document } from '@utils/shared-types';
 import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
 
+interface CommentFormData {
+  text: string;
+}
+
 interface UpdateCommentFormProps {
-  commentToUpdate: Document<Comment>;
-  link: Document<Link>;
+  commentToUpdate: Comment;
+  linkId: number;
   closeUpdate: () => void;
 }
 
 const UpdateCommentForm: React.FC<UpdateCommentFormProps> = (props) => {
-  const { user } = useAuth();
-  const linkId = props.link.id as string;
+  const [profile] = useProfile();
 
   const [showPreview, setShowPreview] = useState(false);
 
-  const updateLinkComment = useUpdateLinkComment(props.link, props.commentToUpdate);
+  const updateLinkComment = useUpdateLinkComment(props.linkId);
 
   const {
     register,
@@ -43,15 +43,20 @@ const UpdateCommentForm: React.FC<UpdateCommentFormProps> = (props) => {
   const commentText = watch('text', props.commentToUpdate.text) ?? '';
 
   const onSubmit = useCallback(
-    (formData: CommentFormData) => {
+    async (formData: CommentFormData) => {
       try {
-        if (!user) {
+        if (!profile) {
           throw new Error('You must be login');
         }
 
         if (formData.text !== props.commentToUpdate.text) {
-          const updatedComment = formatUpdateComment(formData);
-          updateLinkComment.mutate(updatedComment);
+          await updateLinkComment.mutateAsync({
+            commentId: props.commentToUpdate.id,
+            commentToUpdate: {
+              text: formData.text,
+              updatedAt: new Date(),
+            },
+          });
         }
         props.closeUpdate();
       } catch (err) {
@@ -60,7 +65,7 @@ const UpdateCommentForm: React.FC<UpdateCommentFormProps> = (props) => {
       }
       setShowPreview(false);
     },
-    [user, linkId, props.commentToUpdate.text]
+    [profile, props.linkId, props.commentToUpdate.text]
   );
 
   return (
@@ -95,7 +100,7 @@ const UpdateCommentForm: React.FC<UpdateCommentFormProps> = (props) => {
             }
           }}
         />
-        <Button theme="secondary" text="Update" type="submit" />
+        <Button theme="secondary" text="Update" type="submit" loading={updateLinkComment.isLoading} />
       </div>
     </form>
   );

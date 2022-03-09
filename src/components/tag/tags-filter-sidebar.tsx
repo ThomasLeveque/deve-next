@@ -1,4 +1,4 @@
-import { useCategories } from '@api/category/use-categories';
+import { useTags } from '@api/tag/use-tags';
 import SpinnerIcon from '@components/icons/spinner-icon';
 import { useQueryString } from '@hooks/use-query-string';
 import classNames from 'classnames';
@@ -14,7 +14,7 @@ interface TagsFilterSidebarProps {
 
 const TagsFilterSidebar: React.FC<TagsFilterSidebarProps> = React.memo((props) => {
   const { removeTagQuery, addTagQuery, tagsQuery } = useQueryString();
-  const { data: tags } = useCategories({ refetchOnMount: false });
+  const { data: tags } = useTags({ refetchOnMount: false });
 
   const [searchTag, setSearchTag] = useState('');
   const searchRef = useRef<HTMLInputElement>(null);
@@ -56,11 +56,13 @@ const TagsFilterSidebar: React.FC<TagsFilterSidebarProps> = React.memo((props) =
         {tags
           .filter(
             (tag) =>
-              !tagsQuery.includes(tag.name) && tag.name.toLowerCase().includes(searchTag.toLowerCase()) && tag.count > 0
+              !tagsQuery.includes(tag.name) &&
+              tag.name.toLowerCase().includes(searchTag.toLowerCase()) &&
+              (tag.links?.length ?? 0) > 0
           )
           .map((tag) => (
             <li key={tag.id}>
-              <Tag text={`${tag.name} (${tag.count})`} onClick={() => addTagQuery(tag.name)} />
+              <Tag text={`${tag.name} (${tag.links?.length ?? 0})`} onClick={() => addTagQuery(tag.name)} />
             </li>
           ))}
       </TagListWrapper>

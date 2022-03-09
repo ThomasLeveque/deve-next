@@ -1,4 +1,4 @@
-import { COMMENTS_PER_PAGE, useLinkComments } from '@api/old-link/use-link-comments';
+import { COMMENTS_PER_PAGE, useComments } from '@api/comment/use-comments';
 import Button from '@components/elements/button';
 import SpinnerIcon from '@components/icons/spinner-icon';
 import CommentItem from '@components/modals/add-comment-modal/comment-item';
@@ -11,7 +11,7 @@ import AddCommentForm from './add-comment-form';
 const AddCommentModal: React.FC = React.memo(() => {
   const [linkToCommentModal, setLinkToCommentModal] = useLinkToCommentModal();
 
-  const { data: comments, fetchNextPage, hasNextPage, isFetchingNextPage } = useLinkComments(linkToCommentModal);
+  const { data: comments, fetchNextPage, hasNextPage, isFetchingNextPage } = useComments(linkToCommentModal?.id);
 
   const closeModal = () => {
     setLinkToCommentModal(null);
@@ -25,19 +25,19 @@ const AddCommentModal: React.FC = React.memo(() => {
         </h2>
         <p className="text-xs group-hover:underline">On {getDomain(linkToCommentModal.url)}</p>
       </a>
-      <AddCommentForm link={linkToCommentModal} />
-      {linkToCommentModal.commentCount > 0 ? (
+      <AddCommentForm linkId={linkToCommentModal.id} />
+      {linkToCommentModal.commentsCount > 0 ? (
         <>
           {comments ? (
             <>
               <ul className="mt-8 space-y-5">
                 {comments?.pages?.map((page) =>
                   page?.data.map((comment) => (
-                    <CommentItem key={comment.id} comment={comment} link={linkToCommentModal} />
+                    <CommentItem key={comment.id} comment={comment} linkId={linkToCommentModal.id} />
                   ))
                 )}
               </ul>
-              {linkToCommentModal.commentCount > COMMENTS_PER_PAGE ? (
+              {linkToCommentModal.commentsCount > COMMENTS_PER_PAGE ? (
                 <Button
                   theme="secondary"
                   text={hasNextPage ? 'Load more' : 'No more comments'}

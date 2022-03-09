@@ -9,12 +9,14 @@ import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 're
 import { useLinksQueryKey } from '../link/use-links-query-key';
 import { dbKeys } from './db-keys';
 
-const removeVote = async (voteId: number): Promise<Vote> => {
+const removeVote = async (voteToRemove: Partial<Vote>): Promise<Vote> => {
   const response = await supabase
     .from<Vote>(dbKeys.votes)
     .delete()
-    .eq('id', voteId)
-    .select(`*, link:links(votesCount)`)
+    .match({
+      userId: voteToRemove.userId,
+      linkId: voteToRemove.linkId,
+    })
     .single();
   const removedVote = response.data;
 
@@ -24,15 +26,18 @@ const removeVote = async (voteId: number): Promise<Vote> => {
   return removedVote;
 };
 
-export const useAddLinkComment = (linkId: number): UseMutationResult<Vote, Error, number, Vote> => {
+export const useRemoveLinkVote = (link: Link): UseMutationResult<Vote, Error, Partial<Vote>, Vote> => {
   const queryClient = useQueryClient();
 
   const linksQueryKey = useLinksQueryKey();
 
-  return useMutation((voteId) => removeVote(voteId), {
+  return useMutation((voteToRemove) => removeVote(voteToRemove), {
     onSuccess: async (removedVote) => {
+      link.votesCount -= 1;
+      link.votes = link.votes?.filter((vote) => vote.id !== removedVote.id);
+
       queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(linksQueryKey, (oldLinks) =>
-        updateItemInsidePaginatedData({ id: linkId, votesCount: (removedVote.link?.votesCount ?? 0) + 1 }, oldLinks)
+        updateItemInsidePaginatedData(link, oldLinks)
       );
     },
     onError: (err) => {

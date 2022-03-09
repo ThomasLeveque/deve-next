@@ -1,4 +1,3 @@
-import { useAuth } from '@api/auth/useAuth';
 import { ExternalLinkIcon, LogoutIcon, PlusIcon, UserCircleIcon } from '@heroicons/react/outline';
 import { useMediaQuery } from '@hooks/use-media-query';
 import { useAddLinkModalOpen, useAuthModalOpen } from '@store/modals.store';
@@ -12,8 +11,6 @@ import Button from './elements/button';
 import MenuDropdown, { MenuDropdownItemProps } from './elements/menu-dropdown';
 
 const Header: React.FC = React.memo(() => {
-  const { signOut, user } = useAuth();
-
   const profile = useProfile()[0];
 
   const setAuthModalOpen = useAuthModalOpen()[1];
@@ -32,7 +29,7 @@ const Header: React.FC = React.memo(() => {
       },
       {
         text: 'Logout',
-        onClick: signOut,
+        onClick: supabase.auth.signOut,
         icon: <LogoutIcon />,
       },
     ],
@@ -62,53 +59,10 @@ const Header: React.FC = React.memo(() => {
             theme="secondary"
             text={isSmallScreen ? 'Add link' : undefined}
             icon={<PlusIcon />}
-            onClick={() => (user ? setAddLinkModalOpen(true) : setAuthModalOpen(true))}
+            onClick={() => (profile ? setAddLinkModalOpen(true) : setAuthModalOpen(true))}
           />
 
           {profile ? (
-            <>
-              <p>{profile.username}</p>
-              <Button
-                theme="secondary"
-                text="SB logout"
-                onClick={() => {
-                  supabase.auth.signOut();
-                }}
-              />
-            </>
-          ) : (
-            <>
-              <Button
-                theme="secondary"
-                text="discord"
-                onClick={() => {
-                  supabase.auth.signIn({
-                    provider: 'discord',
-                  });
-                }}
-              />
-              <Button
-                theme="secondary"
-                text="google"
-                onClick={() => {
-                  supabase.auth.signIn({
-                    provider: 'google',
-                  });
-                }}
-              />
-              <Button
-                theme="secondary"
-                text="github"
-                onClick={() => {
-                  supabase.auth.signIn({
-                    provider: 'github',
-                  });
-                }}
-              />
-            </>
-          )}
-
-          {user ? (
             <MenuDropdown customButton={<Avatar />} items={userDropdownItems} />
           ) : (
             <Button theme="primary" text="Login" onClick={() => setAuthModalOpen(true)} />

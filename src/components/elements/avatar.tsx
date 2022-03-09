@@ -1,4 +1,4 @@
-import { useAuth } from '@api/auth/useAuth';
+import { useProfile } from '@store/profile.store';
 import { getInitials } from '@utils/format-string';
 import classNames from 'classnames';
 import Image from 'next/image';
@@ -11,13 +11,13 @@ interface AvatarProps {
 }
 
 const Avatar: React.FC<AvatarProps> = React.memo((props) => {
-  const { user } = useAuth();
+  const [profile] = useProfile();
   const size = props.size ?? 50;
   const disabled = props.disabled ?? false;
 
-  const displayNameInitials = useMemo(() => getInitials(user?.displayName ?? ''), [user]);
+  const displayNameInitials = useMemo(() => getInitials(profile?.username ?? ''), [profile]);
 
-  return user?.photoURL ? (
+  return profile?.avatarUrl ? (
     <button
       disabled={disabled}
       className={classNames(
@@ -26,7 +26,7 @@ const Avatar: React.FC<AvatarProps> = React.memo((props) => {
         props.className
       )}
     >
-      <Image src={user?.photoURL} height={size} width={size} priority alt="Avatar image" />
+      <Image src={profile?.avatarUrl} height={size} width={size} priority alt="Avatar image" />
     </button>
   ) : (
     <button

@@ -1,35 +1,19 @@
-import { useAuth } from '@api/auth/useAuth';
-import { dbKeys } from '@api/category/db-keys';
-import { useAddCategory } from '@api/category/use-add-category';
-import { useRemoveCategory } from '@api/category/use-remove-category';
+import { useAddTag } from '@api/tag/use-add-tag';
+import { useRemoveTag } from '@api/tag/use-remove-tag';
 import Tag from '@components/elements/tag';
 import TextInput from '@components/elements/text-input';
-import { Category } from '@data-types/categorie.type';
-import { User } from '@data-types/user.type';
 import { Transition } from '@headlessui/react';
 import { CheckIcon, PlusIcon, TrashIcon } from '@heroicons/react/outline';
-import { db } from '@utils/init-firebase';
-import { Document } from '@utils/shared-types';
+import { Tag as TagModel } from '@models/tag';
+import { useProfile } from '@store/profile.store';
 import classNames from 'classnames';
-import { collection, doc } from 'firebase/firestore/lite';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import TagListWrapper from './tag-list-wrapper';
 
-interface TagsListBoxOptionProps {
-  index: number;
-  tag: Document<Category>;
-  isSelected: (tag: string) => boolean;
-  addSelectedTags: (tag: string) => void;
-  removeSelectedTags: (tag: string) => void;
-  currentIndex: number;
-  setCurrentIndex: (index: number) => void;
-  user: Document<User> | null;
-}
-
 interface TagsListBoxProps {
-  tags?: Document<Category>[];
-  setSelectedTags: (tags: string[]) => void;
-  selectedTags: string[];
+  tags?: TagModel[];
+  setSelectedTags: (tags: number[]) => void;
+  selectedTags: number[];
   className?: string;
   buttonClassName?: string;
   labelClassName?: string;
@@ -38,7 +22,6 @@ interface TagsListBoxProps {
 }
 
 const TagsListBox: React.FC<TagsListBoxProps> = React.memo((props) => {
-  const { user } = useAuth();
   const selectedTags = props.selectedTags ?? [];
 
   const [isOpen, setIsOpen] = useState(false);
@@ -49,10 +32,10 @@ const TagsListBox: React.FC<TagsListBoxProps> = React.memo((props) => {
   const tagListRef = useRef<HTMLUListElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
-  const addCategory = useAddCategory();
+  const addTag = useAddTag();
 
   const isSelected = useCallback(
-    (tag: string) => !!selectedTags.find((selectedTag) => selectedTag.toLocaleLowerCase() === tag.toLocaleLowerCase()),
+    (tagId: number) => !!selectedTags.find((selectedTagId) => selectedTagId === tagId),
     [selectedTags]
   );
 
@@ -62,16 +45,16 @@ const TagsListBox: React.FC<TagsListBoxProps> = React.memo((props) => {
   );
 
   const addSelectedTags = useCallback(
-    (tag: string) => {
+    (tagId: number) => {
       if (selectedTags.length < 4) {
-        props.setSelectedTags([...selectedTags, tag]);
+        props.setSelectedTags([...selectedTags, tagId]);
       }
     },
     [selectedTags]
   );
   const removeSelectedTags = useCallback(
-    (tag: string) => {
-      props.setSelectedTags(selectedTags.filter((selectedTag) => selectedTag !== tag));
+    (tagId: number) => {
+      props.setSelectedTags(selectedTags.filter((selectedTagId) => selectedTagId !== tagId));
     },
     [selectedTags]
   );
@@ -93,8 +76,8 @@ const TagsListBox: React.FC<TagsListBoxProps> = React.memo((props) => {
             break;
           case 'Enter': {
             if (filteredTags[focusedTagIndex]) {
-              const tag = filteredTags[focusedTagIndex].name;
-              isSelected(tag) ? removeSelectedTags(tag) : addSelectedTags(tag);
+              const tagId = filteredTags[focusedTagIndex].id;
+              isSelected(tagId) ? removeSelectedTags(tagId) : addSelectedTags(tagId);
               setSearchTag('');
               searchRef.current?.focus();
               break;
@@ -127,14 +110,14 @@ const TagsListBox: React.FC<TagsListBoxProps> = React.memo((props) => {
       ) : null}
       {selectedTags.length > 0 && (
         <TagListWrapper className="mb-4">
-          {selectedTags.map((selectedTag, i) => (
+          {selectedTags.map((selectedTagId) => (
             <Tag
-              text={selectedTag}
-              key={`${selectedTag}${i}`}
+              text={props.tags?.find((tag) => tag.id === selectedTagId)?.name ?? ''}
+              key={`${selectedTagId}`}
               isColored
               isClosable
               onClose={() => {
-                removeSelectedTags(selectedTag);
+                removeSelectedTags(selectedTagId);
               }}
             />
           ))}
@@ -191,14 +174,12 @@ const TagsListBox: React.FC<TagsListBoxProps> = React.memo((props) => {
             {!isTagExist && searchTag.length > 0 && (
               <button
                 type="button"
-                onClick={() => {
+                onClick={async () => {
                   const tagName = searchTag.trim();
-                  const categoryRef = doc(collection(db, dbKeys.categories));
-                  addCategory.mutate({
-                    categoryRef,
-                    category: { name: tagName, count: 0 },
+                  const newTag = await addTag.mutateAsync({
+                    name: tagName,
                   });
-                  addSelectedTags(tagName);
+                  addSelectedTags(newTag.id);
                   setSearchTag('');
                   searchRef.current?.focus();
                 }}
@@ -217,14 +198,13 @@ const TagsListBox: React.FC<TagsListBoxProps> = React.memo((props) => {
                 tag={tag}
                 isSelected={isSelected}
                 addSelectedTags={(tag) => {
-                  addSelectedTags(tag);
+                  addSelectedTags(tag.id);
                   setSearchTag('');
                   searchRef.current?.focus();
                 }}
                 removeSelectedTags={removeSelectedTags}
                 setCurrentIndex={setFocusedTagIndex}
                 currentIndex={focusedTagIndex}
-                user={user}
               />
             ))}
           </ul>
@@ -234,17 +214,28 @@ const TagsListBox: React.FC<TagsListBoxProps> = React.memo((props) => {
   );
 });
 
-const TagsListBoxOption: React.FC<TagsListBoxOptionProps> = (props) => {
-  const removeCategory = useRemoveCategory();
+interface TagsListBoxOptionProps {
+  index: number;
+  tag: TagModel;
+  isSelected: (tagId: number) => boolean;
+  addSelectedTags: (tag: TagModel) => void;
+  removeSelectedTags: (tagId: number) => void;
+  currentIndex: number;
+  setCurrentIndex: (index: number) => void;
+}
 
-  const isSelected = props.isSelected(props.tag.name);
-  const canBeRemove = props.tag.count === 0 && props.user?.isAdmin;
+const TagsListBoxOption: React.FC<TagsListBoxOptionProps> = (props) => {
+  const [profile] = useProfile();
+  const removeTag = useRemoveTag();
+
+  const isSelected = props.isSelected(props.tag.id);
+  const canBeRemove = props.tag.links?.length === 0 && profile?.role === 'admin';
 
   const handleRemoveTag = useCallback((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.stopPropagation();
     if (props.tag.id) {
-      props.removeSelectedTags(props.tag.name);
-      removeCategory.mutate(props.tag);
+      props.removeSelectedTags(props.tag.id);
+      removeTag.mutate(props.tag.id);
     }
   }, []);
 
@@ -253,7 +244,7 @@ const TagsListBoxOption: React.FC<TagsListBoxOptionProps> = (props) => {
       <button
         type="button"
         onClick={() => {
-          isSelected ? props.removeSelectedTags(props.tag.name) : props.addSelectedTags(props.tag.name);
+          isSelected ? props.removeSelectedTags(props.tag.id) : props.addSelectedTags(props.tag);
           props.setCurrentIndex(props.index);
         }}
         className={classNames(
@@ -266,7 +257,7 @@ const TagsListBoxOption: React.FC<TagsListBoxOptionProps> = (props) => {
       >
         <span>{isSelected && <CheckIcon />}</span>
         <p className="text-left">
-          {props.tag.name} ({props.tag.count})
+          {props.tag.name} ({props.tag.links?.length ?? 0})
         </p>
         {canBeRemove && (
           <button type="button" onClick={handleRemoveTag} className="rounded-[4px] hover:bg-black/10">

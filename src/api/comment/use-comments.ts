@@ -1,5 +1,4 @@
 import { Comment } from '@models/comment';
-import { Link } from '@models/link';
 import { formatError } from '@utils/format-string';
 import { supabase } from '@utils/init-supabase';
 import { Nullable, PaginatedData } from '@utils/shared-types';
@@ -15,7 +14,7 @@ const getComments = async (cursor = 0, linkId: number): Promise<PaginatedData<Co
     const nextCursor = cursor + COMMENTS_PER_PAGE - 1;
     const response = await supabase
       .from<Comment>(dbKeys.comments)
-      .select('*')
+      .select('*, user:profiles(*)')
       .eq('linkId', linkId)
       .range(cursor, nextCursor);
     const comments = response.data;
@@ -34,8 +33,7 @@ const getComments = async (cursor = 0, linkId: number): Promise<PaginatedData<Co
   }
 };
 
-export const useComments = (link: Nullable<Link>): UseInfiniteQueryResult<Nullable<PaginatedData<Comment>>> => {
-  const linkId = link?.id;
+export const useComments = (linkId: Nullable<number>): UseInfiniteQueryResult<Nullable<PaginatedData<Comment>>> => {
   return useInfiniteQuery<Nullable<PaginatedData<Comment>>>(
     queryKeys.comments(linkId as number),
     (context) => getComments(context.pageParam, linkId as number),

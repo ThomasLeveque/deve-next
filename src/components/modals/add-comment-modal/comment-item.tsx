@@ -1,43 +1,39 @@
-import { useAuth } from '@api/auth/useAuth';
-import { useLinksQueryKey } from '@api/old-link/use-links-query-key';
-import { useRemoveLinkComment } from '@api/old-link/use-remove-link-comment';
+import { useRemoveLinkComment } from '@api/comment/use-remove-comment';
 import Button from '@components/elements/button';
 import MyPopover from '@components/elements/popover';
-import { Comment } from '@data-types/comment.type';
-import { Link } from '@data-types/link.type';
 import { Popover } from '@headlessui/react';
 import { PencilAltIcon, TrashIcon, XIcon } from '@heroicons/react/outline';
-import { Document } from '@utils/shared-types';
+import { Comment } from '@models/comment';
+import { useProfile } from '@store/profile.store';
 import { format } from 'date-fns';
 import React, { useMemo, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import UpdateCommentForm from './update-comment-form';
 
 interface CommentItemProps {
-  comment: Document<Comment>;
-  link: Document<Link>;
+  comment: Comment;
+  linkId: number;
   isPreview?: boolean;
 }
 
-const CommentItem: React.FC<CommentItemProps> = ({ comment, link, isPreview = false }) => {
-  const { user } = useAuth();
-  const linksQueryKey = useLinksQueryKey(user?.id as string);
+const CommentItem: React.FC<CommentItemProps> = ({ comment, linkId, isPreview = false }) => {
+  const [profile] = useProfile();
   const [updateComment, setUpdateComment] = useState(false);
 
-  const removeComment = useRemoveLinkComment(link, linksQueryKey);
+  const removeComment = useRemoveLinkComment(linkId);
 
   const canRemoveComment = useMemo(
-    () => user && (user.isAdmin || user.id === comment.postedBy.id),
-    [user, comment.postedBy.id]
+    () => profile && (profile.role === 'admin' || profile.id === comment.userId),
+    [profile, comment.userId]
   );
 
-  const canUpdateComment = useMemo(() => user && user.id === comment.postedBy.id, [user, comment.postedBy.id]);
+  const canUpdateComment = useMemo(() => profile && profile.id === comment.userId, [profile, comment.userId]);
 
   return (
     <li className="group rounded-button border border-gray-400/30 p-5">
       <div className="mb-3 flex min-h-[18px] items-start justify-between space-x-3">
         <div className="flex text-[10px]">
-          <h3 className="font-poppins-bold">{comment.postedBy.displayName}</h3>
+          {comment.user && <h3 className="font-poppins-bold">{comment.user.username}</h3>}
 
           <p className="text-gray-400">
             <span className="mx-2">-</span>
@@ -62,7 +58,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, link, isPreview = fa
                   text="Remove"
                   type="button"
                   onClick={() => {
-                    removeComment.mutate(comment);
+                    removeComment.mutate(comment.id);
                   }}
                 />
               </div>
@@ -72,7 +68,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, link, isPreview = fa
       </div>
 
       {updateComment ? (
-        <UpdateCommentForm commentToUpdate={comment} link={link} closeUpdate={() => setUpdateComment(false)} />
+        <UpdateCommentForm commentToUpdate={comment} linkId={linkId} closeUpdate={() => setUpdateComment(false)} />
       ) : (
         <ReactMarkdown linkTarget="_blank" className="prose prose-sm">
           {comment.text}

@@ -1,5 +1,5 @@
 import { Profile } from '@models/profile';
-import { useProfile } from '@store/profile.store';
+import { useProfile, useProfileLoaded } from '@store/profile.store';
 import { User } from '@supabase/supabase-js';
 import { supabase } from '@utils/init-supabase';
 import { Nullable } from '@utils/shared-types';
@@ -12,6 +12,7 @@ const getUserProfile = async (user: User): Promise<Profile | null> => {
 
 export const useSupabaseAuth = (): void => {
   const [profile, setProfile] = useProfile();
+  const setProfileLoaded = useProfileLoaded()[1];
 
   useEffect(() => {
     const setUserProfile = async (user: Nullable<User>) => {
@@ -21,6 +22,8 @@ export const useSupabaseAuth = (): void => {
       } else {
         setProfile(null);
       }
+
+      setProfileLoaded(true);
     };
     setUserProfile(supabase.auth.user());
 
