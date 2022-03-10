@@ -6,11 +6,18 @@ import { updateItemInsidePaginatedData } from '@utils/mutate-data';
 import { PaginatedData } from '@utils/shared-types';
 import toast from 'react-hot-toast';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
+import { queryKeys as tagsQuerykeys } from '../tag/query-keys';
 import { LinksTags } from './../../models/link';
 import { dbKeys } from './db-keys';
 import { useLinksQueryKey } from './use-links-query-key';
 
-export const updateLink = async (linkId: number, linkToUpdate: Partial<Link>, tags: Tag[]): Promise<Link> => {
+type UpdateLinkReturn = { updatedLink: Link; shouldRevalidateTags: boolean };
+
+export const updateLink = async (
+  linkId: number,
+  linkToUpdate: Partial<Link>,
+  tags: Tag[]
+): Promise<UpdateLinkReturn> => {
   const { data: updatedLink, error: updatedLinkError } = await supabase
     .from<Link>(dbKeys.links)
     .update(linkToUpdate)
@@ -22,9 +29,9 @@ export const updateLink = async (linkId: number, linkToUpdate: Partial<Link>, ta
     throw new Error('Error during updating a link, please try again');
   }
 
-  const linksTagsToRemove = updatedLink.tags?.filter((tag) => !tags.map((t) => t.id).includes(tag.id));
-
-  if (linksTagsToRemove && linksTagsToRemove.length > 0) {
+  const linksTagsToRemove = updatedLink.tags?.filter((tag) => !tags.map((t) => t.id)?.includes(tag.id));
+  const shouldRemovelinksTags = linksTagsToRemove && linksTagsToRemove.length > 0;
+  if (shouldRemovelinksTags) {
     try {
       await Promise.all(
         linksTagsToRemove.map((tag) =>
@@ -40,8 +47,8 @@ export const updateLink = async (linkId: number, linkToUpdate: Partial<Link>, ta
   }
 
   const linksTagsToAdd = tags?.filter((tag) => !updatedLink.tags?.map((t) => t.id)?.includes(tag.id));
-
-  if (linksTagsToAdd && linksTagsToAdd.length > 0) {
+  const shouldAddlinksTags = Boolean(linksTagsToAdd && linksTagsToAdd.length > 0);
+  if (shouldAddlinksTags) {
     const { error: linksTagsToAddError } = await supabase.from<LinksTags>(dbKeys.linksTags).insert(
       linksTagsToAdd.map((tag) => ({
         linkId: updatedLink.id,
@@ -56,24 +63,29 @@ export const updateLink = async (linkId: number, linkToUpdate: Partial<Link>, ta
 
   updatedLink.tags = tags;
 
-  return updatedLink;
+  return { updatedLink, shouldRevalidateTags: shouldAddlinksTags || Boolean(shouldRemovelinksTags) };
 };
 
 export const useUpdateLink = (): UseMutationResult<
-  Link,
+  UpdateLinkReturn,
   Error,
-  { linkId: number; linkToAdd: Partial<Link>; tags: Tag[] },
+  { linkId: number; linkToUpdate: Partial<Link>; tags: Tag[] },
   Link
 > => {
   const queryClient = useQueryClient();
 
   const queryKey = useLinksQueryKey();
 
-  return useMutation(({ linkId, linkToAdd, tags }) => updateLink(linkId, linkToAdd, tags), {
-    onSuccess: (updatedLink) => {
+  return useMutation(({ linkId, linkToUpdate, tags }) => updateLink(linkId, linkToUpdate, tags), {
+    onSuccess: ({ updatedLink, shouldRevalidateTags }) => {
       queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(queryKey, (oldLinks) =>
         updateItemInsidePaginatedData(updatedLink, oldLinks)
       );
+
+      if (shouldRevalidateTags) {
+        console.log('shouldRevalidateTags');
+        queryClient.invalidateQueries(tagsQuerykeys);
+      }
     },
     onError: (err) => {
       toast.error(formatError(err));

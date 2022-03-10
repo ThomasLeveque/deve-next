@@ -74,7 +74,7 @@ const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
 
         await updateLink.mutateAsync({
           linkId: props.linkToUpdate.id,
-          linkToAdd: {
+          linkToUpdate: {
             url: formData.url,
             description: formData.title,
             updatedAt: new Date().toISOString(),
