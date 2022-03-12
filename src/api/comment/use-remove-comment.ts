@@ -1,6 +1,7 @@
 import { useLinksQueryKey } from '@api/link/use-links-query-key';
 import { Comment } from '@models/comment';
 import { Link } from '@models/link';
+import { useLinkToCommentModal } from '@store/modals.store';
 import { formatError } from '@utils/format-string';
 import { supabase } from '@utils/init-supabase';
 import { removeItemInsidePaginatedData, updateItemInsidePaginatedData } from '@utils/mutate-data';
@@ -26,6 +27,8 @@ const removeLinkComment = async (commentId: number): Promise<Comment> => {
 };
 
 export const useRemoveLinkComment = (linkId: number): UseMutationResult<Comment, Error, number, Comment> => {
+  const [linkToCommentModal, setLinkToCommentModal] = useLinkToCommentModal();
+
   const queryClient = useQueryClient();
 
   const linksQueryKey = useLinksQueryKey();
@@ -42,6 +45,9 @@ export const useRemoveLinkComment = (linkId: number): UseMutationResult<Comment,
           oldLinks
         )
       );
+      if (linkToCommentModal) {
+        setLinkToCommentModal({ ...linkToCommentModal, commentsCount: linkToCommentModal.commentsCount - 1 });
+      }
     },
     onError: (err) => {
       toast.error(formatError(err));

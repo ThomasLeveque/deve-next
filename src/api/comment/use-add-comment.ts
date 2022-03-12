@@ -1,5 +1,6 @@
 import { Comment } from '@models/comment';
 import { Link } from '@models/link';
+import { useLinkToCommentModal } from '@store/modals.store';
 import { formatError } from '@utils/format-string';
 import { supabase } from '@utils/init-supabase';
 import { addItemInsidePaginatedData, updateItemInsidePaginatedData } from '@utils/mutate-data';
@@ -25,6 +26,8 @@ const addComment = async (commentToAdd: Partial<Comment>): Promise<Comment> => {
 };
 
 export const useAddLinkComment = (linkId: number): UseMutationResult<Comment, Error, Partial<Comment>, Comment> => {
+  const [linkToCommentModal, setLinkToCommentModal] = useLinkToCommentModal();
+
   const queryClient = useQueryClient();
 
   const linksQueryKey = useLinksQueryKey();
@@ -41,6 +44,9 @@ export const useAddLinkComment = (linkId: number): UseMutationResult<Comment, Er
           oldLinks
         )
       );
+      if (linkToCommentModal) {
+        setLinkToCommentModal({ ...linkToCommentModal, commentsCount: linkToCommentModal.commentsCount + 1 });
+      }
     },
     onError: (err) => {
       toast.error(formatError(err));

@@ -11,13 +11,7 @@ import AddCommentForm from './add-comment-form';
 const AddCommentModal: React.FC = React.memo(() => {
   const [linkToCommentModal, setLinkToCommentModal] = useLinkToCommentModal();
 
-  const {
-    data: comments,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isLoading,
-  } = useComments(linkToCommentModal?.id);
+  const { data: comments, fetchNextPage, hasNextPage, isFetchingNextPage } = useComments(linkToCommentModal?.id);
 
   const closeModal = () => {
     setLinkToCommentModal(null);
@@ -32,28 +26,33 @@ const AddCommentModal: React.FC = React.memo(() => {
         <p className="text-xs group-hover:underline">On {getDomain(linkToCommentModal.url)}</p>
       </a>
       <AddCommentForm linkId={linkToCommentModal.id} />
-      {isLoading && <SpinnerIcon className="m-auto mt-12 w-8" />}
-      {comments && (comments?.pages[0]?.data?.length ?? 0) > 0 && (
+      {linkToCommentModal.commentsCount > 0 ? (
         <>
-          <ul className="mt-8 space-y-5">
-            {comments.pages?.map((page) =>
-              page?.data.map((comment) => (
-                <CommentItem key={comment.id} comment={comment} linkId={linkToCommentModal.id} />
-              ))
-            )}
-          </ul>
-          {linkToCommentModal.commentsCount > COMMENTS_PER_PAGE ? (
-            <Button
-              theme="secondary"
-              text={hasNextPage ? 'Load more' : 'No more comments'}
-              className="mx-auto mt-8"
-              disabled={!hasNextPage}
-              loading={isFetchingNextPage}
-              onClick={fetchNextPage}
-            />
-          ) : null}
+          {comments ? (
+            <>
+              <ul className="mt-8 space-y-5">
+                {comments.pages?.map((page) =>
+                  page?.data?.map((comment) => (
+                    <CommentItem key={comment.id} comment={comment} linkId={linkToCommentModal.id} />
+                  ))
+                )}
+              </ul>
+              {linkToCommentModal.commentsCount > COMMENTS_PER_PAGE ? (
+                <Button
+                  theme="secondary"
+                  text={hasNextPage ? 'Load more' : 'No more comments'}
+                  className="mx-auto mt-8"
+                  disabled={!hasNextPage}
+                  loading={isFetchingNextPage}
+                  onClick={fetchNextPage}
+                />
+              ) : null}
+            </>
+          ) : (
+            <SpinnerIcon className="m-auto mt-12 w-8" />
+          )}
         </>
-      )}
+      ) : null}
     </Modal>
   ) : null;
 });
