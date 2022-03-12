@@ -1,113 +1,83 @@
+import { useAddLinkVote } from '@api/vote/use-add-vote';
+import { useRemoveLinkVote } from '@api/vote/use-remove-vote';
+import TagListWrapper from '@components/tag/tag-list-wrapper';
 import { AnnotationIcon, FireIcon, PencilAltIcon, TrashIcon } from '@heroicons/react/outline';
 import { FireIcon as FireIconSolid } from '@heroicons/react/solid';
-import { ModalsStore, useModalsStore } from '@store/modals.store';
+import { useQueryString } from '@hooks/use-query-string';
+import { Link } from '@models/link';
+import {
+  useAuthModalOpen,
+  useLinkToCommentModal,
+  useLinkToRemoveModal,
+  useLinkToUpdateModal,
+} from '@store/modals.store';
+import { useProfile } from '@store/profile.store';
+import { getDomain } from '@utils/format-string';
 import classNames from 'classnames';
 import { format } from 'date-fns';
-import React, { useCallback, useMemo } from 'react';
-import { QueryKey } from 'react-query';
-
-import TagListWrapper from '@components/tag/tag-list-wrapper';
-
-import { useAuth } from '@hooks/auth/useAuth';
-import { useUpdateLink } from '@hooks/link/use-update-link';
-import { useQueryString } from '@hooks/use-query-string';
-
-import { Link } from '@data-types/link.type';
-
-import { getDomain } from '@utils/format-string';
-import { Document } from '@utils/shared-types';
-
+import React, { useMemo } from 'react';
 import Tag from '../elements/tag';
 
-const setLinkToCommentModalSelector = (state: ModalsStore) => state.setLinkToCommentModal;
-const setLinkToUpdateModalSelector = (state: ModalsStore) => state.setLinkToUpdateModal;
-const setLinkToRemoveModalSelector = (state: ModalsStore) => state.setLinkToRemoveModal;
-const toggleAuthModalSelector = (state: ModalsStore) => state.toggleAuthModal;
-
 interface LinkItemProps {
-  link: Document<Link>;
+  link: Link;
   // To know if the component is used inside the profil page
   isProfilLink?: boolean;
-  linksQueryKey: QueryKey;
 }
 
-const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
-  const isProfilLink = props.isProfilLink ?? false;
-
-  const { user } = useAuth();
+const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, isProfilLink = false }) => {
+  const [profile] = useProfile();
   const { addTagQuery } = useQueryString();
-  const updateLink = useUpdateLink(link, props.linksQueryKey);
 
-  const setLinkToCommentModal = useModalsStore(setLinkToCommentModalSelector);
-  const setLinkToUpdateModal = useModalsStore(setLinkToUpdateModalSelector);
-  const setLinkToRemoveModal = useModalsStore(setLinkToRemoveModalSelector);
-  const toggleAuthModal = useModalsStore(toggleAuthModalSelector);
+  const setLinkToCommentModal = useLinkToCommentModal()[1];
+  const setLinkToUpdateModal = useLinkToUpdateModal()[1];
+  const setLinkToRemoveModal = useLinkToRemoveModal()[1];
+  const setAuthModalOpen = useAuthModalOpen()[1];
 
-  const isLikedByMe = useMemo(
-    () => !!link.votes.find((vote) => vote.voteBy.id === user?.id),
-    [user, link]
-  );
+  const isLikedByMe = useMemo(() => !!link.votes?.find((vote) => vote.userId === profile?.id), [profile, link]);
 
   const canUpdateLinkData = useMemo(
-    () => user && (user.isAdmin || link.postedBy.id === user.id),
-    [user, link]
+    () => profile && (profile.role === 'admin' || link.userId === profile.id),
+    [profile, link]
   );
   const canRemoveLink = useMemo(
-    () => user && (user.isAdmin || link.postedBy.id === user.id),
-    [user, link]
+    () => profile && (profile.role === 'admin' || link.userId === profile.id),
+    [profile, link]
   );
 
   const renderFires = useMemo(() => {
-    if (link.voteCount === 0) {
+    if (link.votesCount === 0) {
       return 'Hot stuff';
     } else {
-      return `${link.voteCount}`;
+      return `${link.votesCount}`;
     }
-  }, [link.voteCount]);
+  }, [link.votesCount]);
 
   const renderComments = useMemo(() => {
-    if (link.commentCount === 0) {
+    if (link.commentsCount === 0) {
       return 'Add comment';
-    } else if (link.commentCount === 1) {
-      return `${link.commentCount} comment`;
+    } else if (link.commentsCount === 1) {
+      return `${link.commentsCount} comment`;
     } else {
-      return `${link.commentCount} comments`;
+      return `${link.commentsCount} comments`;
     }
-  }, [link.commentCount]);
+  }, [link.commentsCount]);
 
-  const addVote = useCallback(() => {
-    const incrementedVoteLink: Partial<Document<Link>> = {
-      voteCount: link.voteCount + 1,
-      votes: [
-        ...link.votes,
-        { voteBy: { id: user?.id ?? '', displayName: user?.displayName ?? '' } },
-      ],
-    };
-    updateLink.mutate(incrementedVoteLink);
-  }, [link, user]);
+  const addVote = useAddLinkVote(link);
 
-  const removeVote = useCallback(() => {
-    const decrementedVoteLink: Partial<Document<Link>> = {
-      voteCount: link.voteCount - 1,
-      votes: link.votes.filter((vote) => vote.voteBy.id !== user?.id),
-    };
-    updateLink.mutate(decrementedVoteLink);
-  }, [link, user]);
+  const removeVote = useRemoveLinkVote(link);
 
   return (
-    <li className="flex flex-col p-[30px] rounded-link-card bg-gray-100 group">
-      <div className="mb-5 flex justify-between items-start space-x-3 min-h-[20px]">
+    <li className="group flex flex-col rounded-link-card bg-gray-100 p-[30px]">
+      <div className="mb-5 flex min-h-[20px] items-start justify-between space-x-3">
         <div>
-          {!isProfilLink && (
-            <h3 className="font-poppins-bold text-[13px] mb-1">{link.postedBy.displayName}</h3>
-          )}
-          <p className="text-[10px] text-gray-400">{format(link.createdAt, 'MMMM d yyyy')}</p>
+          {!isProfilLink && <h3 className="mb-1 font-poppins-bold text-[13px]">{link.user?.username}</h3>}
+          <p className="text-[10px] text-gray-400">{format(new Date(link.createdAt), 'MMMM d yyyy')}</p>
         </div>
-        <div className="space-x-1 group-hover:flex flex lg:hidden">
+        <div className="flex space-x-1 group-hover:flex lg:hidden">
           {canUpdateLinkData && (
             <button
               className="hover:text-secondary"
-              onClick={() => (canUpdateLinkData ? setLinkToUpdateModal(link) : toggleAuthModal())}
+              onClick={() => (canUpdateLinkData ? setLinkToUpdateModal(link) : setAuthModalOpen(true))}
             >
               <PencilAltIcon className="w-5" />
             </button>
@@ -115,21 +85,16 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
           {canRemoveLink && (
             <button
               className="hover:text-secondary"
-              onClick={() => (canRemoveLink ? setLinkToRemoveModal(link) : toggleAuthModal())}
+              onClick={() => (canRemoveLink ? setLinkToRemoveModal(link) : setAuthModalOpen(true))}
             >
               <TrashIcon className="w-5" />
             </button>
           )}
         </div>
       </div>
-      <a
-        href={link.url}
-        rel="noreferrer"
-        target="_blank"
-        className="mb-8 with-ring link-item-link block"
-      >
+      <a href={link.url} rel="noreferrer" target="_blank" className="with-ring link-item-link mb-8 block">
         <h2
-          className={classNames('text-3xl mb-2 font-poppins-bold break-words', {
+          className={classNames('mb-2 break-words font-poppins-bold text-3xl', {
             '!text-2xl': link.description.length > 60,
           })}
         >
@@ -138,27 +103,35 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
         <p className="text-xs">On {getDomain(link.url)}</p>
       </a>
       <TagListWrapper className="mb-5">
-        {link.categories.map((tag) => (
-          <li key={`${link.id}-${tag}`}>
+        {link.tags?.map((tag) => (
+          <li key={tag.id}>
             <Tag
-              text={tag}
+              text={tag.name}
               isColored
               disabled={isProfilLink}
-              onClick={isProfilLink ? undefined : () => addTagQuery(tag)}
+              onClick={isProfilLink ? undefined : () => addTagQuery(tag.name)}
             />
           </li>
         ))}
       </TagListWrapper>
-      <div className="flex mt-auto space-x-5">
+      <div className="mt-auto flex space-x-5">
         <button
           onClick={() => {
-            if (user) {
-              isLikedByMe ? removeVote() : addVote();
+            if (profile) {
+              isLikedByMe
+                ? removeVote.mutate({
+                    userId: profile.id,
+                    linkId: link.id,
+                  })
+                : addVote.mutate({
+                    userId: profile.id,
+                    linkId: link.id,
+                  });
             } else {
-              toggleAuthModal();
+              setAuthModalOpen(true);
             }
           }}
-          className={classNames('flex items-center space-x-[6px] hover:text-secondary with-ring', {
+          className={classNames('with-ring flex items-center space-x-[6px] hover:text-secondary', {
             'text-secondary': isLikedByMe,
           })}
         >
@@ -166,8 +139,8 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, ...props }) => {
           <span className="font-poppins-bold text-[11px]">{renderFires}</span>
         </button>
         <button
-          onClick={() => (user ? setLinkToCommentModal(link) : toggleAuthModal())}
-          className="flex items-center space-x-[6px] hover:text-secondary with-ring"
+          onClick={() => (profile ? setLinkToCommentModal(link) : setAuthModalOpen(true))}
+          className="with-ring flex items-center space-x-[6px] hover:text-secondary"
         >
           <AnnotationIcon className="w-6" />
           <span className="font-poppins-bold text-[11px]">{renderComments}</span>

@@ -30,15 +30,15 @@ const MyPopover: React.FC<MyPopoverProps> = (props) => {
 
       <Transition
         enter="transition duration-100 ease-out"
-        enterFrom="transform scale-95 opacity-0"
-        enterTo="transform scale-100 opacity-100"
+        enterFrom="scale-95 opacity-0"
+        enterTo="scale-100 opacity-100"
         leave="transition duration-75 ease-out"
-        leaveFrom="transform scale-100 opacity-100"
-        leaveTo="transform scale-95 opacity-0"
+        leaveFrom="scale-100 opacity-100"
+        leaveTo="scale-95 opacity-0"
       >
         <Popover.Panel
           className={classNames(
-            'absolute z-10 bg-white rounded-button p-4 focus:outline-none shadow-lg',
+            'absolute z-10 rounded-button bg-white p-4 shadow-lg focus:outline-none',
             props.className,
             positionClassNames
           )}

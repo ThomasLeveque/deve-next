@@ -1,15 +1,14 @@
+import { useSupabaseAuth } from '@api/supabaseAuth/useSupabaseAuth';
+import Toast from '@components/elements/toast';
+import Layout from '@components/layout';
+import { useProfile } from '@store/profile.store';
+import { runMigrations } from '@utils/migrations';
 import { NextPage } from 'next';
 import { AppProps } from 'next/app';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
-
-import Toast from '@components/elements/toast';
-import Layout from '@components/layout';
-
-import AuthProvider from '@hooks/auth/useAuth';
-
 import '../../styles/index.css';
 
 const queryClient = new QueryClient({
@@ -17,6 +16,7 @@ const queryClient = new QueryClient({
     queries: {
       retry: 0,
       refetchOnMount: true,
+      refetchOnWindowFocus: false,
     },
   },
 });
@@ -27,14 +27,22 @@ export type Page<P = unknown> = NextPage<P> & {
 };
 
 const MyApp = ({ Component, pageProps }: AppProps & { Component: Page }): JSX.Element => {
+  useSupabaseAuth();
+
+  // TODO: to remove
+  const profile = useProfile()[0];
+  useEffect(() => {
+    if (profile) {
+      runMigrations(profile.id);
+    }
+  }, [profile]);
+
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <Layout title={Component.title} description={Component.description}>
-          <Component {...pageProps} />
-          <ReactQueryDevtools initialIsOpen={false} />
-        </Layout>
-      </AuthProvider>
+      <Layout title={Component.title} description={Component.description}>
+        <Component {...pageProps} />
+        <ReactQueryDevtools initialIsOpen={false} />
+      </Layout>
       <Toaster
         position="top-right"
         toastOptions={{

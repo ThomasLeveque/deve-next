@@ -1,15 +1,12 @@
-import { AppConfigStore, useAppConfigStore } from '@store/app-config.store';
-import { ModalsStore, useModalsStore } from '@store/modals.store';
+import { usePrefetchTags } from '@api/tag/use-tags';
+import Header from '@components/header';
+import { useMediaQuery } from '@hooks/use-media-query';
+import { useTagsSidebarOpen } from '@store/app-config.store';
+import { useAuthModalOpen } from '@store/modals.store';
+import { useProfile } from '@store/profile.store';
 import classNames from 'classnames';
 import Head from 'next/head';
 import React, { useEffect } from 'react';
-
-import Header from '@components/header';
-
-import { useAuth } from '@hooks/auth/useAuth';
-import { usePrefetchCategories } from '@hooks/category/use-categories';
-import { useMediaQuery } from '@hooks/use-media-query';
-
 import BackToTop from './back-to-top';
 import AddCommentModal from './modals/add-comment-modal/add-comment-modal';
 import AddLinkModal from './modals/add-link-modal/add-link-modal';
@@ -17,36 +14,30 @@ import LoginModal from './modals/login-modal/login-modal';
 import RemoveLinkModal from './modals/remove-link-modal/remove-link-modal';
 import UpdateLinkModal from './modals/update-link-modal/update-link-modal';
 
-const authModalSelector = (state: ModalsStore) => state.authModal;
-const toggleAuthModalSelector = (state: ModalsStore) => state.toggleAuthModal;
-
 interface LayoutProps {
   className?: string;
   title?: string;
   description?: string;
 }
 
-const setTagsSidebarOpenSelector = (state: AppConfigStore) => state.setTagsSidebarOpen;
-
 const Layout: React.FC<LayoutProps> = ({ className, children, ...props }) => {
-  const { user } = useAuth();
+  const [profile] = useProfile();
   const isMobileScreen = useMediaQuery('mobile');
-  const setTagsSidebarOpen = useAppConfigStore(setTagsSidebarOpenSelector);
+  const setTagsSidebarOpen = useTagsSidebarOpen()[1];
 
-  usePrefetchCategories();
+  usePrefetchTags();
 
-  const authModal = useModalsStore(authModalSelector);
-  const toggleAuthModal = useModalsStore(toggleAuthModalSelector);
+  const [authModalOpen, setAuthModalOpen] = useAuthModalOpen();
 
   useEffect(() => {
-    if (user && authModal) {
-      toggleAuthModal();
+    if (profile && authModalOpen) {
+      setAuthModalOpen(false);
     }
-  }, [user, authModal]);
+  }, [profile, authModalOpen, setAuthModalOpen]);
 
   useEffect(() => {
     setTagsSidebarOpen(!isMobileScreen);
-  }, [isMobileScreen]);
+  }, [isMobileScreen, setTagsSidebarOpen]);
 
   const metaTitle = props.title ?? 'Deve-next';
   const metaDescription = props.description ?? 'The place to pratice technical watch';
@@ -58,7 +49,7 @@ const Layout: React.FC<LayoutProps> = ({ className, children, ...props }) => {
         <meta content={metaDescription} name="description" />
       </Head>
       <Header />
-      <main className={classNames('xl:container xl:mx-auto px-5', className)}>{children}</main>
+      <main className={classNames('px-5 xl:container xl:mx-auto', className)}>{children}</main>
       <LoginModal />
       <AddLinkModal />
       <AddCommentModal />

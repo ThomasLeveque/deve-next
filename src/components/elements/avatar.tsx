@@ -1,10 +1,8 @@
+import { useProfile } from '@store/profile.store';
+import { getInitials } from '@utils/format-string';
 import classNames from 'classnames';
 import Image from 'next/image';
 import React, { useMemo } from 'react';
-
-import { useAuth } from '@hooks/auth/useAuth';
-
-import { getInitials } from '@utils/format-string';
 
 interface AvatarProps {
   className?: string;
@@ -13,29 +11,29 @@ interface AvatarProps {
 }
 
 const Avatar: React.FC<AvatarProps> = React.memo((props) => {
-  const { user } = useAuth();
+  const [profile] = useProfile();
   const size = props.size ?? 50;
   const disabled = props.disabled ?? false;
 
-  const displayNameInitials = useMemo(() => getInitials(user?.displayName ?? ''), [user]);
+  const displayNameInitials = useMemo(() => getInitials(profile?.username ?? ''), [profile]);
 
-  return user?.photoURL ? (
+  return profile?.avatarUrl ? (
     <button
       disabled={disabled}
       className={classNames(
-        'flex with-ring rounded-full overflow-hidden',
+        'with-ring flex overflow-hidden rounded-full',
         { 'cursor-default': disabled },
         props.className
       )}
     >
-      <Image src={user?.photoURL} height={size} width={size} priority />
+      <Image src={profile?.avatarUrl} height={size} width={size} priority alt="Avatar image" />
     </button>
   ) : (
     <button
       disabled={disabled}
       style={{ height: size, width: size, fontSize: size * 0.36 }}
       className={classNames(
-        'with-ring bg-gray-100 rounded-full grid place-items-center font-poppins-bold uppercase',
+        'with-ring grid place-items-center rounded-full bg-gray-100 font-poppins-bold uppercase',
         { 'cursor-default': disabled },
         props.className
       )}

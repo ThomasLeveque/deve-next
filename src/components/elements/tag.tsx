@@ -24,7 +24,7 @@ const Tag: React.FC<TagProps> = React.memo((props) => {
       onClick={props.onClick}
       disabled={disabled}
       className={classNames(
-        'rounded-tag py-[7px] px-[10px] inline-flex uppercase',
+        'inline-flex rounded-tag py-[7px] px-[10px] uppercase',
         isColored ? 'bg-primary text-black' : 'bg-gray-400/40 text-black',
         {
           'cursor-default': props.onClick === undefined,
@@ -36,7 +36,7 @@ const Tag: React.FC<TagProps> = React.memo((props) => {
       <span className="font-poppins-bold text-[10px] leading-[15px]">#{props.text}</span>
       {isClosable ? (
         <XIcon
-          className="w-[14px] ml-[6px] cursor-pointer rounded-sm"
+          className="ml-[6px] w-[14px] cursor-pointer rounded-sm"
           onClick={(event) => {
             event.stopPropagation();
             onClose();

@@ -1,11 +1,6 @@
-import create from 'zustand';
+import { atom, SetStateAction, useAtom } from 'jotai';
 
-export interface AppConfigStore {
-  tagsSidebarOpen: boolean;
-  setTagsSidebarOpen: (open: boolean) => void;
-}
+const tagsSidebarOpenAtom = atom(false);
 
-export const useAppConfigStore = create<AppConfigStore>((set) => ({
-  tagsSidebarOpen: false,
-  setTagsSidebarOpen: (open) => set({ tagsSidebarOpen: open }),
-}));
+export const useTagsSidebarOpen = (): [boolean, (update: SetStateAction<boolean>) => void] =>
+  useAtom(tagsSidebarOpenAtom);

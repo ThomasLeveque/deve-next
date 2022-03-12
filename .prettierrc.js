@@ -4,16 +4,8 @@ module.exports = {
   semi: true,
   trailingComma: 'es5',
   singleQuote: true,
-  printWidth: 100,
+  printWidth: 120,
   tabWidth: 2,
   useTabs: false,
-  // match tsconfig.json paths
-  importOrder: [
-    '^@components/(.*)$',
-    '^@hooks/(.*)$',
-    '^@data-types/(.*)$',
-    '^@utils/(.*)$',
-    '^[./]',
-  ],
-  importOrderSeparation: true,
+  plugins: [require('./merged-prettier-plugin.js')],
 };

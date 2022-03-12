@@ -1,58 +1,53 @@
-import { yupResolver } from '@hookform/resolvers/yup';
-import React, { useEffect, useCallback } from 'react';
-import { FieldError, useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
-
+import { useUpdateLink } from '@api/link/use-update-link';
+import { useTags } from '@api/tag/use-tags';
 import Button from '@components/elements/button';
 import TextInput from '@components/elements/text-input';
 import TagsListBox from '@components/tag/tags-list-box';
-
-import { useAuth } from '@hooks/auth/useAuth';
-import { useCategories } from '@hooks/category/use-categories';
-import { useLinksQueryKey } from '@hooks/link/use-links-query-key';
-import { useUpdateLink } from '@hooks/link/use-update-link';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useFetchHtmlText } from '@hooks/use-fetch-html-text';
-
-import { Link, LinkFormData } from '@data-types/link.type';
-
+import { Link } from '@models/link';
+import { Tag } from '@models/tag';
+import { useProfile } from '@store/profile.store';
 import { updateLinkSchema } from '@utils/form-schemas';
-import { formatUpdatedLink } from '@utils/format-link';
 import { formatError } from '@utils/format-string';
-import { Document } from '@utils/shared-types';
+import React, { useCallback, useEffect } from 'react';
+import { FieldError, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+
+interface LinkFormData {
+  url: string;
+  title: string;
+  tagsIds: number[];
+}
 
 interface AddLinkFormProps {
   closeModal: () => void;
-  linkToUpdate: Document<Link>;
+  linkToUpdate: Link;
 }
 
 const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
-  const { user } = useAuth();
+  const [profile] = useProfile();
 
-  const linksQueryKey = useLinksQueryKey(user?.id as string);
-
-  const { data: tags } = useCategories({ refetchOnMount: false });
+  const { data: tags } = useTags({ refetchOnMount: false });
 
   const {
     register,
     handleSubmit,
     setValue,
     watch,
+    reset,
     formState: { errors },
   } = useForm<LinkFormData>({
     resolver: yupResolver(updateLinkSchema),
     defaultValues: {
       url: props.linkToUpdate.url,
       title: props.linkToUpdate.description,
+      tagsIds: props.linkToUpdate.tags?.map((tag) => tag.id),
     },
   });
+  const selectedTagsIds = watch('tagsIds');
 
-  useEffect(() => {
-    setValue('tags', props.linkToUpdate.categories);
-  }, []);
-
-  const selectedTags = watch('tags', []);
-
-  const updateLink = useUpdateLink(props.linkToUpdate, linksQueryKey);
+  const updateLink = useUpdateLink();
 
   const url = watch('url');
   const { htmlText: title, loading: htmlTextLoading } = useFetchHtmlText(url, false);
@@ -63,22 +58,29 @@ const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
   }, [title]);
 
   const onSubmit = useCallback(
-    (formData: LinkFormData) => {
+    async (formData: LinkFormData) => {
       try {
-        if (!user) {
+        if (!profile) {
           throw new Error('You must be login');
         }
 
-        selectedTags.forEach((selectedTag) => {
-          const foundTag = tags?.find(
-            (tag) => tag.name.toLocaleLowerCase() === selectedTag.toLocaleLowerCase()
-          );
-          if (!foundTag) {
-            throw new Error(`The tag ${selectedTag} does not exist`);
+        const updatedTags: Tag[] = [];
+        selectedTagsIds.forEach((selectedTagId) => {
+          const foundTag = tags?.find((tag) => tag.id === selectedTagId);
+          if (foundTag) {
+            updatedTags.push(foundTag);
           }
         });
-        const updatedLink = formatUpdatedLink(formData);
-        updateLink.mutate(updatedLink);
+
+        await updateLink.mutateAsync({
+          linkId: props.linkToUpdate.id,
+          linkToUpdate: {
+            url: formData.url,
+            description: formData.title,
+            updatedAt: new Date().toISOString(),
+          },
+          tags: updatedTags,
+        });
 
         // Do not setLoading(false) because addLink will unmount this component (Modal).
         props.closeModal();
@@ -87,7 +89,7 @@ const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
         console.error(err);
       }
     },
-    [user, tags, selectedTags]
+    [profile, tags, selectedTagsIds]
   );
 
   return (
@@ -108,25 +110,19 @@ const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
         {...register('title')}
         errorText={errors.title?.message}
       />
-      <TagsListBox
-        tags={tags}
-        selectedTags={selectedTags}
-        setSelectedTags={(tags) => setValue('tags', tags, { shouldValidate: true })}
-        className="mb-8"
-        label="tags (min 1, max 4)"
-        errorText={(errors.tags as unknown as FieldError)?.message}
-      />
-      <div className="flex justify-end space-x-4">
-        <Button
-          text="Reset"
-          theme="gray"
-          onClick={() => {
-            setValue('url', props.linkToUpdate.url);
-            setValue('title', props.linkToUpdate.description);
-            setValue('tags', props.linkToUpdate.categories);
-          }}
+      {tags && (
+        <TagsListBox
+          tags={tags}
+          selectedTags={selectedTagsIds}
+          setSelectedTags={(tagsIds) => setValue('tagsIds', tagsIds, { shouldValidate: true })}
+          className="mb-8"
+          label="tags (min 1, max 4)"
+          errorText={(errors.tagsIds as unknown as FieldError)?.message}
         />
-        <Button theme="secondary" text="Update" type="submit" />
+      )}
+      <div className="flex justify-end space-x-4">
+        <Button text="Reset" theme="gray" onClick={() => reset()} />
+        <Button theme="secondary" text="Update" type="submit" loading={updateLink.isLoading} />
       </div>
     </form>
   );

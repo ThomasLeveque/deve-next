@@ -23,13 +23,11 @@ export const useQueryString = (): useQueryStringReturn => {
     [router.query.tags]
   );
 
-  const orderbyQuery = useMemo(
-    () =>
-      router.query.orderby && orderLinksKeys.includes(router.query.orderby as OrderLinksKey)
-        ? (router.query.orderby as OrderLinksKey)
-        : 'newest',
-    [router.query.orderby]
-  );
+  const orderbyQuery = useMemo(() => {
+    return router.query.orderby && orderLinksKeys.includes(router.query.orderby as OrderLinksKey)
+      ? (router.query.orderby as OrderLinksKey)
+      : 'newest';
+  }, [router.query.orderby]);
 
   const updateOrderbyQuery = (orderKey: OrderLinksKey) => {
     router.push(

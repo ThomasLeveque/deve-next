@@ -1,17 +1,16 @@
+import { Nullable, PaginatedData } from '@utils/shared-types';
 import { InfiniteData } from 'react-query';
-
-import { PaginatedData, Document } from '@utils/shared-types';
 
 const initialPaginatedData = {
   pages: [],
   pageParams: [],
 };
 
-export const addItemInsidePaginatedData = <Data>(
-  item: Document<Data>,
-  items: InfiniteData<PaginatedData<Data>> | undefined,
+export const addItemInsidePaginatedData = <DataType>(
+  item: DataType,
+  items: InfiniteData<PaginatedData<DataType>> | undefined,
   pageIndex = 0
-): InfiniteData<PaginatedData<Data>> => {
+): InfiniteData<PaginatedData<DataType>> => {
   if (!items) {
     return initialPaginatedData;
   }
@@ -21,24 +20,25 @@ export const addItemInsidePaginatedData = <Data>(
   return items;
 };
 
-export const updateItemInsidePaginatedData = <Data>(
-  item: Document<Data>,
-  items: InfiniteData<PaginatedData<Data>> | undefined
-): InfiniteData<PaginatedData<Data>> => {
+export const updateItemInsidePaginatedData = <DataType extends { id: number }>(
+  item: Partial<DataType> & { id: number },
+  items: InfiniteData<PaginatedData<DataType>> | undefined
+): InfiniteData<PaginatedData<DataType>> => {
   if (!items) {
     return initialPaginatedData;
   }
 
   const pageIndex = items.pages.findIndex((page) => page.data.find((d) => d.id === item.id));
   const itemIndex = items.pages[pageIndex].data.findIndex((d) => d.id === item.id);
-  items.pages[pageIndex].data[itemIndex] = item;
+  const previousItem = items.pages[pageIndex].data[itemIndex];
+  items.pages[pageIndex].data[itemIndex] = { ...previousItem, ...item };
   return items;
 };
 
-export const removeItemInsidePaginatedData = <Data>(
-  itemId: string,
-  items: InfiniteData<PaginatedData<Data>> | undefined
-): InfiniteData<PaginatedData<Data>> => {
+export const removeItemInsidePaginatedData = <DataType extends { id: number }>(
+  itemId: number,
+  items: InfiniteData<PaginatedData<DataType>> | undefined
+): InfiniteData<PaginatedData<DataType>> => {
   if (!items) {
     return initialPaginatedData;
   }
@@ -49,25 +49,25 @@ export const removeItemInsidePaginatedData = <Data>(
   return items;
 };
 
-export const addItemInsideData = <Data>(
-  item: Document<Data>,
-  items: Document<Data>[] | undefined,
+export const addItemInsideData = <DataType>(
+  item: DataType,
+  items: Nullable<DataType[]>,
   newItemPosition: 'start' | 'end' = 'start'
-): Document<Data>[] =>
-  items ? (newItemPosition === 'start' ? [item, ...items] : [...items, item]) : [];
+): DataType[] => (items ? (newItemPosition === 'start' ? [item, ...items] : [...items, item]) : []);
 
-export const updateItemInsideData = <Data>(
-  item: Document<Data>,
-  items: Document<Data>[] | undefined
-): Document<Data>[] => {
+export const updateItemInsideData = <DataType extends { id: number }>(
+  item: Partial<DataType> & { id: number },
+  items: DataType[] | undefined
+): DataType[] => {
   if (!items) return [];
 
   const itemIndex = items.findIndex((i) => i.id === item.id);
-  items[itemIndex] = item;
+  const previousItem = items[itemIndex];
+  items[itemIndex] = { ...previousItem, ...item };
   return items;
 };
 
-export const removeItemInsideData = <Data>(
-  itemId: string,
-  items: Document<Data>[] | undefined
-): Document<Data>[] => (items ? items.filter((item) => item.id !== itemId) : []);
+export const removeItemInsideData = <DataType extends { id: number }>(
+  itemId: number,
+  items: DataType[] | undefined
+): DataType[] => (items ? items.filter((item) => item.id !== itemId) : []);

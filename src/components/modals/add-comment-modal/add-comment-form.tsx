@@ -1,42 +1,29 @@
+import { useAddLinkComment } from '@api/comment/use-add-comment';
+import Button from '@components/elements/button';
+import TextArea from '@components/elements/textarea';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { doc, collection } from 'firebase/firestore/lite';
+import { useProfile } from '@store/profile.store';
+import { addCommentSchema, commentMaxLength } from '@utils/form-schemas';
+import { formatError } from '@utils/format-string';
 import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-
-import Button from '@components/elements/button';
-import TextArea from '@components/elements/textarea';
-
-import { useAuth } from '@hooks/auth/useAuth';
-import { dbKeys } from '@hooks/link/db-keys';
-import { useAddLinkComment } from '@hooks/link/use-add-link-comment';
-import { useLinksQueryKey } from '@hooks/link/use-links-query-key';
-
-import { CommentFormData } from '@data-types/comment.type';
-import { Link } from '@data-types/link.type';
-import { User } from '@data-types/user.type';
-
-import { addCommentSchema, commentMaxLength } from '@utils/form-schemas';
-import { formatComment } from '@utils/format-comment';
-import { formatError } from '@utils/format-string';
-import { db } from '@utils/init-firebase';
-import { Document } from '@utils/shared-types';
-
 import CommentItem from './comment-item';
 
+interface CommentFormData {
+  text: string;
+}
+
 interface AddCommentFormProps {
-  link: Document<Link>;
+  linkId: number;
 }
 
 const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
-  const { user } = useAuth();
-  const linkId = props.link.id as string;
+  const [profile] = useProfile();
 
   const [showPreview, setShowPreview] = useState(false);
 
-  const linksQueryKey = useLinksQueryKey(user?.id as string);
-
-  const addLinkComment = useAddLinkComment(props.link, linksQueryKey);
+  const addLinkComment = useAddLinkComment(props.linkId);
 
   const {
     register,
@@ -51,15 +38,17 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
   const commentText = watch('text', '') ?? '';
 
   const onSubmit = useCallback(
-    (formData: CommentFormData) => {
+    async (formData: CommentFormData) => {
       try {
-        if (!user) {
+        if (!profile) {
           throw new Error('You must be login');
         }
-        const commentRef = doc(collection(db, dbKeys.comments(linkId)));
 
-        const comment = formatComment(formData, user);
-        addLinkComment.mutate({ commentRef, comment });
+        await addLinkComment.mutateAsync({
+          text: formData.text,
+          linkId: props.linkId,
+          userId: profile.id,
+        });
 
         reset();
       } catch (err) {
@@ -68,17 +57,25 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
       }
       setShowPreview(false);
     },
-    [user, linkId]
+    [profile, props.linkId]
   );
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      {showPreview ? (
+      {showPreview && profile ? (
         <ul>
           <CommentItem
-            comment={formatComment({ text: commentText }, user as Document<User>)}
+            comment={{
+              id: -1,
+              text: commentText,
+              userId: profile?.id,
+              linkId: props.linkId,
+              user: profile,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            }}
             isPreview={true}
-            link={props.link}
+            linkId={props.linkId}
           />
         </ul>
       ) : (
@@ -91,14 +88,14 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
             maxLength={commentMaxLength}
             textareaClassName="h-32"
           />
-          <p className="mt-3 ml-1 text-xs">
-            Characters left:{' '}
+          <p className="mt-3 ml-1 space-x-1 text-xs">
+            <span>Characters left:</span>
             <span className="font-poppins-bold">{commentMaxLength - commentText.length}</span>
           </p>
         </>
       )}
 
-      <div className="flex justify-end space-x-4 mt-8">
+      <div className="mt-8 flex justify-end space-x-4">
         <Button
           text={showPreview ? 'Edit' : 'Preview'}
           theme="gray"
@@ -108,7 +105,7 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
             }
           }}
         />
-        <Button theme="secondary" text="Add" type="submit" />
+        <Button theme="secondary" text="Add" type="submit" loading={addLinkComment.isLoading} />
       </div>
     </form>
   );

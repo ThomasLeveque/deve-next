@@ -1,21 +1,18 @@
+import { formatError } from '@utils/format-string';
+import { supabase } from '@utils/init-supabase';
 import React, { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
-
-import { useAuth } from '@hooks/auth/useAuth';
-
-import { formatError } from '@utils/format-string';
-
 import Button from '../../elements/button';
 
 const SignInWithGoogleBtn: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
-  const { signInWithGoogle } = useAuth();
-
   const handleSignInWithGoogle = useCallback(async () => {
     try {
       setLoading(true);
-      await signInWithGoogle();
+      await supabase.auth.signIn({
+        provider: 'google',
+      });
     } catch (err) {
       toast.error(formatError(err as Error));
       console.error(err);
@@ -25,13 +22,7 @@ const SignInWithGoogleBtn: React.FC = () => {
   }, []);
 
   return (
-    <Button
-      theme="secondary"
-      text="login with google"
-      loading={loading}
-      fullWidth
-      onClick={handleSignInWithGoogle}
-    />
+    <Button theme="secondary" text="login with google" loading={loading} fullWidth onClick={handleSignInWithGoogle} />
   );
 };
 
