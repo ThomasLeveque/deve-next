@@ -11,7 +11,7 @@ const SignInWithGoogleBtn: React.FC = () => {
     try {
       setLoading(true);
       await supabase.auth.signIn({
-        provider: 'github',
+        provider: 'google',
       });
     } catch (err) {
       toast.error(formatError(err as Error));

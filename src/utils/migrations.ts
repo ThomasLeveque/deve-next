@@ -156,7 +156,7 @@ const linksMigrations = async (userId: string) => {
             url: firebaseLink.url,
             description: firebaseLink.description,
             userId: userId,
-            votesCount: firebaseLink.voteCount,
+            votesCount: firebaseLink.voteCount > 0 ? 1 : 0,
             commentsCount: firebaseLink.commentCount,
             createdAt: new Date(firebaseLink.createdAt).toISOString(),
             updatedAt: new Date(firebaseLink.updatedAt).toISOString(),
