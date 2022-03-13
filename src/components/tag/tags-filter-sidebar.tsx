@@ -44,7 +44,7 @@ const TagsFilterSidebar: React.FC<TagsFilterSidebarProps> = React.memo((props) =
         placeholder="Search for a tag..."
         type="search"
         id="search-tag"
-        className="mb-5"
+        wrapperClassName="mb-5"
         onChange={(event) => setSearchTag(event.target.value)}
         value={searchTag}
         clearValue={() => {

@@ -82,7 +82,8 @@ const UpdateCommentForm: React.FC<UpdateCommentFormProps> = (props) => {
             {...register('text')}
             errorText={errors.text?.message}
             maxLength={commentMaxLength}
-            textareaClassName="h-24"
+            wrapperClassName="h-24"
+            className="h-full"
           />
           <p className="mt-3 ml-1 text-xs">
             Characters left: <span className="font-poppins-bold">{commentMaxLength - commentText.length}</span>

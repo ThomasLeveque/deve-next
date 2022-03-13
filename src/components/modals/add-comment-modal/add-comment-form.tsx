@@ -86,7 +86,8 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
             {...register('text')}
             errorText={errors.text?.message}
             maxLength={commentMaxLength}
-            textareaClassName="h-32"
+            wrapperClassName="h-32"
+            className="h-full"
           />
           <p className="mt-3 ml-1 space-x-1 text-xs">
             <span>Characters left:</span>

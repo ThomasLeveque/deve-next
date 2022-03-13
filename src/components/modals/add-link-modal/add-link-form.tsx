@@ -84,7 +84,7 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <TextInput
-        className="mb-6"
+        wrapperClassName="mb-6"
         id="url"
         label="URL"
         placeholder="URL of your link"
@@ -92,7 +92,7 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
         errorText={errors.url?.message}
       />
       <TextInput
-        className="mb-6"
+        wrapperClassName="mb-6"
         id="title"
         label="Title"
         placeholder={htmlTextLoading ? 'Looking for title...' : 'A title for your link'}

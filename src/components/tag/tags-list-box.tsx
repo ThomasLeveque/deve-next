@@ -144,7 +144,7 @@ const TagsListBox: React.FC<TagsListBoxProps> = React.memo((props) => {
           ref={searchRef}
           placeholder="Search for tags..."
           id="search-new-tags"
-          className="z-30"
+          wrapperClassName="z-30"
           type="search"
           autoComplete="off"
           onChange={(event) => {
