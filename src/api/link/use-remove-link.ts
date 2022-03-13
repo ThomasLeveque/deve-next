@@ -1,11 +1,9 @@
 import { Comment } from '@models/comment';
 import { Link } from '@models/link';
 import { Vote } from '@models/vote';
-import { formatError } from '@utils/format-string';
 import { supabase } from '@utils/init-supabase';
 import { removeItemInsidePaginatedData } from '@utils/mutate-data';
 import { PaginatedData } from '@utils/shared-types';
-import toast from 'react-hot-toast';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
 import { dbKeys as commentDbKeys } from '../comment/db-keys';
 import { queryKeys as tagsQuerykeys } from '../tag/query-keys';
@@ -45,9 +43,6 @@ export const useRemoveLink = (): UseMutationResult<number, Error, number, Link> 
       );
 
       queryClient.invalidateQueries(tagsQuerykeys);
-    },
-    onError: (err) => {
-      toast.error(formatError(err));
     },
   });
 };

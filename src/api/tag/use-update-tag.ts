@@ -17,12 +17,7 @@ const updateTag = async (tagId: number, tagToUpdate: Partial<Tag>): Promise<Tag>
   return updatedTag;
 };
 
-export const useUpdateCategory = (): UseMutationResult<
-  Tag,
-  Error,
-  { tagId: number; tagToUpdate: Partial<Tag> },
-  Tag
-> => {
+export const useUpdateTag = (): UseMutationResult<Tag, Error, { tagId: number; tagToUpdate: Partial<Tag> }, Tag> => {
   const queryClient = useQueryClient();
   return useMutation(({ tagId, tagToUpdate }) => updateTag(tagId, tagToUpdate), {
     onSuccess: async (updatedTag) => {

@@ -1,10 +1,8 @@
 import { Link } from '@models/link';
 import { Tag } from '@models/tag';
-import { formatError } from '@utils/format-string';
 import { supabase } from '@utils/init-supabase';
 import { addItemInsidePaginatedData } from '@utils/mutate-data';
 import { PaginatedData } from '@utils/shared-types';
-import toast from 'react-hot-toast';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
 import { queryKeys as tagsQueryKeys } from '../tag/query-keys';
 import { LinksTags } from './../../models/link';
@@ -49,9 +47,6 @@ export const useAddLink = (): UseMutationResult<Link, Error, { linkToAdd: Partia
       );
 
       queryClient.invalidateQueries(tagsQueryKeys);
-    },
-    onError: (err) => {
-      toast.error(formatError(err));
     },
   });
 };

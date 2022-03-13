@@ -35,7 +35,7 @@ const getComments = async (cursor = 0, linkId: number): Promise<PaginatedData<Co
 };
 
 export const useComments = (linkId: Nullable<number>): UseInfiniteQueryResult<Nullable<PaginatedData<Comment>>> => {
-  return useInfiniteQuery<Nullable<PaginatedData<Comment>>>(
+  return useInfiniteQuery<Nullable<PaginatedData<Comment>>, Error>(
     queryKeys.comments(linkId as number),
     (context) => getComments(context.pageParam, linkId as number),
     {

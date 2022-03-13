@@ -87,8 +87,5 @@ export const useUpdateLink = (): UseMutationResult<
         queryClient.invalidateQueries(tagsQuerykeys);
       }
     },
-    onError: (err) => {
-      toast.error(formatError(err));
-    },
   });
 };

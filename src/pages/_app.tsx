@@ -1,4 +1,4 @@
-import { useSupabaseAuth } from '@api/supabaseAuth/useSupabaseAuth';
+import { useAuth } from '@api/auth/useAuth';
 import Toast from '@components/elements/toast';
 import Layout from '@components/layout';
 import { useProfile } from '@store/profile.store';
@@ -27,7 +27,7 @@ export type Page<P = unknown> = NextPage<P> & {
 };
 
 const MyApp = ({ Component, pageProps }: AppProps & { Component: Page }): JSX.Element => {
-  useSupabaseAuth();
+  useAuth();
 
   // TODO: to remove
   const profile = useProfile()[0];

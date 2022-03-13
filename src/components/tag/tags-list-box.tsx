@@ -6,8 +6,10 @@ import { Transition } from '@headlessui/react';
 import { CheckIcon, PlusIcon, TrashIcon } from '@heroicons/react/outline';
 import { Tag as TagModel } from '@models/tag';
 import { useProfile } from '@store/profile.store';
+import { formatError } from '@utils/format-string';
 import classNames from 'classnames';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
 import TagListWrapper from './tag-list-wrapper';
 
 interface TagsListBoxProps {
@@ -88,6 +90,20 @@ const TagsListBox: React.FC<TagsListBoxProps> = React.memo((props) => {
     },
     [filteredTags, isOpen, focusedTagIndex, isSelected]
   );
+
+  const handleAddTag = useCallback(async () => {
+    try {
+      const tagName = searchTag.trim();
+      const newTag = await addTag.mutateAsync({
+        name: tagName,
+      });
+      addSelectedTags(newTag.id);
+      setSearchTag('');
+      searchRef.current?.focus();
+    } catch (err) {
+      toast.error(formatError(err as Error));
+    }
+  }, [searchTag]);
 
   useEffect(() => {
     document.addEventListener('keydown', handleKeyPress);
@@ -174,15 +190,7 @@ const TagsListBox: React.FC<TagsListBoxProps> = React.memo((props) => {
             {!isTagExist && searchTag.length > 0 && (
               <button
                 type="button"
-                onClick={async () => {
-                  const tagName = searchTag.trim();
-                  const newTag = await addTag.mutateAsync({
-                    name: tagName,
-                  });
-                  addSelectedTags(newTag.id);
-                  setSearchTag('');
-                  searchRef.current?.focus();
-                }}
+                onClick={handleAddTag}
                 className="grid w-full grid-cols-[20px,1fr] gap-3 px-4 py-2 text-sm hover:bg-primary"
               >
                 <PlusIcon />
@@ -233,7 +241,7 @@ const TagsListBoxOption: React.FC<TagsListBoxOptionProps> = (props) => {
 
   const handleRemoveTag = useCallback((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.stopPropagation();
-    if (props.tag.id) {
+    if (props.tag.id && canBeRemove) {
       props.removeSelectedTags(props.tag.id);
       removeTag.mutate(props.tag.id);
     }

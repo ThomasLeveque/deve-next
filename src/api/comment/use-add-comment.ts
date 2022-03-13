@@ -1,11 +1,9 @@
 import { Comment } from '@models/comment';
 import { Link } from '@models/link';
 import { useLinkToCommentModal } from '@store/modals.store';
-import { formatError } from '@utils/format-string';
 import { supabase } from '@utils/init-supabase';
 import { addItemInsidePaginatedData, updateItemInsidePaginatedData } from '@utils/mutate-data';
 import { PaginatedData } from '@utils/shared-types';
-import toast from 'react-hot-toast';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
 import { useLinksQueryKey } from '../link/use-links-query-key';
 import { dbKeys } from './db-keys';
@@ -47,9 +45,6 @@ export const useAddLinkComment = (linkId: number): UseMutationResult<Comment, Er
       if (linkToCommentModal) {
         setLinkToCommentModal({ ...linkToCommentModal, commentsCount: linkToCommentModal.commentsCount + 1 });
       }
-    },
-    onError: (err) => {
-      toast.error(formatError(err));
     },
   });
 };

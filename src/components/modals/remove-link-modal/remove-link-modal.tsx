@@ -1,7 +1,9 @@
 import { useRemoveLink } from '@api/link/use-remove-link';
 import Button from '@components/elements/button';
 import { useLinkToRemoveModal } from '@store/modals.store';
-import React from 'react';
+import { formatError } from '@utils/format-string';
+import React, { useCallback } from 'react';
+import toast from 'react-hot-toast';
 import { Modal } from '../modal';
 
 const RemoveLinkModal: React.FC = React.memo(() => {
@@ -9,9 +11,22 @@ const RemoveLinkModal: React.FC = React.memo(() => {
 
   const removeLink = useRemoveLink();
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setLinkToRemoveModal(null);
-  };
+  }, [setLinkToRemoveModal]);
+
+  const handleRemoveLink = useCallback(async () => {
+    try {
+      if (!linkToRemoveModal) {
+        throw new Error('Link to remove unknown, try again');
+      }
+
+      await removeLink.mutateAsync(linkToRemoveModal.id);
+      closeModal();
+    } catch (err) {
+      toast.error(formatError(err as Error));
+    }
+  }, [linkToRemoveModal, closeModal, removeLink]);
 
   return linkToRemoveModal ? (
     <Modal isOpen={!!linkToRemoveModal} closeModal={closeModal} title="Are you sure ?" className="max-w-md">
@@ -23,10 +38,7 @@ const RemoveLinkModal: React.FC = React.memo(() => {
           text="Remove"
           type="button"
           loading={removeLink.isLoading}
-          onClick={async () => {
-            await removeLink.mutateAsync(linkToRemoveModal.id);
-            closeModal();
-          }}
+          onClick={handleRemoveLink}
         />
       </div>
     </Modal>

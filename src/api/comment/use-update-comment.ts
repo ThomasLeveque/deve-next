@@ -1,9 +1,7 @@
 import { Comment } from '@models/comment';
-import { formatError } from '@utils/format-string';
 import { supabase } from '@utils/init-supabase';
 import { updateItemInsidePaginatedData } from '@utils/mutate-data';
 import { PaginatedData } from '@utils/shared-types';
-import toast from 'react-hot-toast';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
 import { dbKeys } from './db-keys';
 import { queryKeys } from './query-keys';
@@ -28,9 +26,6 @@ export const useUpdateLinkComment = (
       queryClient.setQueryData<InfiniteData<PaginatedData<Comment>>>(queryKeys.comments(linkId), (oldComments) =>
         updateItemInsidePaginatedData(updatedComment, oldComments)
       );
-    },
-    onError: (err) => {
-      toast.error(formatError(err as Error));
     },
   });
 };
