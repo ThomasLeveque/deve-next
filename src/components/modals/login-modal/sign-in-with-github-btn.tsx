@@ -1,8 +1,9 @@
+import Button from '@components/elements/button';
+import GithubIcon from '@components/icons/github-icon';
 import { formatError } from '@utils/format-string';
 import { supabase } from '@utils/init-supabase';
 import React, { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
-import Button from '../../elements/button';
 
 const SignInWithGithubBtn: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -21,7 +22,17 @@ const SignInWithGithubBtn: React.FC = () => {
     // Do not setLoading(false) because Signin with Github will unmount this component.
   }, []);
 
-  return <Button theme="black" text="login with github" loading={loading} fullWidth onClick={handleSignInWithGithub} />;
+  return (
+    <Button
+      theme="github"
+      icon={<GithubIcon />}
+      iconPosition="left"
+      text="login with github"
+      loading={loading}
+      fullWidth
+      onClick={handleSignInWithGithub}
+    />
+  );
 };
 
 export default SignInWithGithubBtn;

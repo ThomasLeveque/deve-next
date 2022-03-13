@@ -1,8 +1,9 @@
+import Button from '@components/elements/button';
+import GoogleIcon from '@components/icons/google-icon';
 import { formatError } from '@utils/format-string';
 import { supabase } from '@utils/init-supabase';
 import React, { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
-import Button from '../../elements/button';
 
 const SignInWithGoogleBtn: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -22,7 +23,15 @@ const SignInWithGoogleBtn: React.FC = () => {
   }, []);
 
   return (
-    <Button theme="secondary" text="login with google" loading={loading} fullWidth onClick={handleSignInWithGoogle} />
+    <Button
+      theme="google"
+      icon={<GoogleIcon />}
+      iconPosition="left"
+      text="login with google"
+      loading={loading}
+      fullWidth
+      onClick={handleSignInWithGoogle}
+    />
   );
 };
 

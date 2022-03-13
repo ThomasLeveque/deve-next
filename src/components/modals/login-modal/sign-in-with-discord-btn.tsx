@@ -1,8 +1,9 @@
+import Button from '@components/elements/button';
+import DiscordIcon from '@components/icons/discord-icon';
 import { formatError } from '@utils/format-string';
 import { supabase } from '@utils/init-supabase';
 import React, { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
-import Button from '../../elements/button';
 
 const SignInWithDiscordBtn: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -22,7 +23,15 @@ const SignInWithDiscordBtn: React.FC = () => {
   }, []);
 
   return (
-    <Button theme="secondary" text="login with discord" loading={loading} fullWidth onClick={handleSignInWithGoogle} />
+    <Button
+      theme="discord"
+      icon={<DiscordIcon />}
+      iconPosition="left"
+      text="login with discord"
+      loading={loading}
+      fullWidth
+      onClick={handleSignInWithGoogle}
+    />
   );
 };
 

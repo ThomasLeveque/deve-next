@@ -28,6 +28,9 @@ module.exports = {
         white: '#FFFFFF',
         primary: '#CBEFB6',
         secondary: '#5B5F97',
+        discord: '#5865f2',
+        google: '#DB4437',
+        github: '#333333',
         gray: {
           100: '#F3F4F6',
           400: '#9CA3AF',
