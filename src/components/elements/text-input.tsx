@@ -32,7 +32,7 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
         <div className="relative flex w-full items-center">
           {isSearchInput && (
             <SearchIcon
-              className="absolute left-4 w-6 cursor-text"
+              className="absolute left-4 w-6 cursor-text text-gray-600"
               onClick={() => {
                 (ref as React.MutableRefObject<HTMLInputElement | null>)?.current?.focus();
               }}

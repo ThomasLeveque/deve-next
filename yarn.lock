@@ -438,10 +438,10 @@
     protobufjs "^6.10.0"
     yargs "^16.1.1"
 
-"@headlessui/react@^1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@headlessui/react/-/react-1.5.0.tgz#483b44ba2c8b8d4391e1d2c863898d7dd0cc0296"
-  integrity sha512-aaRnYxBb3MU2FNJf3Ut9RMTUqqU3as0aI1lQhgo2n9Fa67wRu14iOGqx93xB+uMNVfNwZ5B3y/Ndm7qZGuFeMQ==
+"@headlessui/react@^0.0.0-insiders.79b3015":
+  version "0.0.0-insiders.79b3015"
+  resolved "https://registry.yarnpkg.com/@headlessui/react/-/react-0.0.0-insiders.79b3015.tgz#1d4193ac4f19a846dc8d2e1c2764333c53f3b77c"
+  integrity sha512-jHVxiW318zY0Yzv5DoGsyRcGvXpukSo77411iuwpoFkG/oxFnQbu9OouYFNqYcohfEmY43D0CkheCzTLix3i2g==
 
 "@heroicons/react@^1.0.5":
   version "1.0.5"
@@ -3277,10 +3277,10 @@ react-dom@^17.0.2:
     object-assign "^4.1.1"
     scheduler "^0.20.2"
 
-react-hook-form@^7.27.1:
-  version "7.27.1"
-  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.27.1.tgz#fe5fbcb6bf58751f66d9569e998d671480cc57f6"
-  integrity sha512-N3a7A6zIQ8DJeThisVZGtOUabTbJw+7DHJidmB9w8m3chckv2ZWKb5MHps9d2pPJqmCDoWe53Bos56bYmJms5w==
+react-hook-form@^7.28.1:
+  version "7.28.1"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.28.1.tgz#95fc37be6c6b9d57212eb7eca055fb36d079b3b7"
+  integrity sha512-mgwxvXuvt3FMY/mdnWbPc++Zf1U5xYzkhOaL05mtFMLvXc9MvUhMUlKtUVuO12sOrgT3nPXBgVFawtiJ4ONrgg==
 
 react-hot-toast@^2.2.0:
   version "2.2.0"
