@@ -83,7 +83,6 @@ export const useUpdateLink = (): UseMutationResult<
       );
 
       if (shouldRevalidateTags) {
-        console.log('shouldRevalidateTags');
         queryClient.invalidateQueries(tagsQuerykeys);
       }
     },

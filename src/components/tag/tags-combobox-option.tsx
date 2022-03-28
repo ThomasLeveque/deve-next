@@ -8,6 +8,7 @@ import classNames from 'classnames';
 import React, { useCallback } from 'react';
 
 interface TagsComboboxOptionProps {
+  selectedTags: Tag[];
   filteredTag: Tag;
   handleRemoveSelectedTags: (tagId: number) => void;
 }
@@ -30,13 +31,14 @@ const TagsComboboxOption: React.FC<TagsComboboxOptionProps> = ({ filteredTag, ha
     },
     [handleRemoveSelectedTags, removeTag]
   );
+
   return (
     <Combobox.Option
       key={filteredTag.id}
       value={filteredTag}
       className={({ active }) =>
         classNames(
-          `grid w-full grid-cols-[20px,1fr] gap-3 px-4 py-2 text-sm hover:bg-primary `,
+          `pointer grid w-full grid-cols-[20px,1fr] gap-3 px-4 py-2 text-sm hover:bg-primary`,
           {
             'bg-primary': active,
           },

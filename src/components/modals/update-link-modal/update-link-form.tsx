@@ -1,8 +1,7 @@
 import { useUpdateLink } from '@api/link/use-update-link';
-import { useTags } from '@api/tag/use-tags';
 import Button from '@components/elements/button';
 import TextInput from '@components/elements/text-input';
-import TagsListBox from '@components/tag/tags-list-box';
+import TagsCombobox from '@components/tag/tags-combobox';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useFetchHtmlText } from '@hooks/use-fetch-html-text';
 import { Link } from '@models/link';
@@ -17,7 +16,7 @@ import toast from 'react-hot-toast';
 interface LinkFormData {
   url: string;
   title: string;
-  tagsIds: number[];
+  tags: Omit<Tag, 'links'>[];
 }
 
 interface AddLinkFormProps {
@@ -27,8 +26,6 @@ interface AddLinkFormProps {
 
 const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
   const [profile] = useProfile();
-
-  const { data: tags } = useTags({ refetchOnMount: false });
 
   const {
     register,
@@ -42,10 +39,9 @@ const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
     defaultValues: {
       url: props.linkToUpdate.url,
       title: props.linkToUpdate.description,
-      tagsIds: props.linkToUpdate.tags?.map((tag) => tag.id),
+      tags: props.linkToUpdate.tags,
     },
   });
-  const selectedTagsIds = watch('tagsIds');
 
   const updateLink = useUpdateLink();
 
@@ -64,14 +60,6 @@ const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
           throw new Error('You must be login');
         }
 
-        const updatedTags: Tag[] = [];
-        selectedTagsIds.forEach((selectedTagId) => {
-          const foundTag = tags?.find((tag) => tag.id === selectedTagId);
-          if (foundTag) {
-            updatedTags.push(foundTag);
-          }
-        });
-
         await updateLink.mutateAsync({
           linkId: props.linkToUpdate.id,
           linkToUpdate: {
@@ -79,7 +67,7 @@ const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
             description: formData.title,
             updatedAt: new Date().toISOString(),
           },
-          tags: updatedTags,
+          tags: formData.tags,
         });
 
         // Do not setLoading(false) because addLink will unmount this component (Modal).
@@ -89,7 +77,7 @@ const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
         console.error(err);
       }
     },
-    [profile, tags, selectedTagsIds]
+    [profile]
   );
 
   return (
@@ -110,16 +98,14 @@ const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
         {...register('title')}
         errorText={errors.title?.message}
       />
-      {tags && (
-        <TagsListBox
-          tags={tags}
-          selectedTags={selectedTagsIds}
-          setSelectedTags={(tagsIds) => setValue('tagsIds', tagsIds, { shouldValidate: true })}
-          className="mb-8"
-          label="tags (min 1, max 4)"
-          errorText={(errors.tagsIds as unknown as FieldError)?.message}
-        />
-      )}
+      <TagsCombobox
+        selectedTags={watch('tags')}
+        setSelectedTags={(tags) => {
+          setValue('tags', tags, { shouldValidate: true });
+        }}
+        className="mb-8"
+        errorText={(errors.tags as unknown as FieldError)?.message}
+      />
       <div className="flex justify-end space-x-4">
         <Button text="Reset" theme="gray" onClick={() => reset()} />
         <Button theme="secondary" text="Update" type="submit" loading={updateLink.isLoading} />

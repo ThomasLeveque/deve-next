@@ -24,6 +24,7 @@ interface AddLinkFormProps {
 
 const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
   const [profile] = useProfile();
+  const addLink = useAddLink();
 
   const {
     register,
@@ -34,9 +35,6 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
   } = useForm<LinkFormData>({
     resolver: yupResolver(addLinkSchema),
   });
-
-  const selectedTags = watch('tags', []);
-  const addLink = useAddLink();
 
   const url = watch('url', '');
   const { htmlText: title, loading: htmlTextLoading } = useFetchHtmlText(url);
@@ -59,7 +57,7 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
             description: formData.title,
             userId: profile.id,
           },
-          tags: selectedTags,
+          tags: formData.tags,
         });
 
         // Do not setLoading(false) because addLink will unmount this component (Modal).
@@ -69,10 +67,8 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
         console.error(err);
       }
     },
-    [profile, selectedTags]
+    [profile]
   );
-
-  console.log(errors);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -93,8 +89,10 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
         errorText={errors.title?.message}
       />
       <TagsCombobox
-        selectedTags={selectedTags}
-        setSelectedTags={(tags) => setValue('tags', tags, { shouldValidate: true })}
+        selectedTags={watch('tags')}
+        setSelectedTags={(tags) => {
+          setValue('tags', tags, { shouldValidate: true });
+        }}
         className="mb-8"
         errorText={(errors.tags as unknown as FieldError)?.message}
       />

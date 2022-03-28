@@ -20,6 +20,7 @@ interface TagsComboboxProps {
   errorText?: string;
 }
 
+// WORKs BUT SELECTED INSIDE OPTION DO NOT
 const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelectedTags, className, errorText }) => {
   const [query, setQuery] = useState('');
   const addTag = useAddTag();
@@ -34,16 +35,20 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
     [tags, query]
   );
 
-  function handleChange(tagsToSelect: TagModel[]) {
-    if (tagsToSelect.length <= MAX_TAGS_LENGTH) {
-      setSelectedTags(tagsToSelect);
-    } else {
-      toast(`${MAX_TAGS_LENGTH} tags max`, {
-        className: 'Info',
-        icon: <InformationCircleIcon />,
-      });
-    }
-  }
+  const handleChange = useCallback(
+    (tagsToSelect: TagModel[]) => {
+      if (tagsToSelect.length <= MAX_TAGS_LENGTH) {
+        setSelectedTags(tagsToSelect);
+        setQuery('');
+      } else {
+        toast(`${MAX_TAGS_LENGTH} tags max`, {
+          className: 'Info',
+          icon: <InformationCircleIcon />,
+        });
+      }
+    },
+    [setSelectedTags]
+  );
 
   const handleAddTag = useCallback(async () => {
     try {
@@ -65,10 +70,8 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
     [selectedTags, setSelectedTags]
   );
 
-  console.log('QUERY', query);
-
   return (
-    <Combobox as="div" value={selectedTags} onChange={handleChange} className={className}>
+    <Combobox as="div" value={selectedTags} onChange={handleChange} className={className} name="tags">
       <Combobox.Label className="mb-[6px] ml-1 block font-poppins-bold text-[10px] uppercase text-black">
         TAGS (MIN 1, MAX 4)
       </Combobox.Label>
@@ -86,17 +89,19 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
         </TagListWrapper>
       )}
 
-      <div className="relative z-50 w-full">
-        <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
-          <SelectorIcon className="h-5 w-5 text-gray-600" aria-hidden="true" />
-        </Combobox.Button>
+      <div className="relative">
+        <div className="relative z-50 w-full">
+          <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
+            <SelectorIcon className="h-5 w-5 text-gray-600" aria-hidden="true" />
+          </Combobox.Button>
 
-        <Combobox.Input
-          placeholder="Search for a tag..."
-          className="with-ring h-[50px] w-full rounded-button bg-gray-100 pl-5 pr-10 text-sm placeholder-gray-400"
-          onChange={(event) => setQuery(event.target.value)}
-        />
-        {errorText && <p className="absolute top-full right-1 mt-1 text-[10px] text-danger-400">{errorText}</p>}
+          <Combobox.Input
+            placeholder="Search for a tag..."
+            className="with-ring h-[50px] w-full rounded-button bg-gray-100 pl-5 pr-10 text-sm placeholder-gray-400"
+            onChange={(event) => setQuery(event.target.value)}
+          />
+          {errorText && <p className="absolute top-full right-1 mt-1 text-[10px] text-danger-400">{errorText}</p>}
+        </div>
         <Transition
           enter="transition duration-100 ease-out"
           enterFrom="scale-95 opacity-0"
@@ -106,22 +111,25 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
           leaveTo="scale-95 opacity-0"
         >
           <Combobox.Options className="absolute mt-2 max-h-60 w-full overflow-auto rounded-button bg-gray-100 py-1 shadow-lg focus:outline-none">
-            {!isTagExist && query !== '' && (
-              <button
-                type="button"
-                onClick={handleAddTag}
-                className="grid w-full grid-cols-[20px,1fr] gap-3 px-4 py-2 text-sm hover:bg-primary"
-              >
-                {addTag.isLoading ? <SpinnerIcon /> : <PlusIcon />}
-                <p className="text-left">
-                  Create <span className="font-poppins-bold">{query}</span> tag
-                </p>
-              </button>
-            )}
+            <li>
+              {!isTagExist && query !== '' && (
+                <button
+                  type="button"
+                  onClick={handleAddTag}
+                  className="grid w-full grid-cols-[20px,1fr] gap-3 px-4 py-2 text-sm hover:bg-primary"
+                >
+                  {addTag.isLoading ? <SpinnerIcon /> : <PlusIcon />}
+                  <p className="text-left">
+                    Create <span className="font-poppins-bold">{query}</span> tag
+                  </p>
+                </button>
+              )}
+            </li>
             {filteredTags?.map((filteredTag) => (
               <TagsComboboxOption
                 key={filteredTag.id}
                 filteredTag={filteredTag}
+                selectedTags={selectedTags}
                 handleRemoveSelectedTags={handleRemoveSelectedTags}
               />
             ))}
