@@ -1,5 +1,7 @@
+import { InformationCircleIcon } from '@heroicons/react/outline';
 import { useRouter } from 'next/router';
 import { useMemo } from 'react';
+import { toast } from 'react-hot-toast';
 
 export const TAGS_QUERY_SEPARATOR = '|';
 export const orderLinksKeys: OrderLinksKey[] = ['newest', 'oldest', 'liked'];
@@ -18,10 +20,9 @@ interface useQueryStringReturn {
 export const useQueryString = (): useQueryStringReturn => {
   const router = useRouter();
 
-  const tagsQuery = useMemo(
-    () => (router.query.tags ? router.query.tags.toString().split(TAGS_QUERY_SEPARATOR) : []),
-    [router.query.tags]
-  );
+  const tagsQuery = useMemo(() => {
+    return router.query.tags ? router.query.tags.toString().split(TAGS_QUERY_SEPARATOR) : [];
+  }, [router.query.tags]);
 
   const orderbyQuery = useMemo(() => {
     return router.query.orderby && orderLinksKeys.includes(router.query.orderby as OrderLinksKey)
@@ -44,6 +45,10 @@ export const useQueryString = (): useQueryStringReturn => {
 
   const addTagQuery = (name: string) => {
     if (tagsQuery.length === 10 || tagsQuery.includes(name)) {
+      toast('No more than 10 filter tags', {
+        className: 'Info',
+        icon: <InformationCircleIcon />,
+      });
       return;
     }
 
