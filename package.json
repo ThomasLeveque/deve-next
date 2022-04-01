@@ -15,13 +15,14 @@
     "precommit": "lint-staged"
   },
   "dependencies": {
-    "@headlessui/react": "^0.0.0-insiders.79b3015",
+    "@headlessui/react": "^1.5.0",
     "@heroicons/react": "^1.0.5",
     "@hookform/resolvers": "^2.8.8",
     "@supabase/supabase-js": "^1.30.6",
     "@tailwindcss/typography": "^0.5.2",
     "classnames": "^2.3.1",
     "date-fns": "^2.28.0",
+    "downshift": "^6.1.7",
     "firebase": "^9.6.7",
     "jotai": "^1.6.0",
     "next": "^12.1.0",
