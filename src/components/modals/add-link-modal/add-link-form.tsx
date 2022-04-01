@@ -1,8 +1,7 @@
 import { useAddLink } from '@api/link/use-add-link';
-import { useTags } from '@api/tag/use-tags';
 import Button from '@components/elements/button';
 import TextInput from '@components/elements/text-input';
-import TagsListBox from '@components/tag/tags-list-box';
+import TagsCombobox from '@components/tag/tags-combobox';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useFetchHtmlText } from '@hooks/use-fetch-html-text';
 import { Tag } from '@models/tag';
@@ -16,7 +15,7 @@ import toast from 'react-hot-toast';
 interface LinkFormData {
   url: string;
   title: string;
-  tagsIds: number[];
+  tags: Omit<Tag, 'links'>[];
 }
 
 interface AddLinkFormProps {
@@ -25,8 +24,7 @@ interface AddLinkFormProps {
 
 const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
   const [profile] = useProfile();
-
-  const { data: tags } = useTags({ refetchOnMount: false });
+  const addLink = useAddLink();
 
   const {
     register,
@@ -37,8 +35,6 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
   } = useForm<LinkFormData>({
     resolver: yupResolver(addLinkSchema),
   });
-  const selectedTagsIds = watch('tagsIds', []);
-  const addLink = useAddLink();
 
   const url = watch('url', '');
   const { htmlText: title, loading: htmlTextLoading } = useFetchHtmlText(url);
@@ -46,7 +42,7 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
     if (title) {
       setValue('title', title, { shouldValidate: true });
     }
-  }, [title]);
+  }, [title, setValue]);
 
   const onSubmit = useCallback(
     async (formData: LinkFormData) => {
@@ -55,20 +51,13 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
           throw new Error('You must be login');
         }
 
-        const selectedTags: Tag[] = [];
-        selectedTagsIds.forEach((selectedTagId) => {
-          const foundTag = tags?.find((tag) => tag.id === selectedTagId);
-          if (foundTag) {
-            selectedTags.push(foundTag);
-          }
-        });
         await addLink.mutateAsync({
           linkToAdd: {
             url: formData.url,
             description: formData.title,
             userId: profile.id,
           },
-          tags: selectedTags,
+          tags: formData.tags,
         });
 
         // Do not setLoading(false) because addLink will unmount this component (Modal).
@@ -78,7 +67,7 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
         console.error(err);
       }
     },
-    [profile, tags, selectedTagsIds]
+    [profile]
   );
 
   return (
@@ -99,16 +88,14 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
         {...register('title')}
         errorText={errors.title?.message}
       />
-      {tags && (
-        <TagsListBox
-          tags={tags}
-          selectedTags={selectedTagsIds}
-          setSelectedTags={(tagsIds) => setValue('tagsIds', tagsIds, { shouldValidate: true })}
-          className="mb-8"
-          label="tags (min 1, max 4)"
-          errorText={(errors.tagsIds as unknown as FieldError)?.message}
-        />
-      )}
+      <TagsCombobox
+        selectedTags={watch('tags')}
+        setSelectedTags={(tags) => {
+          setValue('tags', tags, { shouldValidate: true });
+        }}
+        className="mb-8"
+        errorText={(errors.tags as unknown as FieldError)?.message}
+      />
       <div className="flex justify-end">
         <Button theme="secondary" text="Create" type="submit" loading={addLink.isLoading} />
       </div>
