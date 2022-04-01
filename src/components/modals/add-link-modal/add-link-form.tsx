@@ -3,12 +3,11 @@ import Button from '@components/elements/button';
 import TextInput from '@components/elements/text-input';
 import TagsCombobox from '@components/tag/tags-combobox';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useFetchHtmlText } from '@hooks/use-fetch-html-text';
 import { Tag } from '@models/tag';
 import { useProfile } from '@store/profile.store';
 import { addLinkSchema } from '@utils/form-schemas';
 import { formatError } from '@utils/format-string';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { FieldError, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
@@ -35,14 +34,6 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
   } = useForm<LinkFormData>({
     resolver: yupResolver(addLinkSchema),
   });
-
-  const url = watch('url', '');
-  const { htmlText: title, loading: htmlTextLoading } = useFetchHtmlText(url);
-  useEffect(() => {
-    if (title) {
-      setValue('title', title, { shouldValidate: true });
-    }
-  }, [title, setValue]);
 
   const onSubmit = useCallback(
     async (formData: LinkFormData) => {
@@ -84,7 +75,7 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
         wrapperClassName="mb-6"
         id="title"
         label="Title"
-        placeholder={htmlTextLoading ? 'Looking for title...' : 'A title for your link'}
+        placeholder="A title for your link"
         {...register('title')}
         errorText={errors.title?.message}
       />
