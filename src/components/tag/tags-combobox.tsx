@@ -42,8 +42,15 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
       },
     });
 
-  const filteredTags =
-    query === '' ? tags : tags?.filter((tag) => tag.name.toLowerCase().includes(query.toLowerCase()));
+  const getFilteredTags = useMemo(
+    () =>
+      tags?.filter(
+        (tag) =>
+          !selectedItems.find((selectedItem) => selectedItem.id === tag.id) &&
+          tag.name.toLowerCase().includes(query.toLowerCase())
+      ),
+    [tags, query, selectedItems]
+  );
 
   const {
     isOpen,
@@ -58,7 +65,7 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
     inputValue: query,
     defaultHighlightedIndex: 0,
     selectedItem: null,
-    items: filteredTags ?? [],
+    items: getFilteredTags ?? [],
     stateReducer: (state, actionAndChanges) => {
       const { changes, type } = actionAndChanges;
       switch (type) {
@@ -81,21 +88,8 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
           if (!selectedItem) {
             break;
           }
-          if (isSelected(selectedItem.id)) {
-            setQuery('');
-            removeSelectedItem(selectedItem);
-            break;
-          }
 
-          if (selectedItems.length >= MAX_TAGS_LENGTH) {
-            toast('No more than 4 tags', {
-              className: 'Info',
-              icon: <InformationCircleIcon />,
-            });
-            break;
-          }
-          setQuery('');
-          addSelectedItem(selectedItem);
+          handleAddSelectedItem(selectedItem);
           break;
         default:
           break;
@@ -103,9 +97,19 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
     },
   });
 
-  const isSelected = useCallback(
-    (itemId: number) => !!selectedItems.find((selectedItem) => selectedItem.id === itemId),
-    [selectedItems]
+  const handleAddSelectedItem = useCallback(
+    (tag: TagModel) => {
+      if (selectedItems.length >= MAX_TAGS_LENGTH) {
+        toast('No more than 4 tags', {
+          className: 'Info',
+          icon: <InformationCircleIcon />,
+        });
+        return;
+      }
+      setQuery('');
+      addSelectedItem(tag);
+    },
+    [selectedItems.length, addSelectedItem]
   );
 
   const handleAddTag = useCallback(async () => {
@@ -114,12 +118,11 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
       const newTag = await addTag.mutateAsync({
         name: tagName,
       });
-      addSelectedItem(newTag);
-      setQuery('');
+      handleAddSelectedItem(newTag);
     } catch (err) {
       toast.error(formatError(err as Error));
     }
-  }, [query, selectedTags]);
+  }, [query, addTag, handleAddSelectedItem]);
 
   return (
     <div className={className}>
@@ -180,18 +183,15 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
                     </button>
                   )}
                 </li>
-                {filteredTags?.map((filteredTag, index) => (
+                {getFilteredTags?.map((filteredTag, index) => (
                   <TagsComboboxOption
                     key={filteredTag.id}
                     {...getItemProps({
                       item: filteredTag,
                       index,
-                      isSelected: isSelected(filteredTag.id),
                     })}
                     filteredTag={filteredTag}
                     active={highlightedIndex === index}
-                    selected={isSelected(filteredTag.id)}
-                    removeSelectedItem={removeSelectedItem}
                   />
                 ))}
               </>

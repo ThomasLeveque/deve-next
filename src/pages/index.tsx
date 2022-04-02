@@ -21,7 +21,7 @@ const Home: Page = () => {
   const { tagsQuery, clearTagQuery, searchQuery, setSearchQuery } = useQueryString();
 
   const { data: links, fetchNextPage, hasNextPage, isFetchingNextPage } = useLinks();
-  console.log(links?.pages[0]?.data);
+
   return (
     <div
       className={classNames({
