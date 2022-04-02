@@ -1,5 +1,6 @@
 import { useLinks } from '@api/link/use-links';
 import Button from '@components/elements/button';
+import TextInput from '@components/elements/text-input';
 import SpinnerIcon from '@components/icons/spinner-icon';
 import LinkItem from '@components/link/link-item';
 import OrderbyLinksDropdown from '@components/link/orderby-links-dropdown';
@@ -9,64 +10,79 @@ import { useMediaQuery } from '@hooks/use-media-query';
 import { useQueryString } from '@hooks/use-query-string';
 import { useTagsSidebarOpen } from '@store/app-config.store';
 import classNames from 'classnames';
-import React from 'react';
+import React, { useRef } from 'react';
 import { Page } from './_app';
 
 const Home: Page = () => {
+  const searchRef = useRef<HTMLInputElement>(null);
+
   const [tagsSidebarOpen, setTagsSidebarOpen] = useTagsSidebarOpen();
-
   const isMobileScreen = useMediaQuery('mobile');
-
-  const { tagsQuery, clearTagQuery } = useQueryString();
+  const { tagsQuery, clearTagQuery, searchQuery, setSearchQuery } = useQueryString();
 
   const { data: links, fetchNextPage, hasNextPage, isFetchingNextPage } = useLinks();
-
+  console.log(links?.pages[0]?.data);
   return (
     <div
       className={classNames({
         'grid grid-cols-[1fr,250px] gap-9': tagsSidebarOpen && !isMobileScreen,
       })}
     >
-      {!links ? (
-        <SpinnerIcon className="m-auto mt-14 w-10" />
-      ) : (
-        <section className="my-8">
-          <div className="mb-5 flex justify-between space-x-4">
-            <OrderbyLinksDropdown />
-            <div className="flex flex-none space-x-4">
-              {tagsQuery.length > 0 && (
-                <Button
-                  theme="gray"
-                  className="flex-none"
-                  text={isMobileScreen ? 'Clear' : 'Clear tags'}
-                  onClick={clearTagQuery}
-                />
-              )}
+      <section className="my-8">
+        <TextInput
+          ref={searchRef}
+          placeholder="Search for a link..."
+          type="search"
+          id="search-link"
+          wrapperClassName="mb-5"
+          onChange={(event) => setSearchQuery(event.target.value)}
+          value={searchQuery}
+          clearValue={() => {
+            setSearchQuery('');
+            searchRef.current?.focus();
+          }}
+        />
+        <div className="mb-5 flex justify-between space-x-4">
+          <OrderbyLinksDropdown />
+          <div className="flex flex-none space-x-4">
+            {tagsQuery.length > 0 && (
               <Button
-                theme="secondary"
+                theme="gray"
                 className="flex-none"
-                onClick={() => setTagsSidebarOpen(!tagsSidebarOpen)}
-                icon={tagsSidebarOpen ? <ChevronDoubleRightIcon /> : <ChevronDoubleLeftIcon />}
+                text={isMobileScreen ? 'Clear' : 'Clear tags'}
+                onClick={clearTagQuery}
               />
-            </div>
+            )}
+            <Button
+              theme="secondary"
+              className="flex-none"
+              onClick={() => setTagsSidebarOpen(!tagsSidebarOpen)}
+              icon={tagsSidebarOpen ? <ChevronDoubleRightIcon /> : <ChevronDoubleLeftIcon />}
+            />
           </div>
-          <ul
-            className={classNames('grid grid-cols-1 gap-5 lg:grid-cols-2', {
-              'md:grid md:grid-cols-2 xl:grid-cols-3 ': !tagsSidebarOpen,
-            })}
-          >
-            {links?.pages?.map((page) => page?.data.map((link) => <LinkItem key={link.id} link={link} />))}
-          </ul>
-          <Button
-            theme="secondary"
-            text={hasNextPage ? 'Load more' : 'No more links'}
-            className="mx-auto mt-8"
-            disabled={!hasNextPage}
-            loading={isFetchingNextPage}
-            onClick={fetchNextPage}
-          />
-        </section>
-      )}
+        </div>
+        {!links ? (
+          <SpinnerIcon className="m-auto mt-14 w-10" />
+        ) : (
+          <>
+            <ul
+              className={classNames('grid grid-cols-1 gap-5 lg:grid-cols-2', {
+                'md:grid md:grid-cols-2 xl:grid-cols-3 ': !tagsSidebarOpen,
+              })}
+            >
+              {links?.pages?.map((page) => page?.data.map((link) => <LinkItem key={link.id} link={link} />))}
+            </ul>
+            <Button
+              theme="secondary"
+              text={hasNextPage ? 'Load more' : 'No more links'}
+              className="mx-auto mt-8"
+              disabled={!hasNextPage}
+              loading={isFetchingNextPage}
+              onClick={fetchNextPage}
+            />
+          </>
+        )}
+      </section>
       {tagsSidebarOpen ? (
         <aside // -mx-5 px-5 to make ring visible because of overflow
           className={classNames(

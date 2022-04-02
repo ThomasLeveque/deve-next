@@ -8,15 +8,15 @@ import { queryKeys } from './query-keys';
 export const useLinksQueryKey = (): QueryKey => {
   const router = useRouter();
   const profile = useProfile()[0];
-  const { orderbyQuery, tagsQuery } = useQueryString();
+  const { orderbyQuery, tagsQuery, searchQuery } = useQueryString();
 
   return useMemo(
     () =>
       router.pathname === '/'
-        ? queryKeys.links(orderbyQuery, tagsQuery)
+        ? queryKeys.links(orderbyQuery, tagsQuery, searchQuery)
         : profile
         ? queryKeys.userLinks(profile.id)
         : [],
-    [router.pathname, orderbyQuery, tagsQuery, profile]
+    [router.pathname, orderbyQuery, tagsQuery, searchQuery, profile]
   );
 };

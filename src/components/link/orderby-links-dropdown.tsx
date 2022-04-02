@@ -4,23 +4,23 @@ import { OrderLinksKey, useQueryString } from '@hooks/use-query-string';
 import React, { useMemo } from 'react';
 
 const OrderbyLinksDropdown: React.FC = React.memo(() => {
-  const { updateOrderbyQuery, orderbyQuery } = useQueryString();
+  const { setOrderbyQuery, orderbyQuery } = useQueryString();
 
   const orderLinksDropdownItems: Record<OrderLinksKey, MenuDropdownItemProps> = useMemo(
     () => ({
       newest: {
         text: 'Most recent',
-        onClick: () => updateOrderbyQuery('newest'),
+        onClick: () => setOrderbyQuery('newest'),
         icon: <SortDescendingIcon />,
       },
       oldest: {
         text: 'Oldest',
-        onClick: () => updateOrderbyQuery('oldest'),
+        onClick: () => setOrderbyQuery('oldest'),
         icon: <SortAscendingIcon />,
       },
       liked: {
         text: 'The hottest',
-        onClick: () => updateOrderbyQuery('liked'),
+        onClick: () => setOrderbyQuery('liked'),
         icon: <FireIcon />,
       },
     }),

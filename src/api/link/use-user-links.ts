@@ -11,13 +11,13 @@ export const USER_LINKS_PER_PAGE = Number(process.env.NEXT_PUBLIC_LINKS_PER_PAGE
 
 const getUserLinks = async (cursor = 0, userId: string): Promise<PaginatedData<Link> | undefined> => {
   try {
-    const nextCursor = cursor + USER_LINKS_PER_PAGE - 1;
+    const nextCursor = cursor + USER_LINKS_PER_PAGE;
     const response = await supabase
       .from<Link>(dbKeys.links)
       .select(dbKeys.selectLinks)
       .eq('userId', userId)
       .order('createdAt', { ascending: false })
-      .range(cursor, nextCursor);
+      .range(cursor, nextCursor - 1);
 
     const userLinks = response.data;
 
@@ -27,7 +27,7 @@ const getUserLinks = async (cursor = 0, userId: string): Promise<PaginatedData<L
 
     return {
       data: userLinks,
-      cursor: nextCursor,
+      cursor: userLinks.length < USER_LINKS_PER_PAGE ? undefined : nextCursor,
     };
   } catch (err) {
     toast.error(formatError(err as Error));

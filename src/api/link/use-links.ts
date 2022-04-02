@@ -1,4 +1,5 @@
 import { OrderLinksKey, useQueryString } from '@hooks/use-query-string';
+import useDebounce from '@hooks/useDebounce';
 import { Link } from '@models/link';
 import { formatError } from '@utils/format-string';
 import { supabase } from '@utils/init-supabase';
@@ -14,10 +15,11 @@ export const LINKS_PER_PAGE = Number(process.env.NEXT_PUBLIC_LINKS_PER_PAGE) ?? 
 const getLinks = async (
   cursor = 0,
   orderby: OrderLinksKey,
-  tags: string[]
+  tags: string[],
+  searchQuery = ''
 ): Promise<PaginatedData<Link> | undefined> => {
   try {
-    const nextCursor = cursor + LINKS_PER_PAGE - 1;
+    const nextCursor = cursor + LINKS_PER_PAGE;
     let query = supabase.from(dbKeys.links).select(dbKeys.selectLinks);
 
     if (tags.length > 0) {
@@ -36,7 +38,11 @@ const getLinks = async (
       query = query.order('votesCount', { ascending: false }).order('createdAt', { ascending: false });
     }
 
-    const response = await query.range(cursor, nextCursor);
+    if (searchQuery) {
+      query = query.textSearch('description', searchQuery);
+    }
+
+    const response = await query.range(cursor, nextCursor - 1);
     const links = response.data;
 
     if (!links) {
@@ -45,7 +51,7 @@ const getLinks = async (
 
     return {
       data: links,
-      cursor: nextCursor,
+      cursor: links.length < LINKS_PER_PAGE ? undefined : nextCursor,
     };
   } catch (err) {
     toast.error(formatError(err as Error));
@@ -54,11 +60,13 @@ const getLinks = async (
 };
 
 export const useLinks = (): UseInfiniteQueryResult<PaginatedData<Link> | undefined> => {
-  const { tagsQuery, orderbyQuery } = useQueryString();
+  const { tagsQuery, orderbyQuery, searchQuery } = useQueryString();
   const router = useRouter();
+  const debouncedSearchQuery = useDebounce<string>(searchQuery, 500);
+
   return useInfiniteQuery<PaginatedData<Link> | undefined>(
-    queryKeys.links(orderbyQuery, tagsQuery),
-    (context) => getLinks(context.pageParam, orderbyQuery, tagsQuery),
+    queryKeys.links(orderbyQuery, tagsQuery, debouncedSearchQuery),
+    (context) => getLinks(context.pageParam, orderbyQuery, tagsQuery, debouncedSearchQuery),
     {
       enabled: router.isReady,
       getNextPageParam: (lastPage) => lastPage?.cursor,

@@ -11,7 +11,9 @@ export type OrderLinksKey = 'newest' | 'oldest' | 'liked';
 interface useQueryStringReturn {
   tagsQuery: string[];
   orderbyQuery: OrderLinksKey;
-  updateOrderbyQuery: (orderKey: OrderLinksKey) => void;
+  searchQuery: string;
+  setOrderbyQuery: (orderKey: OrderLinksKey) => void;
+  setSearchQuery: (search: string) => void;
   addTagQuery: (name: string) => void;
   removeTagQuery: (name: string) => void;
   clearTagQuery: () => void;
@@ -19,6 +21,10 @@ interface useQueryStringReturn {
 
 export const useQueryString = (): useQueryStringReturn => {
   const router = useRouter();
+
+  const searchQuery = useMemo(() => {
+    return typeof router.query.search !== 'string' ? '' : router.query.search ?? '';
+  }, [router.query.search]);
 
   const tagsQuery = useMemo(() => {
     return router.query.tags ? router.query.tags.toString().split(TAGS_QUERY_SEPARATOR) : [];
@@ -30,7 +36,28 @@ export const useQueryString = (): useQueryStringReturn => {
       : 'newest';
   }, [router.query.orderby]);
 
-  const updateOrderbyQuery = (orderKey: OrderLinksKey) => {
+  const setSearchQuery = (search: string) => {
+    let query;
+    if (search === '') {
+      delete router.query.search;
+      query = router.query;
+    } else {
+      query = { ...router.query, search };
+    }
+
+    router.push(
+      {
+        pathname: router.pathname,
+        query,
+      },
+      undefined,
+      {
+        shallow: true,
+      }
+    );
+  };
+
+  const setOrderbyQuery = (orderKey: OrderLinksKey) => {
     router.push(
       {
         pathname: router.pathname,
@@ -44,8 +71,16 @@ export const useQueryString = (): useQueryStringReturn => {
   };
 
   const addTagQuery = (name: string) => {
-    if (tagsQuery.length === 10 || tagsQuery.includes(name)) {
+    if (tagsQuery.length === 10) {
       toast('No more than 10 filter tags', {
+        className: 'Info',
+        icon: <InformationCircleIcon />,
+      });
+      return;
+    }
+
+    if (tagsQuery.includes(name)) {
+      toast('this is already used', {
         className: 'Info',
         icon: <InformationCircleIcon />,
       });
@@ -104,7 +139,9 @@ export const useQueryString = (): useQueryStringReturn => {
   return {
     tagsQuery,
     orderbyQuery,
-    updateOrderbyQuery,
+    searchQuery,
+    setOrderbyQuery,
+    setSearchQuery,
     addTagQuery,
     removeTagQuery,
     clearTagQuery,

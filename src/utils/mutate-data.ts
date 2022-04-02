@@ -15,8 +15,10 @@ export const addItemInsidePaginatedData = <DataType>(
     return initialPaginatedData;
   }
 
-  const currentPageData = items.pages[pageIndex].data;
-  items.pages[pageIndex].data = [item, ...currentPageData];
+  const currentPageData = items.pages[pageIndex] ? items.pages[pageIndex].data : [];
+  if (items.pages[pageIndex]) {
+    items.pages[pageIndex].data = [item, ...currentPageData];
+  }
   return items;
 };
 
