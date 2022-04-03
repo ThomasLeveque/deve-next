@@ -3,7 +3,6 @@ import { useRemoveLinkVote } from '@api/vote/use-remove-vote';
 import TagListWrapper from '@components/tag/tag-list-wrapper';
 import { AnnotationIcon, FireIcon, PencilAltIcon, TrashIcon } from '@heroicons/react/outline';
 import { FireIcon as FireIconSolid } from '@heroicons/react/solid';
-import { useQueryString } from '@hooks/use-query-string';
 import { Link } from '@models/link';
 import {
   useAuthModalOpen,
@@ -16,7 +15,7 @@ import { getDomain } from '@utils/format-string';
 import classNames from 'classnames';
 import { format } from 'date-fns';
 import React, { useMemo } from 'react';
-import Tag from '../elements/tag';
+import TagItem from '../tag/tag-item';
 
 interface LinkItemProps {
   link: Link;
@@ -26,7 +25,6 @@ interface LinkItemProps {
 
 const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, isProfilLink = false }) => {
   const [profile] = useProfile();
-  const { addTagQuery } = useQueryString();
 
   const setLinkToCommentModal = useLinkToCommentModal()[1];
   const setLinkToUpdateModal = useLinkToUpdateModal()[1];
@@ -104,14 +102,13 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, isProfilLink = fal
       </a>
       <TagListWrapper className="mb-5">
         {link.tags?.map((tag) => (
-          <li key={tag.id}>
-            <Tag
-              text={tag.name}
-              isColored
-              disabled={isProfilLink}
-              onClick={isProfilLink ? undefined : () => addTagQuery(tag.name)}
-            />
-          </li>
+          <TagItem
+            key={tag.id}
+            text={tag.name}
+            isColored
+            disabled={isProfilLink}
+            onClick={isProfilLink ? undefined : () => console.log('GO TO TAG PAGE')}
+          />
         ))}
       </TagListWrapper>
       <div className="mt-auto flex space-x-5">
