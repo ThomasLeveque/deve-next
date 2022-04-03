@@ -4,6 +4,7 @@ import TagListWrapper from '@components/tag/tag-list-wrapper';
 import { AnnotationIcon, FireIcon, PencilAltIcon, TrashIcon } from '@heroicons/react/outline';
 import { FireIcon as FireIconSolid } from '@heroicons/react/solid';
 import { Link } from '@models/link';
+import { Tag } from '@models/tag';
 import {
   useAuthModalOpen,
   useLinkToCommentModal,
@@ -14,7 +15,9 @@ import { useProfile } from '@store/profile.store';
 import { getDomain } from '@utils/format-string';
 import classNames from 'classnames';
 import { format } from 'date-fns';
+import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';
+import toast from 'react-hot-toast';
 import TagItem from '../tag/tag-item';
 
 interface LinkItemProps {
@@ -24,6 +27,7 @@ interface LinkItemProps {
 }
 
 const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, isProfilLink = false }) => {
+  const router = useRouter();
   const [profile] = useProfile();
 
   const setLinkToCommentModal = useLinkToCommentModal()[1];
@@ -64,6 +68,14 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, isProfilLink = fal
 
   const removeVote = useRemoveLinkVote(link);
 
+  function goToTagPage(tag: Tag) {
+    if (tag.slug) {
+      router.push(`/tags/${tag.slug}`);
+    } else {
+      toast.error('Tag slug not defined');
+    }
+  }
+
   return (
     <li className="group flex flex-col rounded-link-card bg-gray-100 p-[30px]">
       <div className="mb-5 flex min-h-[20px] items-start justify-between space-x-3">
@@ -102,13 +114,7 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, isProfilLink = fal
       </a>
       <TagListWrapper className="mb-5">
         {link.tags?.map((tag) => (
-          <TagItem
-            key={tag.id}
-            text={tag.name}
-            isColored
-            disabled={isProfilLink}
-            onClick={isProfilLink ? undefined : () => console.log('GO TO TAG PAGE')}
-          />
+          <TagItem key={tag.id} text={tag.name} isColored onClick={() => goToTagPage(tag)} />
         ))}
       </TagListWrapper>
       <div className="mt-auto flex space-x-5">

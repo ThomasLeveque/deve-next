@@ -1,7 +1,6 @@
 import { useAuth } from '@api/auth/useAuth';
 import Toast from '@components/elements/toast';
 import Layout from '@components/layout';
-import { useProfile } from '@store/profile.store';
 import { runMigrations } from '@utils/migrations';
 import { NextPage } from 'next';
 import { AppProps } from 'next/app';
@@ -29,13 +28,9 @@ export type Page<P = unknown> = NextPage<P> & {
 const MyApp = ({ Component, pageProps }: AppProps & { Component: Page }): JSX.Element => {
   useAuth();
 
-  // TODO: to remove
-  const profile = useProfile()[0];
   useEffect(() => {
-    if (profile) {
-      runMigrations(profile.id);
-    }
-  }, [profile]);
+    runMigrations();
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

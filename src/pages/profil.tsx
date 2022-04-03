@@ -49,7 +49,7 @@ const Account: Page = () => {
               <SpinnerIcon className="m-auto my-8 w-10 sm:mt-14 " />
             ) : (
               <section className="mb-8 sm:mt-8">
-                <h1 className="mb-8 text-center font-poppins-bold text-4xl">All your links</h1>
+                <h1 className="mb-8 text-center font-poppins-bold text-4xl sm:text-left">All your links</h1>
                 <ul className="grid grid-cols-1 gap-5 lg:grid-cols-2">
                   {userLinks?.pages?.map((page) =>
                     page?.data.map((link) => <LinkItem isProfilLink key={link.id} link={link} />)

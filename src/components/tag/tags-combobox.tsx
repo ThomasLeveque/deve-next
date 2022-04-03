@@ -5,7 +5,7 @@ import TagListWrapper from '@components/tag/tag-list-wrapper';
 import { Transition } from '@headlessui/react';
 import { InformationCircleIcon, PlusIcon, SelectorIcon } from '@heroicons/react/outline';
 import { Tag } from '@models/tag';
-import { formatError } from '@utils/format-string';
+import { formatError, stringToSlug } from '@utils/format-string';
 import { useCombobox, useMultipleSelection } from 'downshift';
 import React, { useCallback, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -117,6 +117,7 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
       const tagName = query.trim();
       const newTag = await addTag.mutateAsync({
         name: tagName,
+        slug: stringToSlug(tagName),
       });
       handleAddSelectedItem(newTag);
     } catch (err) {
