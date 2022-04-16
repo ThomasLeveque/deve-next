@@ -39,22 +39,15 @@ const Header: React.FC = React.memo(() => {
   return (
     <header className="sticky top-0 z-30 bg-white">
       <div className="flex h-header items-center justify-between px-5 xl:container xl:mx-auto">
-        <Link href="/">
-          <a className="with-ring group font-poppins-bold text-3xl hover:text-secondary">
-            <span className="lg:group-hover:hidden">DN</span>
-            <span className="hidden lg:group-hover:block">Deve-Next</span>
-          </a>
-        </Link>
+        <div className="flex items-center space-x-5">
+          <Link href="/">
+            <a className="with-ring font-poppins-bold text-3xl hover:text-secondary">DN</a>
+          </Link>
+          <Link href="/tags">
+            <a className="with-ring px-1 font-poppins-bold hover:text-secondary hover:underline">Tags</a>
+          </Link>
+        </div>
         <div className="grid auto-cols-max grid-flow-col items-center gap-5">
-          {/* <a
-            href="https://chrome.google.com/webstore/detail/deve-next/oihbbilgakjdkeplfkgibndcnhpaphed"
-            rel="noreferrer"
-            className="hidden items-center text-sm hover:underline focus:underline lg:flex"
-            target="_blank"
-          >
-            Get the chrome extension <ExternalLinkIcon className="ml-1 w-4" />
-          </a> */}
-
           <Button
             theme="secondary"
             text={isSmallScreen ? 'Add link' : undefined}

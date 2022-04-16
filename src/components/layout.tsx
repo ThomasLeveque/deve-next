@@ -1,7 +1,5 @@
 import { usePrefetchTags } from '@api/tag/use-tags';
 import Header from '@components/header';
-import { useMediaQuery } from '@hooks/use-media-query';
-import { useTagsSidebarOpen } from '@store/app-config.store';
 import { useAuthModalOpen } from '@store/modals.store';
 import { useProfile } from '@store/profile.store';
 import classNames from 'classnames';
@@ -22,8 +20,6 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ className, children, ...props }) => {
   const [profile] = useProfile();
-  const isMobileScreen = useMediaQuery('mobile');
-  const setTagsSidebarOpen = useTagsSidebarOpen()[1];
 
   usePrefetchTags();
 
@@ -34,10 +30,6 @@ const Layout: React.FC<LayoutProps> = ({ className, children, ...props }) => {
       setAuthModalOpen(false);
     }
   }, [profile, authModalOpen, setAuthModalOpen]);
-
-  useEffect(() => {
-    setTagsSidebarOpen(!isMobileScreen);
-  }, [isMobileScreen, setTagsSidebarOpen]);
 
   const metaTitle = props.title ?? 'Deve-next';
   const metaDescription = props.description ?? 'The place to pratice technical watch';

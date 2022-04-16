@@ -6,7 +6,7 @@ import { useProfile } from '@store/profile.store';
 import classNames from 'classnames';
 import React, { useCallback } from 'react';
 
-interface TagsComboboxOptionProps extends React.ReactElement<HTMLLIElement> {
+interface TagsComboboxOptionProps extends React.HTMLAttributes<HTMLLIElement> {
   filteredTag: Tag;
   active: boolean;
 }

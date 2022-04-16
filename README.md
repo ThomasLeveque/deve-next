@@ -24,7 +24,6 @@ Now you can start doing technical watch and add some links
 - [typescript](https://www.typescriptlang.org) - Typed JavaScript at Any Scale.
 - [tailwindcss](https://tailwindcss.com/) - A utility-first CSS framework for rapidly building custom designs.
 - [headlessui](https://headlessui.dev/) - Completely unstyled, fully accessible UI components, designed to integrate beautifully with Tailwind CSS.
-- [firebase](https://firebase.google.com/) - Firebase helps you build and run successful apps.
 - [react-query](https://react-query.tanstack.com/) - Performant and powerful data synchronization for React.
 
 ## Online
