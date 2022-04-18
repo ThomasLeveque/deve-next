@@ -9,14 +9,18 @@ export const useLinksQueryKey = (): QueryKey => {
   const router = useRouter();
   const profile = useProfile()[0];
   const { orderbyQuery, searchQuery } = useQueryString();
+  const tagSlug = typeof router.query.tagSlug === 'string' ? router.query.tagSlug : '';
 
-  return useMemo(
-    () =>
-      router.pathname === '/'
-        ? queryKeys.links(orderbyQuery, searchQuery)
-        : profile
-        ? queryKeys.userLinks(profile.id)
-        : [],
-    [router.pathname, orderbyQuery, searchQuery, profile]
-  );
+  return useMemo(() => {
+    switch (router.pathname) {
+      case '/':
+        return queryKeys.links(orderbyQuery, searchQuery);
+      case '/tags/[tagSlug]':
+        return queryKeys.tagLinks(tagSlug);
+      case '/profil':
+        return profile ? queryKeys.userLinks(profile.id) : [];
+      default:
+        return [];
+    }
+  }, [router.pathname, orderbyQuery, searchQuery, profile, tagSlug]);
 };

@@ -6,12 +6,11 @@ import { updateItemInsidePaginatedData } from '@utils/mutate-data';
 import { PaginatedData } from '@utils/shared-types';
 import toast from 'react-hot-toast';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
-import { queryKeys as tagsQuerykeys } from '../tag/query-keys';
 import { LinksTags } from './../../models/link';
 import { dbKeys } from './db-keys';
 import { useLinksQueryKey } from './use-links-query-key';
 
-type UpdateLinkReturn = { updatedLink: Link; shouldRevalidateTags: boolean };
+type UpdateLinkReturn = { updatedLink: Link };
 
 export const updateLink = async (
   linkId: number,
@@ -63,7 +62,7 @@ export const updateLink = async (
 
   updatedLink.tags = tags;
 
-  return { updatedLink, shouldRevalidateTags: shouldAddlinksTags || Boolean(shouldRemovelinksTags) };
+  return { updatedLink };
 };
 
 export const useUpdateLink = (): UseMutationResult<
@@ -77,14 +76,10 @@ export const useUpdateLink = (): UseMutationResult<
   const queryKey = useLinksQueryKey();
 
   return useMutation(({ linkId, linkToUpdate, tags }) => updateLink(linkId, linkToUpdate, tags), {
-    onSuccess: ({ updatedLink, shouldRevalidateTags }) => {
+    onSuccess: ({ updatedLink }) => {
       queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(queryKey, (oldLinks) =>
         updateItemInsidePaginatedData(updatedLink, oldLinks)
       );
-
-      if (shouldRevalidateTags) {
-        queryClient.invalidateQueries(tagsQuerykeys);
-      }
     },
   });
 };

@@ -1,5 +1,5 @@
 import { QueryKey } from 'react-query';
 
-export const queryKeys: Record<string, QueryKey> = {
-  tags: ['tags'],
+export const queryKeys = {
+  tags: ['tags'] as QueryKey,
 };

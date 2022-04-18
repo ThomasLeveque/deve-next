@@ -6,7 +6,6 @@ import { removeItemInsidePaginatedData } from '@utils/mutate-data';
 import { PaginatedData } from '@utils/shared-types';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
 import { dbKeys as commentDbKeys } from '../comment/db-keys';
-import { queryKeys as tagsQuerykeys } from '../tag/query-keys';
 import { LinksTags } from './../../models/link';
 import { dbKeys } from './db-keys';
 import { useLinksQueryKey } from './use-links-query-key';
@@ -41,8 +40,6 @@ export const useRemoveLink = (): UseMutationResult<number, Error, number, Link> 
       queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(queryKey, (oldLinks) =>
         removeItemInsidePaginatedData(removedLinkId, oldLinks)
       );
-
-      queryClient.invalidateQueries(tagsQuerykeys);
     },
   });
 };
