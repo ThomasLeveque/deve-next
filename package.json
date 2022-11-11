@@ -12,7 +12,8 @@
     "prettier-check": "npx prettier --check .",
     "up": "yarn-upgrade-all",
     "prepare": "husky install",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "update-types": "npx supabase gen types typescript --linked > src/types/supabase.ts"
   },
   "dependencies": {
     "@headlessui/react": "^1.5.0",

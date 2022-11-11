@@ -21,7 +21,8 @@
       "@data-types/*": ["src/data-types/*"],
       "@hooks/*": ["src/hooks/*"],
       "@store/*": ["src/store/*"],
-      "@api/*": ["src/api/*"]
+      "@api/*": ["src/api/*"],
+      "@types/*": ["src/types/*"]
     },
     "incremental": true
   },
