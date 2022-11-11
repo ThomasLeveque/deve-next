@@ -4,7 +4,6 @@ import { supabase } from '@utils/init-supabase';
 import { addItemInsidePaginatedData } from '@utils/mutate-data';
 import { PaginatedData } from '@utils/shared-types';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
-import { queryKeys as tagsQueryKeys } from '../tag/query-keys';
 import { LinksTags } from './../../models/link';
 import { dbKeys } from './db-keys';
 import { useLinksQueryKey } from './use-links-query-key';
@@ -45,8 +44,6 @@ export const useAddLink = (): UseMutationResult<Link, Error, { linkToAdd: Partia
       queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(queryKey, (oldLinks) =>
         addItemInsidePaginatedData(newLink, oldLinks)
       );
-
-      queryClient.invalidateQueries(tagsQueryKeys);
     },
   });
 };

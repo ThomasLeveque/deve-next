@@ -5,7 +5,7 @@ export const dbKeys = {
   selectLinks: `
     *,
     user:profiles!links_userId_fkey(*),
-    tags!inner(*),
+    tags(*),
     comments(*),
     votes(*)
   `,

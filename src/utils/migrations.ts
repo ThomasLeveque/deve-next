@@ -1,86 +1,24 @@
-import { Comment } from '@models/comment';
-import { Link } from '@models/link';
 import { Tag } from '@models/tag';
-import { Vote } from '@models/vote';
-import { collection, DocumentSnapshot, getDocs, orderBy, query, QueryDocumentSnapshot } from 'firebase/firestore/lite';
-import { db } from './init-firebase';
+import { stringToSlug } from './format-string';
 import { supabase } from './init-supabase';
 
-// FIREBASE UTILS //
-
-interface PostedByUser {
-  id: string;
-  displayName: string;
-}
-
-type Document<Data> = Data & {
-  id?: string;
-  exists?: boolean;
-};
-
-interface Category {
-  name: string;
-  count: number;
-}
-
-export interface FirebaseVote {
-  voteBy: PostedByUser;
-}
-
-export interface FirebaseLink {
-  url: string;
-  description: string;
-  categories: string[];
-  postedBy: PostedByUser;
-  voteCount: number;
-  commentCount: number;
-  votes: FirebaseVote[];
-  createdAt: number;
-  updatedAt: number;
-}
-
-export interface FirebaseComment {
-  postedBy: PostedByUser;
-  createdAt: number;
-  updatedAt: number;
-  text: string;
-}
-
-export const dataToDocument = <Data>(doc: QueryDocumentSnapshot | DocumentSnapshot): Document<Data> => ({
-  id: doc.id,
-  exists: doc.exists(),
-  ...(doc.data() as Data),
-});
-
-export const getCategories = async () => {
-  const categoriesRef = collection(db, 'categories');
-  const q = query(categoriesRef, orderBy('count', 'desc'));
-  const snapshot = await getDocs(q);
-  return snapshot.docs.map((doc) => dataToDocument<Category>(doc));
-};
-
-export const getFirebaseLinkComments = async (linkId: string) => {
-  const commentsRef = collection(db, `links/${linkId}/comments`);
-  const q = query(commentsRef, orderBy('createdAt', 'desc'));
-  const snapshot = await getDocs(q);
-  return snapshot.docs.map((doc) => dataToDocument<FirebaseComment>(doc));
-};
-
-export const getFirebaseLinks = async () => {
-  const LinksRef = collection(db, 'links');
-  const q = query(LinksRef, orderBy('createdAt', 'desc'));
-  const snapshot = await getDocs(q);
-  return snapshot.docs.map((doc) => dataToDocument<FirebaseLink>(doc));
-};
-
-// SUPABASE UTILS //
-
-const getSupabaseTags = async () => {
-  const resp = await supabase.from<Tag>('tags').select('*');
-  return resp.data;
-};
-
-// UTILS END //
+// const migrationExemple = async () => {
+//   try {
+//     const MIGRATIONS_ID = '';
+//     const migrationAlreadyExists = await getMigration(MIGRATIONS_ID);
+//
+//     if (!migrationAlreadyExists) {
+//       return;
+//     }
+//
+//     console.log('RUN XXXX MIGRATIONS');
+//
+//     // MIGRATION CODE HERE
+//     return createMigration(MIGRATIONS_ID);
+//   } catch (err) {
+//     console.error('xxxxMigrations ERROR:', err);
+//   }
+// };
 
 type Migration = {
   id: string;
@@ -88,6 +26,11 @@ type Migration = {
 
 const getMigration = async (id: string) => {
   const resp = await supabase.from<Migration>('migrations').select('*').eq('id', id).single();
+
+  if (resp.error) {
+    throw new Error(resp.error.message);
+  }
+
   return resp.data;
 };
 
@@ -96,119 +39,35 @@ const createMigration = async (id: string) => {
   return supabase.from<Migration>('migrations').insert({ id: id });
 };
 
-const tagsMigrations = async () => {
+const tagSlugMigration = async () => {
   try {
-    const MIGRATIONS_ID = 'tags-migration';
+    const MIGRATIONS_ID = 'tag-slug-migration';
     const migrationAlreadyExists = await getMigration(MIGRATIONS_ID);
 
     if (migrationAlreadyExists) {
       return;
     }
+    console.log('RUN TAG SLUG MIGRATIONS');
 
-    console.log('RUN TAGS MIGRATIONS');
+    const response = await supabase.from<Tag>('tags').select('*');
+    const tags = response.data;
 
-    const categories = await getCategories();
+    if (tags) {
+      for (const tag of tags) {
+        const slug = stringToSlug(tag.name);
 
-    if (categories && categories.length > 0) {
-      await supabase.from<Tag>('tags').insert(categories.map((category) => ({ name: category.name })));
+        await supabase.from('tags').update({ slug }).eq('id', tag.id);
+      }
 
       return createMigration(MIGRATIONS_ID);
     }
   } catch (err) {
-    console.error('tagsMigrations ERROR:', err);
+    console.error('tagSlugMigrations ERROR:', err);
   }
 };
 
-const linksMigrations = async (userId: string) => {
-  try {
-    const MIGRATIONS_ID = 'links-migration';
-    const migrationAlreadyExists = await getMigration(MIGRATIONS_ID);
-
-    if (migrationAlreadyExists) {
-      return;
-    }
-
-    console.log('RUN LINKS MIGRATIONS');
-
-    const tags = await getSupabaseTags();
-    const firebaseLinks = await getFirebaseLinks();
-
-    if (firebaseLinks && tags) {
-      const linksPromise = firebaseLinks.map(async (firebaseLink) => {
-        const linkSupabaseTags = firebaseLink.categories
-          .filter((category) => {
-            const foundCategory = tags.find((tag) => tag.name.toLowerCase() === category.toLowerCase());
-
-            if (foundCategory) {
-              return true;
-            } else {
-              console.log(`Category ${category} not found`);
-            }
-          })
-          .map((category) => {
-            const usedSupabaseTag = tags.find((tag) => tag.name.toLowerCase() === category.toLowerCase());
-            return usedSupabaseTag as Tag;
-          });
-
-        const resp = await supabase
-          .from<Link>('links')
-          .insert({
-            url: firebaseLink.url,
-            description: firebaseLink.description,
-            userId: userId,
-            votesCount: firebaseLink.voteCount > 0 ? 1 : 0,
-            commentsCount: firebaseLink.commentCount,
-            createdAt: new Date(firebaseLink.createdAt).toISOString(),
-            updatedAt: new Date(firebaseLink.updatedAt).toISOString(),
-          })
-          .single();
-
-        if (resp.data) {
-          const newLink = resp.data as Link;
-
-          // links tags many to many relation
-          await supabase
-            .from<{ linkId: number; tagId: number }>('links_tags')
-            .insert(linkSupabaseTags.map((supabaseTag) => ({ linkId: newLink.id, tagId: supabaseTag.id })));
-
-          // link comments one to many relation
-          if (firebaseLink.id) {
-            const firebaseLinkComments = await getFirebaseLinkComments(firebaseLink.id);
-
-            if (firebaseLinkComments) {
-              const supabaseLinkComments: Partial<Comment>[] = firebaseLinkComments.map((firebaseLinkComment) => ({
-                userId: userId,
-                linkId: newLink.id,
-                text: firebaseLinkComment.text,
-                createdAt: new Date(firebaseLinkComment.createdAt).toISOString(),
-                updatedAt: new Date(firebaseLinkComment.updatedAt).toISOString(),
-              }));
-
-              await supabase.from<Comment>('comments').insert(supabaseLinkComments);
-            }
-          }
-
-          // link votes one to many relation
-          if (firebaseLink.voteCount > 0) {
-            await supabase.from<Vote>('votes').insert({
-              linkId: newLink.id,
-              userId: userId,
-            });
-          }
-        }
-      });
-
-      await Promise.all(linksPromise);
-      await createMigration(MIGRATIONS_ID);
-    }
-  } catch (err) {
-    console.error('linksMigrations ERROR:', err);
-  }
-};
-
-export const runMigrations = async (userId: string): Promise<void> => {
+export const runMigrations = async (): Promise<void> => {
   if (process.env.NODE_ENV === 'development') {
-    await tagsMigrations();
-    await linksMigrations(userId);
+    await tagSlugMigration();
   }
 };

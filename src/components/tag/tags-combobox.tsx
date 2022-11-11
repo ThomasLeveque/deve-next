@@ -4,19 +4,19 @@ import SpinnerIcon from '@components/icons/spinner-icon';
 import TagListWrapper from '@components/tag/tag-list-wrapper';
 import { Transition } from '@headlessui/react';
 import { InformationCircleIcon, PlusIcon, SelectorIcon } from '@heroicons/react/outline';
-import { Tag as TagModel } from '@models/tag';
-import { formatError } from '@utils/format-string';
+import { Tag } from '@models/tag';
+import { formatError, stringToSlug } from '@utils/format-string';
 import { useCombobox, useMultipleSelection } from 'downshift';
 import React, { useCallback, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
-import Tag from '../elements/tag';
+import TagItem from './tag-item';
 import TagsComboboxOption from './tags-combobox-option';
 
 const MAX_TAGS_LENGTH = 4;
 
 interface TagsComboboxProps {
-  selectedTags: TagModel[];
-  setSelectedTags: (tags: TagModel[]) => void;
+  selectedTags: Tag[];
+  setSelectedTags: (tags: Tag[]) => void;
   className?: string;
   errorText?: string;
 }
@@ -98,7 +98,7 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
   });
 
   const handleAddSelectedItem = useCallback(
-    (tag: TagModel) => {
+    (tag: Tag) => {
       if (selectedItems.length >= MAX_TAGS_LENGTH) {
         toast('No more than 4 tags', {
           className: 'Info',
@@ -117,6 +117,7 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
       const tagName = query.trim();
       const newTag = await addTag.mutateAsync({
         name: tagName,
+        slug: stringToSlug(tagName),
       });
       handleAddSelectedItem(newTag);
     } catch (err) {
@@ -132,8 +133,14 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
       {selectedItems.length > 0 && (
         <TagListWrapper className="mb-4">
           {selectedItems.map((selectedItem, index) => (
-            <li key={selectedItem.id} {...getSelectedItemProps({ selectedItem, index })}>
-              <Tag text={selectedItem.name} isColored isClosable onClose={() => removeSelectedItem(selectedItem)} />
+            <li key={selectedItem.id}>
+              <TagItem
+                {...getSelectedItemProps({ selectedItem, index })}
+                text={selectedItem.name}
+                isColored
+                isClosable
+                onClose={() => removeSelectedItem(selectedItem)}
+              />
             </li>
           ))}
         </TagListWrapper>

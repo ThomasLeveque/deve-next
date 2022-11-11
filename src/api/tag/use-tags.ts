@@ -16,7 +16,7 @@ export const getTags = async (): Promise<Nullable<Tag[]>> => {
     if (!tags) {
       throw new Error('Cannot get tags, try to reload the page');
     }
-    return tags.sort((a, b) => (b.links?.length ?? 0) - (a.links?.length ?? 0));
+    return tags.sort((a, b) => (b.links?.length ?? 0) - (a.links?.length ?? 0) || a.name.localeCompare(b.name));
   } catch (err) {
     toast.error(formatError(err as Error));
     console.error(err);
