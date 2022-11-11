@@ -2,6 +2,7 @@ import { useTagLinks } from '@api/link/use-links-by-tag';
 import Button from '@components/elements/button';
 import SpinnerIcon from '@components/icons/spinner-icon';
 import LinkItem from '@components/link/link-item';
+import TagItem from '@components/tag/tag-item';
 import { useRouter } from 'next/router';
 import { Page } from '../_app';
 
@@ -11,9 +12,15 @@ const TagPage: Page = () => {
 
   const { data: links, hasNextPage, isFetchingNextPage, fetchNextPage } = useTagLinks(tagSlug);
 
+  const tag = links?.pages?.[0]?.data?.[0]?.tags?.find((tag) => tag.slug === tagSlug);
+
   return (
     <section className="my-8">
-      <h1 className="mb-8 text-center font-poppins-bold text-4xl sm:text-left">Tag: {tagSlug}</h1>
+      {tag && (
+        <h1 className="mb-8 flex items-center gap-3 text-center font-poppins-bold text-4xl sm:text-left">
+          Tag: <TagItem size="large" text={`${tag.name} (${tag.links?.length ?? 0})`} isColored />
+        </h1>
+      )}
       {links ? (
         <>
           <ul className="grid grid-cols-1 gap-5 lg:grid-cols-2 xl:grid-cols-3">

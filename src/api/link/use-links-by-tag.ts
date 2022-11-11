@@ -18,7 +18,7 @@ const getLinksByTag = async (cursor = 0, tagSlug: string): Promise<PaginatedData
         `
       *,
       user:profiles!links_userId_fkey(*),
-      tags!inner(*),
+      tags!inner(*, links(id)),
       comments(*),
       votes(*)
     `

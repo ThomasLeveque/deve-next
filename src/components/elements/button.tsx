@@ -15,7 +15,7 @@ interface ButtonProps {
   theme?: 'primary' | 'secondary' | 'black' | 'gray' | 'danger' | 'discord' | 'google' | 'github';
 }
 
-const Button: React.FC<ButtonProps> = React.memo((props) => {
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
   const iconPosition = props.iconPosition ?? 'right';
   const fullWidth = props.fullWidth ?? false;
   const type = props.type ?? 'button';
@@ -48,6 +48,7 @@ const Button: React.FC<ButtonProps> = React.memo((props) => {
 
   return (
     <button
+      ref={ref}
       className={classNames(
         'with-ring flex h-[46px] items-center justify-center rounded-button font-poppins-bold text-xs uppercase disabled:cursor-not-allowed disabled:opacity-40',
         { 'w-full': fullWidth },

@@ -27,13 +27,14 @@ const Tags: Page = () => {
           {tags
             .filter((tag) => (tag.links ?? []).length > 0)
             .map((tag) => (
-              <TagItem
-                size="large"
-                key={tag.id}
-                text={`${tag.name} (${tag.links?.length ?? 0})`}
-                isColored
-                onClick={() => goToTagPage(tag)}
-              />
+              <li key={tag.id}>
+                <TagItem
+                  size="large"
+                  text={`${tag.name} (${tag.links?.length ?? 0})`}
+                  isColored
+                  onClick={() => goToTagPage(tag)}
+                />
+              </li>
             ))}
         </TagListWrapper>
       ) : (

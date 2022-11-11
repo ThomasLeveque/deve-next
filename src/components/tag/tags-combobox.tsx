@@ -133,14 +133,15 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
       {selectedItems.length > 0 && (
         <TagListWrapper className="mb-4">
           {selectedItems.map((selectedItem, index) => (
-            <TagItem
-              key={selectedItem.id}
-              {...getSelectedItemProps({ selectedItem, index })}
-              text={selectedItem.name}
-              isColored
-              isClosable
-              onClose={() => removeSelectedItem(selectedItem)}
-            />
+            <li key={selectedItem.id}>
+              <TagItem
+                {...getSelectedItemProps({ selectedItem, index })}
+                text={selectedItem.name}
+                isColored
+                isClosable
+                onClose={() => removeSelectedItem(selectedItem)}
+              />
+            </li>
           ))}
         </TagListWrapper>
       )}

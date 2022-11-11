@@ -114,7 +114,9 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, isProfilLink = fal
       </a>
       <TagListWrapper className="mb-5">
         {link.tags?.map((tag) => (
-          <TagItem key={tag.id} text={tag.name} isColored onClick={() => goToTagPage(tag)} />
+          <li key={tag.id}>
+            <TagItem text={tag.name} isColored onClick={() => goToTagPage(tag)} />
+          </li>
         ))}
       </TagListWrapper>
       <div className="mt-auto flex space-x-5">
