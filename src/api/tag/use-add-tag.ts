@@ -1,12 +1,15 @@
-import { Tag } from '@models/tag';
+import { GetTagsReturn } from '@api/tag/use-tags';
 import { supabase } from '@utils/init-supabase';
 import { addItemInsideData } from '@utils/mutate-data';
 import { useMutation, UseMutationResult, useQueryClient } from 'react-query';
-import { dbKeys } from './db-keys';
+import { Database } from '~types/supabase';
 import { queryKeys } from './query-keys';
 
-const addTag = async (tagToAdd: Partial<Tag>): Promise<Tag> => {
-  const response = await supabase.from<Tag>(dbKeys.tags).insert(tagToAdd).single();
+type TagInsert = Database['public']['Tables']['tags']['Insert'];
+export type AddTagReturn = Awaited<ReturnType<typeof addTag>>;
+
+const addTag = async (tagToAdd: TagInsert) => {
+  const response = await supabase.from('tags').insert(tagToAdd).select('*, links(*)').single();
   const newTag = response.data;
 
   if (!newTag || response.error) {
@@ -15,11 +18,11 @@ const addTag = async (tagToAdd: Partial<Tag>): Promise<Tag> => {
   return newTag;
 };
 
-export const useAddTag = (): UseMutationResult<Tag, Error, Partial<Tag>, Tag> => {
+export const useAddTag = (): UseMutationResult<AddTagReturn, Error, TagInsert> => {
   const queryClient = useQueryClient();
   return useMutation((tagToAdd) => addTag(tagToAdd), {
     onSuccess: (newTag) => {
-      queryClient.setQueryData<Tag[]>(queryKeys.tags, (oldTags) => addItemInsideData(newTag, oldTags, 'end'));
+      queryClient.setQueryData<GetTagsReturn>(queryKeys.tags, (oldTags) => addItemInsideData(newTag, oldTags, 'end'));
     },
   });
 };

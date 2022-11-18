@@ -1,14 +1,17 @@
-import { Tag } from '@models/tag';
+import { GetTagsReturn } from '@api/tag/use-tags';
 import { formatError } from '@utils/format-string';
 import { supabase } from '@utils/init-supabase';
 import { updateItemInsideData } from '@utils/mutate-data';
 import toast from 'react-hot-toast';
 import { useMutation, UseMutationResult, useQueryClient } from 'react-query';
-import { dbKeys } from './db-keys';
+import { Database } from '~types/supabase';
 import { queryKeys } from './query-keys';
 
-const updateTag = async (tagId: number, tagToUpdate: Partial<Tag>): Promise<Tag> => {
-  const response = await supabase.from<Tag>(dbKeys.tags).update(tagToUpdate).eq('id', tagId).single();
+type TagUpdate = Database['public']['Tables']['tags']['Update'];
+export type UpdateTagReturn = Awaited<ReturnType<typeof updateTag>>;
+
+const updateTag = async (tagId: number, tagToUpdate: TagUpdate) => {
+  const response = await supabase.from('tags').update(tagToUpdate).eq('id', tagId).select().single();
   const updatedTag = response.data;
 
   if (!updatedTag || response.error) {
@@ -17,11 +20,15 @@ const updateTag = async (tagId: number, tagToUpdate: Partial<Tag>): Promise<Tag>
   return updatedTag;
 };
 
-export const useUpdateTag = (): UseMutationResult<Tag, Error, { tagId: number; tagToUpdate: Partial<Tag> }, Tag> => {
+export const useUpdateTag = (): UseMutationResult<
+  UpdateTagReturn,
+  Error,
+  { tagId: number; tagToUpdate: TagUpdate }
+> => {
   const queryClient = useQueryClient();
   return useMutation(({ tagId, tagToUpdate }) => updateTag(tagId, tagToUpdate), {
     onSuccess: async (updatedTag) => {
-      queryClient.setQueryData<Tag[]>(queryKeys.tags, (oldTags) => updateItemInsideData<Tag>(updatedTag, oldTags));
+      queryClient.setQueryData<GetTagsReturn>(queryKeys.tags, (oldTags) => updateItemInsideData(updatedTag, oldTags));
     },
     onError: (err) => {
       toast.error(formatError(err));

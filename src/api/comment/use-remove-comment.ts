@@ -1,19 +1,20 @@
+import { GetCommentsReturn } from '@api/comment/use-comments';
+import { GetLinksReturn } from '@api/link/use-links';
 import { useLinksQueryKey } from '@api/link/use-links-query-key';
-import { Comment } from '@models/comment';
-import { Link } from '@models/link';
 import { useLinkToCommentModal } from '@store/modals.store';
+import { arrayToSingle } from '@utils/array-to-single';
 import { formatError } from '@utils/format-string';
 import { supabase } from '@utils/init-supabase';
 import { removeItemInsidePaginatedData, updateItemInsidePaginatedData } from '@utils/mutate-data';
-import { PaginatedData } from '@utils/shared-types';
 import toast from 'react-hot-toast';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
-import { dbKeys } from './db-keys';
 import { queryKeys } from './query-keys';
 
-const removeLinkComment = async (commentId: number): Promise<Comment> => {
+export type RemoveLinkCommentReturn = Awaited<ReturnType<typeof removeLinkComment>>;
+
+const removeLinkComment = async (commentId: number) => {
   const response = await supabase
-    .from<Comment>(dbKeys.comments)
+    .from('comments')
     .delete()
     .eq('id', commentId)
     .select(`*, link:links(commentsCount)`)
@@ -26,7 +27,7 @@ const removeLinkComment = async (commentId: number): Promise<Comment> => {
   return removedComment;
 };
 
-export const useRemoveLinkComment = (linkId: number): UseMutationResult<Comment, Error, number, Comment> => {
+export const useRemoveLinkComment = (linkId: number): UseMutationResult<RemoveLinkCommentReturn, Error, number> => {
   const [linkToCommentModal, setLinkToCommentModal] = useLinkToCommentModal();
 
   const queryClient = useQueryClient();
@@ -35,13 +36,13 @@ export const useRemoveLinkComment = (linkId: number): UseMutationResult<Comment,
 
   return useMutation((commentId) => removeLinkComment(commentId), {
     onSuccess: async (removedComment) => {
-      queryClient.setQueryData<InfiniteData<PaginatedData<Comment>>>(queryKeys.comments(linkId), (oldComments) =>
+      queryClient.setQueryData<InfiniteData<GetCommentsReturn>>(queryKeys.comments(linkId), (oldComments) =>
         removeItemInsidePaginatedData(removedComment.id, oldComments)
       );
 
-      queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(linksQueryKey, (oldLinks) =>
+      queryClient.setQueryData<InfiniteData<GetLinksReturn>>(linksQueryKey, (oldLinks) =>
         updateItemInsidePaginatedData(
-          { id: linkId, commentsCount: (removedComment.link?.commentsCount ?? 0) - 1 },
+          { id: linkId, commentsCount: (arrayToSingle(removedComment.link)?.commentsCount ?? 0) - 1 },
           oldLinks
         )
       );
