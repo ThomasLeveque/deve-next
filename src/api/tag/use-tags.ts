@@ -4,8 +4,10 @@ import { singleToArray } from '@utils/single-to-array';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { useQuery, useQueryClient, UseQueryOptions, UseQueryResult } from 'react-query';
+import { Database } from '~types/supabase';
 import { queryKeys } from './query-keys';
 
+export type TagRow = Database['public']['Tables']['tags']['Row'];
 export type GetTagsReturn = Awaited<ReturnType<typeof getTags>>;
 
 export const getTags = async () => {

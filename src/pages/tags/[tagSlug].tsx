@@ -3,6 +3,7 @@ import Button from '@components/elements/button';
 import SpinnerIcon from '@components/icons/spinner-icon';
 import LinkItem from '@components/link/link-item';
 import TagItem from '@components/tag/tag-item';
+import { singleToArray } from '@utils/single-to-array';
 import { useRouter } from 'next/router';
 import { Page } from '../_app';
 
@@ -12,13 +13,13 @@ const TagPage: Page = () => {
 
   const { data: links, hasNextPage, isFetchingNextPage, fetchNextPage } = useTagLinks(tagSlug);
 
-  const tag = links?.pages?.[0]?.data?.[0]?.tags?.find((tag) => tag.slug === tagSlug);
+  const tag = singleToArray(links?.pages?.[0]?.data?.[0]?.tags).find((tag) => tag.slug === tagSlug);
 
   return (
     <section className="my-8">
       {tag && (
         <h1 className="mb-8 flex items-center gap-3 text-center font-poppins-bold text-4xl sm:text-left">
-          Tag: <TagItem size="large" text={`${tag.name} (${tag.links?.length ?? 0})`} isColored />
+          Tag: <TagItem size="large" text={`${tag.name} (${singleToArray(tag.links).length ?? 0})`} isColored />
         </h1>
       )}
       {links ? (

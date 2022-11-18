@@ -3,7 +3,11 @@ import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import SpinnerIcon from './icons/spinner-icon';
 
-const Protected: React.FC = (props) => {
+interface ProtectedProps {
+  children: React.ReactNode | React.ReactNode[];
+}
+
+const Protected: React.FC<ProtectedProps> = (props) => {
   const profile = useProfile()[0];
   const profileLoaded = useProfileLoaded()[0];
 

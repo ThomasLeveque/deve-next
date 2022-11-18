@@ -1,10 +1,8 @@
 import { useAuth } from '@api/auth/useAuth';
 import Toast from '@components/elements/toast';
 import Layout from '@components/layout';
-import { runMigrations } from '@utils/migrations';
 import { NextPage } from 'next';
 import { AppProps } from 'next/app';
-import React, { useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
@@ -27,10 +25,6 @@ export type Page<P = unknown> = NextPage<P> & {
 
 const MyApp = ({ Component, pageProps }: AppProps & { Component: Page }): JSX.Element => {
   useAuth();
-
-  useEffect(() => {
-    runMigrations();
-  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
