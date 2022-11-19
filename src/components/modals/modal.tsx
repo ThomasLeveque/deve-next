@@ -1,5 +1,5 @@
 import { Dialog, Transition } from '@headlessui/react';
-import { XIcon } from '@heroicons/react/outline';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 import React, { Fragment } from 'react';
 
@@ -10,6 +10,7 @@ interface ModalProps {
   description?: string;
   className?: string;
   titleClassName?: string;
+  children: React.ReactNode | React.ReactNode[];
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -45,7 +46,7 @@ export const Modal: React.FC<ModalProps> = ({
                 onClick={closeModal}
                 className="with-ring absolute right-5 top-5 rounded-tag p-1 hover:bg-gray-100"
               >
-                <XIcon className="w-6" />
+                <XMarkIcon className="w-6" />
               </button>
               {title !== undefined ? (
                 <Dialog.Title

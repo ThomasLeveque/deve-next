@@ -1,11 +1,10 @@
-import { BellIcon, ShieldCheckIcon, XCircleIcon, XIcon } from '@heroicons/react/outline';
+import { BellIcon, ShieldCheckIcon, XCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 import React, { useMemo } from 'react';
-import toast, { ToastBar } from 'react-hot-toast';
-import { Toast as ToastType } from 'react-hot-toast/dist/core/types';
+import toast, { Toast, ToastBar } from 'react-hot-toast';
 
 interface ToastProps {
-  toast: ToastType;
+  toast: Toast;
 }
 
 const Toast: React.FC<ToastProps> = (props) => {
@@ -55,13 +54,15 @@ const Toast: React.FC<ToastProps> = (props) => {
           {icon ?? <BellIcon />}
           <div className="mr-4 grid gap-[6px]">
             <p className="font-poppins-bold text-[11px]">{title ?? 'Notification'}</p>
-            <p className="text-sm">{props.toast.message}</p>
+            <p className="text-sm">
+              {typeof props.toast.message === 'function' ? props.toast.message(props.toast) : props.toast.message}
+            </p>
           </div>
           <button
             onClick={() => toast.dismiss(props.toast.id)}
             className="absolute top-2 right-2 rounded-[4px] hover:bg-white/20"
           >
-            <XIcon className="w-[18px]" />
+            <XMarkIcon className="w-[18px]" />
           </button>
         </div>
       )}

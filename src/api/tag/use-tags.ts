@@ -25,6 +25,8 @@ export const getTags = async () => {
   } catch (err) {
     toast.error(formatError(err as Error));
     console.error(err);
+
+    return [];
   }
 };
 

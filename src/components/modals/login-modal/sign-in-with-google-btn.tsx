@@ -11,7 +11,7 @@ const SignInWithGoogleBtn: React.FC = () => {
   const handleSignInWithGoogle = useCallback(async () => {
     try {
       setLoading(true);
-      await supabase.auth.signIn({
+      await supabase.auth.signInWithOAuth({
         provider: 'google',
       });
     } catch (err) {

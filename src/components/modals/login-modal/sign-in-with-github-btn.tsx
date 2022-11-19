@@ -11,7 +11,7 @@ const SignInWithGithubBtn: React.FC = () => {
   const handleSignInWithGithub = useCallback(async () => {
     try {
       setLoading(true);
-      await supabase.auth.signIn({
+      await supabase.auth.signInWithOAuth({
         provider: 'github',
       });
     } catch (err) {

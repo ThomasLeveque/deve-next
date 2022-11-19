@@ -1,13 +1,14 @@
+import { GetLinksReturn } from '@api/link/use-links';
 import { useUpdateLink } from '@api/link/use-update-link';
+import { GetTagsReturn } from '@api/tag/use-tags';
 import Button from '@components/elements/button';
 import TextInput from '@components/elements/text-input';
 import TagsCombobox from '@components/tag/tags-combobox';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Link } from '@models/link';
-import { Tag } from '@models/tag';
 import { useProfile } from '@store/profile.store';
 import { updateLinkSchema } from '@utils/form-schemas';
 import { formatError } from '@utils/format-string';
+import { singleToArray } from '@utils/single-to-array';
 import React, { useCallback } from 'react';
 import { FieldError, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -15,12 +16,12 @@ import toast from 'react-hot-toast';
 interface LinkFormData {
   url: string;
   title: string;
-  tags: Omit<Tag, 'links'>[];
+  tags: GetTagsReturn;
 }
 
 interface AddLinkFormProps {
   closeModal: () => void;
-  linkToUpdate: Link;
+  linkToUpdate: GetLinksReturn['data'][0];
 }
 
 const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
@@ -38,7 +39,7 @@ const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
     defaultValues: {
       url: props.linkToUpdate.url,
       title: props.linkToUpdate.description,
-      tags: props.linkToUpdate.tags,
+      tags: singleToArray(props.linkToUpdate.tags),
     },
   });
 
@@ -58,7 +59,7 @@ const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
             description: formData.title,
             updatedAt: new Date().toISOString(),
           },
-          tags: formData.tags,
+          tags: singleToArray(formData.tags),
         });
 
         // Do not setLoading(false) because addLink will unmount this component (Modal).

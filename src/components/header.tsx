@@ -1,4 +1,4 @@
-import { LogoutIcon, PlusIcon, UserCircleIcon } from '@heroicons/react/outline';
+import { ArrowLeftOnRectangleIcon, PlusIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 import { useMediaQuery } from '@hooks/use-media-query';
 import { useAddLinkModalOpen, useAuthModalOpen } from '@store/modals.store';
 import { useProfile } from '@store/profile.store';
@@ -30,7 +30,7 @@ const Header: React.FC = React.memo(() => {
       {
         text: 'Logout',
         onClick: () => supabase.auth.signOut(),
-        icon: <LogoutIcon />,
+        icon: <ArrowLeftOnRectangleIcon />,
       },
     ],
     []

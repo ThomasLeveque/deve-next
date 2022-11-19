@@ -1,17 +1,18 @@
+import { GetCommentsReturn } from '@api/comment/use-comments';
 import { useRemoveLinkComment } from '@api/comment/use-remove-comment';
 import Button from '@components/elements/button';
 import MyPopover from '@components/elements/popover';
 import { Popover } from '@headlessui/react';
-import { PencilAltIcon, TrashIcon, XIcon } from '@heroicons/react/outline';
-import { Comment } from '@models/comment';
+import { PencilSquareIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useProfile } from '@store/profile.store';
+import { arrayToSingle } from '@utils/array-to-single';
 import { format } from 'date-fns';
 import React, { useMemo, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import UpdateCommentForm from './update-comment-form';
 
 interface CommentItemProps {
-  comment: Comment;
+  comment: GetCommentsReturn['data'][0];
   linkId: number;
   isPreview?: boolean;
 }
@@ -29,11 +30,13 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, linkId, isPreview = 
 
   const canUpdateComment = useMemo(() => profile && profile.id === comment.userId, [profile, comment.userId]);
 
+  const commentUser = arrayToSingle(comment.user);
+
   return (
     <li className="group rounded-button border border-gray-400/30 p-5">
       <div className="mb-3 flex min-h-[18px] items-start justify-between space-x-3">
         <div className="flex text-[10px]">
-          {comment.user && <h3 className="font-poppins-bold">{comment.user.username}</h3>}
+          {commentUser && <h3 className="font-poppins-bold">{commentUser.username}</h3>}
 
           <p className="text-gray-400">
             <span className="mx-2">-</span>
@@ -46,7 +49,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, linkId, isPreview = 
               className="hover:text-secondary"
               onClick={() => setUpdateComment((prevUpdateComment) => !prevUpdateComment)}
             >
-              {updateComment ? <XIcon className="w-[18px]" /> : <PencilAltIcon className="w-[18px]" />}
+              {updateComment ? <XMarkIcon className="w-[18px]" /> : <PencilSquareIcon className="w-[18px]" />}
             </button>
           )}
           {canRemoveComment && !isPreview && (

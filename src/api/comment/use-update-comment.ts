@@ -5,7 +5,7 @@ import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 're
 import { Database } from '~types/supabase';
 import { queryKeys } from './query-keys';
 
-type CommentUpdate = Database['public']['Tables']['tags']['Update'];
+type CommentUpdate = Database['public']['Tables']['comments']['Update'];
 export type UpdateCommentReturn = Awaited<ReturnType<typeof updateComment>>;
 
 const updateComment = async (commentId: number, commentToUpdate: CommentUpdate) => {

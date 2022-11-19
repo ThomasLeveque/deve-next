@@ -1,13 +1,14 @@
 import { useRemoveTag } from '@api/tag/use-remove-tag';
+import { GetTagsReturn } from '@api/tag/use-tags';
 import SpinnerIcon from '@components/icons/spinner-icon';
-import { TrashIcon } from '@heroicons/react/outline';
-import { Tag } from '@models/tag';
+import { TrashIcon } from '@heroicons/react/24/outline';
 import { useProfile } from '@store/profile.store';
+import { singleToArray } from '@utils/single-to-array';
 import classNames from 'classnames';
 import React, { useCallback } from 'react';
 
 interface TagsComboboxOptionProps extends React.HTMLAttributes<HTMLLIElement> {
-  filteredTag: Tag;
+  filteredTag: GetTagsReturn[0];
   active: boolean;
 }
 
@@ -16,7 +17,9 @@ const TagsComboboxOption = React.forwardRef<HTMLLIElement, TagsComboboxOptionPro
     const [profile] = useProfile();
     const removeTag = useRemoveTag();
 
-    const canBeRemove = (filteredTag.links?.length ?? 0) === 0 && profile?.role === 'admin';
+    const tagLinks = singleToArray(filteredTag.links);
+
+    const canBeRemove = (tagLinks.length ?? 0) === 0 && profile?.role === 'admin';
 
     const handleRemoveTag = useCallback(
       async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -40,7 +43,7 @@ const TagsComboboxOption = React.forwardRef<HTMLLIElement, TagsComboboxOptionPro
       >
         <>
           <p className="text-left">
-            {filteredTag.name} ({filteredTag.links?.length ?? 0})
+            {filteredTag.name} ({tagLinks.length ?? 0})
           </p>
 
           {canBeRemove && (

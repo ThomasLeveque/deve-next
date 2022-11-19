@@ -1,4 +1,4 @@
-import { ArrowSmUpIcon } from '@heroicons/react/outline';
+import { ArrowSmallUpIcon } from '@heroicons/react/24/outline';
 import React from 'react';
 import { useInView } from 'react-intersection-observer';
 import Button from './elements/button';
@@ -17,7 +17,7 @@ const BackToTop: React.FC = () => {
           className="fixed bottom-2 right-2"
           onClick={handleScrollTop}
           theme="secondary"
-          icon={<ArrowSmUpIcon />}
+          icon={<ArrowSmallUpIcon />}
         />
       )}
     </div>

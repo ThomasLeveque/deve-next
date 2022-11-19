@@ -1,4 +1,4 @@
-import { SearchIcon, XCircleIcon } from '@heroicons/react/outline';
+import { MagnifyingGlassIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 import React from 'react';
 
@@ -31,7 +31,7 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
         )}
         <div className="relative flex w-full items-center">
           {isSearchInput && (
-            <SearchIcon
+            <MagnifyingGlassIcon
               className="absolute left-4 w-6 cursor-text text-gray-600"
               onClick={() => {
                 (ref as React.MutableRefObject<HTMLInputElement | null>)?.current?.focus();

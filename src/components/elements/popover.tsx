@@ -6,6 +6,7 @@ interface MyPopoverProps {
   position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
   buttonItem: JSX.Element;
   className?: string;
+  children: React.ReactNode | React.ReactNode[];
 }
 
 const MyPopover: React.FC<MyPopoverProps> = (props) => {
