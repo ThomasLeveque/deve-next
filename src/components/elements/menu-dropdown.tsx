@@ -72,23 +72,21 @@ const MenuDropdownItem: React.FC<MenuDropdownItemProps> = (props) => {
   return (
     <Menu.Item>
       {({ active }) => (
-        <a
-          href="#"
+        <button
           className={classNames(
-            'px-4 py-2 text-sm',
+            'w-full px-4 py-2 text-left text-sm',
             { 'grid grid-cols-[20px,1fr] gap-3': withIcon },
             {
               'bg-primary': active,
             }
           )}
-          onClick={(event) => {
-            event.preventDefault();
+          onClick={() => {
             props.onClick();
           }}
         >
           {withIcon ? props.icon : null}
           {props.text}
-        </a>
+        </button>
       )}
     </Menu.Item>
   );

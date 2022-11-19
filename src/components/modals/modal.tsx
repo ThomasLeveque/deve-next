@@ -1,7 +1,7 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
-import React, { Fragment } from 'react';
+import React, { Fragment, useRef } from 'react';
 
 interface ModalProps {
   isOpen: boolean;
@@ -10,7 +10,11 @@ interface ModalProps {
   description?: string;
   className?: string;
   titleClassName?: string;
-  children: React.ReactNode | React.ReactNode[];
+  children:
+    | (React.ReactNode | React.ReactNode[])
+    | ((
+        initialFocusButtonRef: React.MutableRefObject<HTMLButtonElement | null>
+      ) => React.ReactNode | React.ReactNode[]);
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -22,9 +26,11 @@ export const Modal: React.FC<ModalProps> = ({
   titleClassName,
   children,
 }) => {
+  const initialFocusButtonRef = useRef<HTMLButtonElement | null>(null);
+
   return (
     <Transition show={isOpen} appear as={Fragment}>
-      <Dialog onClose={closeModal} className="fixed inset-0 z-40 overflow-y-auto">
+      <Dialog onClose={closeModal} className="fixed inset-0 z-40 overflow-y-auto" initialFocus={initialFocusButtonRef}>
         <div className="flex min-h-screen items-center justify-center">
           <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100">
             <Dialog.Overlay className="fixed inset-0 bg-black/40" />
@@ -57,7 +63,7 @@ export const Modal: React.FC<ModalProps> = ({
               ) : null}
               {description !== undefined ? <Dialog.Description>{description}</Dialog.Description> : null}
 
-              {children}
+              {typeof children === 'function' ? children(initialFocusButtonRef) : children}
             </div>
           </Transition.Child>
         </div>

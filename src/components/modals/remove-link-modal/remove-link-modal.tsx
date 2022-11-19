@@ -30,17 +30,20 @@ const RemoveLinkModal: React.FC = React.memo(() => {
 
   return linkToRemoveModal ? (
     <Modal isOpen={!!linkToRemoveModal} closeModal={closeModal} title="Are you sure ?" className="max-w-md">
-      <div className="flex space-x-5">
-        <Button text="Cancel" fullWidth theme="gray" onClick={closeModal} />
-        <Button
-          theme="danger"
-          fullWidth
-          text="Remove"
-          type="button"
-          loading={removeLink.isLoading}
-          onClick={handleRemoveLink}
-        />
-      </div>
+      {(initialFocusButtonRef) => (
+        <div className="flex space-x-5">
+          <Button text="Cancel" fullWidth theme="gray" onClick={closeModal} />
+          <Button
+            ref={initialFocusButtonRef}
+            theme="danger"
+            fullWidth
+            text="Remove"
+            type="button"
+            loading={removeLink.isLoading}
+            onClick={handleRemoveLink}
+          />
+        </div>
+      )}
     </Modal>
   ) : null;
 });

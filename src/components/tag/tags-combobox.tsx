@@ -138,7 +138,7 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
       )}
 
       <div className="relative">
-        <div className="relative  w-full">
+        <div className="relative w-full">
           <input
             placeholder="Search for a tag..."
             className="with-ring h-[50px] w-full rounded-button bg-gray-100 pl-5 pr-10 text-sm placeholder-gray-400"

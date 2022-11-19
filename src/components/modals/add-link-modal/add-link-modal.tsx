@@ -12,7 +12,7 @@ const AddLinkModal: React.FC = React.memo(() => {
 
   return (
     <Modal isOpen={addLinkModal} closeModal={closeModal} title="Add new link">
-      <AddLinkForm closeModal={closeModal} />
+      {(initialFocusButtonRef) => <AddLinkForm closeModal={closeModal} initialFocusButtonRef={initialFocusButtonRef} />}
     </Modal>
   );
 });

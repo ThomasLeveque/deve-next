@@ -22,6 +22,7 @@ interface LinkFormData {
 interface AddLinkFormProps {
   closeModal: () => void;
   linkToUpdate: GetLinksReturn['data'][0];
+  initialFocusButtonRef?: React.MutableRefObject<HTMLButtonElement | null>;
 }
 
 const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
@@ -100,7 +101,13 @@ const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
       />
       <div className="flex justify-end space-x-4">
         <Button text="Reset" theme="gray" onClick={() => reset()} />
-        <Button theme="secondary" text="Update" type="submit" loading={updateLink.isLoading} />
+        <Button
+          ref={props.initialFocusButtonRef}
+          theme="secondary"
+          text="Update"
+          type="submit"
+          loading={updateLink.isLoading}
+        />
       </div>
     </form>
   );

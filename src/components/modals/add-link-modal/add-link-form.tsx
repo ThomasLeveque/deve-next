@@ -19,6 +19,7 @@ interface LinkFormData {
 
 interface AddLinkFormProps {
   closeModal: () => void;
+  initialFocusButtonRef?: React.MutableRefObject<HTMLButtonElement | null>;
 }
 
 const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
@@ -88,7 +89,13 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
         errorText={(errors.tags as unknown as FieldError)?.message}
       />
       <div className="flex justify-end">
-        <Button theme="secondary" text="Create" type="submit" loading={addLink.isLoading} />
+        <Button
+          ref={props.initialFocusButtonRef}
+          theme="secondary"
+          text="Create"
+          type="submit"
+          loading={addLink.isLoading}
+        />
       </div>
     </form>
   );
