@@ -40,11 +40,11 @@ const Header: React.FC = React.memo(() => {
     <header className="sticky top-0 z-30 bg-white">
       <div className="flex h-header items-center justify-between px-5 xl:container xl:mx-auto">
         <div className="flex items-center space-x-5">
-          <Link href="/">
-            <a className="with-ring font-poppins-bold text-3xl hover:text-secondary">DN</a>
+          <Link href="/" className="with-ring font-poppins-bold text-3xl hover:text-secondary">
+            DN
           </Link>
-          <Link href="/tags">
-            <a className="with-ring px-1 font-poppins-bold hover:text-secondary hover:underline">Tags</a>
+          <Link href="/tags" className="with-ring px-1 font-poppins-bold hover:text-secondary hover:underline">
+            Tags
           </Link>
         </div>
         <div className="grid auto-cols-max grid-flow-col items-center gap-5">
