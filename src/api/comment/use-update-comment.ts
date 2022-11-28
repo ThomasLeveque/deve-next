@@ -1,13 +1,15 @@
-import { Comment } from '@models/comment';
+import { GetCommentsReturn } from '@api/comment/use-comments';
 import { supabase } from '@utils/init-supabase';
 import { updateItemInsidePaginatedData } from '@utils/mutate-data';
-import { PaginatedData } from '@utils/shared-types';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
-import { dbKeys } from './db-keys';
+import { Database } from '~types/supabase';
 import { queryKeys } from './query-keys';
 
-const updateComment = async (commentId: number, commentToUpdate: Partial<Comment>): Promise<Comment> => {
-  const response = await supabase.from<Comment>(dbKeys.comments).update(commentToUpdate).eq('id', commentId).single();
+type CommentUpdate = Database['public']['Tables']['comments']['Update'];
+export type UpdateCommentReturn = Awaited<ReturnType<typeof updateComment>>;
+
+const updateComment = async (commentId: number, commentToUpdate: CommentUpdate) => {
+  const response = await supabase.from('comments').update(commentToUpdate).eq('id', commentId).select().single();
   const updatedComment = response.data;
 
   if (!updatedComment || response.error) {
@@ -18,12 +20,12 @@ const updateComment = async (commentId: number, commentToUpdate: Partial<Comment
 
 export const useUpdateLinkComment = (
   linkId: number
-): UseMutationResult<Comment, Error, { commentId: number; commentToUpdate: Partial<Comment> }, Comment> => {
+): UseMutationResult<UpdateCommentReturn, Error, { commentId: number; commentToUpdate: CommentUpdate }> => {
   const queryClient = useQueryClient();
 
   return useMutation(({ commentId, commentToUpdate }) => updateComment(commentId, commentToUpdate), {
     onSuccess: async (updatedComment) => {
-      queryClient.setQueryData<InfiniteData<PaginatedData<Comment>>>(queryKeys.comments(linkId), (oldComments) =>
+      queryClient.setQueryData<InfiniteData<GetCommentsReturn>>(queryKeys.comments(linkId), (oldComments) =>
         updateItemInsidePaginatedData(updatedComment, oldComments)
       );
     },

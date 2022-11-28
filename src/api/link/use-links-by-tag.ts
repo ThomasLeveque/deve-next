@@ -1,19 +1,18 @@
-import { Link } from '@models/link';
 import { formatError } from '@utils/format-string';
 import { supabase } from '@utils/init-supabase';
-import { PaginatedData } from '@utils/shared-types';
 import toast from 'react-hot-toast';
-import { useInfiniteQuery, UseInfiniteQueryResult } from 'react-query';
-import { dbKeys } from './db-keys';
+import { useInfiniteQuery } from 'react-query';
 import { queryKeys } from './query-keys';
 
 export const TAG_LINKS_PER_PAGE = Number(process.env.NEXT_PUBLIC_LINKS_PER_PAGE) ?? 20;
 
-const getLinksByTag = async (cursor = 0, tagSlug: string): Promise<PaginatedData<Link> | undefined> => {
+export type GetLinksByTagsReturn = Awaited<ReturnType<typeof getLinksByTag>>;
+
+const getLinksByTag = async (cursor = 0, tagSlug: string) => {
   try {
     const nextCursor = cursor + TAG_LINKS_PER_PAGE;
     const response = await supabase
-      .from<Link>(dbKeys.links)
+      .from('links')
       .select(
         `
       *,
@@ -41,11 +40,16 @@ const getLinksByTag = async (cursor = 0, tagSlug: string): Promise<PaginatedData
   } catch (err) {
     toast.error(formatError(err as Error));
     console.error(err);
+
+    return {
+      data: [],
+      cursor: undefined,
+    };
   }
 };
 
-export const useTagLinks = (tagSlug: string | undefined): UseInfiniteQueryResult<PaginatedData<Link> | undefined> =>
-  useInfiniteQuery<PaginatedData<Link> | undefined>(
+export const useTagLinks = (tagSlug: string | undefined) =>
+  useInfiniteQuery(
     queryKeys.tagLinks(tagSlug as string),
     (context) => getLinksByTag(context.pageParam, tagSlug as string),
     {

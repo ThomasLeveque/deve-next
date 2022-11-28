@@ -1,8 +1,8 @@
-import { useTags } from '@api/tag/use-tags';
+import { TagRow, useTags } from '@api/tag/use-tags';
 import SpinnerIcon from '@components/icons/spinner-icon';
 import TagItem from '@components/tag/tag-item';
 import TagListWrapper from '@components/tag/tag-list-wrapper';
-import { Tag } from '@models/tag';
+import { singleToArray } from '@utils/single-to-array';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
 import { Page } from '../_app';
@@ -11,7 +11,7 @@ const Tags: Page = () => {
   const router = useRouter();
   const { data: tags } = useTags();
 
-  function goToTagPage(tag: Tag) {
+  function goToTagPage(tag: TagRow) {
     if (tag.slug) {
       router.push(`/tags/${tag.slug}`);
     } else {
@@ -25,12 +25,12 @@ const Tags: Page = () => {
       {tags && tags.length > 0 ? (
         <TagListWrapper className="mb-4">
           {tags
-            .filter((tag) => (tag.links ?? []).length > 0)
+            .filter((tag) => singleToArray(tag.links).length > 0)
             .map((tag) => (
               <li key={tag.id}>
                 <TagItem
                   size="large"
-                  text={`${tag.name} (${tag.links?.length ?? 0})`}
+                  text={`${tag.name} (${singleToArray(tag.links).length ?? 0})`}
                   isColored
                   onClick={() => goToTagPage(tag)}
                 />

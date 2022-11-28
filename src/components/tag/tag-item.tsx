@@ -1,4 +1,4 @@
-import { XIcon } from '@heroicons/react/outline';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 import React from 'react';
 
@@ -37,7 +37,7 @@ const TagItem = React.forwardRef<HTMLButtonElement, TagProps>(
           #{text}
         </span>
         {isClosable ? (
-          <XIcon
+          <XMarkIcon
             className={classNames('ml-[6px] w-[14px] cursor-pointer rounded-sm', { 'w-[16px]': isLarge })}
             onClick={(event) => {
               event.stopPropagation();

@@ -7,7 +7,6 @@ import LinkItem from '@components/link/link-item';
 import Protected from '@components/protected';
 import { useProfile } from '@store/profile.store';
 import { format } from 'date-fns';
-import React from 'react';
 import { Page } from './_app';
 
 const Account: Page = () => {

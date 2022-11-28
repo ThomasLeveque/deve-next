@@ -16,6 +16,7 @@ interface CommentFormData {
 
 interface AddCommentFormProps {
   linkId: number;
+  initialFocusButtonRef?: React.MutableRefObject<HTMLButtonElement | null>;
 }
 
 const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
@@ -106,7 +107,13 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
             }
           }}
         />
-        <Button theme="secondary" text="Add" type="submit" loading={addLinkComment.isLoading} />
+        <Button
+          ref={props.initialFocusButtonRef}
+          theme="secondary"
+          text="Add"
+          type="submit"
+          loading={addLinkComment.isLoading}
+        />
       </div>
     </form>
   );

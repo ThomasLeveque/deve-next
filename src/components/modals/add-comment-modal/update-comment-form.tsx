@@ -1,8 +1,8 @@
+import { GetCommentsReturn } from '@api/comment/use-comments';
 import { useUpdateLinkComment } from '@api/comment/use-update-comment';
 import Button from '@components/elements/button';
 import TextArea from '@components/elements/textarea';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Comment } from '@models/comment';
 import { useProfile } from '@store/profile.store';
 import { addCommentSchema, commentMaxLength } from '@utils/form-schemas';
 import { formatError } from '@utils/format-string';
@@ -16,7 +16,7 @@ interface CommentFormData {
 }
 
 interface UpdateCommentFormProps {
-  commentToUpdate: Comment;
+  commentToUpdate: GetCommentsReturn['data'][0];
   linkId: number;
   closeUpdate: () => void;
 }

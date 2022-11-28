@@ -1,15 +1,20 @@
-import { Profile } from '@models/profile';
 import { useProfile, useProfileLoaded } from '@store/profile.store';
 import { User } from '@supabase/supabase-js';
 import { formatError } from '@utils/format-string';
 import { supabase } from '@utils/init-supabase';
-import { Nullable } from '@utils/shared-types';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
+import { Nullable } from '~types/shared';
 
-const getUserProfile = async (user: User): Promise<Profile | null> => {
+export type GetUserProfileReturn = Awaited<ReturnType<typeof getUserProfile>>;
+
+export const getUserProfile = async (user: Nullable<User>) => {
+  if (!user) {
+    return null;
+  }
+
   try {
-    const profile = await supabase.from<Profile>('profiles').select('*').eq('id', user.id).single();
+    const profile = await supabase.from('profiles').select('*').eq('id', user.id).single();
     return profile.data;
   } catch (err) {
     toast.error(formatError(err as Error));
@@ -22,47 +27,52 @@ export const useAuth = (): void => {
   const setProfileLoaded = useProfileLoaded()[1];
 
   useEffect(() => {
-    const setUserProfile = async (user: Nullable<User>) => {
-      if (user) {
-        const userProfile = await getUserProfile(user);
-        setProfile(userProfile);
-      } else {
-        setProfile(null);
-      }
+    const setUserProfile = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      const userProfile = await getUserProfile(session?.user);
+      setProfile(userProfile);
 
       setProfileLoaded(true);
     };
-    setUserProfile(supabase.auth.user());
 
-    const authState = supabase.auth.onAuthStateChange((_event, session) => {
-      setUserProfile(session?.user);
+    setUserProfile();
+
+    const authState = supabase.auth.onAuthStateChange(() => {
+      setUserProfile();
     });
 
-    return () => authState.data?.unsubscribe();
+    return () => authState.data?.subscription.unsubscribe();
   }, [setProfile, setProfileLoaded]);
 
   useEffect(() => {
     if (profile) {
-      const subscription = supabase
-        .from<Profile>(`profiles:id=eq.${profile.id}`)
-        .on('*', (payload) => {
-          switch (payload.eventType) {
-            case 'DELETE':
-              setProfile(null);
-              supabase.removeSubscription(subscription);
-              break;
-            case 'INSERT':
-            case 'UPDATE':
-              setProfile(payload.new);
-              break;
-            default:
-              break;
+      const userListener = supabase
+        .channel('public:profiles')
+        .on<GetUserProfileReturn & Record<string, unknown>>(
+          'postgres_changes',
+          { event: '*', schema: 'public', table: 'profiles', filter: `id=eq.${profile.id}` },
+          (payload) => {
+            switch (payload.eventType) {
+              case 'DELETE':
+                setProfile(null);
+                supabase.removeChannel(userListener);
+                break;
+              case 'INSERT':
+              case 'UPDATE':
+                setProfile(payload.new);
+                break;
+              default:
+                break;
+            }
           }
-        })
+        )
         .subscribe();
 
       return () => {
-        supabase.removeSubscription(subscription);
+        supabase.removeChannel(userListener);
       };
     }
   }, [profile, setProfile]);

@@ -1,16 +1,18 @@
-import { Link } from '@models/link';
-import { Vote } from '@models/vote';
+import { GetLinksReturn } from '@api/link/use-links';
 import { formatError } from '@utils/format-string';
 import { supabase } from '@utils/init-supabase';
 import { updateItemInsidePaginatedData } from '@utils/mutate-data';
-import { PaginatedData } from '@utils/shared-types';
+import { singleToArray } from '@utils/single-to-array';
 import toast from 'react-hot-toast';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
+import { Database } from '~types/supabase';
 import { useLinksQueryKey } from '../link/use-links-query-key';
-import { dbKeys } from './db-keys';
 
-const addVote = async (voteToAdd: Partial<Vote>): Promise<Vote> => {
-  const response = await supabase.from<Vote>(dbKeys.votes).insert(voteToAdd).single();
+type VoteInsert = Database['public']['Tables']['votes']['Insert'];
+export type AddVoteReturn = Awaited<ReturnType<typeof addVote>>;
+
+const addVote = async (voteToAdd: VoteInsert) => {
+  const response = await supabase.from('votes').insert(voteToAdd).select().single();
   const newVote = response.data;
 
   if (!newVote || response.error) {
@@ -19,7 +21,9 @@ const addVote = async (voteToAdd: Partial<Vote>): Promise<Vote> => {
   return newVote;
 };
 
-export const useAddLinkVote = (link: Link): UseMutationResult<Vote, Error, Partial<Vote>, Vote> => {
+export const useAddLinkVote = (
+  link: GetLinksReturn['data'][0]
+): UseMutationResult<AddVoteReturn, Error, VoteInsert> => {
   const queryClient = useQueryClient();
 
   const linksQueryKey = useLinksQueryKey();
@@ -27,9 +31,9 @@ export const useAddLinkVote = (link: Link): UseMutationResult<Vote, Error, Parti
   return useMutation((voteToAdd) => addVote(voteToAdd), {
     onSuccess: async (newVote) => {
       link.votesCount += 1;
-      link.votes?.push(newVote);
+      link.votes = [...singleToArray(link.votes), newVote];
 
-      queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(linksQueryKey, (oldLinks) =>
+      queryClient.setQueryData<InfiniteData<GetLinksReturn>>(linksQueryKey, (oldLinks) =>
         updateItemInsidePaginatedData(link, oldLinks)
       );
     },

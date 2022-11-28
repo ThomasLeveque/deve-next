@@ -1,9 +1,9 @@
 import { useAddLink } from '@api/link/use-add-link';
+import { GetTagsReturn } from '@api/tag/use-tags';
 import Button from '@components/elements/button';
 import TextInput from '@components/elements/text-input';
 import TagsCombobox from '@components/tag/tags-combobox';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Tag } from '@models/tag';
 import { useProfile } from '@store/profile.store';
 import { addLinkSchema } from '@utils/form-schemas';
 import { formatError } from '@utils/format-string';
@@ -14,11 +14,12 @@ import toast from 'react-hot-toast';
 interface LinkFormData {
   url: string;
   title: string;
-  tags: Omit<Tag, 'links'>[];
+  tags: GetTagsReturn;
 }
 
 interface AddLinkFormProps {
   closeModal: () => void;
+  initialFocusButtonRef?: React.MutableRefObject<HTMLButtonElement | null>;
 }
 
 const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
@@ -88,7 +89,13 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
         errorText={(errors.tags as unknown as FieldError)?.message}
       />
       <div className="flex justify-end">
-        <Button theme="secondary" text="Create" type="submit" loading={addLink.isLoading} />
+        <Button
+          ref={props.initialFocusButtonRef}
+          theme="secondary"
+          text="Create"
+          type="submit"
+          loading={addLink.isLoading}
+        />
       </div>
     </form>
   );

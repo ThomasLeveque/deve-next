@@ -17,7 +17,13 @@ const UpdateLinkModal: React.FC = React.memo(() => {
       title={`Update ${linkToUpdateModal.description}`}
       titleClassName="truncate"
     >
-      <UpdateLinkForm closeModal={closeModal} linkToUpdate={linkToUpdateModal} />
+      {(initialFocusButtonRef) => (
+        <UpdateLinkForm
+          closeModal={closeModal}
+          linkToUpdate={linkToUpdateModal}
+          initialFocusButtonRef={initialFocusButtonRef}
+        />
+      )}
     </Modal>
   ) : null;
 });

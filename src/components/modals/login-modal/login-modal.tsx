@@ -14,11 +14,13 @@ const LoginModal: React.FC = React.memo(() => {
 
   return (
     <Modal isOpen={authModalOpen} closeModal={closeModal} title={'Login'}>
-      <div className="grid gap-5">
-        <SignInWithGoogleBtn />
-        <SignInWithGithubBtn />
-        <SignInWithDiscordBtn />
-      </div>
+      {(initialFocusButtonRef) => (
+        <div className="grid gap-5">
+          <SignInWithGithubBtn initialFocusButtonRef={initialFocusButtonRef} />
+          <SignInWithGoogleBtn />
+          <SignInWithDiscordBtn />
+        </div>
+      )}
     </Modal>
   );
 });

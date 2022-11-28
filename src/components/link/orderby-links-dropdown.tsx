@@ -1,5 +1,5 @@
 import MenuDropdown, { MenuDropdownItemProps } from '@components/elements/menu-dropdown';
-import { FireIcon, SortAscendingIcon, SortDescendingIcon } from '@heroicons/react/outline';
+import { BarsArrowDownIcon, BarsArrowUpIcon, FireIcon } from '@heroicons/react/24/outline';
 import { OrderLinksKey, useQueryString } from '@hooks/use-query-string';
 import React, { useMemo } from 'react';
 
@@ -11,12 +11,12 @@ const OrderbyLinksDropdown: React.FC = React.memo(() => {
       newest: {
         text: 'Most recent',
         onClick: () => setOrderbyQuery('newest'),
-        icon: <SortDescendingIcon />,
+        icon: <BarsArrowDownIcon />,
       },
       oldest: {
         text: 'Oldest',
         onClick: () => setOrderbyQuery('oldest'),
-        icon: <SortAscendingIcon />,
+        icon: <BarsArrowUpIcon />,
       },
       liked: {
         text: 'The hottest',

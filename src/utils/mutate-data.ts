@@ -1,7 +1,7 @@
-import { Nullable, PaginatedData } from '@utils/shared-types';
 import { InfiniteData } from 'react-query';
+import { Nullable, PaginatedData } from '~types/shared';
 
-const initialPaginatedData = {
+const initialPaginatedData: InfiniteData<never> = {
   pages: [],
   pageParams: [],
 };
@@ -11,12 +11,12 @@ export const addItemInsidePaginatedData = <DataType>(
   items: InfiniteData<PaginatedData<DataType>> | undefined,
   pageIndex = 0
 ): InfiniteData<PaginatedData<DataType>> => {
-  if (!items) {
+  if (!items?.pages) {
     return initialPaginatedData;
   }
 
-  const currentPageData = items.pages[pageIndex] ? items.pages[pageIndex].data : [];
   if (items.pages[pageIndex]) {
+    const currentPageData = items.pages[pageIndex].data ?? [];
     items.pages[pageIndex].data = [item, ...currentPageData];
   }
   return items;

@@ -5,7 +5,7 @@ import SpinnerIcon from '@components/icons/spinner-icon';
 import LinkItem from '@components/link/link-item';
 import OrderbyLinksDropdown from '@components/link/orderby-links-dropdown';
 import { useQueryString } from '@hooks/use-query-string';
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { Page } from './_app';
 
 const Home: Page = () => {

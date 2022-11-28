@@ -1,20 +1,24 @@
-import { Comment } from '@models/comment';
-import { Link } from '@models/link';
+import { GetCommentsReturn } from '@api/comment/use-comments';
+import { GetLinksReturn } from '@api/link/use-links';
 import { useLinkToCommentModal } from '@store/modals.store';
+import { arrayToSingle } from '@utils/array-to-single';
 import { supabase } from '@utils/init-supabase';
 import { addItemInsidePaginatedData, updateItemInsidePaginatedData } from '@utils/mutate-data';
-import { PaginatedData } from '@utils/shared-types';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
+import { Database } from '~types/supabase';
 import { useLinksQueryKey } from '../link/use-links-query-key';
-import { dbKeys } from './db-keys';
 import { queryKeys } from './query-keys';
 
-const addComment = async (commentToAdd: Partial<Comment>): Promise<Comment> => {
+type CommentInsert = Database['public']['Tables']['comments']['Insert'];
+export type AddCommentReturn = Awaited<ReturnType<typeof addComment>>;
+
+const addComment = async (commentToAdd: CommentInsert) => {
   const response = await supabase
-    .from<Comment>(dbKeys.comments)
+    .from('comments')
     .insert(commentToAdd)
     .select(`*, link:links(commentsCount), user:profiles(*)`)
     .single();
+
   const newComment = response.data;
 
   if (!newComment || response.error) {
@@ -23,7 +27,7 @@ const addComment = async (commentToAdd: Partial<Comment>): Promise<Comment> => {
   return newComment;
 };
 
-export const useAddLinkComment = (linkId: number): UseMutationResult<Comment, Error, Partial<Comment>, Comment> => {
+export const useAddLinkComment = (linkId: number): UseMutationResult<AddCommentReturn, Error, CommentInsert> => {
   const [linkToCommentModal, setLinkToCommentModal] = useLinkToCommentModal();
 
   const queryClient = useQueryClient();
@@ -32,13 +36,13 @@ export const useAddLinkComment = (linkId: number): UseMutationResult<Comment, Er
 
   return useMutation((commentToAdd) => addComment(commentToAdd), {
     onSuccess: async (newComment) => {
-      queryClient.setQueryData<InfiniteData<PaginatedData<Comment>>>(queryKeys.comments(linkId), (oldComments) =>
-        addItemInsidePaginatedData(newComment, oldComments)
-      );
+      queryClient.setQueryData<InfiniteData<GetCommentsReturn>>(queryKeys.comments(linkId), (oldComments) => {
+        return addItemInsidePaginatedData(newComment, oldComments);
+      });
 
-      queryClient.setQueryData<InfiniteData<PaginatedData<Link>>>(linksQueryKey, (oldLinks) =>
+      queryClient.setQueryData<InfiniteData<GetLinksReturn>>(linksQueryKey, (oldLinks) =>
         updateItemInsidePaginatedData(
-          { id: linkId, commentsCount: (newComment.link?.commentsCount ?? 0) + 1 },
+          { id: linkId, commentsCount: (arrayToSingle(newComment.link)?.commentsCount ?? 0) + 1 },
           oldLinks
         )
       );

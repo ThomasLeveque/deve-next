@@ -5,13 +5,15 @@ import { supabase } from '@utils/init-supabase';
 import React, { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
 
-const SignInWithGithubBtn: React.FC = () => {
+const SignInWithGithubBtn: React.FC<{
+  initialFocusButtonRef?: React.MutableRefObject<HTMLButtonElement | null>;
+}> = ({ initialFocusButtonRef }) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleSignInWithGithub = useCallback(async () => {
     try {
       setLoading(true);
-      await supabase.auth.signIn({
+      await supabase.auth.signInWithOAuth({
         provider: 'github',
       });
     } catch (err) {
@@ -24,6 +26,7 @@ const SignInWithGithubBtn: React.FC = () => {
 
   return (
     <Button
+      ref={initialFocusButtonRef}
       theme="github"
       icon={<GithubIcon />}
       iconPosition="left"

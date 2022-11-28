@@ -19,40 +19,44 @@ const AddCommentModal: React.FC = React.memo(() => {
 
   return linkToCommentModal ? (
     <Modal isOpen={!!linkToCommentModal} closeModal={closeModal} className="max-w-2xl">
-      <a href={linkToCommentModal.url} rel="noreferrer" target="_blank" className="with-ring group mb-6 mr-8 block">
-        <h2 className="mb-2 break-words font-poppins-bold text-3xl group-hover:text-secondary">
-          {linkToCommentModal.description}
-        </h2>
-        <p className="text-xs group-hover:underline">On {getDomain(linkToCommentModal.url)}</p>
-      </a>
-      <AddCommentForm linkId={linkToCommentModal.id} />
-      {linkToCommentModal.commentsCount > 0 ? (
+      {(initialFocusButtonRef) => (
         <>
-          {comments ? (
+          <a href={linkToCommentModal.url} rel="noreferrer" target="_blank" className="with-ring group mb-6 mr-8 block">
+            <h2 className="mb-2 break-words font-poppins-bold text-3xl group-hover:text-secondary">
+              {linkToCommentModal.description}
+            </h2>
+            <p className="text-xs group-hover:underline">On {getDomain(linkToCommentModal.url)}</p>
+          </a>
+          <AddCommentForm linkId={linkToCommentModal.id} initialFocusButtonRef={initialFocusButtonRef} />
+          {linkToCommentModal.commentsCount > 0 ? (
             <>
-              <ul className="mt-8 space-y-5">
-                {comments.pages?.map((page) =>
-                  page?.data?.map((comment) => (
-                    <CommentItem key={comment.id} comment={comment} linkId={linkToCommentModal.id} />
-                  ))
-                )}
-              </ul>
-              {linkToCommentModal.commentsCount > COMMENTS_PER_PAGE ? (
-                <Button
-                  theme="secondary"
-                  text={hasNextPage ? 'Load more' : 'No more comments'}
-                  className="mx-auto mt-8"
-                  disabled={!hasNextPage}
-                  loading={isFetchingNextPage}
-                  onClick={fetchNextPage}
-                />
-              ) : null}
+              {comments ? (
+                <>
+                  <ul className="mt-8 space-y-5">
+                    {comments.pages?.map((page) =>
+                      page?.data?.map((comment) => (
+                        <CommentItem key={comment.id} comment={comment} linkId={linkToCommentModal.id} />
+                      ))
+                    )}
+                  </ul>
+                  {linkToCommentModal.commentsCount > COMMENTS_PER_PAGE ? (
+                    <Button
+                      theme="secondary"
+                      text={hasNextPage ? 'Load more' : 'No more comments'}
+                      className="mx-auto mt-8"
+                      disabled={!hasNextPage}
+                      loading={isFetchingNextPage}
+                      onClick={fetchNextPage}
+                    />
+                  ) : null}
+                </>
+              ) : (
+                <SpinnerIcon className="m-auto mt-12 w-8" />
+              )}
             </>
-          ) : (
-            <SpinnerIcon className="m-auto mt-12 w-8" />
-          )}
+          ) : null}
         </>
-      ) : null}
+      )}
     </Modal>
   ) : null;
 });

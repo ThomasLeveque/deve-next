@@ -1,10 +1,9 @@
 import { useAddTag } from '@api/tag/use-add-tag';
-import { useTags } from '@api/tag/use-tags';
+import { GetTagsReturn, useTags } from '@api/tag/use-tags';
 import SpinnerIcon from '@components/icons/spinner-icon';
 import TagListWrapper from '@components/tag/tag-list-wrapper';
 import { Transition } from '@headlessui/react';
-import { InformationCircleIcon, PlusIcon, SelectorIcon } from '@heroicons/react/outline';
-import { Tag } from '@models/tag';
+import { ChevronUpDownIcon, InformationCircleIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { formatError, stringToSlug } from '@utils/format-string';
 import { useCombobox, useMultipleSelection } from 'downshift';
 import React, { useCallback, useMemo, useState } from 'react';
@@ -15,8 +14,8 @@ import TagsComboboxOption from './tags-combobox-option';
 const MAX_TAGS_LENGTH = 4;
 
 interface TagsComboboxProps {
-  selectedTags: Tag[];
-  setSelectedTags: (tags: Tag[]) => void;
+  selectedTags: GetTagsReturn;
+  setSelectedTags: (tags: GetTagsReturn) => void;
   className?: string;
   errorText?: string;
 }
@@ -52,53 +51,45 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
     [tags, query, selectedItems]
   );
 
-  const {
-    isOpen,
-    getToggleButtonProps,
-    getLabelProps,
-    getMenuProps,
-    getInputProps,
-    getComboboxProps,
-    highlightedIndex,
-    getItemProps,
-  } = useCombobox({
-    inputValue: query,
-    defaultHighlightedIndex: 0,
-    selectedItem: null,
-    items: getFilteredTags ?? [],
-    stateReducer: (state, actionAndChanges) => {
-      const { changes, type } = actionAndChanges;
-      switch (type) {
-        case useCombobox.stateChangeTypes.InputKeyDownEnter:
-        case useCombobox.stateChangeTypes.ItemClick:
-          return {
-            ...changes,
-            isOpen: true, // keep the menu open after selection.
-          };
-      }
-      return changes;
-    },
-    onStateChange: ({ inputValue, type, selectedItem }) => {
-      switch (type) {
-        case useCombobox.stateChangeTypes.InputChange:
-          setQuery(inputValue ?? '');
-          break;
-        case useCombobox.stateChangeTypes.InputKeyDownEnter:
-        case useCombobox.stateChangeTypes.ItemClick:
-          if (!selectedItem) {
+  const { isOpen, getToggleButtonProps, getLabelProps, getMenuProps, getInputProps, highlightedIndex, getItemProps } =
+    useCombobox({
+      inputValue: query,
+      defaultHighlightedIndex: 0,
+      selectedItem: null,
+      items: getFilteredTags ?? [],
+      stateReducer: (state, actionAndChanges) => {
+        const { changes, type } = actionAndChanges;
+        switch (type) {
+          case useCombobox.stateChangeTypes.InputKeyDownEnter:
+          case useCombobox.stateChangeTypes.ItemClick:
+            return {
+              ...changes,
+              isOpen: true, // keep the menu open after selection.
+            };
+        }
+        return changes;
+      },
+      onStateChange: ({ inputValue, type, selectedItem }) => {
+        switch (type) {
+          case useCombobox.stateChangeTypes.InputChange:
+            setQuery(inputValue ?? '');
             break;
-          }
+          case useCombobox.stateChangeTypes.InputKeyDownEnter:
+          case useCombobox.stateChangeTypes.ItemClick:
+            if (!selectedItem) {
+              break;
+            }
 
-          handleAddSelectedItem(selectedItem);
-          break;
-        default:
-          break;
-      }
-    },
-  });
+            handleAddSelectedItem(selectedItem);
+            break;
+          default:
+            break;
+        }
+      },
+    });
 
   const handleAddSelectedItem = useCallback(
-    (tag: Tag) => {
+    (tag: GetTagsReturn[0]) => {
       if (selectedItems.length >= MAX_TAGS_LENGTH) {
         toast('No more than 4 tags', {
           className: 'Info',
@@ -147,7 +138,7 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
       )}
 
       <div className="relative">
-        <div {...getComboboxProps()} className="relative  w-full">
+        <div className="relative w-full">
           <input
             placeholder="Search for a tag..."
             className="with-ring h-[50px] w-full rounded-button bg-gray-100 pl-5 pr-10 text-sm placeholder-gray-400"
@@ -159,7 +150,7 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
             {...getToggleButtonProps()}
             className="absolute inset-y-0 right-0 flex items-center pr-2"
           >
-            <SelectorIcon className="h-5 w-5 text-gray-600" aria-hidden="true" />
+            <ChevronUpDownIcon className="h-5 w-5 text-gray-600" aria-hidden="true" />
           </button>
           {errorText && <p className="absolute top-full right-1 mt-1 text-[10px] text-danger-400">{errorText}</p>}
         </div>

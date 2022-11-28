@@ -1,25 +1,26 @@
 import { OrderLinksKey, useQueryString } from '@hooks/use-query-string';
 import useDebounce from '@hooks/useDebounce';
-import { Link } from '@models/link';
 import { formatError } from '@utils/format-string';
 import { supabase } from '@utils/init-supabase';
-import { PaginatedData } from '@utils/shared-types';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
-import { useInfiniteQuery, UseInfiniteQueryResult } from 'react-query';
-import { dbKeys } from './db-keys';
+import { useInfiniteQuery } from 'react-query';
 import { queryKeys } from './query-keys';
 
 export const LINKS_PER_PAGE = Number(process.env.NEXT_PUBLIC_LINKS_PER_PAGE) ?? 20;
 
-const getLinks = async (
-  cursor = 0,
-  orderby: OrderLinksKey,
-  searchQuery = ''
-): Promise<PaginatedData<Link> | undefined> => {
+export type GetLinksReturn = Awaited<ReturnType<typeof getLinks>>;
+
+const getLinks = async (cursor = 0, orderby: OrderLinksKey, searchQuery = '') => {
   try {
     const nextCursor = cursor + LINKS_PER_PAGE;
-    let query = supabase.from(dbKeys.links).select(dbKeys.selectLinks);
+    let query = supabase.from('links').select(`
+    *,
+    user:profiles!links_userId_fkey(*),
+    tags(*),
+    comments(*),
+    votes(*)
+  `);
 
     if (orderby === 'newest') {
       query = query.order('createdAt', { ascending: false });
@@ -51,15 +52,20 @@ const getLinks = async (
   } catch (err) {
     toast.error(formatError(err as Error));
     console.error(err);
+
+    return {
+      data: [],
+      cursor: undefined,
+    };
   }
 };
 
-export const useLinks = (): UseInfiniteQueryResult<PaginatedData<Link> | undefined> => {
+export const useLinks = () => {
   const { orderbyQuery, searchQuery } = useQueryString();
   const router = useRouter();
   const debouncedSearchQuery = useDebounce<string>(searchQuery, 500);
 
-  return useInfiniteQuery<PaginatedData<Link> | undefined>(
+  return useInfiniteQuery(
     queryKeys.links(orderbyQuery, debouncedSearchQuery),
     (context) => getLinks(context.pageParam, orderbyQuery, debouncedSearchQuery),
     {
