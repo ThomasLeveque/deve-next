@@ -1,5 +1,5 @@
 import { useProfile, useProfileLoaded } from '@store/profile.store';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import SpinnerIcon from './icons/spinner-icon';
 

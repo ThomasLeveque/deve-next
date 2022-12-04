@@ -4,12 +4,13 @@ import SpinnerIcon from '@components/icons/spinner-icon';
 import LinkItem from '@components/link/link-item';
 import TagItem from '@components/tag/tag-item';
 import { singleToArray } from '@utils/single-to-array';
-import { useRouter } from 'next/router';
+import { useSearchParams } from 'next/navigation';
 import { Page } from '../_app';
 
 const TagPage: Page = () => {
-  const router = useRouter();
-  const tagSlug = typeof router.query.tagSlug === 'string' ? router.query.tagSlug : '';
+  const params = useSearchParams();
+  const tagSlugParam = params.get('tagSlug');
+  const tagSlug = typeof tagSlugParam === 'string' ? tagSlugParam : '';
 
   const { data: links, hasNextPage, isFetchingNextPage, fetchNextPage } = useTagLinks(tagSlug);
 

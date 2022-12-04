@@ -1,6 +1,6 @@
 import Button from '@components/elements/button';
 import { HomeIcon } from '@heroicons/react/24/outline';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { Page } from './_app';
 
 const NotFound: Page = () => {

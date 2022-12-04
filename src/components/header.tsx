@@ -4,7 +4,7 @@ import { useAddLinkModalOpen, useAuthModalOpen } from '@store/modals.store';
 import { useProfile } from '@store/profile.store';
 import { supabase } from '@utils/init-supabase';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import React, { useMemo } from 'react';
 import Avatar from './elements/avatar';
 import Button from './elements/button';

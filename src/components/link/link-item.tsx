@@ -17,7 +17,7 @@ import { getDomain } from '@utils/format-string';
 import { singleToArray } from '@utils/single-to-array';
 import classNames from 'classnames';
 import { format } from 'date-fns';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import React, { useMemo } from 'react';
 import toast from 'react-hot-toast';
 import TagItem from '../tag/tag-item';

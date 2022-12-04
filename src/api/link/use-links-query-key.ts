@@ -1,18 +1,20 @@
 import { useQueryString } from '@hooks/use-query-string';
 import { useProfile } from '@store/profile.store';
-import { useRouter } from 'next/router';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
 import { QueryKey } from 'react-query';
 import { queryKeys } from './query-keys';
 
 export const useLinksQueryKey = (): QueryKey => {
-  const router = useRouter();
+  const pathname = usePathname();
+  const params = useSearchParams();
   const profile = useProfile()[0];
   const { orderbyQuery, searchQuery } = useQueryString();
-  const tagSlug = typeof router.query.tagSlug === 'string' ? router.query.tagSlug : '';
+  const tagSlugParam = params.get('tagSlug');
+  const tagSlug = tagSlugParam === 'string' ? tagSlugParam : '';
 
   return useMemo(() => {
-    switch (router.pathname) {
+    switch (pathname) {
       case '/':
         return queryKeys.links(orderbyQuery, searchQuery);
       case '/tags/[tagSlug]':
@@ -22,5 +24,5 @@ export const useLinksQueryKey = (): QueryKey => {
       default:
         return [];
     }
-  }, [router.pathname, orderbyQuery, searchQuery, profile, tagSlug]);
+  }, [pathname, orderbyQuery, searchQuery, profile, tagSlug]);
 };
