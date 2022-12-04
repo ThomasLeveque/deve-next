@@ -5,6 +5,7 @@ import { useRemoveLinkVote } from '@api/vote/use-remove-vote';
 import TagListWrapper from '@components/tag/tag-list-wrapper';
 import { ChatBubbleBottomCenterTextIcon, FireIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { FireIcon as FireIconSolid } from '@heroicons/react/24/solid';
+import { useCustomRouter } from '@hooks/useCustomRouter';
 import {
   useAuthModalOpen,
   useLinkToCommentModal,
@@ -17,7 +18,6 @@ import { getDomain } from '@utils/format-string';
 import { singleToArray } from '@utils/single-to-array';
 import classNames from 'classnames';
 import { format } from 'date-fns';
-import { useRouter } from 'next/navigation';
 import React, { useMemo } from 'react';
 import toast from 'react-hot-toast';
 import TagItem from '../tag/tag-item';
@@ -29,7 +29,7 @@ interface LinkItemProps {
 }
 
 const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, isProfilLink = false }) => {
-  const router = useRouter();
+  const router = useCustomRouter();
   const [profile] = useProfile();
 
   const setLinkToCommentModal = useLinkToCommentModal()[1];

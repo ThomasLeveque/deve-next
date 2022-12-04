@@ -1,10 +1,10 @@
 import Button from '@components/elements/button';
 import { HomeIcon } from '@heroicons/react/24/outline';
-import { useRouter } from 'next/navigation';
+import { useCustomRouter } from '@hooks/useCustomRouter';
 import { Page } from './_app';
 
 const NotFound: Page = () => {
-  const router = useRouter();
+  const router = useCustomRouter();
 
   return (
     <section className="content-screen-height grid content-center">

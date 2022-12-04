@@ -1,4 +1,5 @@
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useCustomRouter } from '@hooks/useCustomRouter';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
 
 export const TAGS_QUERY_SEPARATOR = '|';
@@ -16,7 +17,7 @@ interface useQueryStringReturn {
 export const useQueryString = (): useQueryStringReturn => {
   const nextParams = useSearchParams();
   const pathname = usePathname();
-  const router = useRouter();
+  const router = useCustomRouter();
 
   const params = new URLSearchParams(nextParams.toString());
 

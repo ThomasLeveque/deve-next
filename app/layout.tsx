@@ -1,6 +1,8 @@
 'use client';
 
-import GlobalComponents from 'app/GlobalComponents';
+import { useAuth } from '@api/auth/useAuth';
+import Header from '@components/header';
+import { GlobalComponents } from 'app/GlobalComponents';
 import classNames from 'classnames';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
@@ -17,10 +19,13 @@ const queryClient = new QueryClient({
 });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  useAuth();
+
   return (
     <html lang="en">
       <body className="font-poppins">
         <QueryClientProvider client={queryClient}>
+          <Header />
           <main className={classNames('px-5 xl:container xl:mx-auto')}>{children}</main>
 
           <ReactQueryDevtools initialIsOpen={false} />

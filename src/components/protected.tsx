@@ -1,5 +1,5 @@
+import { useCustomRouter } from '@hooks/useCustomRouter';
 import { useProfile, useProfileLoaded } from '@store/profile.store';
-import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import SpinnerIcon from './icons/spinner-icon';
 
@@ -11,7 +11,7 @@ const Protected: React.FC<ProtectedProps> = (props) => {
   const profile = useProfile()[0];
   const profileLoaded = useProfileLoaded()[0];
 
-  const router = useRouter();
+  const router = useCustomRouter();
 
   useEffect(() => {
     if (!profile && profileLoaded) {
