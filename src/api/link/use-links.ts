@@ -2,7 +2,6 @@ import { OrderLinksKey, useQueryString } from '@hooks/use-query-string';
 import useDebounce from '@hooks/useDebounce';
 import { formatError } from '@utils/format-string';
 import { supabase } from '@utils/init-supabase';
-import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
 import { useInfiniteQuery } from 'react-query';
 import { queryKeys } from './query-keys';
@@ -62,14 +61,12 @@ const getLinks = async (cursor = 0, orderby: OrderLinksKey, searchQuery = '') =>
 
 export const useLinks = () => {
   const { orderbyQuery, searchQuery } = useQueryString();
-  const router = useRouter();
   const debouncedSearchQuery = useDebounce<string>(searchQuery, 500);
 
   return useInfiniteQuery(
     queryKeys.links(orderbyQuery, debouncedSearchQuery),
     (context) => getLinks(context.pageParam, orderbyQuery, debouncedSearchQuery),
     {
-      enabled: router.isReady,
       getNextPageParam: (lastPage) => lastPage?.cursor,
     }
   );

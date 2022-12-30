@@ -1,3 +1,5 @@
+'use client';
+
 import { TagRow, useTags } from '@api/tag/use-tags';
 import SpinnerIcon from '@components/icons/spinner-icon';
 import TagItem from '@components/tag/tag-item';
@@ -5,9 +7,8 @@ import TagListWrapper from '@components/tag/tag-list-wrapper';
 import { useCustomRouter } from '@hooks/useCustomRouter';
 import { singleToArray } from '@utils/single-to-array';
 import toast from 'react-hot-toast';
-import { Page } from '../_app';
 
-const Tags: Page = () => {
+export default function Tags() {
   const router = useCustomRouter();
   const { data: tags } = useTags();
 
@@ -42,6 +43,4 @@ const Tags: Page = () => {
       )}
     </section>
   );
-};
-
-export default Tags;
+}

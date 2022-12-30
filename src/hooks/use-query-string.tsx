@@ -1,4 +1,5 @@
-import { useRouter } from 'next/router';
+import { useCustomRouter } from '@hooks/useCustomRouter';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
 
 export const TAGS_QUERY_SEPARATOR = '|';
@@ -14,50 +15,38 @@ interface useQueryStringReturn {
 }
 
 export const useQueryString = (): useQueryStringReturn => {
-  const router = useRouter();
+  const nextParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useCustomRouter();
+
+  const params = new URLSearchParams(nextParams.toString());
+
+  const searchParam = params.get('search');
+  const orderbyParam = params.get('orderby');
 
   const searchQuery = useMemo(() => {
-    return typeof router.query.search !== 'string' ? '' : router.query.search ?? '';
-  }, [router.query.search]);
+    return typeof searchParam !== 'string' ? '' : searchParam ?? '';
+  }, [searchParam]);
 
   const orderbyQuery = useMemo(() => {
-    return router.query.orderby && orderLinksKeys.includes(router.query.orderby as OrderLinksKey)
-      ? (router.query.orderby as OrderLinksKey)
+    return orderbyParam && orderLinksKeys.includes(orderbyParam as OrderLinksKey)
+      ? (orderbyParam as OrderLinksKey)
       : 'newest';
-  }, [router.query.orderby]);
+  }, [orderbyParam]);
 
   const setSearchQuery = (search: string) => {
-    let query;
     if (search === '') {
-      delete router.query.search;
-      query = router.query;
+      params.delete('search');
     } else {
-      query = { ...router.query, search };
+      params.set('search', search);
     }
 
-    router.push(
-      {
-        pathname: router.pathname,
-        query,
-      },
-      undefined,
-      {
-        shallow: true,
-      }
-    );
+    router.push(`${pathname}?${params.toString()}`);
   };
 
   const setOrderbyQuery = (orderKey: OrderLinksKey) => {
-    router.push(
-      {
-        pathname: router.pathname,
-        query: { ...router.query, orderby: orderKey },
-      },
-      undefined,
-      {
-        shallow: true,
-      }
-    );
+    params.set('orderby', orderKey);
+    router.push(`${pathname}?${params.toString()}`);
   };
 
   return {

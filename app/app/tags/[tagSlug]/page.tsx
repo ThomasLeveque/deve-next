@@ -1,17 +1,13 @@
+'use client';
+
 import { useTagLinks } from '@api/link/use-links-by-tag';
 import Button from '@components/elements/button';
 import SpinnerIcon from '@components/icons/spinner-icon';
 import LinkItem from '@components/link/link-item';
 import TagItem from '@components/tag/tag-item';
 import { singleToArray } from '@utils/single-to-array';
-import { useSearchParams } from 'next/navigation';
-import { Page } from '../_app';
 
-const TagPage: Page = () => {
-  const params = useSearchParams();
-  const tagSlugParam = params.get('tagSlug');
-  const tagSlug = typeof tagSlugParam === 'string' ? tagSlugParam : '';
-
+export default function Tag({ params: { tagSlug } }: { params: { tagSlug: string } }) {
   const { data: links, hasNextPage, isFetchingNextPage, fetchNextPage } = useTagLinks(tagSlug);
 
   const tag = singleToArray(links?.pages?.[0]?.data?.[0]?.tags).find((tag) => tag.slug === tagSlug);
@@ -42,6 +38,4 @@ const TagPage: Page = () => {
       )}
     </section>
   );
-};
-
-export default TagPage;
+}

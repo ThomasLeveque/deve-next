@@ -28,12 +28,15 @@ export const addLink = async (linkToAdd: LinkInsert, tags: GetTagsReturn = []) =
     throw new Error('Error during adding a new link, please try again');
   }
 
-  const { data: newLinksTagsConnection, error: newLinksTagsConnectionError } = await supabase.from('links_tags').insert(
-    tags.map((tag) => ({
-      linkId: newLink.id,
-      tagId: tag.id,
-    }))
-  );
+  const { data: newLinksTagsConnection, error: newLinksTagsConnectionError } = await supabase
+    .from('links_tags')
+    .insert(
+      tags.map((tag) => ({
+        linkId: newLink.id,
+        tagId: tag.id,
+      }))
+    )
+    .select('id');
 
   if (!newLinksTagsConnection || newLinksTagsConnectionError) {
     await supabase.from('links').delete().eq('id', newLink.id);
