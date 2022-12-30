@@ -1,5 +1,5 @@
 import { useCustomRouter } from '@hooks/useCustomRouter';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
 
 export const TAGS_QUERY_SEPARATOR = '|';
@@ -16,7 +16,6 @@ interface useQueryStringReturn {
 
 export const useQueryString = (): useQueryStringReturn => {
   const nextParams = useSearchParams();
-  const pathname = usePathname();
   const router = useCustomRouter();
 
   const params = new URLSearchParams(nextParams.toString());
@@ -40,13 +39,12 @@ export const useQueryString = (): useQueryStringReturn => {
     } else {
       params.set('search', search);
     }
-
-    router.push(`${pathname}?${params.toString()}`);
+    router.push(`?${params.toString()}`);
   };
 
   const setOrderbyQuery = (orderKey: OrderLinksKey) => {
     params.set('orderby', orderKey);
-    router.push(`${pathname}?${params.toString()}`);
+    router.push(`?${params.toString()}`);
   };
 
   return {
