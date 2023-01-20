@@ -1,9 +1,9 @@
+import { useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
 import { formatError } from '@utils/format-string';
 import { supabase } from '@utils/init-supabase';
 import { updateItemInsideData } from '@utils/mutate-data';
 import { GetTagsReturn } from 'api/tag/use-tags';
 import toast from 'react-hot-toast';
-import { useMutation, UseMutationResult, useQueryClient } from 'react-query';
 import { Database } from '~types/supabase';
 import { queryKeys } from './query-keys';
 

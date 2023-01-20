@@ -1,8 +1,8 @@
 import { GetLinksReturn } from '@api/link/get-links';
+import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@utils/init-supabase';
 import { addItemInsidePaginatedData } from '@utils/mutate-data';
 import { GetTagsReturn } from 'api/tag/use-tags';
-import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
 import { Database } from '~types/supabase';
 import { useLinksQueryKey } from './use-links-query-key';
 

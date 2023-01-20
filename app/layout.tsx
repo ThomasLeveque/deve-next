@@ -3,9 +3,9 @@
 import { useAuth } from '@api/auth/useAuth';
 import { GlobalComponents } from '@components/GlobalComponents';
 import Header from '@components/header';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import classNames from 'classnames';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
 import '../styles/index.css';
 
 const queryClient = new QueryClient({

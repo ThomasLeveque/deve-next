@@ -1,7 +1,7 @@
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { formatError } from '@utils/format-string';
 import { supabase } from '@utils/init-supabase';
 import toast from 'react-hot-toast';
-import { useInfiniteQuery } from 'react-query';
 import { queryKeys } from './query-keys';
 
 export const TAG_LINKS_PER_PAGE = Number(process.env.NEXT_PUBLIC_LINKS_PER_PAGE) ?? 20;

@@ -1,7 +1,7 @@
 import { GetLinksReturn } from '@api/link/get-links';
+import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@utils/init-supabase';
 import { removeItemInsidePaginatedData } from '@utils/mutate-data';
-import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
 import { useLinksQueryKey } from './use-links-query-key';
 
 export type RemoveLinkReturn = Awaited<ReturnType<typeof removeLink>>;

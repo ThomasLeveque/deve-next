@@ -1,8 +1,8 @@
 import { useQueryString } from '@hooks/use-query-string';
 import { useProfile } from '@store/profile.store';
+import { QueryKey } from '@tanstack/react-query';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
-import { QueryKey } from 'react-query';
 import { queryKeys } from './query-keys';
 
 export const useLinksQueryKey = (): QueryKey => {

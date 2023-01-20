@@ -1,4 +1,4 @@
-import { InfiniteData } from 'react-query';
+import { InfiniteData } from '@tanstack/react-query';
 import { Nullable, PaginatedData } from '~types/shared';
 
 const initialPaginatedData: InfiniteData<never> = {
