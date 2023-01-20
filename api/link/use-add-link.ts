@@ -1,6 +1,6 @@
+import { GetLinksReturn } from '@api/link/get-links';
 import { supabase } from '@utils/init-supabase';
 import { addItemInsidePaginatedData } from '@utils/mutate-data';
-import { GetLinksReturn } from 'api/link/use-links';
 import { GetTagsReturn } from 'api/tag/use-tags';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
 import { Database } from '~types/supabase';

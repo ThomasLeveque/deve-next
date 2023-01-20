@@ -1,10 +1,10 @@
+import { GetLinksReturn } from '@api/link/get-links';
 import { useLinkToCommentModal } from '@store/modals.store';
 import { arrayToSingle } from '@utils/array-to-single';
 import { formatError } from '@utils/format-string';
 import { supabase } from '@utils/init-supabase';
 import { removeItemInsidePaginatedData, updateItemInsidePaginatedData } from '@utils/mutate-data';
 import { GetCommentsReturn } from 'api/comment/use-comments';
-import { GetLinksReturn } from 'api/link/use-links';
 import { useLinksQueryKey } from 'api/link/use-links-query-key';
 import toast from 'react-hot-toast';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';

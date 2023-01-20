@@ -1,3 +1,4 @@
+import { GetLinksReturn } from '@api/link/get-links';
 import TagListWrapper from '@components/tag/tag-list-wrapper';
 import { ChatBubbleBottomCenterTextIcon, FireIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { FireIcon as FireIconSolid } from '@heroicons/react/24/solid';
@@ -12,7 +13,6 @@ import { useProfile } from '@store/profile.store';
 import { arrayToSingle } from '@utils/array-to-single';
 import { getDomain } from '@utils/format-string';
 import { singleToArray } from '@utils/single-to-array';
-import { GetLinksReturn } from 'api/link/use-links';
 import { TagRow } from 'api/tag/use-tags';
 import { useAddLinkVote } from 'api/vote/use-add-vote';
 import { useRemoveLinkVote } from 'api/vote/use-remove-vote';

@@ -1,3 +1,4 @@
+import { GetLinksReturn } from '@api/link/get-links';
 import Button from '@components/elements/button';
 import TextInput from '@components/elements/text-input';
 import TagsCombobox from '@components/tag/tags-combobox';
@@ -6,7 +7,6 @@ import { useProfile } from '@store/profile.store';
 import { updateLinkSchema } from '@utils/form-schemas';
 import { formatError } from '@utils/format-string';
 import { singleToArray } from '@utils/single-to-array';
-import { GetLinksReturn } from 'api/link/use-links';
 import { useUpdateLink } from 'api/link/use-update-link';
 import { GetTagsReturn } from 'api/tag/use-tags';
 import React, { useCallback } from 'react';

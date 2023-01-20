@@ -1,8 +1,8 @@
+import { GetLinksReturn } from '@api/link/get-links';
 import { formatError } from '@utils/format-string';
 import { supabase } from '@utils/init-supabase';
 import { updateItemInsidePaginatedData } from '@utils/mutate-data';
 import { singleToArray } from '@utils/single-to-array';
-import { GetLinksReturn } from 'api/link/use-links';
 import toast from 'react-hot-toast';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
 import { useLinksQueryKey } from '../link/use-links-query-key';

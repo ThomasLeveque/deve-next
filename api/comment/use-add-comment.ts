@@ -1,9 +1,9 @@
+import { GetLinksReturn } from '@api/link/get-links';
 import { useLinkToCommentModal } from '@store/modals.store';
 import { arrayToSingle } from '@utils/array-to-single';
 import { supabase } from '@utils/init-supabase';
 import { addItemInsidePaginatedData, updateItemInsidePaginatedData } from '@utils/mutate-data';
 import { GetCommentsReturn } from 'api/comment/use-comments';
-import { GetLinksReturn } from 'api/link/use-links';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
 import { Database } from '~types/supabase';
 import { useLinksQueryKey } from '../link/use-links-query-key';

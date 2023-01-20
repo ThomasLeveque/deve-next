@@ -1,6 +1,6 @@
+import { GetLinksReturn } from '@api/link/get-links';
 import { supabase } from '@utils/init-supabase';
 import { removeItemInsidePaginatedData } from '@utils/mutate-data';
-import { GetLinksReturn } from 'api/link/use-links';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from 'react-query';
 import { useLinksQueryKey } from './use-links-query-key';
 
