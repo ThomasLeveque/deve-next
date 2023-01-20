@@ -1,3 +1,5 @@
+'use client';
+
 import { ArrowLeftOnRectangleIcon, PlusIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 import { useMediaQuery } from '@hooks/use-media-query';
 import { resolveHref, useCustomRouter } from '@hooks/useCustomRouter';

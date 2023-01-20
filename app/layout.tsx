@@ -1,12 +1,12 @@
 'use client';
 
+import { useAuth } from '@api/auth/useAuth';
 import { GlobalComponents } from '@components/GlobalComponents';
 import Header from '@components/header';
-import { useAuth } from 'api/auth/useAuth';
 import classNames from 'classnames';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import 'styles/index.css';
+import '../styles/index.css';
 
 const queryClient = new QueryClient({
   defaultOptions: {
