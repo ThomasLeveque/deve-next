@@ -1,4 +1,4 @@
-import { useProfile } from '@store/profile.store';
+import { useSupabase } from '@components/SupabaseAuthProvider';
 import { getInitials } from '@utils/format-string';
 import classNames from 'classnames';
 import Image from 'next/image';
@@ -11,7 +11,7 @@ interface AvatarProps {
 }
 
 const Avatar: React.FC<AvatarProps> = React.memo((props) => {
-  const [profile] = useProfile();
+  const { profile } = useSupabase();
   const size = props.size ?? 50;
   const disabled = props.disabled ?? false;
 

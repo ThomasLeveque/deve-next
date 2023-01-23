@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient, UseQueryOptions, UseQueryResult } from '@tanstack/react-query';
 import { formatError } from '@utils/format-string';
-import { supabase } from '@utils/init-supabase';
 import { singleToArray } from '@utils/single-to-array';
+import { supabase } from '@utils/supabase-client';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { Database } from '~types/supabase';

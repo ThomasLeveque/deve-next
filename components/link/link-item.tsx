@@ -1,4 +1,5 @@
 import { GetLinksReturn } from '@api/link/get-links';
+import { useSupabase } from '@components/SupabaseAuthProvider';
 import TagListWrapper from '@components/tag/tag-list-wrapper';
 import { ChatBubbleBottomCenterTextIcon, FireIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { FireIcon as FireIconSolid } from '@heroicons/react/24/solid';
@@ -9,7 +10,6 @@ import {
   useLinkToRemoveModal,
   useLinkToUpdateModal,
 } from '@store/modals.store';
-import { useProfile } from '@store/profile.store';
 import { arrayToSingle } from '@utils/array-to-single';
 import { getDomain } from '@utils/format-string';
 import { singleToArray } from '@utils/single-to-array';
@@ -28,9 +28,9 @@ interface LinkItemProps {
   isProfilLink?: boolean;
 }
 
-const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, isProfilLink = false }) => {
+const LinkItem: React.FC<LinkItemProps> = ({ link, isProfilLink = false }) => {
   const router = useCustomRouter();
-  const [profile] = useProfile();
+  const { profile } = useSupabase();
 
   const setLinkToCommentModal = useLinkToCommentModal()[1];
   const setLinkToUpdateModal = useLinkToUpdateModal()[1];
@@ -39,16 +39,16 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, isProfilLink = fal
 
   const profileVote = useMemo(
     () => singleToArray(link.votes).find((vote) => vote.userId === profile?.id),
-    [profile, link]
+    [profile, link.votes]
   );
 
   const canUpdateLinkData = useMemo(
     () => profile && (profile.role === 'admin' || link.userId === profile.id),
-    [profile, link]
+    [profile, link.userId]
   );
   const canRemoveLink = useMemo(
     () => profile && (profile.role === 'admin' || link.userId === profile.id),
-    [profile, link]
+    [profile, link.userId]
   );
 
   const renderFires = useMemo(() => {
@@ -157,6 +157,6 @@ const LinkItem: React.FC<LinkItemProps> = React.memo(({ link, isProfilLink = fal
       </div>
     </li>
   );
-});
+};
 
 export default LinkItem;

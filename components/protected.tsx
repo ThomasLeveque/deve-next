@@ -1,5 +1,6 @@
+import { useSupabase } from '@components/SupabaseAuthProvider';
 import { useCustomRouter } from '@hooks/useCustomRouter';
-import { useProfile, useProfileLoaded } from '@store/profile.store';
+import { useProfileLoaded } from '@store/profile.store';
 import React, { useEffect } from 'react';
 import SpinnerIcon from './icons/spinner-icon';
 
@@ -8,7 +9,7 @@ interface ProtectedProps {
 }
 
 const Protected: React.FC<ProtectedProps> = (props) => {
-  const profile = useProfile()[0];
+  const { profile } = useSupabase();
   const profileLoaded = useProfileLoaded()[0];
 
   const router = useCustomRouter();

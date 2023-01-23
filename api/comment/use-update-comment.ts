@@ -1,6 +1,6 @@
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@utils/init-supabase';
 import { updateItemInsidePaginatedData } from '@utils/mutate-data';
+import { supabase } from '@utils/supabase-client';
 import { GetCommentsReturn } from 'api/comment/use-comments';
 import { Database } from '~types/supabase';
 import { queryKeys } from './query-keys';

@@ -1,36 +1,35 @@
-'use client';
-
-import { useAuth } from '@api/auth/useAuth';
+import { getUserProfile } from '@api/auth/get-user-profile';
 import { GlobalComponents } from '@components/GlobalComponents';
 import Header from '@components/header';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import ReactQueryClientProvider from '@components/ReactQueryClientProvider';
+import SupabaseAuthProvider from '@components/SupabaseAuthProvider';
+import { createServerClient } from '@utils/supabase-server';
 import classNames from 'classnames';
 import '../styles/index.css';
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 0,
-      refetchOnMount: true,
-      refetchOnWindowFocus: false,
-    },
-  },
-});
+// do not cache this layout
+export const revalidate = 0;
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  useAuth();
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const supabase = createServerClient();
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  const profile = await getUserProfile(session?.user, supabase);
 
   return (
     <html lang="en">
       <body className="font-poppins">
-        <QueryClientProvider client={queryClient}>
-          <Header />
-          <main className={classNames('px-5 xl:container xl:mx-auto')}>{children}</main>
+        <SupabaseAuthProvider session={session} profile={profile}>
+          <ReactQueryClientProvider>
+            <Header />
+            <main className={classNames('px-5 xl:container xl:mx-auto')}>{children}</main>
 
-          <ReactQueryDevtools initialIsOpen={false} />
-          <GlobalComponents />
-        </QueryClientProvider>
+            <GlobalComponents />
+          </ReactQueryClientProvider>
+        </SupabaseAuthProvider>
       </body>
     </html>
   );

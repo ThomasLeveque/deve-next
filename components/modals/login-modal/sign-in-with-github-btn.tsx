@@ -1,7 +1,7 @@
 import Button from '@components/elements/button';
 import GithubIcon from '@components/icons/github-icon';
 import { formatError } from '@utils/format-string';
-import { supabase } from '@utils/init-supabase';
+import { supabase } from '@utils/supabase-client';
 import React, { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
 

@@ -8,7 +8,7 @@ import React from 'react';
 import { Modal } from '../modal';
 import AddCommentForm from './add-comment-form';
 
-const AddCommentModal: React.FC = React.memo(() => {
+const AddCommentModal: React.FC = () => {
   const [linkToCommentModal, setLinkToCommentModal] = useLinkToCommentModal();
 
   const { data: comments, fetchNextPage, hasNextPage, isFetchingNextPage } = useComments(linkToCommentModal?.id);
@@ -59,6 +59,6 @@ const AddCommentModal: React.FC = React.memo(() => {
       )}
     </Modal>
   ) : null;
-});
+};
 
 export default AddCommentModal;

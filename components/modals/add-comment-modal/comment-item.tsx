@@ -1,8 +1,8 @@
 import Button from '@components/elements/button';
 import MyPopover from '@components/elements/popover';
+import { useSupabase } from '@components/SupabaseAuthProvider';
 import { Popover } from '@headlessui/react';
 import { PencilSquareIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { useProfile } from '@store/profile.store';
 import { arrayToSingle } from '@utils/array-to-single';
 import { GetCommentsReturn } from 'api/comment/use-comments';
 import { useRemoveLinkComment } from 'api/comment/use-remove-comment';
@@ -18,7 +18,7 @@ interface CommentItemProps {
 }
 
 const CommentItem: React.FC<CommentItemProps> = ({ comment, linkId, isPreview = false }) => {
-  const [profile] = useProfile();
+  const { profile } = useSupabase();
   const [updateComment, setUpdateComment] = useState(false);
 
   const removeComment = useRemoveLinkComment(linkId);

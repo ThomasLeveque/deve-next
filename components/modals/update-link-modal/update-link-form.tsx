@@ -1,9 +1,9 @@
 import { GetLinksReturn } from '@api/link/get-links';
 import Button from '@components/elements/button';
 import TextInput from '@components/elements/text-input';
+import { useSupabase } from '@components/SupabaseAuthProvider';
 import TagsCombobox from '@components/tag/tags-combobox';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useProfile } from '@store/profile.store';
 import { updateLinkSchema } from '@utils/form-schemas';
 import { formatError } from '@utils/format-string';
 import { singleToArray } from '@utils/single-to-array';
@@ -26,7 +26,7 @@ interface AddLinkFormProps {
 }
 
 const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
-  const [profile] = useProfile();
+  const { profile } = useSupabase();
 
   const {
     register,

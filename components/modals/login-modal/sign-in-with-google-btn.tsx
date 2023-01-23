@@ -1,7 +1,7 @@
 import Button from '@components/elements/button';
 import GoogleIcon from '@components/icons/google-icon';
 import { formatError } from '@utils/format-string';
-import { supabase } from '@utils/init-supabase';
+import { supabase } from '@utils/supabase-client';
 import React, { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
 

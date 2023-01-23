@@ -3,11 +3,11 @@
 import Button from '@components/elements/button';
 import SpinnerIcon from '@components/icons/spinner-icon';
 import LinkItem from '@components/link/link-item';
-import { useProfile } from '@store/profile.store';
+import { useSupabase } from '@components/SupabaseAuthProvider';
 import { useUserLinks } from 'api/link/use-user-links';
 
 export default function Profil() {
-  const profile = useProfile()[0];
+  const { profile } = useSupabase();
 
   const { data: userLinks, fetchNextPage, hasNextPage, isFetchingNextPage } = useUserLinks(profile?.id);
 

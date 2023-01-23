@@ -1,6 +1,6 @@
 import { OrderLinksKey } from '@hooks/use-query-string';
 import { formatError } from '@utils/format-string';
-import { supabase } from '@utils/init-supabase';
+import { supabase } from '@utils/supabase-client';
 import toast from 'react-hot-toast';
 
 export const LINKS_PER_PAGE = Number(process.env.NEXT_PUBLIC_LINKS_PER_PAGE) ?? 20;

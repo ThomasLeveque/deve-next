@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { formatError } from '@utils/format-string';
-import { supabase } from '@utils/init-supabase';
+import { supabase } from '@utils/supabase-client';
 import toast from 'react-hot-toast';
 import { queryKeys } from './query-keys';
 

@@ -1,7 +1,7 @@
 import Button from '@components/elements/button';
 import TextArea from '@components/elements/textarea';
+import { useSupabase } from '@components/SupabaseAuthProvider';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useProfile } from '@store/profile.store';
 import { addCommentSchema, commentMaxLength } from '@utils/form-schemas';
 import { formatError } from '@utils/format-string';
 import { GetCommentsReturn } from 'api/comment/use-comments';
@@ -22,7 +22,7 @@ interface UpdateCommentFormProps {
 }
 
 const UpdateCommentForm: React.FC<UpdateCommentFormProps> = (props) => {
-  const [profile] = useProfile();
+  const { profile } = useSupabase();
 
   const [showPreview, setShowPreview] = useState(false);
 

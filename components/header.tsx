@@ -1,21 +1,21 @@
 'use client';
 
+import { useSupabase } from '@components/SupabaseAuthProvider';
 import { ArrowLeftOnRectangleIcon, PlusIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 import { useMediaQuery } from '@hooks/use-media-query';
 import { resolveHref, useCustomRouter } from '@hooks/useCustomRouter';
 import { useAddLinkModalOpen, useAuthModalOpen } from '@store/modals.store';
-import { useProfile } from '@store/profile.store';
-import { supabase } from '@utils/init-supabase';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import Avatar from './elements/avatar';
 import Button from './elements/button';
 import MenuDropdown, { MenuDropdownItemProps } from './elements/menu-dropdown';
 
-const Header: React.FC = React.memo(() => {
-  const profile = useProfile()[0];
+const Header = () => {
   const pathname = usePathname();
+
+  const { supabase, profile } = useSupabase();
 
   const setAuthModalOpen = useAuthModalOpen()[1];
   const setAddLinkModalOpen = useAddLinkModalOpen()[1];
@@ -71,6 +71,6 @@ const Header: React.FC = React.memo(() => {
       </div>
     </header>
   );
-});
+};
 
 export default Header;
