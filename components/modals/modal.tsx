@@ -55,9 +55,7 @@ export const Modal: React.FC<ModalProps> = ({
                 <XMarkIcon className="w-6" />
               </button>
               {title !== undefined ? (
-                <Dialog.Title
-                  className={classNames('mx-4 mb-8 mt-2 text-center font-poppins-bold text-4xl', titleClassName)}
-                >
+                <Dialog.Title className={classNames('mx-4 mb-8 mt-2 text-center text-4xl font-bold', titleClassName)}>
                   {title}
                 </Dialog.Title>
               ) : null}

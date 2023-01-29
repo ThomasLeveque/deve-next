@@ -1,9 +1,12 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { fontFamily } = require('tailwindcss/defaultTheme');
+
+/** @type {import('tailwindcss').Config} \*/
 module.exports = {
   content: ['./components/**/*.{js,ts,jsx,tsx}', './app/**/*.{js,ts,jsx,tsx}'],
   theme: {
     fontFamily: {
-      poppins: ['poppins'],
-      'poppins-bold': ['poppins-bold'],
+      poppins: ['var(--font-poppins)', ...fontFamily.sans],
     },
     extend: {
       extend: {

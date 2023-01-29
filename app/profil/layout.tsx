@@ -19,23 +19,23 @@ export default function ProfilLayout({ children }: { children: React.ReactNode }
               <Avatar disabled className="mx-auto mb-6 sm:-ml-1" size={85} />
               <ul className="space-y-5 text-center sm:text-left">
                 <li>
-                  <h3 className="mb-1 font-poppins-bold text-[10px] uppercase">Username :</h3>
+                  <h3 className="mb-1 text-[10px] font-bold uppercase">Username :</h3>
                   <h2 className="break-all text-sm">{profile.username}</h2>
                 </li>
                 <li>
-                  <h3 className="mb-1 font-poppins-bold text-[10px] uppercase">Email :</h3>
+                  <h3 className="mb-1 text-[10px] font-bold uppercase">Email :</h3>
                   <h2 className="break-all text-sm">{profile.email}</h2>
                 </li>
                 <li>
-                  <h3 className="mb-2 font-poppins-bold text-[10px] uppercase">Admin status :</h3>
+                  <h3 className="mb-2 text-[10px] font-bold uppercase">Admin status :</h3>
                   <ToggleSwitch className="mx-auto sm:mx-0" disabled={true} checked={profile.role === 'admin'} />
                 </li>
                 <li>
-                  <h3 className="mb-1 font-poppins-bold text-[10px] uppercase">Created at :</h3>
+                  <h3 className="mb-1 text-[10px] font-bold uppercase">Created at :</h3>
                   <h2 className="text-sm">{format(new Date(profile.createdAt), 'MMMM d yyyy')}</h2>
                 </li>
                 <li>
-                  <h3 className="mb-1 font-poppins-bold text-[10px] uppercase">Last updated at :</h3>
+                  <h3 className="mb-1 text-[10px] font-bold uppercase">Last updated at :</h3>
                   <h2 className="text-sm">{format(new Date(profile.updatedAt), 'MMMM d yyyy')}</h2>
                 </li>
               </ul>

@@ -33,9 +33,7 @@ const TagItem = React.forwardRef<HTMLButtonElement, TagProps>(
         )}
         {...props}
       >
-        <span className={classNames('font-poppins-bold text-[10px] leading-[15px]', { 'text-[15px]': isLarge })}>
-          #{text}
-        </span>
+        <span className={classNames('text-[10px] font-bold leading-[15px]', { 'text-[15px]': isLarge })}>#{text}</span>
         {isClosable ? (
           <XMarkIcon
             className={classNames('ml-[6px] w-[14px] cursor-pointer rounded-sm', { 'w-[16px]': isLarge })}

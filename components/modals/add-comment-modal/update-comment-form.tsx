@@ -86,7 +86,7 @@ const UpdateCommentForm: React.FC<UpdateCommentFormProps> = (props) => {
             className="h-full"
           />
           <p className="mt-3 ml-1 text-xs">
-            Characters left: <span className="font-poppins-bold">{commentMaxLength - commentText.length}</span>
+            Characters left: <span className="font-bold">{commentMaxLength - commentText.length}</span>
           </p>
         </>
       )}

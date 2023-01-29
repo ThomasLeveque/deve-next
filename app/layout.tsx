@@ -3,9 +3,16 @@ import { GlobalComponents } from '@components/GlobalComponents';
 import Header from '@components/header';
 import ReactQueryClientProvider from '@components/ReactQueryClientProvider';
 import SupabaseAuthProvider from '@components/SupabaseAuthProvider';
+import { Poppins } from '@next/font/google';
 import { createServerClient } from '@utils/supabase-server';
 import classNames from 'classnames';
 import '../styles/index.css';
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-poppins',
+});
 
 // do not cache this layout
 export const revalidate = 0;
@@ -21,7 +28,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="en">
-      <body className="font-poppins">
+      <body className={`${poppins.variable} font-poppins`}>
         <SupabaseAuthProvider session={session} profile={profile}>
           <ReactQueryClientProvider>
             <Header />

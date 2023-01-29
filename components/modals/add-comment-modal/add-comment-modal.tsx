@@ -22,7 +22,7 @@ const AddCommentModal: React.FC = () => {
       {(initialFocusButtonRef) => (
         <>
           <a href={linkToCommentModal.url} rel="noreferrer" target="_blank" className="with-ring group mb-6 mr-8 block">
-            <h2 className="mb-2 break-words font-poppins-bold text-3xl group-hover:text-secondary">
+            <h2 className="mb-2 break-words text-3xl font-bold group-hover:text-secondary">
               {linkToCommentModal.description}
             </h2>
             <p className="text-xs group-hover:underline">On {getDomain(linkToCommentModal.url)}</p>

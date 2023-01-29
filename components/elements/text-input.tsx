@@ -21,10 +21,7 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
         {label && (
           <label
             htmlFor={inputProps.id}
-            className={classNames(
-              'mb-[6px] ml-1 block font-poppins-bold text-[10px] uppercase text-black',
-              labelClassName
-            )}
+            className={classNames('mb-[6px] ml-1 block text-[10px] font-bold uppercase text-black', labelClassName)}
           >
             {label}
           </label>

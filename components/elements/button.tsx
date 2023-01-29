@@ -50,7 +50,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => 
     <button
       ref={ref}
       className={classNames(
-        'with-ring flex h-[46px] items-center justify-center rounded-button font-poppins-bold text-xs uppercase disabled:cursor-not-allowed disabled:opacity-40',
+        'with-ring flex h-[46px] items-center justify-center rounded-button text-xs font-bold uppercase disabled:cursor-not-allowed disabled:opacity-40',
         { 'w-full': fullWidth },
         { 'px-5': !isOnlyIcon },
         { 'w-[46px]': isOnlyIcon },

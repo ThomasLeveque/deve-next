@@ -15,7 +15,7 @@ export default function Tag({ params: { tagSlug } }: { params: { tagSlug: string
   return (
     <section className="my-8">
       {tag && (
-        <h1 className="mb-8 flex items-center gap-3 text-center font-poppins-bold text-4xl sm:text-left">
+        <h1 className="mb-8 flex items-center gap-3 text-center text-4xl font-bold sm:text-left">
           Tag: <TagItem size="large" text={`${tag.name} (${singleToArray(tag.links).length ?? 0})`} isColored />
         </h1>
       )}

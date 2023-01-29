@@ -53,7 +53,7 @@ const Toast: React.FC<ToastProps> = (props) => {
         >
           {icon ?? <BellIcon />}
           <div className="mr-4 grid gap-[6px]">
-            <p className="font-poppins-bold text-[11px]">{title ?? 'Notification'}</p>
+            <p className="text-[11px] font-bold">{title ?? 'Notification'}</p>
             <p className="text-sm">
               {typeof props.toast.message === 'function' ? props.toast.message(props.toast) : props.toast.message}
             </p>

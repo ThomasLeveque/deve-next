@@ -118,7 +118,7 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
 
   return (
     <div className={className}>
-      <label {...getLabelProps()} className="mb-[6px] ml-1 block font-poppins-bold text-[10px] uppercase text-black">
+      <label {...getLabelProps()} className="mb-[6px] ml-1 block text-[10px] font-bold uppercase text-black">
         TAGS (MIN 1, MAX 4)
       </label>
       {selectedItems.length > 0 && (
@@ -176,7 +176,7 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
                     >
                       {addTag.isLoading ? <SpinnerIcon /> : <PlusIcon />}
                       <p className="text-left">
-                        Create <span className="font-poppins-bold">{query}</span> tag
+                        Create <span className="font-bold">{query}</span> tag
                       </p>
                     </button>
                   )}

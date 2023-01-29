@@ -44,12 +44,12 @@ const Header = () => {
     <header className="sticky top-0 z-30 bg-white">
       <div className="flex h-header items-center justify-between px-5 xl:container xl:mx-auto">
         <div className="flex items-center space-x-5">
-          <Link href={resolveHref('/', pathname)} className="with-ring font-poppins-bold text-3xl hover:text-secondary">
+          <Link href={resolveHref('/', pathname)} className="with-ring text-3xl font-bold hover:text-secondary">
             DN
           </Link>
           <Link
             href={resolveHref('/tags', pathname)}
-            className="with-ring px-1 font-poppins-bold hover:text-secondary hover:underline"
+            className="with-ring px-1 font-bold hover:text-secondary hover:underline"
           >
             Tags
           </Link>

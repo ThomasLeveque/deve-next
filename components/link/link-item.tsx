@@ -85,9 +85,7 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, isProfilLink = false }) => {
     <li className="group flex flex-col rounded-link-card bg-gray-100 p-[30px]">
       <div className="mb-5 flex min-h-[20px] items-start justify-between space-x-3">
         <div>
-          {!isProfilLink && (
-            <h3 className="mb-1 font-poppins-bold text-[13px]">{arrayToSingle(link.user)?.username}</h3>
-          )}
+          {!isProfilLink && <h3 className="mb-1 text-[13px] font-bold">{arrayToSingle(link.user)?.username}</h3>}
           <p className="text-[10px] text-gray-400">{format(new Date(link.createdAt), 'MMMM d yyyy')}</p>
         </div>
         <div className="flex space-x-1 group-hover:flex lg:hidden">
@@ -111,7 +109,7 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, isProfilLink = false }) => {
       </div>
       <a href={link.url} rel="noreferrer" target="_blank" className="with-ring link-item-link mb-8 block">
         <h2
-          className={classNames('mb-2 break-words font-poppins-bold text-3xl', {
+          className={classNames('mb-2 break-words text-3xl font-bold', {
             '!text-2xl': link.description.length > 60,
           })}
         >
@@ -145,14 +143,14 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, isProfilLink = false }) => {
           })}
         >
           {Boolean(profileVote) ? <FireIconSolid className="w-6" /> : <FireIcon className="w-6" />}
-          <span className="font-poppins-bold text-[11px]">{renderFires}</span>
+          <span className="text-[11px] font-bold">{renderFires}</span>
         </button>
         <button
           onClick={() => (profile ? setLinkToCommentModal(link) : setAuthModalOpen(true))}
           className="with-ring flex items-center space-x-[6px] hover:text-secondary"
         >
           <ChatBubbleBottomCenterTextIcon className="w-6" />
-          <span className="font-poppins-bold text-[11px]">{renderComments}</span>
+          <span className="text-[11px] font-bold">{renderComments}</span>
         </button>
       </div>
     </li>

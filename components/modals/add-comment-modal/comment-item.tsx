@@ -36,7 +36,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, linkId, isPreview = 
     <li className="group rounded-button border border-gray-400/30 p-5">
       <div className="mb-3 flex min-h-[18px] items-start justify-between space-x-3">
         <div className="flex text-[10px]">
-          {commentUser && <h3 className="font-poppins-bold">{commentUser.username}</h3>}
+          {commentUser && <h3 className="font-bold">{commentUser.username}</h3>}
 
           <p className="text-gray-400">
             <span className="mx-2">-</span>

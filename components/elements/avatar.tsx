@@ -33,7 +33,7 @@ const Avatar: React.FC<AvatarProps> = React.memo((props) => {
       disabled={disabled}
       style={{ height: size, width: size, fontSize: size * 0.36 }}
       className={classNames(
-        'with-ring grid place-items-center rounded-full bg-gray-100 font-poppins-bold uppercase',
+        'with-ring grid place-items-center rounded-full bg-gray-100 font-bold uppercase',
         { 'cursor-default': disabled },
         props.className
       )}
