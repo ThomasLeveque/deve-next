@@ -38,6 +38,7 @@
     "react-hot-toast": "^2.4.0",
     "react-intersection-observer": "^9.4.0",
     "react-markdown": "^8.0.3",
+    "tailwind-merge": "^1.8.1",
     "yup": "^0.32.11"
   },
   "devDependencies": {

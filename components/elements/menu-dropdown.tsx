@@ -1,6 +1,6 @@
 import { Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
-import classNames from 'classnames';
+import { cn } from '@utils/cn';
 import React from 'react';
 import Button from './button';
 
@@ -23,15 +23,15 @@ const MenuDropdown: React.FC<MenuDropdownProps> = React.memo((props) => {
   const dropdownPosition = props.dropdownPosition ?? 'right';
 
   return (
-    <Menu as="div" className={classNames('relative w-full', props.className)}>
+    <Menu as="div" className={cn('relative w-full', props.className)}>
       {({ open }) => (
         <>
           {props.customButton !== undefined ? (
-            <Menu.Button as="div" className={classNames(props.buttonClassName)}>
+            <Menu.Button as="div" className={cn(props.buttonClassName)}>
               {props.customButton}
             </Menu.Button>
           ) : (
-            <Menu.Button as="div" className={classNames('inline-flex', props.buttonClassName)}>
+            <Menu.Button as="div" className={cn('inline-flex', props.buttonClassName)}>
               <Button
                 theme="gray"
                 text={props.defaultButtonText}
@@ -50,7 +50,7 @@ const MenuDropdown: React.FC<MenuDropdownProps> = React.memo((props) => {
             leaveTo="opacity-0 scale-95"
           >
             <Menu.Items
-              className={classNames(
+              className={cn(
                 'absolute mt-2 overflow-hidden rounded-button bg-gray-100 py-1 shadow-lg focus:outline-none',
                 dropdownPosition === 'right' ? 'right-0 origin-top-right' : 'left-0 origin-top-left'
               )}
@@ -73,7 +73,7 @@ const MenuDropdownItem: React.FC<MenuDropdownItemProps> = (props) => {
     <Menu.Item>
       {({ active }) => (
         <button
-          className={classNames(
+          className={cn(
             'w-full px-4 py-2 text-left text-sm',
             { 'grid grid-cols-[20px,1fr] gap-3': withIcon },
             {

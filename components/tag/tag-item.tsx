@@ -1,5 +1,5 @@
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import classNames from 'classnames';
+import { cn } from '@utils/cn';
 import React from 'react';
 
 interface TagProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -22,7 +22,7 @@ const TagItem = React.forwardRef<HTMLButtonElement, TagProps>(
         type="button"
         onClick={onClick}
         disabled={disabled}
-        className={classNames(
+        className={cn(
           'inline-flex rounded-tag py-[7px] px-[10px] uppercase',
           isColored ? 'bg-primary text-black' : 'bg-gray-400/40 text-black',
           {
@@ -33,10 +33,10 @@ const TagItem = React.forwardRef<HTMLButtonElement, TagProps>(
         )}
         {...props}
       >
-        <span className={classNames('text-[10px] font-bold leading-[15px]', { 'text-[15px]': isLarge })}>#{text}</span>
+        <span className={cn('text-[10px] font-bold leading-[15px]', { 'text-[15px]': isLarge })}>#{text}</span>
         {isClosable ? (
           <XMarkIcon
-            className={classNames('ml-[6px] w-[14px] cursor-pointer rounded-sm', { 'w-[16px]': isLarge })}
+            className={cn('ml-[6px] w-[14px] cursor-pointer rounded-sm', { 'w-[16px]': isLarge })}
             onClick={(event) => {
               event.stopPropagation();
               onClose && onClose();

@@ -1,4 +1,4 @@
-import classNames from 'classnames';
+import { cn } from '@utils/cn';
 import React from 'react';
 
 interface TextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -11,11 +11,11 @@ interface TextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement
 const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
   ({ label, labelClassName, wrapperClassName, errorText, className, ...textAreaProps }, ref) => {
     return (
-      <div className={classNames('relative flex flex-wrap', wrapperClassName)}>
+      <div className={cn('relative flex flex-wrap', wrapperClassName)}>
         {label && (
           <label
             htmlFor={textAreaProps.id}
-            className={classNames('mb-[6px] ml-1 block text-[10px] font-bold uppercase text-black', labelClassName)}
+            className={cn('mb-[6px] ml-1 block text-[10px] font-bold uppercase text-black', labelClassName)}
           >
             {label}
           </label>
@@ -23,7 +23,7 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
         <div className="relative flex w-full items-center">
           <textarea
             ref={ref}
-            className={classNames(
+            className={cn(
               'with-ring w-full rounded-button bg-gray-100 px-5 py-4 text-sm placeholder-gray-400',
               className
             )}

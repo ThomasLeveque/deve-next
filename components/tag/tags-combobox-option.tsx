@@ -1,10 +1,10 @@
 import SpinnerIcon from '@components/icons/spinner-icon';
 import { useSupabase } from '@components/SupabaseAuthProvider';
 import { TrashIcon } from '@heroicons/react/24/outline';
+import { cn } from '@utils/cn';
 import { singleToArray } from '@utils/single-to-array';
 import { useRemoveTag } from 'api/tag/use-remove-tag';
 import { GetTagsReturn } from 'api/tag/use-tags';
-import classNames from 'classnames';
 import React, { useCallback } from 'react';
 
 interface TagsComboboxOptionProps extends React.HTMLAttributes<HTMLLIElement> {
@@ -33,7 +33,7 @@ const TagsComboboxOption = React.forwardRef<HTMLLIElement, TagsComboboxOptionPro
 
     return (
       <li
-        className={classNames(
+        className={cn(
           `pointer grid w-full gap-3 px-4 py-2 text-sm hover:bg-primary`,
           { 'bg-primary': active },
           { 'grid-cols-[1fr,20px]': canBeRemove }

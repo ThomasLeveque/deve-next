@@ -1,3 +1,5 @@
+'use client';
+
 import { GetLinksReturn } from '@api/link/get-links';
 import { useSupabase } from '@components/SupabaseAuthProvider';
 import TagListWrapper from '@components/tag/tag-list-wrapper';
@@ -11,12 +13,12 @@ import {
   useLinkToUpdateModal,
 } from '@store/modals.store';
 import { arrayToSingle } from '@utils/array-to-single';
+import { cn } from '@utils/cn';
 import { getDomain } from '@utils/format-string';
 import { singleToArray } from '@utils/single-to-array';
 import { TagRow } from 'api/tag/use-tags';
 import { useAddLinkVote } from 'api/vote/use-add-vote';
 import { useRemoveLinkVote } from 'api/vote/use-remove-vote';
-import classNames from 'classnames';
 import { format } from 'date-fns';
 import React, { useMemo } from 'react';
 import toast from 'react-hot-toast';
@@ -109,7 +111,7 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, isProfilLink = false }) => {
       </div>
       <a href={link.url} rel="noreferrer" target="_blank" className="with-ring link-item-link mb-8 block">
         <h2
-          className={classNames('mb-2 break-words text-3xl font-bold', {
+          className={cn('mb-2 break-words text-3xl font-bold', {
             '!text-2xl': link.description.length > 60,
           })}
         >
@@ -138,7 +140,7 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, isProfilLink = false }) => {
               setAuthModalOpen(true);
             }
           }}
-          className={classNames('with-ring flex items-center space-x-[6px] hover:text-secondary', {
+          className={cn('with-ring flex items-center space-x-[6px] hover:text-secondary', {
             'text-secondary': Boolean(profileVote),
           })}
         >

@@ -2,7 +2,6 @@
 
 import { useSupabase } from '@components/SupabaseAuthProvider';
 import { ArrowLeftOnRectangleIcon, PlusIcon, UserCircleIcon } from '@heroicons/react/24/outline';
-import { useMediaQuery } from '@hooks/use-media-query';
 import { resolveHref, useCustomRouter } from '@hooks/useCustomRouter';
 import { useAddLinkModalOpen, useAuthModalOpen } from '@store/modals.store';
 import Link from 'next/link';
@@ -19,8 +18,6 @@ const Header = () => {
 
   const setAuthModalOpen = useAuthModalOpen()[1];
   const setAddLinkModalOpen = useAddLinkModalOpen()[1];
-
-  const isSmallScreen = useMediaQuery('sm');
 
   const router = useCustomRouter();
 
@@ -40,6 +37,14 @@ const Header = () => {
     []
   );
 
+  function openAddLink() {
+    if (profile) {
+      setAddLinkModalOpen(true);
+    } else {
+      setAuthModalOpen(true);
+    }
+  }
+
   return (
     <header className="sticky top-0 z-30 bg-white">
       <div className="flex h-header items-center justify-between px-5 xl:container xl:mx-auto">
@@ -57,10 +62,12 @@ const Header = () => {
         <div className="grid auto-cols-max grid-flow-col items-center gap-5">
           <Button
             theme="secondary"
-            text={isSmallScreen ? 'Add link' : undefined}
+            text={'Add link'}
             icon={<PlusIcon />}
-            onClick={() => (profile ? setAddLinkModalOpen(true) : setAuthModalOpen(true))}
+            className="hidden sm:flex"
+            onClick={openAddLink}
           />
+          <Button theme="secondary" className="flex sm:hidden" icon={<PlusIcon />} onClick={openAddLink} />
 
           {profile ? (
             <MenuDropdown customButton={<Avatar />} items={userDropdownItems} />

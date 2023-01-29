@@ -1,10 +1,10 @@
-import classNames from 'classnames';
+import { cn } from '@utils/cn';
 import React from 'react';
 
 const SpinnerIcon: React.FC<React.SVGAttributes<SVGElement>> = React.memo(({ className, ...svgProps }) => {
   return (
     <svg
-      className={classNames('animate-spin', className)}
+      className={cn('animate-spin', className)}
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"

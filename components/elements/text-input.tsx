@@ -1,5 +1,5 @@
 import { MagnifyingGlassIcon, XCircleIcon } from '@heroicons/react/24/outline';
-import classNames from 'classnames';
+import { cn } from '@utils/cn';
 import React from 'react';
 
 interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -17,11 +17,11 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
       isSearchInput && inputProps.value && typeof inputProps.value === 'string' && inputProps.value.length > 0;
 
     return (
-      <div className={classNames('relative flex flex-wrap', wrapperClassName)}>
+      <div className={cn('relative flex flex-wrap', wrapperClassName)}>
         {label && (
           <label
             htmlFor={inputProps.id}
-            className={classNames('mb-[6px] ml-1 block text-[10px] font-bold uppercase text-black', labelClassName)}
+            className={cn('mb-[6px] ml-1 block text-[10px] font-bold uppercase text-black', labelClassName)}
           >
             {label}
           </label>
@@ -38,7 +38,7 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
           {isSearchLength && <XCircleIcon onClick={clearValue} className="absolute right-4 w-6 cursor-pointer" />}
           <input
             ref={ref}
-            className={classNames(
+            className={cn(
               'with-ring h-[50px] w-full rounded-button bg-gray-100 px-5 text-sm placeholder-gray-400',
               { 'px-12': inputProps.type === 'search' },
               className

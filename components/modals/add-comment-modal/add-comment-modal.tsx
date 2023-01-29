@@ -1,3 +1,5 @@
+'use client';
+
 import Button from '@components/elements/button';
 import SpinnerIcon from '@components/icons/spinner-icon';
 import CommentItem from '@components/modals/add-comment-modal/comment-item';

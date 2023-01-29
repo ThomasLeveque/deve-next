@@ -1,6 +1,6 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import classNames from 'classnames';
+import { cn } from '@utils/cn';
 import React, { Fragment, useRef } from 'react';
 
 interface ModalProps {
@@ -43,7 +43,7 @@ export const Modal: React.FC<ModalProps> = ({
             enterTo="opacity-100 scale-100"
           >
             <div
-              className={classNames(
+              className={cn(
                 'relative z-20 mx-auto w-full max-w-lg rounded-modal bg-white py-10 px-8 sm:px-10',
                 className
               )}
@@ -55,7 +55,7 @@ export const Modal: React.FC<ModalProps> = ({
                 <XMarkIcon className="w-6" />
               </button>
               {title !== undefined ? (
-                <Dialog.Title className={classNames('mx-4 mb-8 mt-2 text-center text-4xl font-bold', titleClassName)}>
+                <Dialog.Title className={cn('mx-4 mb-8 mt-2 text-center text-4xl font-bold', titleClassName)}>
                   {title}
                 </Dialog.Title>
               ) : null}

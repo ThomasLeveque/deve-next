@@ -1,3 +1,5 @@
+'use client';
+
 import Button from '@components/elements/button';
 import TextArea from '@components/elements/textarea';
 import { useSupabase } from '@components/SupabaseAuthProvider';

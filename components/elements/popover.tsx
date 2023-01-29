@@ -1,5 +1,5 @@
 import { Popover, Transition } from '@headlessui/react';
-import classNames from 'classnames';
+import { cn } from '@utils/cn';
 import React, { useMemo } from 'react';
 
 interface MyPopoverProps {
@@ -38,7 +38,7 @@ const MyPopover: React.FC<MyPopoverProps> = (props) => {
         leaveTo="scale-95 opacity-0"
       >
         <Popover.Panel
-          className={classNames(
+          className={cn(
             'absolute z-10 rounded-button bg-white p-4 shadow-lg focus:outline-none',
             props.className,
             positionClassNames
