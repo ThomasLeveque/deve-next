@@ -1,4 +1,5 @@
 import { InfiniteData } from '@tanstack/react-query';
+import produce, { Draft } from 'immer';
 import { Nullable, PaginatedData } from '~types/shared';
 
 const initialPaginatedData: InfiniteData<never> = {
@@ -6,70 +7,73 @@ const initialPaginatedData: InfiniteData<never> = {
   pageParams: [],
 };
 
-export const addItemInsidePaginatedData = <DataType>(
-  item: DataType,
-  items: InfiniteData<PaginatedData<DataType>> | undefined,
+export const addItemInsidePaginatedData = <TData>(
+  item: Draft<TData>,
+  items: InfiniteData<PaginatedData<TData>> | undefined,
   pageIndex = 0
-): InfiniteData<PaginatedData<DataType>> => {
+): InfiniteData<PaginatedData<TData>> => {
   if (!items?.pages) {
     return initialPaginatedData;
   }
 
-  if (items.pages[pageIndex]) {
-    const currentPageData = items.pages[pageIndex].data ?? [];
-    items.pages[pageIndex].data = [item, ...currentPageData];
-  }
-  return items;
+  return produce(items, (newItems) => {
+    if (newItems.pages[pageIndex].data) {
+      newItems.pages[pageIndex].data.push(item);
+    }
+  });
 };
 
-export const updateItemInsidePaginatedData = <DataType extends { id: number }>(
-  item: Partial<DataType> & { id: number },
-  items: InfiniteData<PaginatedData<DataType>> | undefined
-): InfiniteData<PaginatedData<DataType>> => {
+export const updateItemInsidePaginatedData = <TData extends { id: number }>(
+  item: Partial<TData> & { id: number },
+  items: InfiniteData<PaginatedData<TData>> | undefined
+): InfiniteData<PaginatedData<TData>> => {
   if (!items) {
     return initialPaginatedData;
   }
 
-  const pageIndex = items.pages.findIndex((page) => page.data.find((d) => d.id === item.id));
-  const itemIndex = items.pages[pageIndex].data.findIndex((d) => d.id === item.id);
-  const previousItem = items.pages[pageIndex].data[itemIndex];
-  items.pages[pageIndex].data[itemIndex] = { ...previousItem, ...item };
-  return items;
+  return produce(items, (newItems) => {
+    const pageIndex = newItems.pages.findIndex((page) => page.data.find((d) => d.id === item.id));
+    const itemIndex = newItems.pages[pageIndex].data.findIndex((d) => d.id === item.id);
+    const previousItem = newItems.pages[pageIndex].data[itemIndex];
+    newItems.pages[pageIndex].data[itemIndex] = { ...previousItem, ...item };
+  });
 };
 
-export const removeItemInsidePaginatedData = <DataType extends { id: number }>(
+export const removeItemInsidePaginatedData = <TData extends { id: number }>(
   itemId: number,
-  items: InfiniteData<PaginatedData<DataType>> | undefined
-): InfiniteData<PaginatedData<DataType>> => {
+  items: InfiniteData<PaginatedData<TData>> | undefined
+): InfiniteData<PaginatedData<TData>> => {
   if (!items) {
     return initialPaginatedData;
   }
 
-  const pageIndex = items.pages.findIndex((page) => page.data.find((d) => d.id === itemId));
-  const newData = items.pages[pageIndex].data.filter((d) => d.id !== itemId);
-  items.pages[pageIndex].data = newData;
-  return items;
+  return produce(items, (newItems) => {
+    const pageIndex = newItems.pages.findIndex((page) => page.data.find((d) => d.id === itemId));
+    const newData = newItems.pages[pageIndex].data.filter((d) => d.id !== itemId);
+    newItems.pages[pageIndex].data = newData;
+  });
 };
 
-export const addItemInsideData = <DataType>(
-  item: DataType,
-  items: Nullable<DataType[]>,
+export const addItemInsideData = <TData>(
+  item: TData,
+  items: Nullable<TData[]>,
   newItemPosition: 'start' | 'end' = 'start'
-): DataType[] => (items ? (newItemPosition === 'start' ? [item, ...items] : [...items, item]) : []);
+): TData[] => (items ? (newItemPosition === 'start' ? [item, ...items] : [...items, item]) : []);
 
-export const updateItemInsideData = <DataType extends { id: number }>(
-  item: Partial<DataType> & { id: number },
-  items: DataType[] | undefined
-): DataType[] => {
+export const updateItemInsideData = <TData extends { id: number }>(
+  item: Partial<TData> & { id: number },
+  items: TData[] | undefined
+): TData[] => {
   if (!items) return [];
 
-  const itemIndex = items.findIndex((i) => i.id === item.id);
-  const previousItem = items[itemIndex];
-  items[itemIndex] = { ...previousItem, ...item };
-  return items;
+  return produce(items, (newItems) => {
+    const itemIndex = newItems.findIndex((i) => i.id === item.id);
+    const previousItem = newItems[itemIndex];
+    newItems[itemIndex] = { ...previousItem, ...item };
+  });
 };
 
-export const removeItemInsideData = <DataType extends { id: number }>(
+export const removeItemInsideData = <TData extends { id: number }>(
   itemId: number,
-  items: DataType[] | undefined
-): DataType[] => (items ? items.filter((item) => item.id !== itemId) : []);
+  items: TData[] | undefined
+): TData[] => (items ? items.filter((item) => item.id !== itemId) : []);
