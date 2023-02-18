@@ -5,8 +5,8 @@ import TextInput from '@components/elements/text-input';
 import SpinnerIcon from '@components/icons/spinner-icon';
 import LinkItem from '@components/link/link-item';
 import OrderbyLinksDropdown from '@components/link/orderby-links-dropdown';
+import { useLinks } from '@data/link/use-links';
 import { useQueryString } from '@hooks/use-query-string';
-import { useLinks } from 'api/link/use-links';
 import { useRef } from 'react';
 
 export default function RootClient() {

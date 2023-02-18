@@ -1,4 +1,4 @@
-import { GetLinksReturn } from '@api/link/get-links';
+import { GetLinksReturn } from '@data/link/get-links';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
 import { formatError } from '@utils/format-string';
 import { updateItemInsidePaginatedData } from '@utils/mutate-data';

@@ -1,8 +1,8 @@
-import { getUserProfile } from '@api/auth/get-user-profile';
 import { GlobalComponents } from '@components/GlobalComponents';
 import Header from '@components/header';
 import ReactQueryClientProvider from '@components/ReactQueryClientProvider';
 import SupabaseAuthProvider from '@components/SupabaseAuthProvider';
+import { getUserProfile } from '@data/auth/get-user-profile';
 import { Poppins } from '@next/font/google';
 import { cn } from '@utils/cn';
 import { createServerClient } from '@utils/supabase-server';

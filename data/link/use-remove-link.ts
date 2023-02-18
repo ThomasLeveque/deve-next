@@ -1,4 +1,4 @@
-import { GetLinksReturn } from '@api/link/get-links';
+import { GetLinksReturn } from '@data/link/get-links';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
 import { removeItemInsidePaginatedData } from '@utils/mutate-data';
 import { supabase } from '@utils/supabase-client';

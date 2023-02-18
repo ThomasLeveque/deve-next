@@ -1,6 +1,6 @@
 'use client';
 
-import { GetUserProfileReturn } from '@api/auth/get-user-profile';
+import { GetUserProfileReturn } from '@data/auth/get-user-profile';
 import { Session } from '@supabase/supabase-js';
 import { createBrowserClient } from '@utils/supabase-client';
 import { useRouter } from 'next/navigation';

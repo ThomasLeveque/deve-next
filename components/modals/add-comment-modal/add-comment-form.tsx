@@ -3,10 +3,10 @@
 import Button from '@components/elements/button';
 import TextArea from '@components/elements/textarea';
 import { useSupabase } from '@components/SupabaseAuthProvider';
+import { useAddLinkComment } from '@data/comment/use-add-comment';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { addCommentSchema, commentMaxLength } from '@utils/form-schemas';
 import { formatError } from '@utils/format-string';
-import { useAddLinkComment } from 'api/comment/use-add-comment';
 import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';

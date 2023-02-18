@@ -1,10 +1,10 @@
 import SpinnerIcon from '@components/icons/spinner-icon';
 import TagListWrapper from '@components/tag/tag-list-wrapper';
+import { useAddTag } from '@data/tag/use-add-tag';
+import { GetTagsReturn, useTags } from '@data/tag/use-tags';
 import { Transition } from '@headlessui/react';
 import { ChevronUpDownIcon, InformationCircleIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { formatError, stringToSlug } from '@utils/format-string';
-import { useAddTag } from 'api/tag/use-add-tag';
-import { GetTagsReturn, useTags } from 'api/tag/use-tags';
 import { useCombobox, useMultipleSelection } from 'downshift';
 import React, { useCallback, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';

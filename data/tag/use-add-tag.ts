@@ -1,7 +1,7 @@
+import { GetTagsReturn } from '@data/tag/use-tags';
 import { useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
 import { addItemInsideData } from '@utils/mutate-data';
 import { supabase } from '@utils/supabase-client';
-import { GetTagsReturn } from 'api/tag/use-tags';
 import { Database } from '~types/supabase';
 import { queryKeys } from './query-keys';
 

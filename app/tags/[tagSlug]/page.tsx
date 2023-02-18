@@ -4,8 +4,8 @@ import Button from '@components/elements/button';
 import SpinnerIcon from '@components/icons/spinner-icon';
 import LinkItem from '@components/link/link-item';
 import TagItem from '@components/tag/tag-item';
+import { useTagLinks } from '@data/link/use-links-by-tag';
 import { singleToArray } from '@utils/single-to-array';
-import { useTagLinks } from 'api/link/use-links-by-tag';
 
 export default function Tag({ params: { tagSlug } }: { params: { tagSlug: string } }) {
   const { data: links, hasNextPage, isFetchingNextPage, fetchNextPage } = useTagLinks(tagSlug);

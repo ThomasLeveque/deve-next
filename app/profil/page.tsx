@@ -4,7 +4,7 @@ import Button from '@components/elements/button';
 import SpinnerIcon from '@components/icons/spinner-icon';
 import LinkItem from '@components/link/link-item';
 import { useSupabase } from '@components/SupabaseAuthProvider';
-import { useUserLinks } from 'api/link/use-user-links';
+import { useUserLinks } from '@data/link/use-user-links';
 
 export default function Profil() {
   const { profile } = useSupabase();

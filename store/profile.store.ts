@@ -1,4 +1,4 @@
-import { GetUserProfileReturn } from '@api/auth/get-user-profile';
+import { GetUserProfileReturn } from '@data/auth/get-user-profile';
 import { atom, SetStateAction, useAtom } from 'jotai';
 import { Nullable } from '~types/shared';
 

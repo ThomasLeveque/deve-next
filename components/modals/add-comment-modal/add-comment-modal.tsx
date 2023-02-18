@@ -3,9 +3,9 @@
 import Button from '@components/elements/button';
 import SpinnerIcon from '@components/icons/spinner-icon';
 import CommentItem from '@components/modals/add-comment-modal/comment-item';
+import { COMMENTS_PER_PAGE, useComments } from '@data/comment/use-comments';
 import { useLinkToCommentModal } from '@store/modals.store';
 import { getDomain } from '@utils/format-string';
-import { COMMENTS_PER_PAGE, useComments } from 'api/comment/use-comments';
 import React from 'react';
 import { Modal } from '../modal';
 import AddCommentForm from './add-comment-form';

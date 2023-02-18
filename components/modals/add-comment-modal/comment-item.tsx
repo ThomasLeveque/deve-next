@@ -1,11 +1,11 @@
 import Button from '@components/elements/button';
 import MyPopover from '@components/elements/popover';
 import { useSupabase } from '@components/SupabaseAuthProvider';
+import { GetCommentsReturn } from '@data/comment/use-comments';
+import { useRemoveLinkComment } from '@data/comment/use-remove-comment';
 import { Popover } from '@headlessui/react';
 import { PencilSquareIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { arrayToSingle } from '@utils/array-to-single';
-import { GetCommentsReturn } from 'api/comment/use-comments';
-import { useRemoveLinkComment } from 'api/comment/use-remove-comment';
 import { format } from 'date-fns';
 import React, { useMemo, useState } from 'react';
 import ReactMarkdown from 'react-markdown';

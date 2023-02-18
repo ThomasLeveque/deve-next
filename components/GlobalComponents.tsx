@@ -8,8 +8,8 @@ import LoginModal from '@components/modals/login-modal/login-modal';
 import RemoveLinkModal from '@components/modals/remove-link-modal/remove-link-modal';
 import UpdateLinkModal from '@components/modals/update-link-modal/update-link-modal';
 import { useSupabase } from '@components/SupabaseAuthProvider';
+import { usePrefetchTags } from '@data/tag/use-tags';
 import { useAuthModalOpen } from '@store/modals.store';
-import { usePrefetchTags } from 'api/tag/use-tags';
 import { useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
 

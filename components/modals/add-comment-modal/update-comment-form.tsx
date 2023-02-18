@@ -1,11 +1,11 @@
 import Button from '@components/elements/button';
 import TextArea from '@components/elements/textarea';
 import { useSupabase } from '@components/SupabaseAuthProvider';
+import { GetCommentsReturn } from '@data/comment/use-comments';
+import { useUpdateLinkComment } from '@data/comment/use-update-comment';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { addCommentSchema, commentMaxLength } from '@utils/form-schemas';
 import { formatError } from '@utils/format-string';
-import { GetCommentsReturn } from 'api/comment/use-comments';
-import { useUpdateLinkComment } from 'api/comment/use-update-comment';
 import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';

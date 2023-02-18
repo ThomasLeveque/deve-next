@@ -1,8 +1,11 @@
 'use client';
 
-import { GetLinksReturn } from '@api/link/get-links';
 import { useSupabase } from '@components/SupabaseAuthProvider';
 import TagListWrapper from '@components/tag/tag-list-wrapper';
+import { GetLinksReturn } from '@data/link/get-links';
+import { TagRow } from '@data/tag/use-tags';
+import { useAddLinkVote } from '@data/vote/use-add-vote';
+import { useRemoveLinkVote } from '@data/vote/use-remove-vote';
 import { ChatBubbleBottomCenterTextIcon, FireIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { FireIcon as FireIconSolid } from '@heroicons/react/24/solid';
 import { useCustomRouter } from '@hooks/useCustomRouter';
@@ -16,9 +19,6 @@ import { arrayToSingle } from '@utils/array-to-single';
 import { cn } from '@utils/cn';
 import { getDomain } from '@utils/format-string';
 import { singleToArray } from '@utils/single-to-array';
-import { TagRow } from 'api/tag/use-tags';
-import { useAddLinkVote } from 'api/vote/use-add-vote';
-import { useRemoveLinkVote } from 'api/vote/use-remove-vote';
 import { format } from 'date-fns';
 import React, { useMemo } from 'react';
 import toast from 'react-hot-toast';

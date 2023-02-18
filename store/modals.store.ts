@@ -1,4 +1,4 @@
-import { GetLinksReturn } from '@api/link/get-links';
+import { GetLinksReturn } from '@data/link/get-links';
 import { atom, SetStateAction, useAtom } from 'jotai';
 import { Nullable } from '~types/shared';
 
