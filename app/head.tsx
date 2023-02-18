@@ -1,4 +1,4 @@
-import { DefaultHead } from 'app/DefaultHead';
+import { DefaultHead } from 'components/DefaultHead';
 
 export default function RootHead() {
   return <DefaultHead />;
