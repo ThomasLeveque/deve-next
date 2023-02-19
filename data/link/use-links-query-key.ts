@@ -11,18 +11,17 @@ export const useLinksQueryKey = (): QueryKey => {
   const { profile } = useSupabase();
   const { orderbyQuery, searchQuery } = useQueryString();
   const tagSlugParam = params.get('tagSlug');
-  const tagSlug = tagSlugParam === 'string' ? tagSlugParam : '';
 
   return useMemo(() => {
     switch (pathname) {
       case '/':
         return queryKeys.links(orderbyQuery, searchQuery);
       case '/tags/[tagSlug]':
-        return queryKeys.tagLinks(tagSlug);
+        return queryKeys.tagLinks(tagSlugParam);
       case '/profil':
-        return profile ? queryKeys.userLinks(profile.id) : [];
+        return queryKeys.userLinks(profile?.id ?? null);
       default:
         return [];
     }
-  }, [pathname, orderbyQuery, searchQuery, profile, tagSlug]);
+  }, [pathname, orderbyQuery, searchQuery, profile, tagSlugParam]);
 };

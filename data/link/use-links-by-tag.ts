@@ -16,14 +16,14 @@ const getLinksByTag = async (cursor = 0, tagSlug: string) => {
       .select(
         `
       *,
-      user:profiles!links_userId_fkey(*),
-      tags!inner(*, links(id)),
+      user:profiles(*),
+      temp_tags:tags!inner(*, links(id)),
+      tags(*, links(id)),
       comments(*),
       votes(*)
     `
       )
-      // @ts-ignore
-      .eq('tags.slug', tagSlug)
+      .eq('temp_tags.slug', tagSlug)
       .order('createdAt', { ascending: false })
       .range(cursor, nextCursor - 1);
 

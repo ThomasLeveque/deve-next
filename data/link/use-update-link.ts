@@ -1,5 +1,5 @@
 import { GetLinksReturn } from '@data/link/get-links';
-import { GetTagsReturn } from '@data/tag/use-tags';
+import { GetTagsReturn } from '@data/tag/get-tags';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
 import { formatError } from '@utils/format-string';
 import { updateItemInsidePaginatedData } from '@utils/mutate-data';

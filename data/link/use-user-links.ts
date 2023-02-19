@@ -16,7 +16,7 @@ const getUserLinks = async (cursor = 0, userId: string) => {
       .select(
         `
       *,
-      user:profiles!links_userId_fkey(*),
+      user:profiles(*),
       tags(*),
       comments(*),
       votes(*)

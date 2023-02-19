@@ -1,7 +1,8 @@
 import SpinnerIcon from '@components/icons/spinner-icon';
 import TagListWrapper from '@components/tag/tag-list-wrapper';
+import { GetTagsReturn } from '@data/tag/get-tags';
 import { useAddTag } from '@data/tag/use-add-tag';
-import { GetTagsReturn, useTags } from '@data/tag/use-tags';
+import { useTags } from '@data/tag/use-tags';
 import { Transition } from '@headlessui/react';
 import { ChevronUpDownIcon, InformationCircleIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { formatError, stringToSlug } from '@utils/format-string';
@@ -24,7 +25,7 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
   const [query, setQuery] = useState('');
   const addTag = useAddTag();
 
-  const { data: tags } = useTags({ refetchOnMount: false });
+  const { data: tags } = useTags();
 
   const isTagExist = useMemo(
     () => !!tags?.find((tag) => tag.name.toLocaleLowerCase() === query.toLocaleLowerCase()),

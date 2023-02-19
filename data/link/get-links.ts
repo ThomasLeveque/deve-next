@@ -12,7 +12,7 @@ export const getLinks = async (cursor = 0, orderby: OrderLinksKey, searchQuery =
     const nextCursor = cursor + LINKS_PER_PAGE;
     let query = supabase.from('links').select(`
     *,
-    user:profiles!links_userId_fkey(*),
+    user:profiles(*),
     tags(*),
     comments(*),
     votes(*)

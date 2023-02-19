@@ -4,7 +4,7 @@ import { useSupabase } from '@components/SupabaseAuthProvider';
 import TagsCombobox from '@components/tag/tags-combobox';
 import { GetLinksReturn } from '@data/link/get-links';
 import { useUpdateLink } from '@data/link/use-update-link';
-import { GetTagsReturn } from '@data/tag/use-tags';
+import { GetTagsReturn } from '@data/tag/get-tags';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { updateLinkSchema } from '@utils/form-schemas';
 import { formatError } from '@utils/format-string';

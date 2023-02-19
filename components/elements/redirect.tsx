@@ -1,4 +1,4 @@
-import { useCustomRouter } from '@hooks/useCustomRouter';
+import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 
 type RedirectProps = {
@@ -6,7 +6,7 @@ type RedirectProps = {
 };
 
 const Redirect: React.FC<RedirectProps> = ({ to }) => {
-  const router = useCustomRouter();
+  const router = useRouter();
 
   useEffect(() => {
     router.push(to);

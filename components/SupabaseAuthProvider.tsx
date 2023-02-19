@@ -3,19 +3,26 @@
 import { GetUserProfileReturn } from '@data/auth/get-user-profile';
 import { Session } from '@supabase/supabase-js';
 import { createBrowserClient } from '@utils/supabase-client';
+import { atom, createStore, Provider } from 'jotai';
 import { useRouter } from 'next/navigation';
-import { createContext, useContext, useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Nullable } from '~types/shared';
 
-type SupabaseContext = {
+type SupabaseAtom = {
   supabase: ReturnType<typeof createBrowserClient>;
   session: Nullable<Session>;
   profile: Nullable<GetUserProfileReturn>;
 };
 
-const Context = createContext<SupabaseContext>({} as SupabaseContext);
+const supabaseStore = createStore();
 
-export const useSupabase = () => useContext(Context);
+export const supabaseAtom = atom<SupabaseAtom>({
+  supabase: createBrowserClient(),
+  session: null,
+  profile: null,
+});
+
+export const useSupabase = () => supabaseStore.get(supabaseAtom);
 
 // this component handles refreshing server data when the user logs in or out
 // this method avoids the need to pass a session down to child components
@@ -25,8 +32,10 @@ export default function SupabaseAuthProvider({
   session,
   profile,
   children,
-}: Pick<SupabaseContext, 'session' | 'profile'> & { children: React.ReactNode }) {
-  const [supabase] = useState(() => createBrowserClient());
+}: Pick<SupabaseAtom, 'session' | 'profile'> & { children: React.ReactNode }) {
+  const supabase = supabaseStore.get(supabaseAtom).supabase;
+
+  supabaseStore.set(supabaseAtom, { supabase, session, profile });
 
   const router = useRouter();
 
@@ -48,8 +57,8 @@ export default function SupabaseAuthProvider({
   }, [session?.access_token, router]);
 
   return (
-    <Context.Provider value={{ supabase, session, profile }}>
+    <Provider store={supabaseStore}>
       <>{children}</>
-    </Context.Provider>
+    </Provider>
   );
 }

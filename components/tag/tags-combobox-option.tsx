@@ -1,7 +1,7 @@
 import SpinnerIcon from '@components/icons/spinner-icon';
 import { useSupabase } from '@components/SupabaseAuthProvider';
+import { GetTagsReturn } from '@data/tag/get-tags';
 import { useRemoveTag } from '@data/tag/use-remove-tag';
-import { GetTagsReturn } from '@data/tag/use-tags';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { cn } from '@utils/cn';
 import { singleToArray } from '@utils/single-to-array';

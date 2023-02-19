@@ -1,6 +1,6 @@
 import { useSupabase } from '@components/SupabaseAuthProvider';
-import { useCustomRouter } from '@hooks/useCustomRouter';
 import { useProfileLoaded } from '@store/profile.store';
+import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import SpinnerIcon from './icons/spinner-icon';
 
@@ -12,7 +12,7 @@ const Protected: React.FC<ProtectedProps> = (props) => {
   const { profile } = useSupabase();
   const profileLoaded = useProfileLoaded()[0];
 
-  const router = useCustomRouter();
+  const router = useRouter();
 
   useEffect(() => {
     if (!profile && profileLoaded) {

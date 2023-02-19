@@ -8,7 +8,6 @@ import { useAddLinkVote } from '@data/vote/use-add-vote';
 import { useRemoveLinkVote } from '@data/vote/use-remove-vote';
 import { ChatBubbleBottomCenterTextIcon, FireIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { FireIcon as FireIconSolid } from '@heroicons/react/24/solid';
-import { useCustomRouter } from '@hooks/useCustomRouter';
 import {
   useAuthModalOpen,
   useLinkToCommentModal,
@@ -20,6 +19,7 @@ import { cn } from '@utils/cn';
 import { getDomain } from '@utils/format-string';
 import { singleToArray } from '@utils/single-to-array';
 import { format } from 'date-fns';
+import { useRouter } from 'next/navigation';
 import React, { useMemo } from 'react';
 import toast from 'react-hot-toast';
 import TagItem from '../tag/tag-item';
@@ -31,7 +31,7 @@ interface LinkItemProps {
 }
 
 const LinkItem: React.FC<LinkItemProps> = ({ link, isProfilLink = false }) => {
-  const router = useCustomRouter();
+  const router = useRouter();
   const { profile } = useSupabase();
 
   const setLinkToCommentModal = useLinkToCommentModal()[1];

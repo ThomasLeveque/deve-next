@@ -3,7 +3,7 @@ import TextInput from '@components/elements/text-input';
 import { useSupabase } from '@components/SupabaseAuthProvider';
 import TagsCombobox from '@components/tag/tags-combobox';
 import { useAddLink } from '@data/link/use-add-link';
-import { GetTagsReturn } from '@data/tag/use-tags';
+import { GetTagsReturn } from '@data/tag/get-tags';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { addLinkSchema } from '@utils/form-schemas';
 import { formatError } from '@utils/format-string';

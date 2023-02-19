@@ -25,6 +25,7 @@ const TagItem = React.forwardRef<HTMLButtonElement, TagProps>(
         className={cn(
           'inline-flex rounded-tag py-[7px] px-[10px] uppercase',
           isColored ? 'bg-primary text-black' : 'bg-gray-400/40 text-black',
+
           {
             'cursor-default': onClick === undefined,
             'with-ring': onClick !== undefined,
@@ -33,7 +34,9 @@ const TagItem = React.forwardRef<HTMLButtonElement, TagProps>(
         )}
         {...props}
       >
-        <span className={cn('text-[10px] font-bold leading-[15px]', { 'text-[15px]': isLarge })}>#{text}</span>
+        <span className={cn('text-[10px] font-bold leading-[15px]', { 'text-[15px] leading-[20px]': isLarge })}>
+          #{text}
+        </span>
         {isClosable ? (
           <XMarkIcon
             className={cn('ml-[6px] w-[14px] cursor-pointer rounded-sm', { 'w-[16px]': isLarge })}

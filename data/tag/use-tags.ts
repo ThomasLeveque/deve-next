@@ -1,41 +1,16 @@
-import { useQuery, useQueryClient, UseQueryOptions, UseQueryResult } from '@tanstack/react-query';
-import { formatError } from '@utils/format-string';
-import { singleToArray } from '@utils/single-to-array';
-import { supabase } from '@utils/supabase-client';
-import { useEffect } from 'react';
-import toast from 'react-hot-toast';
+import { getTags, GetTagsReturn } from '@data/tag/get-tags';
+import { useQuery, UseQueryOptions, UseQueryResult } from '@tanstack/react-query';
 import { Database } from '~types/supabase';
-import { queryKeys } from './query-keys';
+import { queryKeys } from './utils';
 
 export type TagRow = Database['public']['Tables']['tags']['Row'];
-export type GetTagsReturn = Awaited<ReturnType<typeof getTags>>;
 
-export const getTags = async () => {
-  try {
-    const response = await supabase.from('tags').select('*, links(*)');
-    const tags = response.data;
-
-    if (!tags) {
-      throw new Error('Cannot get tags, try to reload the page');
-    }
-    return tags.sort(
-      (a, b) =>
-        (singleToArray(b.links).length ?? 0) - (singleToArray(a.links).length ?? 0) || a.name.localeCompare(b.name)
-    );
-  } catch (err) {
-    toast.error(formatError(err as Error));
-    console.error(err);
-
-    return [];
-  }
-};
-
-export const useTags = (options?: UseQueryOptions<GetTagsReturn>): UseQueryResult<GetTagsReturn> =>
-  useQuery(queryKeys.tags, () => getTags(), options);
-
-export const usePrefetchTags = (): void => {
-  const queryClient = useQueryClient();
-  useEffect(() => {
-    queryClient.prefetchQuery(queryKeys.tags, () => getTags());
-  }, []);
+export const useTags = (options?: UseQueryOptions<GetTagsReturn>): UseQueryResult<GetTagsReturn> => {
+  return useQuery({
+    queryKey: queryKeys.tags,
+    queryFn: getTags,
+    ...options,
+    // enabled false because tags are fetch server side inside globalTagsClient component
+    enabled: false,
+  });
 };

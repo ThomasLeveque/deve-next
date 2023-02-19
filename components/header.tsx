@@ -2,10 +2,9 @@
 
 import { useSupabase } from '@components/SupabaseAuthProvider';
 import { ArrowLeftOnRectangleIcon, PlusIcon, UserCircleIcon } from '@heroicons/react/24/outline';
-import { resolveHref, useCustomRouter } from '@hooks/useCustomRouter';
 import { useAddLinkModalOpen, useAuthModalOpen } from '@store/modals.store';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import Avatar from './elements/avatar';
 import Button from './elements/button';
@@ -19,7 +18,7 @@ const Header = () => {
   const setAuthModalOpen = useAuthModalOpen()[1];
   const setAddLinkModalOpen = useAddLinkModalOpen()[1];
 
-  const router = useCustomRouter();
+  const router = useRouter();
 
   const userDropdownItems: MenuDropdownItemProps[] = useMemo(
     () => [
@@ -49,13 +48,10 @@ const Header = () => {
     <header className="sticky top-0 z-30 bg-white">
       <div className="flex h-header items-center justify-between px-5 xl:container xl:mx-auto">
         <div className="flex items-center space-x-5">
-          <Link href={resolveHref('/', pathname)} className="with-ring text-3xl font-bold hover:text-secondary">
+          <Link href="/" className="with-ring text-3xl font-bold hover:text-secondary">
             DN
           </Link>
-          <Link
-            href={resolveHref('/tags', pathname)}
-            className="with-ring px-1 font-bold hover:text-secondary hover:underline"
-          >
+          <Link href="/tags" className="with-ring px-1 font-bold hover:text-secondary hover:underline">
             Tags
           </Link>
         </div>
