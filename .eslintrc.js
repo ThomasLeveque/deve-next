@@ -12,5 +12,6 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'error',
     'react/display-name': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
+    '@typescript-eslint/no-unused-vars': 'warn',
   },
 };

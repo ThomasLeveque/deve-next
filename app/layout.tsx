@@ -1,10 +1,7 @@
-import { GlobalComponents } from '@components/GlobalComponents';
-import Header from '@components/header';
 import ReactQueryClientProvider from '@components/ReactQueryClientProvider';
 import SupabaseAuthProvider from '@components/SupabaseAuthProvider';
 import { getUserProfile } from '@data/auth/get-user-profile';
 import { Poppins } from '@next/font/google';
-import { cn } from '@utils/cn';
 import { createServerClient } from '@utils/supabase-server';
 import '../styles/index.css';
 
@@ -30,12 +27,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="en">
       <body className={`${poppins.variable} font-poppins`}>
         <SupabaseAuthProvider session={session} profile={profile}>
-          <ReactQueryClientProvider>
-            <Header />
-            <main className={cn('px-5 xl:container xl:mx-auto')}>{children}</main>
-
-            <GlobalComponents />
-          </ReactQueryClientProvider>
+          <ReactQueryClientProvider>{children}</ReactQueryClientProvider>
         </SupabaseAuthProvider>
       </body>
     </html>
