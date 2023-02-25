@@ -1,11 +1,11 @@
 import Button from '@components/elements/button';
 import TextInput from '@components/elements/text-input';
-import { useSupabase } from '@components/SupabaseAuthProvider';
 import TagsCombobox from '@components/tag/tags-combobox';
 import { GetLinksReturn } from '@data/link/get-links';
 import { useUpdateLink } from '@data/link/use-update-link';
 import { GetTagsReturn } from '@data/tag/get-tags';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useProfile } from '@store/profile.store';
 import { updateLinkSchema } from '@utils/form-schemas';
 import { formatError } from '@utils/format-string';
 import { singleToArray } from '@utils/single-to-array';
@@ -26,7 +26,7 @@ interface AddLinkFormProps {
 }
 
 const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
-  const { profile } = useSupabase();
+  const profile = useProfile()[0];
 
   const {
     register,

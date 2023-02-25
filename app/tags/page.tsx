@@ -5,9 +5,10 @@ import TagItem from '@components/tag/tag-item';
 import TagListWrapper from '@components/tag/tag-list-wrapper';
 import { useTags } from '@data/tag/use-tags';
 import { singleToArray } from '@utils/single-to-array';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function Tags() {
+  const router = useRouter();
   const { data: tags } = useTags();
 
   return (
@@ -19,9 +20,12 @@ export default function Tags() {
             .filter((tag) => singleToArray(tag.links).length > 0)
             .map((tag) => (
               <li key={tag.id}>
-                <Link href={`/tags/${tag.slug}`}>
-                  <TagItem size="large" text={`${tag.name} (${singleToArray(tag.links).length ?? 0})`} isColored />
-                </Link>
+                <TagItem
+                  onClick={() => router.push(`/tags/${tag.slug}`)}
+                  size="large"
+                  text={`${tag.name} (${singleToArray(tag.links).length ?? 0})`}
+                  isColored
+                />
               </li>
             ))}
         </TagListWrapper>

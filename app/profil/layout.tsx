@@ -3,12 +3,12 @@
 import Avatar from '@components/elements/avatar';
 import ToggleSwitch from '@components/elements/toggle-switch';
 import Protected from '@components/protected';
-import { useSupabase } from '@components/SupabaseAuthProvider';
+import { useProfile } from '@store/profile.store';
 import { format } from 'date-fns';
 import 'styles/index.css';
 
 export default function ProfilLayout({ children }: { children: React.ReactNode }) {
-  const { profile } = useSupabase();
+  const profile = useProfile()[0];
 
   return (
     <Protected>

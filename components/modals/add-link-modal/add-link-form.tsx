@@ -1,10 +1,10 @@
 import Button from '@components/elements/button';
 import TextInput from '@components/elements/text-input';
-import { useSupabase } from '@components/SupabaseAuthProvider';
 import TagsCombobox from '@components/tag/tags-combobox';
 import { useAddLink } from '@data/link/use-add-link';
 import { GetTagsReturn } from '@data/tag/get-tags';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useProfile } from '@store/profile.store';
 import { addLinkSchema } from '@utils/form-schemas';
 import { formatError } from '@utils/format-string';
 import React, { useCallback } from 'react';
@@ -23,7 +23,7 @@ interface AddLinkFormProps {
 }
 
 const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
-  const { profile } = useSupabase();
+  const profile = useProfile()[0];
   const addLink = useAddLink();
 
   const {

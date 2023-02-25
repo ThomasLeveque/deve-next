@@ -1,5 +1,5 @@
-import { useSupabase } from '@components/SupabaseAuthProvider';
 import { useAuthModalOpen } from '@store/modals.store';
+import { useProfile } from '@store/profile.store';
 import React, { useCallback, useEffect } from 'react';
 import { Modal } from '../modal';
 import SignInWithDiscordBtn from './sign-in-with-discord-btn';
@@ -8,7 +8,7 @@ import SignInWithGoogleBtn from './sign-in-with-google-btn';
 
 const LoginModal: React.FC = React.memo(() => {
   const [authModalOpen, setAuthModalOpen] = useAuthModalOpen();
-  const { profile } = useSupabase();
+  const profile = useProfile()[0];
 
   const closeModal = useCallback(() => {
     setAuthModalOpen(false);

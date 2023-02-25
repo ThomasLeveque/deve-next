@@ -1,19 +1,19 @@
 'use client';
 
-import { useSupabase } from '@components/SupabaseAuthProvider';
 import { ArrowLeftOnRectangleIcon, PlusIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 import { useAddLinkModalOpen, useAuthModalOpen } from '@store/modals.store';
+import { useProfile, useProfileLoaded } from '@store/profile.store';
+import { supabase } from '@utils/supabase-client';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import Avatar from './elements/avatar';
 import Button from './elements/button';
 import MenuDropdown, { MenuDropdownItemProps } from './elements/menu-dropdown';
 
 const Header = () => {
-  const pathname = usePathname();
-
-  const { supabase, profile } = useSupabase();
+  const profile = useProfile()[0];
+  const profileLoaded = useProfileLoaded()[0];
 
   const setAuthModalOpen = useAuthModalOpen()[1];
   const setAddLinkModalOpen = useAddLinkModalOpen()[1];
@@ -33,7 +33,7 @@ const Header = () => {
         icon: <ArrowLeftOnRectangleIcon />,
       },
     ],
-    []
+    [router]
   );
 
   function openAddLink() {
@@ -68,7 +68,15 @@ const Header = () => {
           {profile ? (
             <MenuDropdown customButton={<Avatar />} items={userDropdownItems} />
           ) : (
-            <Button theme="primary" text="Login" onClick={() => setAuthModalOpen(true)} />
+            <Button
+              theme="primary"
+              text="Login"
+              onClick={() => {
+                if (profileLoaded) {
+                  setAuthModalOpen(true);
+                }
+              }}
+            />
           )}
         </div>
       </div>

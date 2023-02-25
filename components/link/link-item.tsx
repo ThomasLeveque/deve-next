@@ -1,6 +1,5 @@
 'use client';
 
-import { useSupabase } from '@components/SupabaseAuthProvider';
 import TagListWrapper from '@components/tag/tag-list-wrapper';
 import { GetLinksReturn } from '@data/link/get-links';
 import { TagRow } from '@data/tag/use-tags';
@@ -14,6 +13,7 @@ import {
   useLinkToRemoveModal,
   useLinkToUpdateModal,
 } from '@store/modals.store';
+import { useProfile } from '@store/profile.store';
 import { arrayToSingle } from '@utils/array-to-single';
 import { cn } from '@utils/cn';
 import { getDomain } from '@utils/format-string';
@@ -32,7 +32,7 @@ interface LinkItemProps {
 
 const LinkItem: React.FC<LinkItemProps> = ({ link, isProfilLink = false }) => {
   const router = useRouter();
-  const { profile } = useSupabase();
+  const profile = useProfile()[0];
 
   const setLinkToCommentModal = useLinkToCommentModal()[1];
   const setLinkToUpdateModal = useLinkToUpdateModal()[1];

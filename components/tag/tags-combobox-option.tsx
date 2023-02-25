@@ -1,8 +1,8 @@
 import SpinnerIcon from '@components/icons/spinner-icon';
-import { useSupabase } from '@components/SupabaseAuthProvider';
 import { GetTagsReturn } from '@data/tag/get-tags';
 import { useRemoveTag } from '@data/tag/use-remove-tag';
 import { TrashIcon } from '@heroicons/react/24/outline';
+import { useProfile } from '@store/profile.store';
 import { cn } from '@utils/cn';
 import { singleToArray } from '@utils/single-to-array';
 import React, { useCallback } from 'react';
@@ -14,7 +14,7 @@ interface TagsComboboxOptionProps extends React.HTMLAttributes<HTMLLIElement> {
 
 const TagsComboboxOption = React.forwardRef<HTMLLIElement, TagsComboboxOptionProps>(
   ({ active, filteredTag, ...props }, ref) => {
-    const { profile } = useSupabase();
+    const profile = useProfile()[0];
     const removeTag = useRemoveTag();
 
     const tagLinks = singleToArray(filteredTag.links);

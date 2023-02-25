@@ -2,9 +2,9 @@
 
 import Button from '@components/elements/button';
 import TextArea from '@components/elements/textarea';
-import { useSupabase } from '@components/SupabaseAuthProvider';
 import { useAddLinkComment } from '@data/comment/use-add-comment';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useProfile } from '@store/profile.store';
 import { addCommentSchema, commentMaxLength } from '@utils/form-schemas';
 import { formatError } from '@utils/format-string';
 import React, { useCallback, useState } from 'react';
@@ -22,7 +22,7 @@ interface AddCommentFormProps {
 }
 
 const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
-  const { profile } = useSupabase();
+  const profile = useProfile()[0];
 
   const [showPreview, setShowPreview] = useState(false);
 
