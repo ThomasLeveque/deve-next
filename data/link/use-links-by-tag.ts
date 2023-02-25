@@ -2,6 +2,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { formatError } from '@utils/format-string';
 import { supabase } from '@utils/supabase-client';
 import toast from 'react-hot-toast';
+import { Nullable } from '~types/shared';
 import { queryKeys } from './query-keys';
 
 export const TAG_LINKS_PER_PAGE = Number(process.env.NEXT_PUBLIC_LINKS_PER_PAGE) ?? 20;
@@ -48,7 +49,7 @@ const getLinksByTag = async (cursor = 0, tagSlug: string) => {
   }
 };
 
-export const useTagLinks = (tagSlug: string | undefined) =>
+export const useTagLinks = (tagSlug: Nullable<string>) =>
   useInfiniteQuery(
     queryKeys.tagLinks(tagSlug as string),
     (context) => getLinksByTag(context.pageParam, tagSlug as string),

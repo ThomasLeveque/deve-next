@@ -15,6 +15,11 @@ const poppins = Poppins({
 
 export const revalidate = 3600;
 
+export const metadata = {
+  title: { default: 'Deve-next', template: '%s - Deve-next' },
+  description: 'The place to pratice technical watch',
+};
+
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const tags = await getTags();
 
