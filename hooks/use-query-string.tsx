@@ -17,7 +17,7 @@ export const useQueryString = (): useQueryStringReturn => {
   const nextParams = useSearchParams();
   const router = useRouter();
 
-  const params = new URLSearchParams(nextParams.toString());
+  const params = new URLSearchParams(nextParams?.toString());
 
   const searchParam = params.get('search');
   const orderbyParam = params.get('orderby');

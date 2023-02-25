@@ -23,7 +23,7 @@ export default function TagsPageClient() {
                 <TagItem
                   onClick={() => router.push(`/tags/${tag.slug}`)}
                   size="large"
-                  text={`${tag.name} (${singleToArray(tag.links).length ?? 0})`}
+                  text={`${tag.name} (${tag.linksCount})`}
                   isColored
                 />
               </li>

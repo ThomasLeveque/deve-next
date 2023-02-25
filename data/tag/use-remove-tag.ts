@@ -22,7 +22,9 @@ export const useRemoveTag = (): UseMutationResult<RemoveTagReturn, Error, number
   const queryClient = useQueryClient();
   return useMutation((tagId) => removeTag(tagId), {
     onSuccess: async (removedTagId) => {
-      queryClient.setQueryData<GetTagsReturn>(queryKeys.tags, (oldTags) => removeItemInsideData(removedTagId, oldTags));
+      queryClient.setQueryData<GetTagsReturn>(queryKeys.tags, (oldTags) =>
+        removeItemInsideData([removedTagId], oldTags)
+      );
     },
     onError: (err) => {
       toast.error(formatError(err));

@@ -1,7 +1,9 @@
 import { GetLinksReturn } from '@data/link/get-links';
 import { GetTagsReturn } from '@data/tag/get-tags';
+import { queryKeys } from '@data/tag/utils';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
-import { addItemInsidePaginatedData } from '@utils/mutate-data';
+import { addItemInsidePaginatedData, updateItemsInsideData } from '@utils/mutate-data';
+import { singleToArray } from '@utils/single-to-array';
 import { supabase } from '@utils/supabase-client';
 import { Database } from '~types/supabase';
 import { useLinksQueryKey } from './use-links-query-key';
@@ -61,6 +63,19 @@ export const useAddLink = (): UseMutationResult<
     onSuccess: (newLink) => {
       queryClient.setQueryData<InfiniteData<GetLinksReturn>>(queryKey, (oldLinks) =>
         addItemInsidePaginatedData(newLink, oldLinks)
+      );
+
+      queryClient.setQueryData<GetTagsReturn>(queryKeys.tags, (oldTags) =>
+        updateItemsInsideData(
+          singleToArray(newLink.tags).map(({ id }) => {
+            const tagLinkCount = oldTags?.find((tag) => tag.id === id)?.linksCount;
+            return {
+              id: id,
+              linksCount: tagLinkCount ? tagLinkCount + 1 : 0,
+            };
+          }),
+          oldTags
+        )
       );
     },
   });

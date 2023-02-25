@@ -60,20 +60,22 @@ export const addItemInsideData = <TData>(
   newItemPosition: 'start' | 'end' = 'start'
 ): TData[] => (items ? (newItemPosition === 'start' ? [item, ...items] : [...items, item]) : []);
 
-export const updateItemInsideData = <TData extends { id: number }>(
-  item: Partial<TData> & { id: number },
+export const updateItemsInsideData = <TData extends { id: number }>(
+  itemsToUpdate: Partial<TData>[],
   items: TData[] | undefined
 ): TData[] => {
   if (!items) return [];
 
   return produce(items, (newItems) => {
-    const itemIndex = newItems.findIndex((i) => i.id === item.id);
-    const previousItem = newItems[itemIndex];
-    newItems[itemIndex] = { ...previousItem, ...item };
+    itemsToUpdate.forEach((item) => {
+      const itemIndex = newItems.findIndex((i) => i.id === item.id);
+      const previousItem = newItems[itemIndex];
+      newItems[itemIndex] = { ...previousItem, ...item };
+    });
   });
 };
 
 export const removeItemInsideData = <TData extends { id: number }>(
-  itemId: number,
+  itemIds: number[],
   items: TData[] | undefined
-): TData[] => (items ? items.filter((item) => item.id !== itemId) : []);
+): TData[] => (items ? items.filter((item) => !itemIds.includes(item.id)) : []);

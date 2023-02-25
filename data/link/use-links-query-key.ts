@@ -10,7 +10,7 @@ export const useLinksQueryKey = (): QueryKey => {
   const params = useSearchParams();
   const profile = useProfile()[0];
   const { orderbyQuery, searchQuery } = useQueryString();
-  const tagSlugParam = params.get('tagSlug');
+  const tagSlugParam = params?.get('tagSlug');
 
   return useMemo(() => {
     switch (pathname) {

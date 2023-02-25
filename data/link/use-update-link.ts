@@ -1,8 +1,9 @@
 import { GetLinksReturn } from '@data/link/get-links';
 import { GetTagsReturn } from '@data/tag/get-tags';
+import { queryKeys } from '@data/tag/utils';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
 import { formatError } from '@utils/format-string';
-import { updateItemInsidePaginatedData } from '@utils/mutate-data';
+import { updateItemInsidePaginatedData, updateItemsInsideData } from '@utils/mutate-data';
 import { singleToArray } from '@utils/single-to-array';
 import { supabase } from '@utils/supabase-client';
 import toast from 'react-hot-toast';
@@ -25,7 +26,7 @@ export const updateLink = async (linkId: number, linkToUpdate: LinkUpdate, tags:
   }
 
   const linksTagsToRemove = singleToArray(updatedLink.tags).filter((tag) => !tags.map((t) => t.id)?.includes(tag.id));
-  const shouldRemovelinksTags = linksTagsToRemove && linksTagsToRemove.length > 0;
+  const shouldRemovelinksTags = linksTagsToRemove.length > 0;
   if (shouldRemovelinksTags) {
     try {
       await Promise.all(
@@ -47,7 +48,7 @@ export const updateLink = async (linkId: number, linkToUpdate: LinkUpdate, tags:
         .map((t) => t.id)
         ?.includes(tag.id)
   );
-  const shouldAddlinksTags = Boolean(linksTagsToAdd && linksTagsToAdd.length > 0);
+  const shouldAddlinksTags = linksTagsToAdd.length > 0;
   if (shouldAddlinksTags) {
     const { error: linksTagsToAddError } = await supabase.from('links_tags').insert(
       linksTagsToAdd.map((tag) => ({
@@ -63,7 +64,7 @@ export const updateLink = async (linkId: number, linkToUpdate: LinkUpdate, tags:
 
   updatedLink.tags = tags;
 
-  return { updatedLink };
+  return { updatedLink, linksTagsToAdd, linksTagsToRemove };
 };
 
 export const useUpdateLink = (): UseMutationResult<
@@ -76,9 +77,31 @@ export const useUpdateLink = (): UseMutationResult<
   const queryKey = useLinksQueryKey();
 
   return useMutation(({ linkId, linkToUpdate, tags }) => updateLink(linkId, linkToUpdate, tags), {
-    onSuccess: ({ updatedLink }) => {
+    onSuccess: ({ updatedLink, linksTagsToAdd, linksTagsToRemove }) => {
       queryClient.setQueryData<InfiniteData<GetLinksReturn>>(queryKey, (oldLinks) =>
         updateItemInsidePaginatedData(updatedLink, oldLinks)
+      );
+
+      queryClient.setQueryData<GetTagsReturn>(queryKeys.tags, (oldTags) =>
+        updateItemsInsideData(
+          [
+            ...linksTagsToAdd.map(({ id }) => {
+              const tagLinkCount = oldTags?.find((tag) => tag.id === id)?.linksCount;
+              return {
+                id: id,
+                linksCount: tagLinkCount ? tagLinkCount + 1 : 0,
+              };
+            }),
+            ...linksTagsToRemove.map(({ id }) => {
+              const tagLinkCount = oldTags?.find((tag) => tag.id === id)?.linksCount;
+              return {
+                id: id,
+                linksCount: tagLinkCount ? tagLinkCount - 1 : 0,
+              };
+            }),
+          ],
+          oldTags
+        )
       );
     },
   });
