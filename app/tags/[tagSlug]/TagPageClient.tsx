@@ -6,15 +6,23 @@ import LinkItem from '@components/link/link-item';
 import TagItem from '@components/tag/tag-item';
 import { useTagLinks } from '@data/link/use-links-by-tag';
 import { GetTagBySlugReturn } from '@data/tag/get-tag-by-slug';
+import { singleToArray } from '@utils/single-to-array';
 
 export default function TagPageClient({ tag }: { tag: NonNullable<GetTagBySlugReturn> }) {
   const { data: links, hasNextPage, isFetchingNextPage, fetchNextPage } = useTagLinks(tag.slug);
+
+  const tagClient = singleToArray(links?.pages?.[0]?.data?.[0]?.tags).find((tag) => tag.slug === tag.slug);
 
   return (
     <section className="my-8">
       {tag && (
         <h1 className="mb-8 flex items-center gap-3 text-center text-4xl font-bold sm:text-left">
-          Tag: <TagItem size="large" text={`${tag.name} (${tag.linksCount})`} isColored />
+          Tag:{' '}
+          <TagItem
+            size="large"
+            text={`${tag.name} (${singleToArray(tagClient?.links).length ?? tag.linksCount})`}
+            isColored
+          />
         </h1>
       )}
       {links ? (

@@ -1,9 +1,7 @@
 import { GlobalComponents } from '@components/GlobalComponents';
 import Header from '@components/header';
 import ReactQueryClientProvider from '@components/ReactQueryClientProvider';
-import { getTags } from '@data/tag/get-tags';
 import { cn } from '@utils/cn';
-import GlobalTagsClient from 'app/GlobalTagsClient';
 import { Poppins } from 'next/font/google';
 import '../styles/index.css';
 
@@ -13,7 +11,7 @@ const poppins = Poppins({
   variable: '--font-poppins',
 });
 
-export const revalidate = 60;
+// export const revalidate = 60;
 
 export const metadata = {
   title: { default: 'Deve-next', template: '%s - Deve-next' },
@@ -27,13 +25,13 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const tags = await getTags();
+  // const tags = await getTags();
 
   return (
     <html lang="en">
       <body className={`${poppins.variable} font-poppins`}>
         <ReactQueryClientProvider>
-          <GlobalTagsClient tags={tags} />
+          {/* <GlobalTagsClient tags={tags} /> */}
           <Header />
           <main className={cn('px-5 xl:container xl:mx-auto')}>{children}</main>
 

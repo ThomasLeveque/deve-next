@@ -4,7 +4,6 @@ import SpinnerIcon from '@components/icons/spinner-icon';
 import TagItem from '@components/tag/tag-item';
 import TagListWrapper from '@components/tag/tag-list-wrapper';
 import { useTags } from '@data/tag/use-tags';
-import { singleToArray } from '@utils/single-to-array';
 import { useRouter } from 'next/navigation';
 
 export default function TagsPageClient() {
@@ -17,7 +16,7 @@ export default function TagsPageClient() {
       {tags && tags.length > 0 ? (
         <TagListWrapper className="mb-4">
           {tags
-            .filter((tag) => singleToArray(tag.links).length > 0)
+            .filter((tag) => tag.linksCount > 0)
             .map((tag) => (
               <li key={tag.id}>
                 <TagItem

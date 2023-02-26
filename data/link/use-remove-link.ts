@@ -4,6 +4,7 @@ import { queryKeys } from '@data/tag/utils';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
 import { removeItemInsidePaginatedData } from '@utils/mutate-data';
 import { supabase } from '@utils/supabase-client';
+import { useRouter } from 'next/navigation';
 import { updateItemsInsideData } from './../../utils/mutate-data';
 import { useLinksQueryKey } from './use-links-query-key';
 
@@ -34,6 +35,7 @@ export const removeLink = async (linkId: number) => {
 
 export const useRemoveLink = (): UseMutationResult<RemoveLinkReturn, Error, number> => {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const queryKey = useLinksQueryKey();
 
@@ -55,6 +57,8 @@ export const useRemoveLink = (): UseMutationResult<RemoveLinkReturn, Error, numb
           oldTags
         )
       );
+
+      router.refresh();
     },
   });
 };

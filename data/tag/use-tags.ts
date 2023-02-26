@@ -11,6 +11,6 @@ export const useTags = (options?: UseQueryOptions<GetTagsReturn>): UseQueryResul
     queryFn: getTags,
     ...options,
     // enabled false because tags are fetch server side inside globalTagsClient component
-    enabled: false,
+    enabled: true,
   });
 };
