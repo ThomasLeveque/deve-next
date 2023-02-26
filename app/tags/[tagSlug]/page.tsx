@@ -1,4 +1,5 @@
 import { getTagBySlug } from '@data/tag/get-tag-by-slug';
+import { getTags } from '@data/tag/get-tags';
 import TagPageClient from 'app/tags/[tagSlug]/TagPageClient';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -8,6 +9,14 @@ export async function generateMetadata({ params }: { params: { tagSlug: string }
 
   return { title: tag?.name };
 }
+
+export async function generateStaticParams() {
+  const tags = await getTags();
+
+  return tags.map((tag) => ({ tagSlug: tag.slug }));
+}
+
+export const revalidate = 60;
 
 export default async function Tag({ params: { tagSlug } }: { params: { tagSlug: string } }) {
   const tag = await getTagBySlug(tagSlug);

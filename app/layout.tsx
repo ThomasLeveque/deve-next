@@ -18,6 +18,12 @@ export const revalidate = 60;
 export const metadata = {
   title: { default: 'Deve-next', template: '%s - Deve-next' },
   description: 'The place to pratice technical watch',
+  themeColor: '#ffffff',
+  manifest: '/favicon/site.webmanifest',
+  icons: {
+    icon: ['/favicon/favicon-32x32.png', '/favicon/favicon-16x16.png'],
+    apple: '/favicon/apple-touch-icon.png',
+  },
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
