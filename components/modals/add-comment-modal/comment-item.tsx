@@ -1,11 +1,11 @@
-import Button from '@components/elements/button';
-import MyPopover from '@components/elements/popover';
-import { GetCommentsReturn } from '@data/comment/use-comments';
-import { useRemoveLinkComment } from '@data/comment/use-remove-comment';
+import Button from '@/components/elements/button';
+import MyPopover from '@/components/elements/popover';
+import { GetCommentsReturn } from '@/data/comment/use-comments';
+import { useRemoveLinkComment } from '@/data/comment/use-remove-comment';
+import { useProfile } from '@/store/profile.store';
+import { arrayToSingle } from '@/utils/array-to-single';
 import { Popover } from '@headlessui/react';
 import { PencilSquareIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { useProfile } from '@store/profile.store';
-import { arrayToSingle } from '@utils/array-to-single';
 import { format } from 'date-fns';
 import React, { useMemo, useState } from 'react';
 import ReactMarkdown from 'react-markdown';

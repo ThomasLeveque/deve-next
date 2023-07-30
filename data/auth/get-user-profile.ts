@@ -1,6 +1,6 @@
+import { Nullable } from '@/types/shared';
+import { createServerClient } from '@/utils/supabase-server';
 import { User } from '@supabase/supabase-js';
-import { createServerClient } from '@utils/supabase-server';
-import { Nullable } from '~types/shared';
 
 export type GetUserProfileReturn = Awaited<ReturnType<typeof getUserProfile>>;
 

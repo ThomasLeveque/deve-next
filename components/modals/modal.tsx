@@ -1,6 +1,6 @@
+import { cn } from '@/utils/cn';
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import { cn } from '@utils/cn';
 import React, { Fragment, useRef } from 'react';
 
 interface ModalProps {

@@ -1,10 +1,10 @@
-import SpinnerIcon from '@components/icons/spinner-icon';
-import { GetTagsReturn } from '@data/tag/get-tags';
-import { useRemoveTag } from '@data/tag/use-remove-tag';
+import SpinnerIcon from '@/components/icons/spinner-icon';
+import { GetTagsReturn } from '@/data/tag/get-tags';
+import { useRemoveTag } from '@/data/tag/use-remove-tag';
+import { useProfile } from '@/store/profile.store';
+import { cn } from '@/utils/cn';
+import { singleToArray } from '@/utils/single-to-array';
 import { TrashIcon } from '@heroicons/react/24/outline';
-import { useProfile } from '@store/profile.store';
-import { cn } from '@utils/cn';
-import { singleToArray } from '@utils/single-to-array';
 import React, { useCallback } from 'react';
 
 interface TagsComboboxOptionProps extends React.HTMLAttributes<HTMLLIElement> {

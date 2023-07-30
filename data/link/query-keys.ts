@@ -1,6 +1,6 @@
-import { OrderLinksKey } from '@hooks/use-query-string';
+import { OrderLinksKey } from '@/hooks/use-query-string';
+import { Nullable } from '@/types/shared';
 import { QueryKey } from '@tanstack/react-query';
-import { Nullable } from '~types/shared';
 
 export const queryKeys = {
   links: (orderbyQuery: OrderLinksKey, searchQuery: string): QueryKey => ['links', orderbyQuery, searchQuery],

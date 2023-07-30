@@ -1,6 +1,6 @@
-import { useProfile } from '@store/profile.store';
-import { cn } from '@utils/cn';
-import { getInitials } from '@utils/format-string';
+import { useProfile } from '@/store/profile.store';
+import { cn } from '@/utils/cn';
+import { getInitials } from '@/utils/format-string';
 import Image from 'next/image';
 import React, { useMemo } from 'react';
 

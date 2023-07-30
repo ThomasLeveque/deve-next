@@ -1,5 +1,5 @@
+import { cn } from '@/utils/cn';
 import { MagnifyingGlassIcon, XCircleIcon } from '@heroicons/react/24/outline';
-import { cn } from '@utils/cn';
 import React from 'react';
 
 interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {

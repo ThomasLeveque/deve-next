@@ -1,9 +1,9 @@
-import { GetTagsReturn } from '@data/tag/get-tags';
-import { formatTagWithLinksCount, GET_TAGS_SELECT } from '@data/tag/utils';
+import { GetTagsReturn } from '@/data/tag/get-tags';
+import { formatTagWithLinksCount, GET_TAGS_SELECT } from '@/data/tag/utils';
+import { Database } from '@/types/supabase';
+import { addItemInsideData } from '@/utils/mutate-data';
+import { supabase } from '@/utils/supabase-client';
 import { useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
-import { addItemInsideData } from '@utils/mutate-data';
-import { supabase } from '@utils/supabase-client';
-import { Database } from '~types/supabase';
 import { queryKeys } from './utils';
 
 type TagInsert = Database['public']['Tables']['tags']['Insert'];

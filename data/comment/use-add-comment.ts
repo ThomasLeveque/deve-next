@@ -1,11 +1,11 @@
-import { GetCommentsReturn } from '@data/comment/use-comments';
-import { GetLinksReturn } from '@data/link/get-links';
-import { useLinkToCommentModal } from '@store/modals.store';
+import { GetCommentsReturn } from '@/data/comment/use-comments';
+import { GetLinksReturn } from '@/data/link/get-links';
+import { useLinkToCommentModal } from '@/store/modals.store';
+import { Database } from '@/types/supabase';
+import { arrayToSingle } from '@/utils/array-to-single';
+import { addItemInsidePaginatedData, updateItemInsidePaginatedData } from '@/utils/mutate-data';
+import { supabase } from '@/utils/supabase-client';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
-import { arrayToSingle } from '@utils/array-to-single';
-import { addItemInsidePaginatedData, updateItemInsidePaginatedData } from '@utils/mutate-data';
-import { supabase } from '@utils/supabase-client';
-import { Database } from '~types/supabase';
 import { useLinksQueryKey } from '../link/use-links-query-key';
 import { queryKeys } from './query-keys';
 

@@ -1,11 +1,11 @@
-import Button from '@components/elements/button';
-import TextArea from '@components/elements/textarea';
-import { GetCommentsReturn } from '@data/comment/use-comments';
-import { useUpdateLinkComment } from '@data/comment/use-update-comment';
+import Button from '@/components/elements/button';
+import TextArea from '@/components/elements/textarea';
+import { GetCommentsReturn } from '@/data/comment/use-comments';
+import { useUpdateLinkComment } from '@/data/comment/use-update-comment';
+import { useProfile } from '@/store/profile.store';
+import { addCommentSchema, commentMaxLength } from '@/utils/form-schemas';
+import { formatError } from '@/utils/format-string';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useProfile } from '@store/profile.store';
-import { addCommentSchema, commentMaxLength } from '@utils/form-schemas';
-import { formatError } from '@utils/format-string';
 import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';

@@ -1,7 +1,7 @@
-import { GlobalComponents } from '@components/GlobalComponents';
-import Header from '@components/header';
-import ReactQueryClientProvider from '@components/ReactQueryClientProvider';
-import { cn } from '@utils/cn';
+import { GlobalComponents } from '@/components/GlobalComponents';
+import Header from '@/components/header';
+import ReactQueryClientProvider from '@/components/ReactQueryClientProvider';
+import { cn } from '@/utils/cn';
 import { Poppins } from 'next/font/google';
 import '../styles/index.css';
 

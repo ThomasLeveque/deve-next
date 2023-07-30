@@ -1,4 +1,4 @@
-import { useLinkToUpdateModal } from '@store/modals.store';
+import { useLinkToUpdateModal } from '@/store/modals.store';
 import React from 'react';
 import { Modal } from '../modal';
 import UpdateLinkForm from './update-link-form';

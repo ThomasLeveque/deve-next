@@ -1,5 +1,5 @@
-import { useAuthModalOpen } from '@store/modals.store';
-import { useProfile } from '@store/profile.store';
+import { useAuthModalOpen } from '@/store/modals.store';
+import { useProfile } from '@/store/profile.store';
 import React, { useCallback, useEffect } from 'react';
 import { Modal } from '../modal';
 import SignInWithDiscordBtn from './sign-in-with-discord-btn';

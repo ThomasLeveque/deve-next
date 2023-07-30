@@ -1,9 +1,9 @@
-import { GetLinksReturn } from '@data/link/get-links';
+import { GetLinksReturn } from '@/data/link/get-links';
+import { formatError } from '@/utils/format-string';
+import { updateItemInsidePaginatedData } from '@/utils/mutate-data';
+import { singleToArray } from '@/utils/single-to-array';
+import { supabase } from '@/utils/supabase-client';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
-import { formatError } from '@utils/format-string';
-import { updateItemInsidePaginatedData } from '@utils/mutate-data';
-import { singleToArray } from '@utils/single-to-array';
-import { supabase } from '@utils/supabase-client';
 import toast from 'react-hot-toast';
 import { useLinksQueryKey } from '../link/use-links-query-key';
 

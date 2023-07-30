@@ -1,8 +1,8 @@
+import { Nullable } from '@/types/shared';
+import { formatError } from '@/utils/format-string';
+import { supabase } from '@/utils/supabase-client';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { formatError } from '@utils/format-string';
-import { supabase } from '@utils/supabase-client';
 import toast from 'react-hot-toast';
-import { Nullable } from '~types/shared';
 import { queryKeys } from './query-keys';
 
 export const TAG_LINKS_PER_PAGE = Number(process.env.NEXT_PUBLIC_LINKS_PER_PAGE) ?? 20;

@@ -1,6 +1,6 @@
-import { getLinks } from '@data/link/get-links';
-import { useQueryString } from '@hooks/use-query-string';
-import useDebounce from '@hooks/useDebounce';
+import { getLinks } from '@/data/link/get-links';
+import { useQueryString } from '@/hooks/use-query-string';
+import useDebounce from '@/hooks/useDebounce';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { queryKeys } from './query-keys';
 

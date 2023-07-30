@@ -1,6 +1,6 @@
-import MenuDropdown, { MenuDropdownItemProps } from '@components/elements/menu-dropdown';
+import MenuDropdown, { MenuDropdownItemProps } from '@/components/elements/menu-dropdown';
+import { OrderLinksKey, useQueryString } from '@/hooks/use-query-string';
 import { BarsArrowDownIcon, BarsArrowUpIcon, FireIcon } from '@heroicons/react/24/outline';
-import { OrderLinksKey, useQueryString } from '@hooks/use-query-string';
 import React, { useMemo } from 'react';
 
 const OrderbyLinksDropdown: React.FC = React.memo(() => {

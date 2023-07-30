@@ -1,7 +1,7 @@
-import { getUserProfile } from '@data/auth/get-user-profile';
-import { useProfile, useProfileLoaded } from '@store/profile.store';
+import { getUserProfile } from '@/data/auth/get-user-profile';
+import { useProfile, useProfileLoaded } from '@/store/profile.store';
+import { supabase } from '@/utils/supabase-client';
 import { Session } from '@supabase/supabase-js';
-import { supabase } from '@utils/supabase-client';
 import { useEffect } from 'react';
 
 export function useAuth() {

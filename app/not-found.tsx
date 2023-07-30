@@ -1,4 +1,4 @@
-import Button from '@components/elements/button';
+import Button from '@/components/elements/button';
 import { HomeIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 

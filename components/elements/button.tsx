@@ -1,5 +1,5 @@
-import SpinnerIcon from '@components/icons/spinner-icon';
-import { cn } from '@utils/cn';
+import SpinnerIcon from '@/components/icons/spinner-icon';
+import { cn } from '@/utils/cn';
 import React, { useMemo } from 'react';
 
 interface ButtonProps {

@@ -1,8 +1,8 @@
-import { GetCommentsReturn } from '@data/comment/use-comments';
+import { GetCommentsReturn } from '@/data/comment/use-comments';
+import { Database } from '@/types/supabase';
+import { updateItemInsidePaginatedData } from '@/utils/mutate-data';
+import { supabase } from '@/utils/supabase-client';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
-import { updateItemInsidePaginatedData } from '@utils/mutate-data';
-import { supabase } from '@utils/supabase-client';
-import { Database } from '~types/supabase';
 import { queryKeys } from './query-keys';
 
 type CommentUpdate = Database['public']['Tables']['comments']['Update'];

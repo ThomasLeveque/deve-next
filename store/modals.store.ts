@@ -1,6 +1,6 @@
-import { GetLinksReturn } from '@data/link/get-links';
+import { GetLinksReturn } from '@/data/link/get-links';
+import { Nullable } from '@/types/shared';
 import { atom, SetStateAction, useAtom } from 'jotai';
-import { Nullable } from '~types/shared';
 
 const authModalOpenAtom = atom(false);
 export const useAuthModalOpen = (): [boolean, (update: SetStateAction<boolean>) => void] => useAtom(authModalOpenAtom);

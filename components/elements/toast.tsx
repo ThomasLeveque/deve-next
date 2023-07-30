@@ -1,5 +1,5 @@
+import { cn } from '@/utils/cn';
 import { BellIcon, ShieldCheckIcon, XCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { cn } from '@utils/cn';
 import React, { useMemo } from 'react';
 import toast, { Toast, ToastBar } from 'react-hot-toast';
 

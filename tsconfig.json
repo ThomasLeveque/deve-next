@@ -15,12 +15,7 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-      "@data/*": ["data/*"],
-      "@components/*": ["components/*"],
-      "@hooks/*": ["hooks/*"],
-      "@store/*": ["store/*"],
-      "~types/*": ["types/*"],
-      "@utils/*": ["utils/*"]
+      "@/*": ["./*"]
     },
     "incremental": true,
     "plugins": [

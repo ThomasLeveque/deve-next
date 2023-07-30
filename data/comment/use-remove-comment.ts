@@ -1,12 +1,12 @@
-import { GetCommentsReturn } from '@data/comment/use-comments';
-import { GetLinksReturn } from '@data/link/get-links';
-import { useLinksQueryKey } from '@data/link/use-links-query-key';
-import { useLinkToCommentModal } from '@store/modals.store';
+import { GetCommentsReturn } from '@/data/comment/use-comments';
+import { GetLinksReturn } from '@/data/link/get-links';
+import { useLinksQueryKey } from '@/data/link/use-links-query-key';
+import { useLinkToCommentModal } from '@/store/modals.store';
+import { arrayToSingle } from '@/utils/array-to-single';
+import { formatError } from '@/utils/format-string';
+import { removeItemInsidePaginatedData, updateItemInsidePaginatedData } from '@/utils/mutate-data';
+import { supabase } from '@/utils/supabase-client';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
-import { arrayToSingle } from '@utils/array-to-single';
-import { formatError } from '@utils/format-string';
-import { removeItemInsidePaginatedData, updateItemInsidePaginatedData } from '@utils/mutate-data';
-import { supabase } from '@utils/supabase-client';
 import toast from 'react-hot-toast';
 import { queryKeys } from './query-keys';
 

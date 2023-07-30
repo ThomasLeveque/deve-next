@@ -1,5 +1,5 @@
+import { cn } from '@/utils/cn';
 import { Popover, Transition } from '@headlessui/react';
-import { cn } from '@utils/cn';
 import React, { useMemo } from 'react';
 
 interface MyPopoverProps {

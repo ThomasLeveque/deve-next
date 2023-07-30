@@ -1,9 +1,9 @@
 'use client';
 
+import { useAddLinkModalOpen, useAuthModalOpen } from '@/store/modals.store';
+import { useProfile, useProfileLoaded } from '@/store/profile.store';
+import { supabase } from '@/utils/supabase-client';
 import { ArrowLeftOnRectangleIcon, PlusIcon, UserCircleIcon } from '@heroicons/react/24/outline';
-import { useAddLinkModalOpen, useAuthModalOpen } from '@store/modals.store';
-import { useProfile, useProfileLoaded } from '@store/profile.store';
-import { supabase } from '@utils/supabase-client';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';

@@ -1,9 +1,9 @@
-import { GetLinksReturn } from '@data/link/get-links';
-import { GetTagsReturn } from '@data/tag/get-tags';
-import { queryKeys } from '@data/tag/utils';
+import { GetLinksReturn } from '@/data/link/get-links';
+import { GetTagsReturn } from '@/data/tag/get-tags';
+import { queryKeys } from '@/data/tag/utils';
+import { removeItemInsidePaginatedData } from '@/utils/mutate-data';
+import { supabase } from '@/utils/supabase-client';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
-import { removeItemInsidePaginatedData } from '@utils/mutate-data';
-import { supabase } from '@utils/supabase-client';
 import { useRouter } from 'next/navigation';
 import { updateItemsInsideData } from './../../utils/mutate-data';
 import { useLinksQueryKey } from './use-links-query-key';

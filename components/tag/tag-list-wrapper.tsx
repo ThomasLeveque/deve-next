@@ -1,4 +1,4 @@
-import { cn } from '@utils/cn';
+import { cn } from '@/utils/cn';
 import React from 'react';
 
 const TagListWrapper: React.FC<{ className?: string; children: React.ReactNode | React.ReactNode[] }> = (props) => {

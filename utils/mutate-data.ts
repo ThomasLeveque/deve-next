@@ -1,6 +1,6 @@
+import { Nullable, PaginatedData } from '@/types/shared';
 import { InfiniteData } from '@tanstack/react-query';
 import produce, { Draft } from 'immer';
-import { Nullable, PaginatedData } from '~types/shared';
 
 const initialPaginatedData: InfiniteData<never> = {
   pages: [],

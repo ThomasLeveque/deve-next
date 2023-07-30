@@ -1,7 +1,7 @@
-import Button from '@components/elements/button';
-import { useRemoveLink } from '@data/link/use-remove-link';
-import { useLinkToRemoveModal } from '@store/modals.store';
-import { formatError } from '@utils/format-string';
+import Button from '@/components/elements/button';
+import { useRemoveLink } from '@/data/link/use-remove-link';
+import { useLinkToRemoveModal } from '@/store/modals.store';
+import { formatError } from '@/utils/format-string';
 import React, { useCallback } from 'react';
 import toast from 'react-hot-toast';
 import { Modal } from '../modal';

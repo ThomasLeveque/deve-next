@@ -1,5 +1,5 @@
+import { cn } from '@/utils/cn';
 import { Switch } from '@headlessui/react';
-import { cn } from '@utils/cn';
 import React from 'react';
 
 interface ToggleSwitchProps {

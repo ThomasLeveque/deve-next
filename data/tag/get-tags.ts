@@ -1,5 +1,5 @@
-import { formatTagWithLinksCount, GET_TAGS_SELECT } from '@data/tag/utils';
-import { supabase } from '@utils/supabase-client';
+import { formatTagWithLinksCount, GET_TAGS_SELECT } from '@/data/tag/utils';
+import { supabase } from '@/utils/supabase-client';
 
 export type GetTagsReturn = Awaited<ReturnType<typeof getTags>>;
 

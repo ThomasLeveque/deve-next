@@ -1,10 +1,10 @@
 'use client';
 
-import Button from '@components/elements/button';
-import SpinnerIcon from '@components/icons/spinner-icon';
-import LinkItem from '@components/link/link-item';
-import { useUserLinks } from '@data/link/use-user-links';
-import { useProfile } from '@store/profile.store';
+import Button from '@/components/elements/button';
+import SpinnerIcon from '@/components/icons/spinner-icon';
+import LinkItem from '@/components/link/link-item';
+import { useUserLinks } from '@/data/link/use-user-links';
+import { useProfile } from '@/store/profile.store';
 
 export default function ProfilPageClient() {
   const profile = useProfile()[0];

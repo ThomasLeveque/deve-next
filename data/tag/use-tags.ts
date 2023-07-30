@@ -1,6 +1,6 @@
-import { getTags, GetTagsReturn } from '@data/tag/get-tags';
+import { getTags, GetTagsReturn } from '@/data/tag/get-tags';
+import { Database } from '@/types/supabase';
 import { useQuery, UseQueryOptions, UseQueryResult } from '@tanstack/react-query';
-import { Database } from '~types/supabase';
 import { queryKeys } from './utils';
 
 export type TagRow = Database['public']['Tables']['tags']['Row'];

@@ -1,7 +1,7 @@
-import Button from '@components/elements/button';
-import DiscordIcon from '@components/icons/discord-icon';
-import { formatError } from '@utils/format-string';
-import { supabase } from '@utils/supabase-client';
+import Button from '@/components/elements/button';
+import DiscordIcon from '@/components/icons/discord-icon';
+import { formatError } from '@/utils/format-string';
+import { supabase } from '@/utils/supabase-client';
 import React, { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
 

@@ -1,6 +1,6 @@
+import { cn } from '@/utils/cn';
 import { Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
-import { cn } from '@utils/cn';
 import React from 'react';
 import Button from './button';
 

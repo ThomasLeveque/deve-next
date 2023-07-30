@@ -1,6 +1,6 @@
-import { formatTagWithLinksCount, GET_TAGS_SELECT } from '@data/tag/utils';
-import { supabase } from '@utils/supabase-client';
-import { Nullable } from '~types/shared';
+import { formatTagWithLinksCount, GET_TAGS_SELECT } from '@/data/tag/utils';
+import { Nullable } from '@/types/shared';
+import { supabase } from '@/utils/supabase-client';
 
 export type GetTagBySlugReturn = Awaited<ReturnType<typeof getTagBySlug>>;
 

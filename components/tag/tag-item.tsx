@@ -1,5 +1,5 @@
+import { cn } from '@/utils/cn';
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import { cn } from '@utils/cn';
 import React from 'react';
 
 interface TagProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {

@@ -1,9 +1,9 @@
 'use client';
 
-import SpinnerIcon from '@components/icons/spinner-icon';
-import TagItem from '@components/tag/tag-item';
-import TagListWrapper from '@components/tag/tag-list-wrapper';
-import { useTags } from '@data/tag/use-tags';
+import SpinnerIcon from '@/components/icons/spinner-icon';
+import TagItem from '@/components/tag/tag-item';
+import TagListWrapper from '@/components/tag/tag-list-wrapper';
+import { useTags } from '@/data/tag/use-tags';
 import { useRouter } from 'next/navigation';
 
 export default function TagsPageClient() {

@@ -1,5 +1,5 @@
-import { getTagBySlug } from '@data/tag/get-tag-by-slug';
-import { getTags } from '@data/tag/get-tags';
+import { getTagBySlug } from '@/data/tag/get-tag-by-slug';
+import { getTags } from '@/data/tag/get-tags';
 import TagPageClient from 'app/tags/[tagSlug]/TagPageClient';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';

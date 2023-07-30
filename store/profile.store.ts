@@ -1,6 +1,6 @@
-import { GetUserProfileReturn } from '@data/auth/get-user-profile';
+import { GetUserProfileReturn } from '@/data/auth/get-user-profile';
+import { Nullable } from '@/types/shared';
 import { atom, SetStateAction, useAtom } from 'jotai';
-import { Nullable } from '~types/shared';
 
 const profileAtom = atom<Nullable<GetUserProfileReturn>>(null);
 const profileLoadedAtom = atom<boolean>(false);

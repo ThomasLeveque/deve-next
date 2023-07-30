@@ -1,4 +1,4 @@
-import { useAddLinkModalOpen } from '@store/modals.store';
+import { useAddLinkModalOpen } from '@/store/modals.store';
 import React from 'react';
 import { Modal } from '../modal';
 import AddLinkForm from './add-link-form';
