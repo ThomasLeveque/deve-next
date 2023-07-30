@@ -3,7 +3,7 @@ import TextInput from '@components/elements/text-input';
 import TagsCombobox from '@components/tag/tags-combobox';
 import { useAddLink } from '@data/link/use-add-link';
 import { GetTagsReturn } from '@data/tag/get-tags';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useProfile } from '@store/profile.store';
 import { addLinkSchema } from '@utils/form-schemas';
 import { formatError } from '@utils/format-string';
@@ -33,7 +33,7 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
     watch,
     formState: { errors },
   } = useForm<LinkFormData>({
-    resolver: yupResolver(addLinkSchema),
+    resolver: zodResolver(addLinkSchema),
   });
 
   const onSubmit = useCallback(

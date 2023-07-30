@@ -14,11 +14,6 @@ export const getInitials = (text: string): string => {
   }
 };
 
-export const validUrlRegex =
-  /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
-
-export const isValidUrl = (url: string): boolean => url.match(validUrlRegex) !== null;
-
 export const formatError = (err: Error): string => err.message ?? err.toString();
 
 export function stringToSlug(str: string) {

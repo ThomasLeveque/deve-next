@@ -3,7 +3,7 @@
 import Button from '@components/elements/button';
 import TextArea from '@components/elements/textarea';
 import { useAddLinkComment } from '@data/comment/use-add-comment';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useProfile } from '@store/profile.store';
 import { addCommentSchema, commentMaxLength } from '@utils/form-schemas';
 import { formatError } from '@utils/format-string';
@@ -35,7 +35,7 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
     reset,
     watch,
   } = useForm<CommentFormData>({
-    resolver: yupResolver(addCommentSchema),
+    resolver: zodResolver(addCommentSchema),
   });
 
   const commentText = watch('text', '') ?? '';

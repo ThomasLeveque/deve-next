@@ -1,23 +1,25 @@
-import * as yup from 'yup';
-import { validUrlRegex } from './format-string';
+import z from 'zod';
 
-const userDisplayNameSchema = yup.string().required('Username is required').max(255);
-const userEmailSchema = yup.string().email('Email must be a valid email').required('Email is required').max(255);
-const userPasswordSchema = yup
-  .string()
-  .required('Password is required')
+const userDisplayNameSchema = z
+  .string({
+    required_error: 'Username is required',
+  })
+  .max(255);
+const userEmailSchema = z.string({ required_error: 'Email is required' }).email('Email must be a valid email').max(255);
+const userPasswordSchema = z
+  .string({ required_error: 'Password is required' })
   .min(6, 'Password must be at least 6 characters')
   .max(255);
 
-export const resetPasswordSchema = yup.object().shape({
+export const resetPasswordSchema = z.object({
   email: userEmailSchema,
 });
 
-export const signInSchema = yup.object().shape({
+export const signInSchema = z.object({
   email: userEmailSchema,
   password: userPasswordSchema,
 });
-export const signUpSchema = yup.object().shape({
+export const signUpSchema = z.object({
   displayName: userDisplayNameSchema,
   email: userEmailSchema,
   password: userPasswordSchema,
@@ -25,21 +27,17 @@ export const signUpSchema = yup.object().shape({
 
 export const commentMaxLength = 1000;
 const commentSchema = {
-  text: yup.string().required('Comment is required').max(commentMaxLength),
+  text: z.string({ required_error: 'Comment is required' }).max(commentMaxLength),
 };
 
-export const addCommentSchema = yup.object().shape(commentSchema);
+export const addCommentSchema = z.object(commentSchema);
 
 const linkSchema = {
-  url: yup.string().required('Url is required').matches(validUrlRegex, { message: 'Url must be a valid url' }).max(255),
-  title: yup.string().required('Title is required').max(255),
-  tags: yup
-    .array(yup.object())
-    .required('At least 1 tag required')
-    .min(1, 'At least 1 tag required')
-    .max(4, 'No more than 4 tags'),
+  url: z.string({ required_error: 'Url is required' }).url('Url must be a valid url').max(255),
+  title: z.string({ required_error: 'Title is required' }).max(255),
+  tags: z.array(z.object({})).min(1, 'At least 1 tag required').max(4, 'No more than 4 tags'),
 };
 
-export const addLinkSchema = yup.object().shape(linkSchema);
+export const addLinkSchema = z.object(linkSchema);
 
-export const updateLinkSchema = yup.object().shape(linkSchema);
+export const updateLinkSchema = z.object(linkSchema);

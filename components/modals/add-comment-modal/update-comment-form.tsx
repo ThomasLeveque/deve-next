@@ -2,7 +2,7 @@ import Button from '@components/elements/button';
 import TextArea from '@components/elements/textarea';
 import { GetCommentsReturn } from '@data/comment/use-comments';
 import { useUpdateLinkComment } from '@data/comment/use-update-comment';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useProfile } from '@store/profile.store';
 import { addCommentSchema, commentMaxLength } from '@utils/form-schemas';
 import { formatError } from '@utils/format-string';
@@ -34,7 +34,7 @@ const UpdateCommentForm: React.FC<UpdateCommentFormProps> = (props) => {
     formState: { errors },
     watch,
   } = useForm<CommentFormData>({
-    resolver: yupResolver(addCommentSchema),
+    resolver: zodResolver(addCommentSchema),
     defaultValues: {
       text: props.commentToUpdate.text,
     },

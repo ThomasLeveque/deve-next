@@ -4,7 +4,7 @@ import TagsCombobox from '@components/tag/tags-combobox';
 import { GetLinksReturn } from '@data/link/get-links';
 import { useUpdateLink } from '@data/link/use-update-link';
 import { GetTagsReturn } from '@data/tag/get-tags';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useProfile } from '@store/profile.store';
 import { updateLinkSchema } from '@utils/form-schemas';
 import { formatError } from '@utils/format-string';
@@ -36,7 +36,7 @@ const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
     reset,
     formState: { errors },
   } = useForm<LinkFormData>({
-    resolver: yupResolver(updateLinkSchema),
+    resolver: zodResolver(updateLinkSchema),
     defaultValues: {
       url: props.linkToUpdate.url,
       title: props.linkToUpdate.description,
