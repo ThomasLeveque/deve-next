@@ -1,4 +1,4 @@
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/utils';
 import { BellIcon, ShieldCheckIcon, XCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import React, { useMemo } from 'react';
 import toast, { Toast, ToastBar } from 'react-hot-toast';
@@ -47,7 +47,7 @@ const Toast: React.FC<ToastProps> = (props) => {
       {() => (
         <div
           className={cn(
-            'relative grid w-full max-w-xs grid-cols-[28px,1fr] gap-2 rounded-button bg-white py-4 px-5 shadow-lg',
+            'rounded-button relative grid w-full max-w-xs grid-cols-[28px,1fr] gap-2 bg-white py-4 px-5 shadow-lg',
             themeClasses
           )}
         >

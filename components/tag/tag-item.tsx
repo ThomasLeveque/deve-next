@@ -1,4 +1,4 @@
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/utils';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import React from 'react';
 
@@ -23,7 +23,7 @@ const TagItem = React.forwardRef<HTMLButtonElement, TagProps>(
         onClick={onClick}
         disabled={disabled}
         className={cn(
-          'inline-flex rounded-tag py-[7px] px-[10px] uppercase',
+          'rounded-tag inline-flex py-[7px] px-[10px] uppercase',
           isColored ? 'bg-primary text-black' : 'bg-gray-400/40 text-black',
 
           {

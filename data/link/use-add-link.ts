@@ -1,9 +1,9 @@
 import { GetLinksReturn } from '@/data/link/get-links';
 import { GetTagsReturn } from '@/data/tag/get-tags';
 import { queryKeys } from '@/data/tag/utils';
+import { singleToArray } from '@/lib/utils';
 import { Database } from '@/types/supabase';
 import { addItemInsidePaginatedData, updateItemsInsideData } from '@/utils/mutate-data';
-import { singleToArray } from '@/utils/single-to-array';
 import { supabase } from '@/utils/supabase-client';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
 import { useLinksQueryKey } from './use-links-query-key';

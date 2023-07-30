@@ -5,6 +5,7 @@ import { GetLinksReturn } from '@/data/link/get-links';
 import { TagRow } from '@/data/tag/use-tags';
 import { useAddLinkVote } from '@/data/vote/use-add-vote';
 import { useRemoveLinkVote } from '@/data/vote/use-remove-vote';
+import { arrayToSingle, cn, singleToArray } from '@/lib/utils';
 import {
   useAuthModalOpen,
   useLinkToCommentModal,
@@ -12,10 +13,7 @@ import {
   useLinkToUpdateModal,
 } from '@/store/modals.store';
 import { useProfile } from '@/store/profile.store';
-import { arrayToSingle } from '@/utils/array-to-single';
-import { cn } from '@/utils/cn';
 import { getDomain } from '@/utils/format-string';
-import { singleToArray } from '@/utils/single-to-array';
 import { ChatBubbleBottomCenterTextIcon, FireIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { FireIcon as FireIconSolid } from '@heroicons/react/24/solid';
 import { format } from 'date-fns';
@@ -84,7 +82,7 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, isProfilLink = false }) => {
   }
 
   return (
-    <li className="group flex flex-col rounded-link-card bg-gray-100 p-[30px]">
+    <li className="rounded-link-card group flex flex-col bg-gray-100 p-[30px]">
       <div className="mb-5 flex min-h-[20px] items-start justify-between space-x-3">
         <div>
           {!isProfilLink && <h3 className="mb-1 text-[13px] font-bold">{arrayToSingle(link.user)?.username}</h3>}

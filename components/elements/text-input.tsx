@@ -1,4 +1,4 @@
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/utils';
 import { MagnifyingGlassIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import React from 'react';
 
@@ -39,14 +39,14 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
           <input
             ref={ref}
             className={cn(
-              'with-ring h-[50px] w-full rounded-button bg-gray-100 px-5 text-sm placeholder-gray-400',
+              'with-ring rounded-button h-[50px] w-full bg-gray-100 px-5 text-sm placeholder-gray-400',
               { 'px-12': inputProps.type === 'search' },
               className
             )}
             {...inputProps}
           />
         </div>
-        {errorText && <p className="absolute top-full right-1 mt-1 text-[10px] text-danger-400">{errorText}</p>}
+        {errorText && <p className="text-danger-400 absolute top-full right-1 mt-1 text-[10px]">{errorText}</p>}
       </div>
     );
   }

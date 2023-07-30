@@ -1,4 +1,4 @@
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/utils';
 import { Popover, Transition } from '@headlessui/react';
 import React, { useMemo } from 'react';
 
@@ -39,7 +39,7 @@ const MyPopover: React.FC<MyPopoverProps> = (props) => {
       >
         <Popover.Panel
           className={cn(
-            'absolute z-10 rounded-button bg-white p-4 shadow-lg focus:outline-none',
+            'rounded-button absolute z-10 bg-white p-4 shadow-lg focus:outline-none',
             props.className,
             positionClassNames
           )}

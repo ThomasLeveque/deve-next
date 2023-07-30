@@ -6,7 +6,7 @@ import LinkItem from '@/components/link/link-item';
 import TagItem from '@/components/tag/tag-item';
 import { useTagLinks } from '@/data/link/use-links-by-tag';
 import { GetTagBySlugReturn } from '@/data/tag/get-tag-by-slug';
-import { singleToArray } from '@/utils/single-to-array';
+import { singleToArray } from '@/lib/utils';
 
 export default function TagPageClient({ tag }: { tag: NonNullable<GetTagBySlugReturn> }) {
   const { data: links, hasNextPage, isFetchingNextPage, fetchNextPage } = useTagLinks(tag.slug);

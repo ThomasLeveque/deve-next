@@ -1,5 +1,5 @@
 import { FetchTagsReturn } from '@/data/tag/get-tags';
-import { singleToArray } from '@/utils/single-to-array';
+import { singleToArray } from '@/lib/utils';
 
 export const GET_TAGS_SELECT = '*, links(id)';
 

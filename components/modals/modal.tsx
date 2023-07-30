@@ -1,4 +1,4 @@
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/utils';
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import React, { Fragment, useRef } from 'react';
@@ -44,13 +44,13 @@ export const Modal: React.FC<ModalProps> = ({
           >
             <div
               className={cn(
-                'relative z-20 mx-auto w-full max-w-lg rounded-modal bg-white py-10 px-8 sm:px-10',
+                'rounded-modal relative z-20 mx-auto w-full max-w-lg bg-white py-10 px-8 sm:px-10',
                 className
               )}
             >
               <button
                 onClick={closeModal}
-                className="with-ring absolute right-5 top-5 rounded-tag p-1 hover:bg-gray-100"
+                className="with-ring rounded-tag absolute right-5 top-5 p-1 hover:bg-gray-100"
               >
                 <XMarkIcon className="w-6" />
               </button>

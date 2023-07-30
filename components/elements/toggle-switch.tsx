@@ -1,4 +1,4 @@
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/utils';
 import { Switch } from '@headlessui/react';
 import React from 'react';
 
@@ -20,7 +20,7 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = (props) => {
       onChange={onChange}
       className={cn(
         'with-ring relative flex h-[30px] w-[50px] cursor-pointer items-center rounded-full px-1 transition-colors duration-200 ease-in-out focus:outline-none',
-        props.checked ? 'justify-end bg-success-400' : 'justify-start bg-danger-400',
+        props.checked ? 'bg-success-400 justify-end' : 'bg-danger-400 justify-start',
         { 'opacity-50': disabled },
         props.className
       )}

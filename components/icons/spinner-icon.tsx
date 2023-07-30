@@ -1,4 +1,4 @@
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/utils';
 import React from 'react';
 
 const SpinnerIcon: React.FC<React.SVGAttributes<SVGElement>> = React.memo(({ className, ...svgProps }) => {

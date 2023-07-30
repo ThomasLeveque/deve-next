@@ -1,5 +1,5 @@
 import SpinnerIcon from '@/components/icons/spinner-icon';
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/utils';
 import React, { useMemo } from 'react';
 
 interface ButtonProps {
@@ -50,7 +50,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => 
     <button
       ref={ref}
       className={cn(
-        'with-ring flex h-[46px] items-center justify-center rounded-button text-xs font-bold uppercase disabled:cursor-not-allowed disabled:opacity-40',
+        'with-ring rounded-button flex h-[46px] items-center justify-center text-xs font-bold uppercase disabled:cursor-not-allowed disabled:opacity-40',
         { 'w-full': fullWidth },
         { 'px-5': !isOnlyIcon },
         { 'w-[46px]': isOnlyIcon },

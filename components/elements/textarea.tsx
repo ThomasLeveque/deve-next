@@ -1,4 +1,4 @@
-import { cn } from '@/utils/cn';
+import { cn } from '@/lib/utils';
 import React from 'react';
 
 interface TextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -24,13 +24,13 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
           <textarea
             ref={ref}
             className={cn(
-              'with-ring w-full rounded-button bg-gray-100 px-5 py-4 text-sm placeholder-gray-400',
+              'with-ring rounded-button w-full bg-gray-100 px-5 py-4 text-sm placeholder-gray-400',
               className
             )}
             {...textAreaProps}
           />
         </div>
-        {errorText ? <p className="absolute top-full right-1 mt-1 text-[10px] text-danger-400">{errorText}</p> : null}
+        {errorText ? <p className="text-danger-400 absolute top-full right-1 mt-1 text-[10px]">{errorText}</p> : null}
       </div>
     );
   }

@@ -1,8 +1,8 @@
 import { GetLinksReturn } from '@/data/link/get-links';
+import { singleToArray } from '@/lib/utils';
 import { Database } from '@/types/supabase';
 import { formatError } from '@/utils/format-string';
 import { updateItemInsidePaginatedData } from '@/utils/mutate-data';
-import { singleToArray } from '@/utils/single-to-array';
 import { supabase } from '@/utils/supabase-client';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
