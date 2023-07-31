@@ -1,5 +1,5 @@
-import Button from '@/components/elements/button';
 import GithubIcon from '@/components/icons/github-icon';
+import { Button } from '@/components/ui/button';
 import { formatError } from '@/utils/format-string';
 import { supabase } from '@/utils/supabase-client';
 import React, { useCallback, useState } from 'react';
@@ -27,14 +27,13 @@ const SignInWithGithubBtn: React.FC<{
   return (
     <Button
       ref={initialFocusButtonRef}
-      theme="github"
-      icon={<GithubIcon />}
-      iconPosition="left"
-      text="login with github"
-      loading={loading}
-      fullWidth
+      variant="default"
+      // loading={loading}
+      className="w-full"
       onClick={handleSignInWithGithub}
-    />
+    >
+      <GithubIcon className="mr-2" /> login with github
+    </Button>
   );
 };
 

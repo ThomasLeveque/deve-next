@@ -1,8 +1,8 @@
 'use client';
 
-import Button from '@/components/elements/button';
 import SpinnerIcon from '@/components/icons/spinner-icon';
 import CommentItem from '@/components/modals/add-comment-modal/comment-item';
+import { Button } from '@/components/ui/button';
 import { COMMENTS_PER_PAGE, useComments } from '@/data/comment/use-comments';
 import { useLinkToCommentModal } from '@/store/modals.store';
 import { getDomain } from '@/utils/format-string';
@@ -43,13 +43,14 @@ const AddCommentModal: React.FC = () => {
                   </ul>
                   {linkToCommentModal.commentsCount > COMMENTS_PER_PAGE ? (
                     <Button
-                      theme="secondary"
-                      text={hasNextPage ? 'Load more' : 'No more comments'}
+                      variant="secondary"
                       className="mx-auto mt-8"
                       disabled={!hasNextPage}
-                      loading={isFetchingNextPage}
-                      onClick={fetchNextPage}
-                    />
+                      // loading={isFetchingNextPage}
+                      onClick={() => fetchNextPage()}
+                    >
+                      {hasNextPage ? 'Load more' : 'No more comments'}
+                    </Button>
                   ) : null}
                 </>
               ) : (

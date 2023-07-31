@@ -3,7 +3,7 @@ import { GetTagsReturn } from '@/data/tag/get-tags';
 import { useRemoveTag } from '@/data/tag/use-remove-tag';
 import { cn, singleToArray } from '@/lib/utils';
 import { useProfile } from '@/store/profile.store';
-import { TrashIcon } from '@heroicons/react/24/outline';
+import { TrashIcon } from 'lucide-react';
 import React, { useCallback } from 'react';
 
 interface TagsComboboxOptionProps extends React.HTMLAttributes<HTMLLIElement> {

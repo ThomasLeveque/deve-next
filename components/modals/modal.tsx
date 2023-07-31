@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 import { Dialog, Transition } from '@headlessui/react';
-import { XMarkIcon } from '@heroicons/react/24/outline';
+import { XIcon } from 'lucide-react';
 import React, { Fragment, useRef } from 'react';
 
 interface ModalProps {
@@ -52,7 +52,7 @@ export const Modal: React.FC<ModalProps> = ({
                 onClick={closeModal}
                 className="with-ring rounded-tag absolute right-5 top-5 p-1 hover:bg-gray-100"
               >
-                <XMarkIcon className="w-6" />
+                <XIcon className="w-6" />
               </button>
               {title !== undefined ? (
                 <Dialog.Title className={cn('mx-4 mb-8 mt-2 text-center text-4xl font-bold', titleClassName)}>

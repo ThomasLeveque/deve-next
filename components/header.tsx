@@ -1,15 +1,15 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
 import { useAddLinkModalOpen, useAuthModalOpen } from '@/store/modals.store';
 import { useProfile, useProfileLoaded } from '@/store/profile.store';
 import { supabase } from '@/utils/supabase-client';
-import { ArrowLeftOnRectangleIcon, PlusIcon, UserCircleIcon } from '@heroicons/react/24/outline';
+import { LogOut, PlusIcon, UserCircleIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
-import Avatar from './elements/avatar';
-import Button from './elements/button';
 import MenuDropdown, { MenuDropdownItemProps } from './elements/menu-dropdown';
+import { ProfileAvatar } from './elements/profile-avatar';
 
 const Header = () => {
   const profile = useProfile()[0];
@@ -30,7 +30,7 @@ const Header = () => {
       {
         text: 'Logout',
         onClick: () => supabase.auth.signOut(),
-        icon: <ArrowLeftOnRectangleIcon />,
+        icon: <LogOut />,
       },
     ],
     [router]
@@ -48,35 +48,34 @@ const Header = () => {
     <header className="sticky top-0 z-30 bg-white">
       <div className="flex h-header items-center justify-between px-5 xl:container xl:mx-auto">
         <div className="flex items-center space-x-5">
-          <Link href="/" className="with-ring text-3xl font-bold hover:text-secondary">
+          <Link href="/" className="with-ring text-3xl font-bold">
             DN
           </Link>
-          <Link href="/tags" className="with-ring px-1 font-bold hover:text-secondary hover:underline">
+          <Link href="/tags" className="with-ring px-1 font-bold hover:underline">
             Tags
           </Link>
         </div>
         <div className="grid auto-cols-max grid-flow-col items-center gap-5">
-          <Button
-            theme="secondary"
-            text={'Add link'}
-            icon={<PlusIcon />}
-            className="hidden sm:flex"
-            onClick={openAddLink}
-          />
-          <Button theme="secondary" className="flex sm:hidden" icon={<PlusIcon />} onClick={openAddLink} />
+          <Button variant="default" className="hidden sm:flex" onClick={openAddLink}>
+            Add link <PlusIcon size={18} className="ml-2" />
+          </Button>
+          <Button variant="default" size="icon" className="flex sm:hidden" onClick={openAddLink}>
+            <PlusIcon size={18} />
+          </Button>
 
           {profile ? (
-            <MenuDropdown customButton={<Avatar />} items={userDropdownItems} />
+            <MenuDropdown customButton={<ProfileAvatar className="cursor-pointer" />} items={userDropdownItems} />
           ) : (
             <Button
-              theme="primary"
-              text="Login"
+              variant="default"
               onClick={() => {
                 if (profileLoaded) {
                   setAuthModalOpen(true);
                 }
               }}
-            />
+            >
+              Login
+            </Button>
           )}
         </div>
       </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import TagListWrapper from '@/components/tag/tag-list-wrapper';
+import { Badge } from '@/components/ui/badge';
 import { GetLinksReturn } from '@/data/link/get-links';
 import { TagRow } from '@/data/tag/use-tags';
 import { useAddLinkVote } from '@/data/vote/use-add-vote';
@@ -14,13 +15,11 @@ import {
 } from '@/store/modals.store';
 import { useProfile } from '@/store/profile.store';
 import { getDomain } from '@/utils/format-string';
-import { ChatBubbleBottomCenterTextIcon, FireIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { FireIcon as FireIconSolid } from '@heroicons/react/24/solid';
 import { format } from 'date-fns';
+import { MessagesSquare, Pencil, ThumbsDown, ThumbsUp, TrashIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useMemo } from 'react';
 import toast from 'react-hot-toast';
-import TagItem from '../tag/tag-item';
 
 interface LinkItemProps {
   link: GetLinksReturn['data'][0];
@@ -88,21 +87,15 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, isProfilLink = false }) => {
           {!isProfilLink && <h3 className="mb-1 text-[13px] font-bold">{arrayToSingle(link.user)?.username}</h3>}
           <p className="text-[10px] text-gray-400">{format(new Date(link.createdAt), 'MMMM d yyyy')}</p>
         </div>
-        <div className="flex space-x-1 group-hover:flex lg:hidden">
+        <div className="flex space-x-1.5 group-hover:flex lg:hidden">
           {canUpdateLinkData && (
-            <button
-              className="hover:text-secondary"
-              onClick={() => (canUpdateLinkData ? setLinkToUpdateModal(link) : setAuthModalOpen(true))}
-            >
-              <PencilSquareIcon className="w-5" />
+            <button onClick={() => (canUpdateLinkData ? setLinkToUpdateModal(link) : setAuthModalOpen(true))}>
+              <Pencil size={16} />
             </button>
           )}
           {canRemoveLink && (
-            <button
-              className="hover:text-secondary"
-              onClick={() => (canRemoveLink ? setLinkToRemoveModal(link) : setAuthModalOpen(true))}
-            >
-              <TrashIcon className="w-5" />
+            <button onClick={() => (canRemoveLink ? setLinkToRemoveModal(link) : setAuthModalOpen(true))}>
+              <TrashIcon size={16} />
             </button>
           )}
         </div>
@@ -120,7 +113,9 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, isProfilLink = false }) => {
       <TagListWrapper className="mb-5">
         {singleToArray(link.tags).map((tag) => (
           <li key={tag.id}>
-            <TagItem text={tag.name} isColored onClick={() => goToTagPage(tag)} />
+            <button onClick={() => goToTagPage(tag)}>
+              <Badge variant="default">{tag.name}</Badge>
+            </button>
           </li>
         ))}
       </TagListWrapper>
@@ -138,18 +133,16 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, isProfilLink = false }) => {
               setAuthModalOpen(true);
             }
           }}
-          className={cn('with-ring flex items-center space-x-[6px] hover:text-secondary', {
-            'text-secondary': Boolean(profileVote),
-          })}
+          className={cn('with-ring flex items-center space-x-[6px]')}
         >
-          {Boolean(profileVote) ? <FireIconSolid className="w-6" /> : <FireIcon className="w-6" />}
+          {Boolean(profileVote) ? <ThumbsDown size={16} /> : <ThumbsUp size={16} />}
           <span className="text-[11px] font-bold">{renderFires}</span>
         </button>
         <button
           onClick={() => (profile ? setLinkToCommentModal(link) : setAuthModalOpen(true))}
-          className="with-ring flex items-center space-x-[6px] hover:text-secondary"
+          className="with-ring flex items-center space-x-[6px]"
         >
-          <ChatBubbleBottomCenterTextIcon className="w-6" />
+          <MessagesSquare size={16} />
           <span className="text-[11px] font-bold">{renderComments}</span>
         </button>
       </div>

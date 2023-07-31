@@ -1,5 +1,5 @@
-import Button from '@/components/elements/button';
 import GoogleIcon from '@/components/icons/google-icon';
+import { Button } from '@/components/ui/button';
 import { formatError } from '@/utils/format-string';
 import { supabase } from '@/utils/supabase-client';
 import React, { useCallback, useState } from 'react';
@@ -24,14 +24,13 @@ const SignInWithGoogleBtn: React.FC = () => {
 
   return (
     <Button
-      theme="google"
-      icon={<GoogleIcon />}
-      iconPosition="left"
-      text="login with google"
-      loading={loading}
-      fullWidth
+      variant="default"
+      // loading={loading}
+      className="w-full"
       onClick={handleSignInWithGoogle}
-    />
+    >
+      <GoogleIcon className="mr-2" /> login with google
+    </Button>
   );
 };
 

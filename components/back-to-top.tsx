@@ -1,7 +1,7 @@
-import { ArrowSmallUpIcon } from '@heroicons/react/24/outline';
+import { Button } from '@/components/ui/button';
+import { ArrowUp } from 'lucide-react';
 import React from 'react';
 import { useInView } from 'react-intersection-observer';
-import Button from './elements/button';
 
 const BackToTop: React.FC = () => {
   const { ref, entry } = useInView();
@@ -13,12 +13,9 @@ const BackToTop: React.FC = () => {
   return (
     <div className="absolute inset-0 h-screen w-[1px]" ref={ref}>
       {entry && !entry.isIntersecting && (
-        <Button
-          className="fixed bottom-2 right-2"
-          onClick={handleScrollTop}
-          theme="secondary"
-          icon={<ArrowSmallUpIcon />}
-        />
+        <Button className="fixed bottom-2 right-2" onClick={handleScrollTop} variant="default">
+          <ArrowUp />
+        </Button>
       )}
     </div>
   );

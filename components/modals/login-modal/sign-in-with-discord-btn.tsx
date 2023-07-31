@@ -1,5 +1,5 @@
-import Button from '@/components/elements/button';
 import DiscordIcon from '@/components/icons/discord-icon';
+import { Button } from '@/components/ui/button';
 import { formatError } from '@/utils/format-string';
 import { supabase } from '@/utils/supabase-client';
 import React, { useCallback, useState } from 'react';
@@ -24,14 +24,13 @@ const SignInWithDiscordBtn: React.FC = () => {
 
   return (
     <Button
-      theme="discord"
-      icon={<DiscordIcon />}
-      iconPosition="left"
-      text="login with discord"
-      loading={loading}
-      fullWidth
+      variant="default"
+      // loading={loading}
+      className="w-full"
       onClick={handleSignInWithGoogle}
-    />
+    >
+      <DiscordIcon className="mr-2" /> login with discord
+    </Button>
   );
 };
 

@@ -1,6 +1,6 @@
-import Button from '@/components/elements/button';
 import TextInput from '@/components/elements/text-input';
 import TagsCombobox from '@/components/tag/tags-combobox';
+import { Button } from '@/components/ui/button';
 import { useAddLink } from '@/data/link/use-add-link';
 import { GetTagsReturn } from '@/data/tag/get-tags';
 import { useProfile } from '@/store/profile.store';
@@ -91,11 +91,12 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
       <div className="flex justify-end">
         <Button
           ref={props.initialFocusButtonRef}
-          theme="secondary"
-          text="Create"
+          variant="default"
           type="submit"
-          loading={addLink.isLoading}
-        />
+          // loading={addLink.isLoading}
+        >
+          Create
+        </Button>
       </div>
     </form>
   );

@@ -1,7 +1,7 @@
 'use client';
 
-import Button from '@/components/elements/button';
 import TextArea from '@/components/elements/textarea';
+import { Button } from '@/components/ui/button';
 import { useAddLinkComment } from '@/data/comment/use-add-comment';
 import { useProfile } from '@/store/profile.store';
 import { addCommentSchema, commentMaxLength } from '@/utils/form-schemas';
@@ -101,21 +101,23 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
 
       <div className="mt-8 flex justify-end space-x-4">
         <Button
-          text={showPreview ? 'Edit' : 'Preview'}
-          theme="gray"
+          variant="link"
           onClick={() => {
             if (commentText.length > 0) {
               setShowPreview((prevShowPreview) => !prevShowPreview);
             }
           }}
-        />
+        >
+          {showPreview ? 'Edit' : 'Preview'}
+        </Button>
         <Button
           ref={props.initialFocusButtonRef}
-          theme="secondary"
-          text="Add"
+          variant="default"
           type="submit"
-          loading={addLinkComment.isLoading}
-        />
+          // loading={addLinkComment.isLoading}
+        >
+          Add
+        </Button>
       </div>
     </form>
   );

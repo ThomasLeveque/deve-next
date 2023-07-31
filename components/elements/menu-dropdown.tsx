@@ -1,8 +1,8 @@
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Menu, Transition } from '@headlessui/react';
-import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
+import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 import React from 'react';
-import Button from './button';
 
 export interface MenuDropdownItemProps {
   text: string;
@@ -32,11 +32,10 @@ const MenuDropdown: React.FC<MenuDropdownProps> = React.memo((props) => {
             </Menu.Button>
           ) : (
             <Menu.Button as="div" className={cn('inline-flex', props.buttonClassName)}>
-              <Button
-                theme="gray"
-                text={props.defaultButtonText}
-                icon={open ? <ChevronUpIcon /> : <ChevronDownIcon />}
-              />
+              <Button variant="default">
+                {props.defaultButtonText}{' '}
+                {open ? <ChevronUpIcon size={18} className="ml-2" /> : <ChevronDownIcon size={18} className="ml-2" />}
+              </Button>
             </Menu.Button>
           )}
 

@@ -1,6 +1,6 @@
-import Button from '@/components/elements/button';
 import TextInput from '@/components/elements/text-input';
 import TagsCombobox from '@/components/tag/tags-combobox';
+import { Button } from '@/components/ui/button';
 import { GetLinksReturn } from '@/data/link/get-links';
 import { useUpdateLink } from '@/data/link/use-update-link';
 import { GetTagsReturn } from '@/data/tag/get-tags';
@@ -100,14 +100,17 @@ const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
         errorText={(errors.tags as unknown as FieldError)?.message}
       />
       <div className="flex justify-end space-x-4">
-        <Button text="Reset" theme="gray" onClick={() => reset()} />
+        <Button variant="link" onClick={() => reset()}>
+          Reset
+        </Button>
         <Button
           ref={props.initialFocusButtonRef}
-          theme="secondary"
-          text="Update"
+          variant="default"
           type="submit"
-          loading={updateLink.isLoading}
-        />
+          // loading={updateLink.isLoading}
+        >
+          Update
+        </Button>
       </div>
     </form>
   );

@@ -1,8 +1,14 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { fontFamily } = require('tailwindcss/defaultTheme');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ['class'],
   content: ['./pages/**/*.{ts,tsx}', './components/**/*.{ts,tsx}', './app/**/*.{ts,tsx}', './src/**/*.{ts,tsx}'],
   theme: {
+    fontFamily: {
+      poppins: ['var(--font-poppins)', ...fontFamily.sans],
+    },
     container: {
       center: true,
       padding: '2rem',
@@ -11,6 +17,12 @@ module.exports = {
       },
     },
     extend: {
+      screens: {
+        mobile: { max: '639px' },
+      },
+      spacing: {
+        header: '80px',
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
@@ -53,12 +65,12 @@ module.exports = {
       },
       keyframes: {
         'accordion-down': {
-          from: { height: 0 },
+          from: { height: '0px' },
           to: { height: 'var(--radix-accordion-content-height)' },
         },
         'accordion-up': {
           from: { height: 'var(--radix-accordion-content-height)' },
-          to: { height: 0 },
+          to: { height: '0px' },
         },
       },
       animation: {
@@ -66,6 +78,15 @@ module.exports = {
         'accordion-up': 'accordion-up 0.2s ease-out',
       },
     },
+    typography: (theme) => ({
+      DEFAULT: {
+        css: {
+          strong: {
+            fontFamily: theme('fontFamily.poppins-bold'),
+          },
+        },
+      },
+    }),
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [require('tailwindcss-animate'), require('@tailwindcss/typography'), require('prettier-plugin-tailwindcss')],
 };

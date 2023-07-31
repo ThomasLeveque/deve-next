@@ -1,12 +1,12 @@
-import Button from '@/components/elements/button';
 import MyPopover from '@/components/elements/popover';
+import { Button } from '@/components/ui/button';
 import { GetCommentsReturn } from '@/data/comment/use-comments';
 import { useRemoveLinkComment } from '@/data/comment/use-remove-comment';
 import { arrayToSingle } from '@/lib/utils';
 import { useProfile } from '@/store/profile.store';
 import { Popover } from '@headlessui/react';
-import { PencilSquareIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { format } from 'date-fns';
+import { PencilIcon, TrashIcon, XIcon } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import UpdateCommentForm from './update-comment-form';
@@ -49,22 +49,25 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, linkId, isPreview = 
               className="hover:text-secondary"
               onClick={() => setUpdateComment((prevUpdateComment) => !prevUpdateComment)}
             >
-              {updateComment ? <XMarkIcon className="w-[18px]" /> : <PencilSquareIcon className="w-[18px]" />}
+              {updateComment ? <XIcon size={18} /> : <PencilIcon size={18} />}
             </button>
           )}
           {canRemoveComment && !isPreview && (
             <MyPopover buttonItem={<TrashIcon className="w-[18px] hover:text-secondary" />}>
               <div className="flex space-x-4">
-                <Popover.Button as={Button} text="Cancel" theme="gray" />
+                <Popover.Button as={Button} variant="link">
+                  Cancel
+                </Popover.Button>
                 <Button
-                  theme="danger"
-                  text="Remove"
-                  loading={removeComment.isLoading}
+                  variant="destructive"
+                  // loading={removeComment.isLoading}
                   type="button"
                   onClick={() => {
                     removeComment.mutate(comment.id);
                   }}
-                />
+                >
+                  Remove
+                </Button>
               </div>
             </MyPopover>
           )}

@@ -1,15 +1,15 @@
 import SpinnerIcon from '@/components/icons/spinner-icon';
 import TagListWrapper from '@/components/tag/tag-list-wrapper';
+import { Badge } from '@/components/ui/badge';
 import { GetTagsReturn } from '@/data/tag/get-tags';
 import { useAddTag } from '@/data/tag/use-add-tag';
 import { useTags } from '@/data/tag/use-tags';
 import { formatError, stringToSlug } from '@/utils/format-string';
 import { Transition } from '@headlessui/react';
-import { ChevronUpDownIcon, InformationCircleIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { useCombobox, useMultipleSelection } from 'downshift';
+import { ChevronDown, InfoIcon, PlusIcon, X } from 'lucide-react';
 import React, { useCallback, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
-import TagItem from './tag-item';
 import TagsComboboxOption from './tags-combobox-option';
 
 const MAX_TAGS_LENGTH = 4;
@@ -94,7 +94,7 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
       if (selectedItems.length >= MAX_TAGS_LENGTH) {
         toast('No more than 4 tags', {
           className: 'Info',
-          icon: <InformationCircleIcon />,
+          icon: <InfoIcon />,
         });
         return;
       }
@@ -126,13 +126,10 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
         <TagListWrapper className="mb-4">
           {selectedItems.map((selectedItem, index) => (
             <li key={selectedItem.id}>
-              <TagItem
-                {...getSelectedItemProps({ selectedItem, index })}
-                text={selectedItem.name}
-                isColored
-                isClosable
-                onClose={() => removeSelectedItem(selectedItem)}
-              />
+              <Badge {...getSelectedItemProps({ selectedItem, index })}>
+                {selectedItem.name}
+                <X className="ml-1 cursor-pointer" size={16} onClick={() => removeSelectedItem(selectedItem)} />
+              </Badge>
             </li>
           ))}
         </TagListWrapper>
@@ -142,7 +139,7 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
         <div className="relative w-full">
           <input
             placeholder="Search for a tag..."
-            className="with-ring h-[50px] w-full rounded-button bg-gray-100 pl-5 pr-10 text-sm placeholder-gray-400"
+            className="with-ring rounded-button h-[50px] w-full bg-gray-100 pl-5 pr-10 text-sm placeholder-gray-400"
             {...getInputProps(getDropdownProps({ preventKeyAction: isOpen }))}
           />
           <button
@@ -151,9 +148,9 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
             {...getToggleButtonProps()}
             className="absolute inset-y-0 right-0 flex items-center pr-2"
           >
-            <ChevronUpDownIcon className="h-5 w-5 text-gray-600" aria-hidden="true" />
+            <ChevronDown className="h-5 w-5 text-gray-600" aria-hidden="true" />
           </button>
-          {errorText && <p className="absolute top-full right-1 mt-1 text-[10px] text-danger-400">{errorText}</p>}
+          {errorText && <p className="text-danger-400 absolute top-full right-1 mt-1 text-[10px]">{errorText}</p>}
         </div>
 
         <div {...getMenuProps()}>
@@ -166,7 +163,7 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
             leaveFrom="scale-100 opacity-100"
             leaveTo="scale-95 opacity-0"
           >
-            <ul className="absolute z-50 mt-2 max-h-60 w-full overflow-auto rounded-button bg-gray-100 py-1 shadow-lg focus:outline-none">
+            <ul className="rounded-button absolute z-50 mt-2 max-h-60 w-full overflow-auto bg-gray-100 py-1 shadow-lg focus:outline-none">
               <>
                 <li>
                   {!isTagExist && query !== '' && (

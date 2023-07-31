@@ -1,5 +1,5 @@
-import Button from '@/components/elements/button';
 import TextArea from '@/components/elements/textarea';
+import { Button } from '@/components/ui/button';
 import { GetCommentsReturn } from '@/data/comment/use-comments';
 import { useUpdateLinkComment } from '@/data/comment/use-update-comment';
 import { useProfile } from '@/store/profile.store';
@@ -93,15 +93,18 @@ const UpdateCommentForm: React.FC<UpdateCommentFormProps> = (props) => {
 
       <div className="mt-8 flex justify-end space-x-4">
         <Button
-          text={showPreview ? 'Edit' : 'Preview'}
-          theme="gray"
+          variant="link"
           onClick={() => {
             if (commentText.length > 0) {
               setShowPreview((prevShowPreview) => !prevShowPreview);
             }
           }}
-        />
-        <Button theme="secondary" text="Update" type="submit" loading={updateLinkComment.isLoading} />
+        >
+          {showPreview ? 'Edit' : 'Preview'}
+        </Button>
+        <Button variant="default" type="submit">
+          Update
+        </Button>
       </div>
     </form>
   );

@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { BellIcon, ShieldCheckIcon, XCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { BellIcon, ShieldCheckIcon, XCircleIcon, XIcon } from 'lucide-react';
 import React, { useMemo } from 'react';
 import toast, { Toast, ToastBar } from 'react-hot-toast';
 
@@ -62,7 +62,7 @@ const Toast: React.FC<ToastProps> = (props) => {
             onClick={() => toast.dismiss(props.toast.id)}
             className="absolute top-2 right-2 rounded-[4px] hover:bg-white/20"
           >
-            <XMarkIcon className="w-[18px]" />
+            <XIcon className="w-[18px]" />
           </button>
         </div>
       )}

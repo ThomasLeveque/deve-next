@@ -1,4 +1,4 @@
-import Button from '@/components/elements/button';
+import { Button } from '@/components/ui/button';
 import { useRemoveLink } from '@/data/link/use-remove-link';
 import { useLinkToRemoveModal } from '@/store/modals.store';
 import { formatError } from '@/utils/format-string';
@@ -32,16 +32,19 @@ const RemoveLinkModal: React.FC = React.memo(() => {
     <Modal isOpen={!!linkToRemoveModal} closeModal={closeModal} title="Are you sure ?" className="max-w-md">
       {(initialFocusButtonRef) => (
         <div className="flex space-x-5">
-          <Button text="Cancel" fullWidth theme="gray" onClick={closeModal} />
+          <Button className="w-full" variant="link" onClick={closeModal}>
+            Cancel
+          </Button>
           <Button
             ref={initialFocusButtonRef}
-            theme="danger"
-            fullWidth
-            text="Remove"
+            variant="destructive"
+            className="w-full"
             type="button"
-            loading={removeLink.isLoading}
+            // loading={removeLink.isLoading}
             onClick={handleRemoveLink}
-          />
+          >
+            Remove
+          </Button>
         </div>
       )}
     </Modal>

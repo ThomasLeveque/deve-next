@@ -7,11 +7,9 @@ import './globals.css';
 
 const poppins = Poppins({
   subsets: ['latin'],
-  weight: ['400', '700'],
+  weight: ['400', '600', '700'],
   variable: '--font-poppins',
 });
-
-// export const revalidate = 60;
 
 export const metadata = {
   title: { default: 'Deve-next', template: '%s - Deve-next' },
@@ -24,14 +22,11 @@ export const metadata = {
   },
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  // const tags = await getTags();
-
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body className={`${poppins.variable} font-poppins`}>
         <ReactQueryClientProvider>
-          {/* <GlobalTagsClient tags={tags} /> */}
           <Header />
           <main className={cn('px-5 xl:container xl:mx-auto')}>{children}</main>
 

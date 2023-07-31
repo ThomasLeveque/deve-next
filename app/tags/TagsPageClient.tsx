@@ -1,8 +1,8 @@
 'use client';
 
 import SpinnerIcon from '@/components/icons/spinner-icon';
-import TagItem from '@/components/tag/tag-item';
 import TagListWrapper from '@/components/tag/tag-list-wrapper';
+import { Button } from '@/components/ui/button';
 import { useTags } from '@/data/tag/use-tags';
 import { useRouter } from 'next/navigation';
 
@@ -19,12 +19,7 @@ export default function TagsPageClient() {
             .filter((tag) => tag.linksCount > 0)
             .map((tag) => (
               <li key={tag.id}>
-                <TagItem
-                  onClick={() => router.push(`/tags/${tag.slug}`)}
-                  size="large"
-                  text={`${tag.name} (${tag.linksCount})`}
-                  isColored
-                />
+                <Button onClick={() => router.push(`/tags/${tag.slug}`)}>{`${tag.name} (${tag.linksCount})`}</Button>
               </li>
             ))}
         </TagListWrapper>

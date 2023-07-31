@@ -1,8 +1,8 @@
 'use client';
 
-import Button from '@/components/elements/button';
 import SpinnerIcon from '@/components/icons/spinner-icon';
 import LinkItem from '@/components/link/link-item';
+import { Button } from '@/components/ui/button';
 import { useUserLinks } from '@/data/link/use-user-links';
 import { useProfile } from '@/store/profile.store';
 
@@ -19,14 +19,9 @@ export default function ProfilPageClient() {
       <ul className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         {userLinks?.pages?.map((page) => page?.data.map((link) => <LinkItem isProfilLink key={link.id} link={link} />))}
       </ul>
-      <Button
-        theme="secondary"
-        text={hasNextPage ? 'Load more' : 'No more links'}
-        className="mx-auto mt-8"
-        disabled={!hasNextPage}
-        loading={isFetchingNextPage}
-        onClick={fetchNextPage}
-      />
+      <Button variant="secondary" className="mx-auto mt-8" disabled={!hasNextPage} onClick={() => fetchNextPage()}>
+        {hasNextPage ? 'Load more' : 'No more links'}
+      </Button>
     </section>
   );
 }

@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { MagnifyingGlassIcon, XCircleIcon } from '@heroicons/react/24/outline';
+import { Search, XCircleIcon } from 'lucide-react';
 import React from 'react';
 
 interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -28,7 +28,7 @@ const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(
         )}
         <div className="relative flex w-full items-center">
           {isSearchInput && (
-            <MagnifyingGlassIcon
+            <Search
               className="absolute left-4 w-6 cursor-text text-gray-600"
               onClick={() => {
                 (ref as React.MutableRefObject<HTMLInputElement | null>)?.current?.focus();

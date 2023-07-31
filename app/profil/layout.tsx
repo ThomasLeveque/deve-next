@@ -1,11 +1,10 @@
 'use client';
 
-import Avatar from '@/components/elements/avatar';
+import { ProfileAvatar } from '@/components/elements/profile-avatar';
 import ToggleSwitch from '@/components/elements/toggle-switch';
 import Protected from '@/components/protected';
 import { useProfile } from '@/store/profile.store';
 import { format } from 'date-fns';
-import 'styles/index.css';
 
 export default function ProfilLayout({ children }: { children: React.ReactNode }) {
   const profile = useProfile()[0];
@@ -16,7 +15,7 @@ export default function ProfilLayout({ children }: { children: React.ReactNode }
         {profile && (
           <>
             <aside className="sm:content-screen-height -mx-5 px-5 pt-8 sm:sticky sm:top-header sm:overflow-y-auto sm:pb-8">
-              <Avatar disabled className="mx-auto mb-6 sm:-ml-1" size={85} />
+              <ProfileAvatar className="mx-auto mb-6 h-16 w-16 sm:-ml-1" />
               <ul className="space-y-5 text-center sm:text-left">
                 <li>
                   <h3 className="mb-1 text-[10px] font-bold uppercase">Username :</h3>
