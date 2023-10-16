@@ -1,6 +1,7 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import AddLinkModal from '@/components/modals/add-link-modal/add-link-modal';
+import LoginModal from '@/components/modals/login-modal/login-modal';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +12,7 @@ import {
 import { useAddLinkModalOpen, useAuthModalOpen } from '@/store/modals.store';
 import { useProfile, useProfileLoaded } from '@/store/profile.store';
 import { supabase } from '@/utils/supabase-client';
-import { LogOut, PlusIcon, UserCircleIcon } from 'lucide-react';
+import { LogOut, UserCircleIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ProfileAvatar } from './elements/profile-avatar';
@@ -45,12 +46,7 @@ const Header = () => {
           </Link>
         </div>
         <div className="grid auto-cols-max grid-flow-col items-center gap-5">
-          <Button variant="default" className="hidden sm:flex" onClick={openAddLink}>
-            Add link <PlusIcon size={18} className="ml-2" />
-          </Button>
-          <Button variant="default" size="icon" className="flex sm:hidden" onClick={openAddLink}>
-            <PlusIcon size={18} />
-          </Button>
+          <AddLinkModal />
 
           {profile ? (
             <DropdownMenu>
@@ -71,16 +67,7 @@ const Header = () => {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button
-              variant="default"
-              onClick={() => {
-                if (profileLoaded) {
-                  setAuthModalOpen(true);
-                }
-              }}
-            >
-              Login
-            </Button>
+            <LoginModal />
           )}
         </div>
       </div>

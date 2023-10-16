@@ -100,7 +100,7 @@ const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
         errorText={(errors.tags as unknown as FieldError)?.message}
       />
       <div className="flex justify-end space-x-4">
-        <Button variant="link" onClick={() => reset()}>
+        <Button variant="link" type="button" onClick={() => reset()}>
           Reset
         </Button>
         <Button ref={props.initialFocusButtonRef} variant="default" type="submit" isLoading={updateLink.isLoading}>

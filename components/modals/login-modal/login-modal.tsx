@@ -1,35 +1,38 @@
-import { useAuthModalOpen } from '@/store/modals.store';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useProfile } from '@/store/profile.store';
-import React, { useCallback, useEffect } from 'react';
-import { Modal } from '../modal';
+import React, { useEffect, useState } from 'react';
 import SignInWithDiscordBtn from './sign-in-with-discord-btn';
 import SignInWithGithubBtn from './sign-in-with-github-btn';
 import SignInWithGoogleBtn from './sign-in-with-google-btn';
 
 const LoginModal: React.FC = React.memo(() => {
-  const [authModalOpen, setAuthModalOpen] = useAuthModalOpen();
   const profile = useProfile()[0];
-
-  const closeModal = useCallback(() => {
-    setAuthModalOpen(false);
-  }, [setAuthModalOpen]);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (profile && authModalOpen) {
-      setAuthModalOpen(false);
+    if (profile && open) {
+      setOpen(false);
     }
-  }, [profile, authModalOpen, setAuthModalOpen]);
+  }, [profile, open]);
 
   return (
-    <Modal isOpen={authModalOpen} closeModal={closeModal} title={'Login'}>
-      {(initialFocusButtonRef) => (
-        <div className="grid gap-5">
-          <SignInWithGithubBtn initialFocusButtonRef={initialFocusButtonRef} />
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="default">Login</Button>
+      </DialogTrigger>
+
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle>Login with</DialogTitle>
+        </DialogHeader>
+        <div className="grid gap-4">
+          <SignInWithGithubBtn />
           <SignInWithGoogleBtn />
           <SignInWithDiscordBtn />
         </div>
-      )}
-    </Modal>
+      </DialogContent>
+    </Dialog>
   );
 });
 

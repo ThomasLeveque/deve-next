@@ -1,7 +1,7 @@
 import { Nullable } from '@/types/shared';
 import { formatError } from '@/utils/format-string';
 import { supabase } from '@/utils/supabase-client';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { UseInfiniteQueryOptions, useInfiniteQuery } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { queryKeys } from './query-keys';
 
@@ -39,13 +39,16 @@ const getComments = async (linkId: number, cursor = 0) => {
   }
 };
 
-export const useComments = (linkId: Nullable<number>) => {
+export const useComments = (
+  linkId: Nullable<number>,
+  options?: UseInfiniteQueryOptions<Nullable<GetCommentsReturn>, Error>
+) => {
   return useInfiniteQuery<Nullable<GetCommentsReturn>, Error>(
     queryKeys.comments(linkId as number),
     ({ pageParam = 0 }) => getComments(linkId as number, pageParam),
     {
-      enabled: !!linkId,
       getNextPageParam: (lastPage) => lastPage?.cursor,
+      ...(options ?? {}),
     }
   );
 };

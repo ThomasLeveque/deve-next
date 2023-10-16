@@ -3,65 +3,80 @@
 import SpinnerIcon from '@/components/icons/spinner-icon';
 import CommentItem from '@/components/modals/add-comment-modal/comment-item';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { COMMENTS_PER_PAGE, useComments } from '@/data/comment/use-comments';
-import { useLinkToCommentModal } from '@/store/modals.store';
+import { GetLinksReturn } from '@/data/link/get-links';
 import { getDomain } from '@/utils/format-string';
-import React from 'react';
-import { Modal } from '../modal';
+import React, { useState } from 'react';
 import AddCommentForm from './add-comment-form';
 
-const AddCommentModal: React.FC = () => {
-  const [linkToCommentModal, setLinkToCommentModal] = useLinkToCommentModal();
-
-  const { data: comments, fetchNextPage, hasNextPage, isFetchingNextPage } = useComments(linkToCommentModal?.id);
-
-  const closeModal = () => {
-    setLinkToCommentModal(null);
-  };
-
-  return linkToCommentModal ? (
-    <Modal isOpen={!!linkToCommentModal} closeModal={closeModal} className="max-w-2xl">
-      {(initialFocusButtonRef) => (
-        <>
-          <a href={linkToCommentModal.url} rel="noreferrer" target="_blank" className="with-ring group mb-6 mr-8 block">
-            <h2 className="mb-2 break-words text-3xl font-bold group-hover:text-secondary">
-              {linkToCommentModal.description}
-            </h2>
-            <p className="text-xs group-hover:underline">On {getDomain(linkToCommentModal.url)}</p>
-          </a>
-          <AddCommentForm linkId={linkToCommentModal.id} initialFocusButtonRef={initialFocusButtonRef} />
-          {linkToCommentModal.commentsCount > 0 ? (
-            <>
-              {comments ? (
-                <>
-                  <ul className="mt-8 space-y-5">
-                    {comments.pages?.map((page) =>
-                      page?.data?.map((comment) => (
-                        <CommentItem key={comment.id} comment={comment} linkId={linkToCommentModal.id} />
-                      ))
-                    )}
-                  </ul>
-                  {linkToCommentModal.commentsCount > COMMENTS_PER_PAGE ? (
-                    <Button
-                      variant="secondary"
-                      className="mx-auto mt-8"
-                      disabled={!hasNextPage}
-                      isLoading={isFetchingNextPage}
-                      onClick={() => fetchNextPage()}
-                    >
-                      {hasNextPage ? 'Load more' : 'No more comments'}
-                    </Button>
-                  ) : null}
-                </>
-              ) : (
-                <SpinnerIcon size={32} className="m-auto mt-12" />
-              )}
-            </>
-          ) : null}
-        </>
-      )}
-    </Modal>
-  ) : null;
+type AddCommentModalProps = {
+  linkToComment: GetLinksReturn['data'][0];
+  children: React.ReactNode;
 };
+
+function AddCommentModal({ linkToComment, children }: AddCommentModalProps) {
+  const [open, setOpen] = useState(false);
+
+  const {
+    data: comments,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useComments(linkToComment?.id, {
+    enabled: Boolean(linkToComment?.id) && open,
+  });
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent className="max-w-2xl overflow-auto">
+        <DialogHeader>
+          <a className="mb-2 space-y-2" href={linkToComment.url} rel="noreferrer" target="_blank">
+            <DialogTitle className="break-words">{linkToComment.description}</DialogTitle>
+            <DialogDescription>On {getDomain(linkToComment.url)}</DialogDescription>
+          </a>
+        </DialogHeader>
+        <AddCommentForm linkId={linkToComment.id} />
+
+        {linkToComment.commentsCount > 0 ? (
+          <>
+            {comments ? (
+              <>
+                <ul className="mt-8 space-y-5">
+                  {comments.pages?.map((page) =>
+                    page?.data?.map((comment) => (
+                      <CommentItem key={comment.id} comment={comment} linkId={linkToComment.id} />
+                    ))
+                  )}
+                </ul>
+                {linkToComment.commentsCount > COMMENTS_PER_PAGE ? (
+                  <Button
+                    variant="secondary"
+                    className="mx-auto mt-8"
+                    disabled={!hasNextPage}
+                    isLoading={isFetchingNextPage}
+                    onClick={() => fetchNextPage()}
+                  >
+                    {hasNextPage ? 'Load more' : 'No more comments'}
+                  </Button>
+                ) : null}
+              </>
+            ) : (
+              <SpinnerIcon size={32} className="m-auto mt-12" />
+            )}
+          </>
+        ) : null}
+      </DialogContent>
+    </Dialog>
+  );
+}
 
 export default AddCommentModal;

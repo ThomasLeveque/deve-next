@@ -24,6 +24,9 @@ module.exports = {
         header: '80px',
       },
       colors: {
+        discord: '#5865f2',
+        google: '#DB4437',
+        github: '#333333',
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',

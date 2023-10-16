@@ -93,7 +93,8 @@ const UpdateCommentForm: React.FC<UpdateCommentFormProps> = (props) => {
 
       <div className="mt-8 flex justify-end space-x-4">
         <Button
-          variant="link"
+          variant="secondary"
+          type="button"
           onClick={() => {
             if (commentText.length > 0) {
               setShowPreview((prevShowPreview) => !prevShowPreview);

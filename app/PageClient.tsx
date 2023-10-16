@@ -18,21 +18,21 @@ export default function RootClient() {
 
   return (
     <section className="my-8">
-      <TextInput
-        ref={searchRef}
-        placeholder="Search for a link..."
-        type="search"
-        id="search-link"
-        wrapperClassName="mb-5"
-        onChange={(event) => setSearchQuery(event.target.value)}
-        value={searchQuery}
-        clearValue={() => {
-          setSearchQuery('');
-          searchRef.current?.focus();
-        }}
-      />
-      <div className="mb-5">
-        <OrderbyLinksDropdown />
+      <div className="mb-5 flex space-x-2">
+        <OrderbyLinksDropdown className="flex-none" />
+        <TextInput
+          ref={searchRef}
+          placeholder="Search for a link..."
+          type="search"
+          wrapperClassName="w-full"
+          id="search-link"
+          onChange={(event) => setSearchQuery(event.target.value)}
+          value={searchQuery}
+          clearValue={() => {
+            setSearchQuery('');
+            searchRef.current?.focus();
+          }}
+        />
       </div>
       {!links ? (
         <SpinnerIcon size={40} className="m-auto mt-14" />
@@ -46,6 +46,7 @@ export default function RootClient() {
             className="mx-auto mt-8"
             disabled={!hasNextPage}
             onClick={() => fetchNextPage()}
+            isLoading={isFetchingNextPage}
           >
             {hasNextPage ? 'Load more' : 'No more links'}
           </Button>

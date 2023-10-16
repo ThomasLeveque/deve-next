@@ -1,13 +1,13 @@
 import TextInput from '@/components/elements/text-input';
 import TagsCombobox from '@/components/tag/tags-combobox';
 import { Button } from '@/components/ui/button';
+import { DialogClose, DialogFooter } from '@/components/ui/dialog';
 import { useAddLink } from '@/data/link/use-add-link';
 import { GetTagsReturn } from '@/data/tag/get-tags';
 import { useProfile } from '@/store/profile.store';
 import { addLinkSchema } from '@/utils/form-schemas';
 import { formatError } from '@/utils/format-string';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React, { useCallback } from 'react';
 import { FieldError, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
@@ -19,10 +19,9 @@ interface LinkFormData {
 
 interface AddLinkFormProps {
   closeModal: () => void;
-  initialFocusButtonRef?: React.MutableRefObject<HTMLButtonElement | null>;
 }
 
-const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
+function AddLinkForm({ closeModal }: AddLinkFormProps) {
   const profile = useProfile()[0];
   const addLink = useAddLink();
 
@@ -36,31 +35,28 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
     resolver: zodResolver(addLinkSchema),
   });
 
-  const onSubmit = useCallback(
-    async (formData: LinkFormData) => {
-      try {
-        if (!profile) {
-          throw new Error('You must be login');
-        }
-
-        await addLink.mutateAsync({
-          linkToAdd: {
-            url: formData.url,
-            description: formData.title,
-            userId: profile.id,
-          },
-          tags: formData.tags,
-        });
-
-        // Do not setLoading(false) because addLink will unmount this component (Modal).
-        props.closeModal();
-      } catch (err) {
-        toast.error(formatError(err as Error));
-        console.error(err);
+  async function onSubmit(formData: LinkFormData) {
+    try {
+      if (!profile) {
+        throw new Error('You must be login');
       }
-    },
-    [profile]
-  );
+
+      await addLink.mutateAsync({
+        linkToAdd: {
+          url: formData.url,
+          description: formData.title,
+          userId: profile.id,
+        },
+        tags: formData.tags,
+      });
+
+      // Do not setLoading(false) because addLink will unmount this component (Modal).
+      closeModal();
+    } catch (err) {
+      toast.error(formatError(err as Error));
+      console.error(err);
+    }
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -88,13 +84,18 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
         className="mb-8"
         errorText={(errors.tags as unknown as FieldError)?.message}
       />
-      <div className="flex justify-end">
-        <Button ref={props.initialFocusButtonRef} variant="default" type="submit" isLoading={addLink.isLoading}>
+      <DialogFooter>
+        <DialogClose asChild>
+          <Button type="button" variant="secondary">
+            Close
+          </Button>
+        </DialogClose>
+        <Button type="submit" isLoading={addLink.isLoading}>
           Create
         </Button>
-      </div>
+      </DialogFooter>
     </form>
   );
-};
+}
 
 export default AddLinkForm;

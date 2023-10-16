@@ -34,12 +34,12 @@ const orderLinksDropdownItems = {
   }
 >;
 
-function OrderbyLinksDropdown() {
+function OrderbyLinksDropdown({ className }: { className?: string }) {
   const { setOrderbyQuery, orderbyQuery } = useQueryString();
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger asChild className={className}>
         <Button variant="outline">{orderLinksDropdownItems[orderbyQuery].text}</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start">

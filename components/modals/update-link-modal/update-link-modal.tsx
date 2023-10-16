@@ -1,31 +1,34 @@
-import { useLinkToUpdateModal } from '@/store/modals.store';
-import React from 'react';
-import { Modal } from '../modal';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { GetLinksReturn } from '@/data/link/get-links';
+import { Pencil } from 'lucide-react';
+import { useState } from 'react';
 import UpdateLinkForm from './update-link-form';
 
-const UpdateLinkModal: React.FC = React.memo(() => {
-  const [linkToUpdateModal, setLinkToUpdateModal] = useLinkToUpdateModal();
+type UpdateLinkModalProps = {
+  linkToUpdate: GetLinksReturn['data'][0];
+};
+
+function UpdateLinkModal({ linkToUpdate }: UpdateLinkModalProps) {
+  const [open, setOpen] = useState(false);
 
   const closeModal = () => {
-    setLinkToUpdateModal(null);
+    setOpen(false);
   };
 
-  return linkToUpdateModal ? (
-    <Modal
-      isOpen={!!linkToUpdateModal}
-      closeModal={closeModal}
-      title={`Update ${linkToUpdateModal.description}`}
-      titleClassName="truncate"
-    >
-      {(initialFocusButtonRef) => (
-        <UpdateLinkForm
-          closeModal={closeModal}
-          linkToUpdate={linkToUpdateModal}
-          initialFocusButtonRef={initialFocusButtonRef}
-        />
-      )}
-    </Modal>
-  ) : null;
-});
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger>
+        <Pencil size={16} />
+      </DialogTrigger>
+
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{`Update ${linkToUpdate.description}`}</DialogTitle>
+        </DialogHeader>
+        <UpdateLinkForm closeModal={closeModal} linkToUpdate={linkToUpdate} />
+      </DialogContent>
+    </Dialog>
+  );
+}
 
 export default UpdateLinkModal;

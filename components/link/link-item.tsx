@@ -1,5 +1,8 @@
 'use client';
 
+import AddCommentModal from '@/components/modals/add-comment-modal/add-comment-modal';
+import RemoveLinkModal from '@/components/modals/remove-link-modal/remove-link-modal';
+import UpdateLinkModal from '@/components/modals/update-link-modal/update-link-modal';
 import TagListWrapper from '@/components/tag/tag-list-wrapper';
 import { Badge } from '@/components/ui/badge';
 import { GetLinksReturn } from '@/data/link/get-links';
@@ -7,16 +10,11 @@ import { TagRow } from '@/data/tag/use-tags';
 import { useAddLinkVote } from '@/data/vote/use-add-vote';
 import { useRemoveLinkVote } from '@/data/vote/use-remove-vote';
 import { arrayToSingle, cn, singleToArray } from '@/lib/utils';
-import {
-  useAuthModalOpen,
-  useLinkToCommentModal,
-  useLinkToRemoveModal,
-  useLinkToUpdateModal,
-} from '@/store/modals.store';
+import { useAuthModalOpen } from '@/store/modals.store';
 import { useProfile } from '@/store/profile.store';
 import { getDomain } from '@/utils/format-string';
 import { format } from 'date-fns';
-import { MessagesSquare, Pencil, ThumbsDown, ThumbsUp, TrashIcon } from 'lucide-react';
+import { MessagesSquare, ThumbsDown, ThumbsUp } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useMemo } from 'react';
 import toast from 'react-hot-toast';
@@ -31,9 +29,6 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, isProfilLink = false }) => {
   const router = useRouter();
   const profile = useProfile()[0];
 
-  const setLinkToCommentModal = useLinkToCommentModal()[1];
-  const setLinkToUpdateModal = useLinkToUpdateModal()[1];
-  const setLinkToRemoveModal = useLinkToRemoveModal()[1];
   const setAuthModalOpen = useAuthModalOpen()[1];
 
   const profileVote = useMemo(
@@ -41,14 +36,8 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, isProfilLink = false }) => {
     [profile, link.votes]
   );
 
-  const canUpdateLinkData = useMemo(
-    () => profile && (profile.role === 'admin' || link.userId === profile.id),
-    [profile, link.userId]
-  );
-  const canRemoveLink = useMemo(
-    () => profile && (profile.role === 'admin' || link.userId === profile.id),
-    [profile, link.userId]
-  );
+  const canUpdateLinkData = profile && (profile.role === 'admin' || link.userId === profile.id);
+  const canRemoveLink = profile && (profile.role === 'admin' || link.userId === profile.id);
 
   const renderFires = useMemo(() => {
     if (link.votesCount === 0) {
@@ -88,16 +77,8 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, isProfilLink = false }) => {
           <p className="text-[10px] text-gray-400">{format(new Date(link.createdAt), 'MMMM d yyyy')}</p>
         </div>
         <div className="flex space-x-1.5 group-hover:flex lg:hidden">
-          {canUpdateLinkData && (
-            <button onClick={() => (canUpdateLinkData ? setLinkToUpdateModal(link) : setAuthModalOpen(true))}>
-              <Pencil size={16} />
-            </button>
-          )}
-          {canRemoveLink && (
-            <button onClick={() => (canRemoveLink ? setLinkToRemoveModal(link) : setAuthModalOpen(true))}>
-              <TrashIcon size={16} />
-            </button>
-          )}
+          {canUpdateLinkData && <UpdateLinkModal linkToUpdate={link} />}
+          {canRemoveLink && <RemoveLinkModal linkIdToRemove={link.id} />}
         </div>
       </div>
       <a href={link.url} rel="noreferrer" target="_blank" className="with-ring link-item-link mb-8 block">
@@ -138,13 +119,20 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, isProfilLink = false }) => {
           {Boolean(profileVote) ? <ThumbsDown size={16} /> : <ThumbsUp size={16} />}
           <span className="text-[11px] font-bold">{renderFires}</span>
         </button>
-        <button
-          onClick={() => (profile ? setLinkToCommentModal(link) : setAuthModalOpen(true))}
-          className="with-ring flex items-center space-x-[6px]"
-        >
-          <MessagesSquare size={16} />
-          <span className="text-[11px] font-bold">{renderComments}</span>
-        </button>
+        <AddCommentModal linkToComment={link}>
+          <button
+            onClick={(e) => {
+              if (!profile) {
+                e.preventDefault();
+                setAuthModalOpen(true);
+              }
+            }}
+            className="with-ring inline-flex items-center space-x-1.5"
+          >
+            <MessagesSquare size={16} />
+            <span className="text-[11px] font-bold">{renderComments}</span>
+          </button>
+        </AddCommentModal>
       </div>
     </li>
   );

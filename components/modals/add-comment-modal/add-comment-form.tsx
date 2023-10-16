@@ -2,6 +2,7 @@
 
 import TextArea from '@/components/elements/textarea';
 import { Button } from '@/components/ui/button';
+import { DialogFooter } from '@/components/ui/dialog';
 import { useAddLinkComment } from '@/data/comment/use-add-comment';
 import { useProfile } from '@/store/profile.store';
 import { addCommentSchema, commentMaxLength } from '@/utils/form-schemas';
@@ -99,9 +100,10 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
         </>
       )}
 
-      <div className="mt-8 flex justify-end space-x-4">
+      <DialogFooter className="mt-8">
         <Button
-          variant="link"
+          variant="secondary"
+          type="button"
           onClick={() => {
             if (commentText.length > 0) {
               setShowPreview((prevShowPreview) => !prevShowPreview);
@@ -113,7 +115,7 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
         <Button ref={props.initialFocusButtonRef} variant="default" type="submit" isLoading={addLinkComment.isLoading}>
           Add
         </Button>
-      </div>
+      </DialogFooter>
     </form>
   );
 };

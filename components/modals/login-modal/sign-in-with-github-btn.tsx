@@ -27,12 +27,12 @@ const SignInWithGithubBtn: React.FC<{
   return (
     <Button
       ref={initialFocusButtonRef}
-      variant="default"
+      variant="github"
       isLoading={loading}
       className="w-full"
       onClick={handleSignInWithGithub}
     >
-      <GithubIcon className="mr-2" /> login with github
+      <GithubIcon className="mr-2 w-4" /> Github
     </Button>
   );
 };

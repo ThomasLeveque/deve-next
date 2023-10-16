@@ -23,8 +23,8 @@ const SignInWithDiscordBtn: React.FC = () => {
   }, []);
 
   return (
-    <Button variant="default" isLoading={loading} className="w-full" onClick={handleSignInWithGoogle}>
-      <DiscordIcon className="mr-2" /> login with discord
+    <Button variant="discord" isLoading={loading} className="w-full" onClick={handleSignInWithGoogle}>
+      <DiscordIcon className="mr-2 w-4" /> Discord
     </Button>
   );
 };

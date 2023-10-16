@@ -1,42 +1,54 @@
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { useRemoveLink } from '@/data/link/use-remove-link';
-import { useLinkToRemoveModal } from '@/store/modals.store';
 import { formatError } from '@/utils/format-string';
-import React, { useCallback } from 'react';
+import { TrashIcon } from 'lucide-react';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { Modal } from '../modal';
 
-const RemoveLinkModal: React.FC = React.memo(() => {
-  const [linkToRemoveModal, setLinkToRemoveModal] = useLinkToRemoveModal();
+type RemoveLinkModalProps = {
+  linkIdToRemove: number;
+};
 
+function RemoveLinkModal({ linkIdToRemove }: RemoveLinkModalProps) {
   const removeLink = useRemoveLink();
+  const [open, setOpen] = useState(false);
 
-  const closeModal = useCallback(() => {
-    setLinkToRemoveModal(null);
-  }, [setLinkToRemoveModal]);
-
-  const handleRemoveLink = useCallback(async () => {
+  async function handleRemoveLink() {
     try {
-      if (!linkToRemoveModal) {
-        throw new Error('Link to remove unknown, try again');
-      }
-
-      await removeLink.mutateAsync(linkToRemoveModal.id);
-      closeModal();
+      await removeLink.mutateAsync(linkIdToRemove);
+      setOpen(false);
     } catch (err) {
       toast.error(formatError(err as Error));
     }
-  }, [linkToRemoveModal, closeModal, removeLink]);
+  }
 
-  return linkToRemoveModal ? (
-    <Modal isOpen={!!linkToRemoveModal} closeModal={closeModal} title="Are you sure ?" className="max-w-md">
-      {(initialFocusButtonRef) => (
-        <div className="flex space-x-5">
-          <Button className="w-full" variant="link" onClick={closeModal}>
-            Cancel
-          </Button>
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger>
+        <TrashIcon size={16} />
+      </DialogTrigger>
+
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle>Are you sure ?</DialogTitle>
+        </DialogHeader>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button className="w-full" variant="secondary">
+              Cancel
+            </Button>
+          </DialogClose>
+
           <Button
-            ref={initialFocusButtonRef}
             variant="destructive"
             className="w-full"
             type="button"
@@ -45,10 +57,10 @@ const RemoveLinkModal: React.FC = React.memo(() => {
           >
             Remove
           </Button>
-        </div>
-      )}
-    </Modal>
-  ) : null;
-});
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
 
 export default RemoveLinkModal;
