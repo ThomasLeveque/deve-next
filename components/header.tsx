@@ -2,6 +2,8 @@
 
 import AddLinkModal from '@/components/modals/add-link-modal/add-link-modal';
 import LoginModal from '@/components/modals/login-modal/login-modal';
+import { Button } from '@/components/ui/button';
+import { DialogTrigger } from '@/components/ui/dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,7 +11,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useAddLinkModalOpen, useAuthModalOpen } from '@/store/modals.store';
 import { useProfile, useProfileLoaded } from '@/store/profile.store';
 import { supabase } from '@/utils/supabase-client';
 import { LogOut, UserCircleIcon } from 'lucide-react';
@@ -21,18 +22,7 @@ const Header = () => {
   const profile = useProfile()[0];
   const profileLoaded = useProfileLoaded()[0];
 
-  const setAuthModalOpen = useAuthModalOpen()[1];
-  const setAddLinkModalOpen = useAddLinkModalOpen()[1];
-
   const router = useRouter();
-
-  function openAddLink() {
-    if (profile) {
-      setAddLinkModalOpen(true);
-    } else {
-      setAuthModalOpen(true);
-    }
-  }
 
   return (
     <header className="sticky top-0 z-30 bg-white">
@@ -46,7 +36,15 @@ const Header = () => {
           </Link>
         </div>
         <div className="grid auto-cols-max grid-flow-col items-center gap-5">
-          <AddLinkModal />
+          {profile ? (
+            <AddLinkModal>
+              <AddLinkModal.Trigger />
+            </AddLinkModal>
+          ) : (
+            <LoginModal>
+              <AddLinkModal.Trigger />
+            </LoginModal>
+          )}
 
           {profile ? (
             <DropdownMenu>
@@ -67,7 +65,18 @@ const Header = () => {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <LoginModal />
+            <LoginModal>
+              <DialogTrigger
+                asChild
+                onClick={(event) => {
+                  if (!profileLoaded) {
+                    event.preventDefault();
+                  }
+                }}
+              >
+                <Button variant="default">Login</Button>
+              </DialogTrigger>
+            </LoginModal>
           )}
         </div>
       </div>

@@ -1,12 +1,11 @@
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useProfile } from '@/store/profile.store';
-import React, { useEffect, useState } from 'react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 import SignInWithDiscordBtn from './sign-in-with-discord-btn';
 import SignInWithGithubBtn from './sign-in-with-github-btn';
 import SignInWithGoogleBtn from './sign-in-with-google-btn';
 
-const LoginModal: React.FC = React.memo(() => {
+function LoginModal({ children }: PropsWithChildren) {
   const profile = useProfile()[0];
   const [open, setOpen] = useState(false);
 
@@ -18,9 +17,7 @@ const LoginModal: React.FC = React.memo(() => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="default">Login</Button>
-      </DialogTrigger>
+      {children}
 
       <DialogContent className="max-w-md">
         <DialogHeader>
@@ -34,6 +31,6 @@ const LoginModal: React.FC = React.memo(() => {
       </DialogContent>
     </Dialog>
   );
-});
+}
 
 export default LoginModal;

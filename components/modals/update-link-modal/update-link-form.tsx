@@ -9,7 +9,7 @@ import { useProfile } from '@/store/profile.store';
 import { updateLinkSchema } from '@/utils/form-schemas';
 import { formatError } from '@/utils/format-string';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React, { useCallback } from 'react';
+import React from 'react';
 import { FieldError, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
@@ -46,32 +46,29 @@ const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
 
   const updateLink = useUpdateLink();
 
-  const onSubmit = useCallback(
-    async (formData: LinkFormData) => {
-      try {
-        if (!profile) {
-          throw new Error('You must be login');
-        }
-
-        await updateLink.mutateAsync({
-          linkId: props.linkToUpdate.id,
-          linkToUpdate: {
-            url: formData.url,
-            description: formData.title,
-            updatedAt: new Date().toISOString(),
-          },
-          tags: singleToArray(formData.tags),
-        });
-
-        // Do not setLoading(false) because addLink will unmount this component (Modal).
-        props.closeModal();
-      } catch (err) {
-        toast.error(formatError(err as Error));
-        console.error(err);
+  async function onSubmit(formData: LinkFormData) {
+    try {
+      if (!profile) {
+        throw new Error('You must be login');
       }
-    },
-    [profile]
-  );
+
+      await updateLink.mutateAsync({
+        linkId: props.linkToUpdate.id,
+        linkToUpdate: {
+          url: formData.url,
+          description: formData.title,
+          updatedAt: new Date().toISOString(),
+        },
+        tags: singleToArray(formData.tags),
+      });
+
+      // Do not setLoading(false) because addLink will unmount this component (Modal).
+      props.closeModal();
+    } catch (err) {
+      toast.error(formatError(err as Error));
+      console.error(err);
+    }
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

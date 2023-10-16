@@ -1,10 +1,12 @@
 'use client';
 
 import AddCommentModal from '@/components/modals/add-comment-modal/add-comment-modal';
+import LoginModal from '@/components/modals/login-modal/login-modal';
 import RemoveLinkModal from '@/components/modals/remove-link-modal/remove-link-modal';
 import UpdateLinkModal from '@/components/modals/update-link-modal/update-link-modal';
 import TagListWrapper from '@/components/tag/tag-list-wrapper';
 import { Badge } from '@/components/ui/badge';
+import { DialogTrigger } from '@/components/ui/dialog';
 import { GetLinksReturn } from '@/data/link/get-links';
 import { TagRow } from '@/data/tag/use-tags';
 import { useAddLinkVote } from '@/data/vote/use-add-vote';
@@ -14,7 +16,7 @@ import { useAuthModalOpen } from '@/store/modals.store';
 import { useProfile } from '@/store/profile.store';
 import { getDomain } from '@/utils/format-string';
 import { format } from 'date-fns';
-import { MessagesSquare, ThumbsDown, ThumbsUp } from 'lucide-react';
+import { ThumbsDown, ThumbsUp } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useMemo } from 'react';
 import toast from 'react-hot-toast';
@@ -101,38 +103,34 @@ const LinkItem: React.FC<LinkItemProps> = ({ link, isProfilLink = false }) => {
         ))}
       </TagListWrapper>
       <div className="mt-auto flex space-x-5">
-        <button
-          onClick={() => {
-            if (profile) {
-              profileVote
-                ? removeVote.mutate(profileVote.id)
-                : addVote.mutate({
-                    userId: profile.id,
-                    linkId: link.id,
-                  });
-            } else {
-              setAuthModalOpen(true);
-            }
-          }}
-          className={cn('with-ring flex items-center space-x-[6px]')}
-        >
-          {Boolean(profileVote) ? <ThumbsDown size={16} /> : <ThumbsUp size={16} />}
-          <span className="text-[11px] font-bold">{renderFires}</span>
-        </button>
-        <AddCommentModal linkToComment={link}>
-          <button
-            onClick={(e) => {
-              if (!profile) {
-                e.preventDefault();
-                setAuthModalOpen(true);
+        <LoginModal>
+          <DialogTrigger
+            className={cn('with-ring flex items-center space-x-[6px]')}
+            onClick={(event) => {
+              if (profile) {
+                event.preventDefault();
+                profileVote
+                  ? removeVote.mutate(profileVote.id)
+                  : addVote.mutate({
+                      userId: profile.id,
+                      linkId: link.id,
+                    });
               }
             }}
-            className="with-ring inline-flex items-center space-x-1.5"
           >
-            <MessagesSquare size={16} />
-            <span className="text-[11px] font-bold">{renderComments}</span>
-          </button>
-        </AddCommentModal>
+            {Boolean(profileVote) ? <ThumbsDown size={16} /> : <ThumbsUp size={16} />}
+            <span className="text-[11px] font-bold">{renderFires}</span>
+          </DialogTrigger>
+        </LoginModal>
+        {profile ? (
+          <AddCommentModal linkToComment={link}>
+            <AddCommentModal.Trigger>{renderComments}</AddCommentModal.Trigger>
+          </AddCommentModal>
+        ) : (
+          <LoginModal>
+            <AddCommentModal.Trigger>{renderComments}</AddCommentModal.Trigger>
+          </LoginModal>
+        )}
       </div>
     </li>
   );

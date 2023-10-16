@@ -14,7 +14,8 @@ import {
 import { COMMENTS_PER_PAGE, useComments } from '@/data/comment/use-comments';
 import { GetLinksReturn } from '@/data/link/get-links';
 import { getDomain } from '@/utils/format-string';
-import React, { useState } from 'react';
+import { MessagesSquare } from 'lucide-react';
+import React, { PropsWithChildren, useState } from 'react';
 import AddCommentForm from './add-comment-form';
 
 type AddCommentModalProps = {
@@ -78,5 +79,16 @@ function AddCommentModal({ linkToComment, children }: AddCommentModalProps) {
     </Dialog>
   );
 }
+
+function AddCommentModalTrigger({ children }: PropsWithChildren) {
+  return (
+    <DialogTrigger className="with-ring inline-flex items-center space-x-1.5">
+      <MessagesSquare size={16} />
+      <span className="text-[11px] font-bold">{children}</span>
+    </DialogTrigger>
+  );
+}
+
+AddCommentModal.Trigger = AddCommentModalTrigger;
 
 export default AddCommentModal;
