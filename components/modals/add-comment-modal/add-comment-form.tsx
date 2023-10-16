@@ -110,12 +110,7 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
         >
           {showPreview ? 'Edit' : 'Preview'}
         </Button>
-        <Button
-          ref={props.initialFocusButtonRef}
-          variant="default"
-          type="submit"
-          // loading={addLinkComment.isLoading}
-        >
+        <Button ref={props.initialFocusButtonRef} variant="default" type="submit" isLoading={addLinkComment.isLoading}>
           Add
         </Button>
       </div>

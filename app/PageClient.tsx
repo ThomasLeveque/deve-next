@@ -35,7 +35,7 @@ export default function RootClient() {
         <OrderbyLinksDropdown />
       </div>
       {!links ? (
-        <SpinnerIcon className="m-auto mt-14 w-10" />
+        <SpinnerIcon size={40} className="m-auto mt-14" />
       ) : (
         <>
           <ul className="grid grid-cols-1 gap-5 lg:grid-cols-2 xl:grid-cols-3">

@@ -30,7 +30,7 @@ export default function TagPageClient({ tag }: { tag: NonNullable<GetTagBySlugRe
           </Button>
         </>
       ) : (
-        <SpinnerIcon className="m-auto mt-14 w-10" />
+        <SpinnerIcon size={40} className="m-auto mt-14" />
       )}
     </section>
   );

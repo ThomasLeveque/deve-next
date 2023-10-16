@@ -172,7 +172,7 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
                       onClick={handleAddTag}
                       className="grid w-full grid-cols-[20px,1fr] gap-3 px-4 py-2 text-sm hover:bg-primary"
                     >
-                      {addTag.isLoading ? <SpinnerIcon /> : <PlusIcon />}
+                      {addTag.isLoading ? <SpinnerIcon size={16} /> : <PlusIcon size={16} />}
                       <p className="text-left">
                         Create <span className="font-bold">{query}</span> tag
                       </p>

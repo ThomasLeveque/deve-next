@@ -40,7 +40,7 @@ const RemoveLinkModal: React.FC = React.memo(() => {
             variant="destructive"
             className="w-full"
             type="button"
-            // loading={removeLink.isLoading}
+            isLoading={removeLink.isLoading}
             onClick={handleRemoveLink}
           >
             Remove

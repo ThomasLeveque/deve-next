@@ -16,15 +16,15 @@ import { objectEntries } from '@/utils/object-entries';
 const orderLinksDropdownItems = {
   newest: {
     text: 'Most recent',
-    icon: <ArrowDownNarrowWide size={18} />,
+    icon: <ArrowDownNarrowWide size={16} className="mr-2" />,
   },
   oldest: {
     text: 'Oldest',
-    icon: <ArrowUpNarrowWide size={18} />,
+    icon: <ArrowUpNarrowWide size={16} className="mr-2" />,
   },
   liked: {
     text: 'The hottest',
-    icon: <ThumbsUp size={18} />,
+    icon: <ThumbsUp size={16} className="mr-2" />,
   },
 } satisfies Record<
   OrderLinksKey,
@@ -42,7 +42,7 @@ function OrderbyLinksDropdown() {
       <DropdownMenuTrigger asChild>
         <Button variant="outline">{orderLinksDropdownItems[orderbyQuery].text}</Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent align="start">
         <DropdownMenuLabel>Filtering</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>

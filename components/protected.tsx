@@ -19,7 +19,7 @@ const Protected: React.FC<ProtectedProps> = (props) => {
     }
   }, [profile, profileLoaded, router]);
 
-  return profile ? <>{props.children}</> : <SpinnerIcon className="m-auto mt-14 w-10" />;
+  return profile ? <>{props.children}</> : <SpinnerIcon size={40} className="m-auto mt-14" />;
 };
 
 export default Protected;

@@ -48,10 +48,10 @@ const TagsComboboxOption = React.forwardRef<HTMLLIElement, TagsComboboxOptionPro
           {canBeRemove && (
             <>
               {removeTag.isLoading ? (
-                <SpinnerIcon />
+                <SpinnerIcon size={16} />
               ) : (
                 <button type="button" onClick={handleRemoveTag} className="rounded-[4px] hover:bg-black/10">
-                  <TrashIcon />
+                  <TrashIcon size={16} />
                 </button>
               )}
             </>

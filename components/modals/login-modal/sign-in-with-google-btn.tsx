@@ -23,12 +23,7 @@ const SignInWithGoogleBtn: React.FC = () => {
   }, []);
 
   return (
-    <Button
-      variant="default"
-      // loading={loading}
-      className="w-full"
-      onClick={handleSignInWithGoogle}
-    >
+    <Button variant="default" isLoading={loading} className="w-full" onClick={handleSignInWithGoogle}>
       <GoogleIcon className="mr-2" /> login with google
     </Button>
   );

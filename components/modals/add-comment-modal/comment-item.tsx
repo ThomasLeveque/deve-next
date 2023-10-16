@@ -1,10 +1,9 @@
-import MyPopover from '@/components/elements/popover';
 import { Button } from '@/components/ui/button';
+import { Popover, PopoverClose, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { GetCommentsReturn } from '@/data/comment/use-comments';
 import { useRemoveLinkComment } from '@/data/comment/use-remove-comment';
 import { arrayToSingle } from '@/lib/utils';
 import { useProfile } from '@/store/profile.store';
-import { Popover } from '@headlessui/react';
 import { format } from 'date-fns';
 import { PencilIcon, TrashIcon, XIcon } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
@@ -43,33 +42,28 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, linkId, isPreview = 
             {format(new Date(comment.createdAt), 'MMMM d yyyy')}
           </p>
         </div>
-        <div className="flex space-x-1 group-hover:flex lg:hidden">
+        <div className="flex space-x-2 group-hover:flex lg:hidden">
           {canUpdateComment && !isPreview && (
-            <button
-              className="hover:text-secondary"
-              onClick={() => setUpdateComment((prevUpdateComment) => !prevUpdateComment)}
-            >
-              {updateComment ? <XIcon size={18} /> : <PencilIcon size={18} />}
+            <button onClick={() => setUpdateComment((prevUpdateComment) => !prevUpdateComment)}>
+              {updateComment ? <XIcon size={16} /> : <PencilIcon size={16} />}
             </button>
           )}
           {canRemoveComment && !isPreview && (
-            <MyPopover buttonItem={<TrashIcon className="w-[18px] hover:text-secondary" />}>
-              <div className="flex space-x-4">
-                <Popover.Button as={Button} variant="link">
-                  Cancel
-                </Popover.Button>
-                <Button
-                  variant="destructive"
-                  // loading={removeComment.isLoading}
-                  type="button"
-                  onClick={() => {
-                    removeComment.mutate(comment.id);
-                  }}
-                >
+            <Popover>
+              <PopoverTrigger>
+                <TrashIcon size={16} />
+              </PopoverTrigger>
+              <PopoverContent className="flex w-60 space-x-4 p-2">
+                <PopoverClose asChild>
+                  <Button className="w-full" variant="link">
+                    Cancel
+                  </Button>
+                </PopoverClose>
+                <Button className="w-full" variant="destructive" isLoading={removeComment.isLoading} type="button">
                   Remove
                 </Button>
-              </div>
-            </MyPopover>
+              </PopoverContent>
+            </Popover>
           )}
         </div>
       </div>

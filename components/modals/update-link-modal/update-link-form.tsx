@@ -103,12 +103,7 @@ const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
         <Button variant="link" onClick={() => reset()}>
           Reset
         </Button>
-        <Button
-          ref={props.initialFocusButtonRef}
-          variant="default"
-          type="submit"
-          // loading={updateLink.isLoading}
-        >
+        <Button ref={props.initialFocusButtonRef} variant="default" type="submit" isLoading={updateLink.isLoading}>
           Update
         </Button>
       </div>

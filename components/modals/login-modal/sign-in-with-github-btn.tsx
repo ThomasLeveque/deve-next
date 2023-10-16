@@ -28,7 +28,7 @@ const SignInWithGithubBtn: React.FC<{
     <Button
       ref={initialFocusButtonRef}
       variant="default"
-      // loading={loading}
+      isLoading={loading}
       className="w-full"
       onClick={handleSignInWithGithub}
     >

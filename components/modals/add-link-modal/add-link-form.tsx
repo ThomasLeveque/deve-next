@@ -89,12 +89,7 @@ const AddLinkForm: React.FC<AddLinkFormProps> = (props) => {
         errorText={(errors.tags as unknown as FieldError)?.message}
       />
       <div className="flex justify-end">
-        <Button
-          ref={props.initialFocusButtonRef}
-          variant="default"
-          type="submit"
-          // loading={addLink.isLoading}
-        >
+        <Button ref={props.initialFocusButtonRef} variant="default" type="submit" isLoading={addLink.isLoading}>
           Create
         </Button>
       </div>

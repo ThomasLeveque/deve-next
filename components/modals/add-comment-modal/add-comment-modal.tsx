@@ -46,7 +46,7 @@ const AddCommentModal: React.FC = () => {
                       variant="secondary"
                       className="mx-auto mt-8"
                       disabled={!hasNextPage}
-                      // loading={isFetchingNextPage}
+                      isLoading={isFetchingNextPage}
                       onClick={() => fetchNextPage()}
                     >
                       {hasNextPage ? 'Load more' : 'No more comments'}
@@ -54,7 +54,7 @@ const AddCommentModal: React.FC = () => {
                   ) : null}
                 </>
               ) : (
-                <SpinnerIcon className="m-auto mt-12 w-8" />
+                <SpinnerIcon size={32} className="m-auto mt-12" />
               )}
             </>
           ) : null}

@@ -54,17 +54,17 @@ const Header = () => {
 
           {profile ? (
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+              <DropdownMenuTrigger>
                 <ProfileAvatar />
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
+              <DropdownMenuContent align="end">
                 <DropdownMenuGroup>
                   <DropdownMenuItem onClick={() => router.push('/profil')}>
-                    <UserCircleIcon />
+                    <UserCircleIcon size={16} className="mr-2" />
                     <span>Profil</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => supabase.auth.signOut()}>
-                    <LogOut />
+                    <LogOut size={16} className="mr-2" />
                     <span>Logout</span>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
