@@ -92,7 +92,7 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
             wrapperClassName="h-32"
             className="h-full"
           />
-          <p className="mt-3 ml-1 space-x-1 text-xs">
+          <p className="ml-1 mt-3 space-x-1 text-xs">
             <span>Characters left:</span>
             <span className="font-bold">{commentMaxLength - commentText.length}</span>
           </p>

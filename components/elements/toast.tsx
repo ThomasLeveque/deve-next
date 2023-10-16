@@ -47,7 +47,7 @@ const Toast: React.FC<ToastProps> = (props) => {
       {() => (
         <div
           className={cn(
-            'rounded-button relative grid w-full max-w-xs grid-cols-[28px,1fr] gap-2 bg-white py-4 px-5 shadow-lg',
+            'rounded-button relative grid w-full max-w-xs grid-cols-[28px,1fr] gap-2 bg-white px-5 py-4 shadow-lg',
             themeClasses
           )}
         >
@@ -60,7 +60,7 @@ const Toast: React.FC<ToastProps> = (props) => {
           </div>
           <button
             onClick={() => toast.dismiss(props.toast.id)}
-            className="absolute top-2 right-2 rounded-[4px] hover:bg-white/20"
+            className="absolute right-2 top-2 rounded-[4px] hover:bg-white/20"
           >
             <XIcon className="w-[18px]" />
           </button>

@@ -71,7 +71,7 @@ const UpdateCommentForm: React.FC<UpdateCommentFormProps> = (props) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       {showPreview ? (
-        <ReactMarkdown linkTarget="_blank" className="prose prose-sm">
+        <ReactMarkdown linkTarget="_blank" className="prose-sm prose">
           {commentText}
         </ReactMarkdown>
       ) : (
@@ -85,7 +85,7 @@ const UpdateCommentForm: React.FC<UpdateCommentFormProps> = (props) => {
             wrapperClassName="h-24"
             className="h-full"
           />
-          <p className="mt-3 ml-1 text-xs">
+          <p className="ml-1 mt-3 text-xs">
             Characters left: <span className="font-bold">{commentMaxLength - commentText.length}</span>
           </p>
         </>

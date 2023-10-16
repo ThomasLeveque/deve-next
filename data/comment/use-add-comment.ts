@@ -5,7 +5,7 @@ import { useLinkToCommentModal } from '@/store/modals.store';
 import { Database } from '@/types/supabase';
 import { addItemInsidePaginatedData, updateItemInsidePaginatedData } from '@/utils/mutate-data';
 import { supabase } from '@/utils/supabase-client';
-import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
+import { InfiniteData, UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLinksQueryKey } from '../link/use-links-query-key';
 import { queryKeys } from './query-keys';
 

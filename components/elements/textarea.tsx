@@ -30,7 +30,7 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
             {...textAreaProps}
           />
         </div>
-        {errorText ? <p className="text-danger-400 absolute top-full right-1 mt-1 text-[10px]">{errorText}</p> : null}
+        {errorText ? <p className="text-danger-400 absolute right-1 top-full mt-1 text-[10px]">{errorText}</p> : null}
       </div>
     );
   }

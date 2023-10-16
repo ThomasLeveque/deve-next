@@ -5,7 +5,7 @@ import { singleToArray } from '@/lib/utils';
 import { Database } from '@/types/supabase';
 import { addItemInsidePaginatedData, updateItemsInsideData } from '@/utils/mutate-data';
 import { supabase } from '@/utils/supabase-client';
-import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
+import { InfiniteData, UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLinksQueryKey } from './use-links-query-key';
 
 type LinkInsert = Database['public']['Tables']['links']['Insert'];

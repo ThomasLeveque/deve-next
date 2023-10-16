@@ -1,6 +1,6 @@
 import { GlobalComponents } from '@/components/GlobalComponents';
-import Header from '@/components/header';
 import ReactQueryClientProvider from '@/components/ReactQueryClientProvider';
+import Header from '@/components/header';
 import { cn } from '@/lib/utils';
 import { Poppins } from 'next/font/google';
 import './globals.css';

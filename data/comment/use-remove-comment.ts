@@ -6,7 +6,7 @@ import { useLinkToCommentModal } from '@/store/modals.store';
 import { formatError } from '@/utils/format-string';
 import { removeItemInsidePaginatedData, updateItemInsidePaginatedData } from '@/utils/mutate-data';
 import { supabase } from '@/utils/supabase-client';
-import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
+import { InfiniteData, UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { queryKeys } from './query-keys';
 

@@ -150,7 +150,7 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
           >
             <ChevronDown className="h-5 w-5 text-gray-600" aria-hidden="true" />
           </button>
-          {errorText && <p className="text-danger-400 absolute top-full right-1 mt-1 text-[10px]">{errorText}</p>}
+          {errorText && <p className="text-danger-400 absolute right-1 top-full mt-1 text-[10px]">{errorText}</p>}
         </div>
 
         <div {...getMenuProps()}>

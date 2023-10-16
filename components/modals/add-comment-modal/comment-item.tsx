@@ -77,7 +77,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, linkId, isPreview = 
       {updateComment ? (
         <UpdateCommentForm commentToUpdate={comment} linkId={linkId} closeUpdate={() => setUpdateComment(false)} />
       ) : (
-        <ReactMarkdown linkTarget="_blank" className="prose prose-sm">
+        <ReactMarkdown linkTarget="_blank" className="prose-sm prose">
           {comment.text}
         </ReactMarkdown>
       )}

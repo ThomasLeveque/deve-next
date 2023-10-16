@@ -44,7 +44,7 @@ export const Modal: React.FC<ModalProps> = ({
           >
             <div
               className={cn(
-                'rounded-modal relative z-20 mx-auto w-full max-w-lg bg-white py-10 px-8 sm:px-10',
+                'rounded-modal relative z-20 mx-auto w-full max-w-lg bg-white px-8 py-10 sm:px-10',
                 className
               )}
             >
