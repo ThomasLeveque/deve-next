@@ -1,14 +1,19 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { useAddLinkModalOpen, useAuthModalOpen } from '@/store/modals.store';
 import { useProfile, useProfileLoaded } from '@/store/profile.store';
 import { supabase } from '@/utils/supabase-client';
 import { LogOut, PlusIcon, UserCircleIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useMemo } from 'react';
-import MenuDropdown, { MenuDropdownItemProps } from './elements/menu-dropdown';
 import { ProfileAvatar } from './elements/profile-avatar';
 
 const Header = () => {
@@ -19,22 +24,6 @@ const Header = () => {
   const setAddLinkModalOpen = useAddLinkModalOpen()[1];
 
   const router = useRouter();
-
-  const userDropdownItems: MenuDropdownItemProps[] = useMemo(
-    () => [
-      {
-        text: 'Profil',
-        onClick: () => router.push('/profil'),
-        icon: <UserCircleIcon />,
-      },
-      {
-        text: 'Logout',
-        onClick: () => supabase.auth.signOut(),
-        icon: <LogOut />,
-      },
-    ],
-    [router]
-  );
 
   function openAddLink() {
     if (profile) {
@@ -64,7 +53,23 @@ const Header = () => {
           </Button>
 
           {profile ? (
-            <MenuDropdown customButton={<ProfileAvatar className="cursor-pointer" />} items={userDropdownItems} />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <ProfileAvatar />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuGroup>
+                  <DropdownMenuItem onClick={() => router.push('/profil')}>
+                    <UserCircleIcon />
+                    <span>Profil</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => supabase.auth.signOut()}>
+                    <LogOut />
+                    <span>Logout</span>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : (
             <Button
               variant="default"

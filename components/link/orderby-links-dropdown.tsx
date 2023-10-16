@@ -1,39 +1,61 @@
-import MenuDropdown, { MenuDropdownItemProps } from '@/components/elements/menu-dropdown';
 import { OrderLinksKey, useQueryString } from '@/hooks/use-query-string';
 import { ArrowDownNarrowWide, ArrowUpNarrowWide, ThumbsUp } from 'lucide-react';
-import React, { useMemo } from 'react';
 
-const OrderbyLinksDropdown: React.FC = React.memo(() => {
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { objectEntries } from '@/utils/object-entries';
+
+const orderLinksDropdownItems = {
+  newest: {
+    text: 'Most recent',
+    icon: <ArrowDownNarrowWide size={18} />,
+  },
+  oldest: {
+    text: 'Oldest',
+    icon: <ArrowUpNarrowWide size={18} />,
+  },
+  liked: {
+    text: 'The hottest',
+    icon: <ThumbsUp size={18} />,
+  },
+} satisfies Record<
+  OrderLinksKey,
+  {
+    text: string;
+    icon: JSX.Element;
+  }
+>;
+
+function OrderbyLinksDropdown() {
   const { setOrderbyQuery, orderbyQuery } = useQueryString();
 
-  const orderLinksDropdownItems: Record<OrderLinksKey, MenuDropdownItemProps> = useMemo(
-    () => ({
-      newest: {
-        text: 'Most recent',
-        onClick: () => setOrderbyQuery('newest'),
-        icon: <ArrowDownNarrowWide size={18} />,
-      },
-      oldest: {
-        text: 'Oldest',
-        onClick: () => setOrderbyQuery('oldest'),
-        icon: <ArrowUpNarrowWide size={18} />,
-      },
-      liked: {
-        text: 'The hottest',
-        onClick: () => setOrderbyQuery('liked'),
-        icon: <ThumbsUp size={18} />,
-      },
-    }),
-    []
-  );
-
   return (
-    <MenuDropdown
-      items={Object.values(orderLinksDropdownItems)}
-      dropdownPosition="left"
-      defaultButtonText={orderLinksDropdownItems[orderbyQuery].text}
-    />
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline">{orderLinksDropdownItems[orderbyQuery].text}</Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuLabel>Filtering</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          {objectEntries(orderLinksDropdownItems).map(([key, item]) => (
+            <DropdownMenuItem key={key} onClick={() => setOrderbyQuery(key)}>
+              {item.icon}
+              <span>{item.text}</span>
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
-});
+}
 
 export default OrderbyLinksDropdown;
