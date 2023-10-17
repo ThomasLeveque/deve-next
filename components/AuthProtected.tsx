@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import { PropsWithChildren, useEffect } from 'react';
 import SpinnerIcon from './icons/SpinnerIcon';
 
-export function Protected({ children }: PropsWithChildren) {
+export function AuthProtected({ children }: PropsWithChildren) {
   const profile = useProfile()[0];
   const profileLoaded = useProfileLoaded()[0];
 
@@ -18,4 +18,4 @@ export function Protected({ children }: PropsWithChildren) {
   return profile ? <>{children}</> : <SpinnerIcon size={40} className="m-auto mt-14" />;
 }
 
-export default Protected;
+export default AuthProtected;

@@ -1,8 +1,8 @@
 'use client';
 
+import AuthProtected from '@/components/AuthProtected';
 import { ProfileAvatar } from '@/components/ProfileAvatar';
-import Protected from '@/components/Protected';
-import { Switch } from '@/components/ui/switch';
+import { Switch } from '@/components/ui/switch-toto';
 import { useProfile } from '@/store/profile.store';
 import { format } from 'date-fns';
 
@@ -10,7 +10,7 @@ export default function ProfilLayout({ children }: { children: React.ReactNode }
   const profile = useProfile()[0];
 
   return (
-    <Protected>
+    <AuthProtected>
       <div className="grid gap-9 sm:grid-cols-[250px,1fr]">
         {profile && (
           <>
@@ -43,6 +43,6 @@ export default function ProfilLayout({ children }: { children: React.ReactNode }
           </>
         )}
       </div>
-    </Protected>
+    </AuthProtected>
   );
 }
