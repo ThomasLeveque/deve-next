@@ -39,7 +39,8 @@ export const useRemoveLink = (): UseMutationResult<RemoveLinkReturn, Error, numb
 
   const queryKey = useLinksQueryKey();
 
-  return useMutation((linkId) => removeLink(linkId), {
+  return useMutation({
+    mutationFn: (linkId) => removeLink(linkId),
     onSuccess: ({ linkId, tagIds }) => {
       queryClient.setQueryData<InfiniteData<GetLinksReturn>>(queryKey, (oldLinks) =>
         removeItemInsidePaginatedData(linkId, oldLinks)

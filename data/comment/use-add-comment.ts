@@ -31,7 +31,8 @@ export const useAddLinkComment = (linkId: number): UseMutationResult<AddCommentR
 
   const linksQueryKey = useLinksQueryKey();
 
-  return useMutation((commentToAdd) => addComment(commentToAdd), {
+  return useMutation({
+    mutationFn: (commentToAdd) => addComment(commentToAdd),
     onSuccess: async (newComment) => {
       queryClient.setQueryData<InfiniteData<GetCommentsReturn>>(queryKeys.comments(linkId), (oldComments) => {
         return addItemInsidePaginatedData(newComment, oldComments);

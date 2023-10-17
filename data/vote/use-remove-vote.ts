@@ -27,7 +27,8 @@ export const useRemoveLinkVote = (
 
   const linksQueryKey = useLinksQueryKey();
 
-  return useMutation((voteId) => removeVote(voteId), {
+  return useMutation({
+    mutationFn: (voteId) => removeVote(voteId),
     onSuccess: async (removedVote) => {
       link.votesCount -= 1;
       link.votes = singleToArray(link.votes).filter((vote) => vote.id !== removedVote.id);

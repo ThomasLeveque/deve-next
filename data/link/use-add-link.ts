@@ -59,7 +59,8 @@ export const useAddLink = (): UseMutationResult<
 
   const queryKey = useLinksQueryKey();
 
-  return useMutation(({ linkToAdd, tags }) => addLink(linkToAdd, tags), {
+  return useMutation({
+    mutationFn: ({ linkToAdd, tags }) => addLink(linkToAdd, tags),
     onSuccess: (newLink) => {
       queryClient.setQueryData<InfiniteData<GetLinksReturn>>(queryKey, (oldLinks) =>
         addItemInsidePaginatedData(newLink, oldLinks)

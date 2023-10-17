@@ -2,7 +2,7 @@
 
 import { ProfileAvatar } from '@/components/ProfileAvatar';
 import Protected from '@/components/Protected';
-import ToggleSwitch from '@/components/ToggleSwitch';
+import { Switch } from '@/components/ui/Switch';
 import { useProfile } from '@/store/profile.store';
 import { format } from 'date-fns';
 
@@ -27,7 +27,7 @@ export default function ProfilLayout({ children }: { children: React.ReactNode }
                 </li>
                 <li>
                   <h3 className="mb-2 text-[10px] font-bold uppercase">Admin status :</h3>
-                  <ToggleSwitch className="mx-auto sm:mx-0" disabled={true} checked={profile.role === 'admin'} />
+                  <Switch className="mx-auto sm:mx-0" disabled={true} checked={profile.role === 'admin'} />
                 </li>
                 <li>
                   <h3 className="mb-1 text-[10px] font-bold uppercase">Created at :</h3>

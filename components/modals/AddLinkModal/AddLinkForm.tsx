@@ -90,7 +90,7 @@ function AddLinkForm({ closeModal }: AddLinkFormProps) {
             Close
           </Button>
         </DialogClose>
-        <Button type="submit" isLoading={addLink.isLoading}>
+        <Button type="submit" isLoading={addLink.isPending}>
           Create
         </Button>
       </DialogFooter>

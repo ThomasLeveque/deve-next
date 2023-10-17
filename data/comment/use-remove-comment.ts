@@ -31,7 +31,8 @@ export const useRemoveLinkComment = (linkId: number): UseMutationResult<RemoveLi
 
   const linksQueryKey = useLinksQueryKey();
 
-  return useMutation((commentId) => removeLinkComment(commentId), {
+  return useMutation({
+    mutationFn: (commentId) => removeLinkComment(commentId),
     onSuccess: async (removedComment) => {
       queryClient.setQueryData<InfiniteData<GetCommentsReturn>>(queryKeys.comments(linkId), (oldComments) =>
         removeItemInsidePaginatedData(removedComment.id, oldComments)

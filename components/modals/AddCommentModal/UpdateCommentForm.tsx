@@ -71,9 +71,7 @@ const UpdateCommentForm: React.FC<UpdateCommentFormProps> = (props) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       {showPreview ? (
-        <ReactMarkdown linkTarget="_blank" className="prose-sm prose">
-          {commentText}
-        </ReactMarkdown>
+        <ReactMarkdown className="prose-sm prose">{commentText}</ReactMarkdown>
       ) : (
         <>
           <TextArea

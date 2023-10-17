@@ -19,7 +19,6 @@ interface CommentFormData {
 
 interface AddCommentFormProps {
   linkId: number;
-  initialFocusButtonRef?: React.MutableRefObject<HTMLButtonElement | null>;
 }
 
 const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
@@ -74,7 +73,7 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
               text: commentText,
               userId: profile?.id,
               linkId: props.linkId,
-              user: profile,
+              user: [profile],
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString(),
             }}
@@ -112,7 +111,7 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
         >
           {showPreview ? 'Edit' : 'Preview'}
         </Button>
-        <Button ref={props.initialFocusButtonRef} variant="default" type="submit" isLoading={addLinkComment.isLoading}>
+        <Button variant="default" type="submit" isLoading={addLinkComment.isPending}>
           Add
         </Button>
       </DialogFooter>

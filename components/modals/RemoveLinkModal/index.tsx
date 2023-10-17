@@ -52,7 +52,7 @@ function RemoveLinkModal({ linkIdToRemove }: RemoveLinkModalProps) {
             variant="destructive"
             className="w-full"
             type="button"
-            isLoading={removeLink.isLoading}
+            isLoading={removeLink.isPending}
             onClick={handleRemoveLink}
           >
             Remove

@@ -5,7 +5,6 @@ import { GetTagsReturn } from '@/data/tag/get-tags';
 import { useAddTag } from '@/data/tag/use-add-tag';
 import { useTags } from '@/data/tag/use-tags';
 import { formatError, stringToSlug } from '@/utils/format-string';
-import { Transition } from '@headlessui/react';
 import { useCombobox, useMultipleSelection } from 'downshift';
 import { ChevronDown, InfoIcon, PlusIcon, X } from 'lucide-react';
 import React, { useCallback, useMemo, useState } from 'react';
@@ -154,45 +153,35 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
         </div>
 
         <div {...getMenuProps()}>
-          <Transition
-            show={isOpen}
-            enter="transition duration-100 ease-out"
-            enterFrom="scale-95 opacity-0"
-            enterTo="scale-100 opacity-100"
-            leave="transition duration-75 ease-out"
-            leaveFrom="scale-100 opacity-100"
-            leaveTo="scale-95 opacity-0"
-          >
-            <ul className="rounded-button absolute z-50 mt-2 max-h-60 w-full overflow-auto bg-gray-100 py-1 shadow-lg focus:outline-none">
-              <>
-                <li>
-                  {!isTagExist && query !== '' && (
-                    <button
-                      type="button"
-                      onClick={handleAddTag}
-                      className="grid w-full grid-cols-[20px,1fr] gap-3 px-4 py-2 text-sm hover:bg-primary"
-                    >
-                      {addTag.isLoading ? <SpinnerIcon size={16} /> : <PlusIcon size={16} />}
-                      <p className="text-left">
-                        Create <span className="font-bold">{query}</span> tag
-                      </p>
-                    </button>
-                  )}
-                </li>
-                {getFilteredTags?.map((filteredTag, index) => (
-                  <TagsComboboxOption
-                    key={filteredTag.id}
-                    {...getItemProps({
-                      item: filteredTag,
-                      index,
-                    })}
-                    filteredTag={filteredTag}
-                    active={highlightedIndex === index}
-                  />
-                ))}
-              </>
-            </ul>
-          </Transition>
+          <ul className="rounded-button absolute z-50 mt-2 max-h-60 w-full overflow-auto bg-gray-100 py-1 shadow-lg focus:outline-none">
+            <>
+              <li>
+                {!isTagExist && query !== '' && (
+                  <button
+                    type="button"
+                    onClick={handleAddTag}
+                    className="grid w-full grid-cols-[20px,1fr] gap-3 px-4 py-2 text-sm hover:bg-primary"
+                  >
+                    {addTag.isPending ? <SpinnerIcon size={16} /> : <PlusIcon size={16} />}
+                    <p className="text-left">
+                      Create <span className="font-bold">{query}</span> tag
+                    </p>
+                  </button>
+                )}
+              </li>
+              {getFilteredTags?.map((filteredTag, index) => (
+                <TagsComboboxOption
+                  key={filteredTag.id}
+                  {...getItemProps({
+                    item: filteredTag,
+                    index,
+                  })}
+                  filteredTag={filteredTag}
+                  active={highlightedIndex === index}
+                />
+              ))}
+            </>
+          </ul>
         </div>
       </div>
     </div>

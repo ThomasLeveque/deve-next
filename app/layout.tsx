@@ -3,6 +3,7 @@ import BackToTop from '@/app/_components/BackToTop';
 import { Navigation } from '@/app/_components/Navigation';
 import { cn } from '@/lib/utils';
 import { Poppins } from 'next/font/google';
+
 import './globals.css';
 
 const poppins = Poppins({

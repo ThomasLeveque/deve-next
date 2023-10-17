@@ -8,11 +8,10 @@ export const useLinks = () => {
   const { orderbyQuery, searchQuery } = useQueryString();
   const debouncedSearchQuery = useDebounce<string>(searchQuery, 500);
 
-  return useInfiniteQuery(
-    queryKeys.links(orderbyQuery, debouncedSearchQuery),
-    (context) => getLinks(context.pageParam, orderbyQuery, debouncedSearchQuery),
-    {
-      getNextPageParam: (lastPage) => lastPage?.cursor,
-    }
-  );
+  return useInfiniteQuery({
+    queryKey: queryKeys.links(orderbyQuery, debouncedSearchQuery),
+    queryFn: (context) => getLinks(context.pageParam, orderbyQuery, debouncedSearchQuery),
+    getNextPageParam: (lastPage) => lastPage?.cursor,
+    initialPageParam: 0,
+  });
 };

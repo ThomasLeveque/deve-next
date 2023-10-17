@@ -1,7 +1,7 @@
 import { Nullable } from '@/types/shared';
 import { formatError } from '@/utils/format-string';
 import { supabase } from '@/utils/supabase-client';
-import { UseInfiniteQueryOptions, useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { queryKeys } from './query-keys';
 
@@ -9,7 +9,7 @@ export const COMMENTS_PER_PAGE = Number(process.env.NEXT_PUBLIC_COMMENTS_PER_PAG
 
 export type GetCommentsReturn = Awaited<ReturnType<typeof getComments>>;
 
-const getComments = async (linkId: number, cursor = 0) => {
+const getComments = async (linkId: number, cursor: number) => {
   try {
     const nextCursor = cursor + COMMENTS_PER_PAGE;
     const response = await supabase
@@ -39,16 +39,12 @@ const getComments = async (linkId: number, cursor = 0) => {
   }
 };
 
-export const useComments = (
-  linkId: Nullable<number>,
-  options?: UseInfiniteQueryOptions<Nullable<GetCommentsReturn>, Error>
-) => {
-  return useInfiniteQuery<Nullable<GetCommentsReturn>, Error>(
-    queryKeys.comments(linkId as number),
-    ({ pageParam = 0 }) => getComments(linkId as number, pageParam),
-    {
-      getNextPageParam: (lastPage) => lastPage?.cursor,
-      ...(options ?? {}),
-    }
-  );
+export const useComments = (linkId: Nullable<number>, enabled = true) => {
+  return useInfiniteQuery({
+    queryKey: queryKeys.comments(linkId as number),
+    queryFn: ({ pageParam }) => getComments(linkId as number, pageParam),
+    getNextPageParam: (lastPage) => lastPage?.cursor,
+    initialPageParam: 0,
+    enabled,
+  });
 };

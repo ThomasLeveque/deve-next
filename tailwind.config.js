@@ -91,5 +91,5 @@ module.exports = {
       },
     }),
   },
-  plugins: [require('tailwindcss-animate'), require('@tailwindcss/typography'), require('prettier-plugin-tailwindcss')],
+  plugins: [require('tailwindcss-animate'), require('@tailwindcss/typography')],
 };

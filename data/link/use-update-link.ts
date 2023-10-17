@@ -76,7 +76,8 @@ export const useUpdateLink = (): UseMutationResult<
 
   const queryKey = useLinksQueryKey();
 
-  return useMutation(({ linkId, linkToUpdate, tags }) => updateLink(linkId, linkToUpdate, tags), {
+  return useMutation({
+    mutationFn: ({ linkId, linkToUpdate, tags }) => updateLink(linkId, linkToUpdate, tags),
     onSuccess: ({ updatedLink, linksTagsToAdd, linksTagsToRemove }) => {
       queryClient.setQueryData<InfiniteData<GetLinksReturn>>(queryKey, (oldLinks) =>
         updateItemInsidePaginatedData(updatedLink, oldLinks)

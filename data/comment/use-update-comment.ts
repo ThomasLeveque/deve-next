@@ -23,7 +23,8 @@ export const useUpdateLinkComment = (
 ): UseMutationResult<UpdateCommentReturn, Error, { commentId: number; commentToUpdate: CommentUpdate }> => {
   const queryClient = useQueryClient();
 
-  return useMutation(({ commentId, commentToUpdate }) => updateComment(commentId, commentToUpdate), {
+  return useMutation({
+    mutationFn: ({ commentId, commentToUpdate }) => updateComment(commentId, commentToUpdate),
     onSuccess: async (updatedComment) => {
       queryClient.setQueryData<InfiniteData<GetCommentsReturn>>(queryKeys.comments(linkId), (oldComments) =>
         updateItemInsidePaginatedData(updatedComment, oldComments)

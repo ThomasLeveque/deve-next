@@ -28,7 +28,8 @@ export const useAddLinkVote = (
 
   const linksQueryKey = useLinksQueryKey();
 
-  return useMutation((voteToAdd) => addVote(voteToAdd), {
+  return useMutation({
+    mutationFn: (voteToAdd) => addVote(voteToAdd),
     onSuccess: async (newVote) => {
       link.votesCount += 1;
       link.votes = [...singleToArray(link.votes), newVote];

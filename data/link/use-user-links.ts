@@ -8,7 +8,7 @@ export const USER_LINKS_PER_PAGE = Number(process.env.NEXT_PUBLIC_LINKS_PER_PAGE
 
 export type GetUserLinksReturn = Awaited<ReturnType<typeof getUserLinks>>;
 
-const getUserLinks = async (cursor = 0, userId: string) => {
+const getUserLinks = async (cursor: number, userId: string) => {
   try {
     const nextCursor = cursor + USER_LINKS_PER_PAGE;
     const response = await supabase
@@ -43,11 +43,10 @@ const getUserLinks = async (cursor = 0, userId: string) => {
 };
 
 export const useUserLinks = (userId: string | undefined) =>
-  useInfiniteQuery(
-    queryKeys.userLinks(userId as string),
-    (context) => getUserLinks(context.pageParam, userId as string),
-    {
-      enabled: !!userId,
-      getNextPageParam: (lastPage) => lastPage?.cursor,
-    }
-  );
+  useInfiniteQuery({
+    queryKey: queryKeys.userLinks(userId as string),
+    queryFn: ({ pageParam }) => getUserLinks(pageParam, userId as string),
+    enabled: !!userId,
+    getNextPageParam: (lastPage) => lastPage?.cursor,
+    initialPageParam: 0,
+  });

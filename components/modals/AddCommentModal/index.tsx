@@ -31,9 +31,7 @@ function AddCommentModal({ linkToComment, children }: AddCommentModalProps) {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useComments(linkToComment?.id, {
-    enabled: Boolean(linkToComment?.id) && open,
-  });
+  } = useComments(linkToComment?.id, Boolean(linkToComment?.id) && open);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -52,10 +50,11 @@ function AddCommentModal({ linkToComment, children }: AddCommentModalProps) {
             {comments ? (
               <>
                 <ul className="mt-8 space-y-5">
-                  {comments.pages?.map((page) =>
-                    page?.data?.map((comment) => (
-                      <CommentItem key={comment.id} comment={comment} linkId={linkToComment.id} />
-                    ))
+                  {comments.pages?.map(
+                    (page) =>
+                      page?.data?.map((comment) => (
+                        <CommentItem key={comment.id} comment={comment} linkId={linkToComment.id} />
+                      ))
                   )}
                 </ul>
                 {linkToComment.commentsCount > COMMENTS_PER_PAGE ? (

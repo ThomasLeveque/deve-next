@@ -9,7 +9,7 @@ export const TAG_LINKS_PER_PAGE = Number(process.env.NEXT_PUBLIC_LINKS_PER_PAGE)
 
 export type GetLinksByTagsReturn = Awaited<ReturnType<typeof getLinksByTag>>;
 
-const getLinksByTag = async (cursor = 0, tagSlug: string) => {
+const getLinksByTag = async (cursor: number, tagSlug: string) => {
   try {
     const nextCursor = cursor + TAG_LINKS_PER_PAGE;
     const response = await supabase
@@ -50,11 +50,10 @@ const getLinksByTag = async (cursor = 0, tagSlug: string) => {
 };
 
 export const useTagLinks = (tagSlug: Nullable<string>) =>
-  useInfiniteQuery(
-    queryKeys.tagLinks(tagSlug as string),
-    (context) => getLinksByTag(context.pageParam, tagSlug as string),
-    {
-      enabled: !!tagSlug,
-      getNextPageParam: (lastPage) => lastPage?.cursor,
-    }
-  );
+  useInfiniteQuery({
+    queryKey: queryKeys.tagLinks(tagSlug as string),
+    queryFn: (context) => getLinksByTag(context.pageParam, tagSlug as string),
+    enabled: !!tagSlug,
+    getNextPageParam: (lastPage) => lastPage?.cursor,
+    initialPageParam: 0,
+  });

@@ -20,7 +20,8 @@ const removeTag = async (tagId: number) => {
 
 export const useRemoveTag = (): UseMutationResult<RemoveTagReturn, Error, number> => {
   const queryClient = useQueryClient();
-  return useMutation((tagId) => removeTag(tagId), {
+  return useMutation({
+    mutationFn: (tagId) => removeTag(tagId),
     onSuccess: async (removedTagId) => {
       queryClient.setQueryData<GetTagsReturn>(queryKeys.tags, (oldTags) =>
         removeItemInsideData([removedTagId], oldTags)

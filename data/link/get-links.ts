@@ -7,7 +7,7 @@ export const LINKS_PER_PAGE = Number(process.env.NEXT_PUBLIC_LINKS_PER_PAGE) ?? 
 
 export type GetLinksReturn = Awaited<ReturnType<typeof getLinks>>;
 
-export const getLinks = async (cursor = 0, orderby: OrderLinksKey, searchQuery = '') => {
+export const getLinks = async (cursor: number, orderby: OrderLinksKey, searchQuery = '') => {
   try {
     const nextCursor = cursor + LINKS_PER_PAGE;
     let query = supabase.from('links').select(`

@@ -22,7 +22,6 @@ interface LinkFormData {
 interface AddLinkFormProps {
   closeModal: () => void;
   linkToUpdate: GetLinksReturn['data'][0];
-  initialFocusButtonRef?: React.MutableRefObject<HTMLButtonElement | null>;
 }
 
 const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
@@ -100,7 +99,7 @@ const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
         <Button variant="link" type="button" onClick={() => reset()}>
           Reset
         </Button>
-        <Button ref={props.initialFocusButtonRef} variant="default" type="submit" isLoading={updateLink.isLoading}>
+        <Button variant="default" type="submit" isLoading={updateLink.isPending}>
           Update
         </Button>
       </div>

@@ -59,7 +59,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, linkId, isPreview = 
                     Cancel
                   </Button>
                 </PopoverClose>
-                <Button className="w-full" variant="destructive" isLoading={removeComment.isLoading} type="button">
+                <Button className="w-full" variant="destructive" isLoading={removeComment.isPending} type="button">
                   Remove
                 </Button>
               </PopoverContent>
@@ -71,9 +71,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, linkId, isPreview = 
       {updateComment ? (
         <UpdateCommentForm commentToUpdate={comment} linkId={linkId} closeUpdate={() => setUpdateComment(false)} />
       ) : (
-        <ReactMarkdown linkTarget="_blank" className="prose-sm prose">
-          {comment.text}
-        </ReactMarkdown>
+        <ReactMarkdown className="prose-sm prose">{comment.text}</ReactMarkdown>
       )}
     </li>
   );

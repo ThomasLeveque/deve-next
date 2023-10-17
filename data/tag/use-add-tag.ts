@@ -21,7 +21,8 @@ const addTag = async (tagToAdd: TagInsert) => {
 
 export const useAddTag = (): UseMutationResult<AddTagReturn, Error, TagInsert> => {
   const queryClient = useQueryClient();
-  return useMutation((tagToAdd) => addTag(tagToAdd), {
+  return useMutation({
+    mutationFn: (tagToAdd) => addTag(tagToAdd),
     onSuccess: (newTag) => {
       queryClient.setQueryData<GetTagsReturn>(queryKeys.tags, (oldTags) => addItemInsideData(newTag, oldTags, 'end'));
     },
