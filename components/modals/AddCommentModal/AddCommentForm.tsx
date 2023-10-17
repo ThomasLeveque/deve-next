@@ -2,7 +2,7 @@
 
 import TextArea from '@/components/Textarea';
 import { addCommentSchema, commentMaxLength } from '@/components/modals/AddCommentModal/schemas';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/ButtonToto';
 import { DialogFooter } from '@/components/ui/Dialog';
 import { useAddLinkComment } from '@/data/comment/use-add-comment';
 import { useProfile } from '@/store/profile.store';

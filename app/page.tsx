@@ -4,7 +4,7 @@ import LinkCard from '@/components/LinkCard';
 import OrderbyLinksDropdown from '@/components/OrderbyLinksDropdown';
 import TextInput from '@/components/TextInput';
 import SpinnerIcon from '@/components/icons/SpinnerIcon';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/ButtonToto';
 import { useLinks } from '@/data/link/use-links';
 import { useQueryString } from '@/hooks/use-query-string';
 import { useRef } from 'react';

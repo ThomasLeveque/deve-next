@@ -1,7 +1,7 @@
 import { OrderLinksKey, useQueryString } from '@/hooks/use-query-string';
 import { ArrowDownNarrowWide, ArrowUpNarrowWide, ThumbsUp } from 'lucide-react';
 
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/ButtonToto';
 import {
   DropdownMenu,
   DropdownMenuContent,

@@ -1,7 +1,7 @@
 import TagsCombobox from '@/components/TagsCombobox';
 import TextInput from '@/components/TextInput';
 import { addLinkSchema } from '@/components/modals/AddLinkModal/schemas';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/ButtonToto';
 import { DialogClose, DialogFooter } from '@/components/ui/Dialog';
 import { useAddLink } from '@/data/link/use-add-link';
 import { GetTagsReturn } from '@/data/tag/get-tags';

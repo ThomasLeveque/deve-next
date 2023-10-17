@@ -3,7 +3,7 @@
 import SpinnerIcon from '@/components/icons/SpinnerIcon';
 import LinkCard from '@/components/LinkCard';
 import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/ButtonToto';
 import { useTagLinks } from '@/data/link/use-links-by-tag';
 import { GetTagBySlugReturn } from '@/data/tag/get-tag-by-slug';
 import { singleToArray } from '@/lib/utils';

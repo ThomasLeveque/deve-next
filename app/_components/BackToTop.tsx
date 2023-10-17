@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/ButtonToto';
 import { ArrowUp } from 'lucide-react';
 import React from 'react';
 import { useInView } from 'react-intersection-observer';

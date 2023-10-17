@@ -1,5 +1,5 @@
 import GithubIcon from '@/components/icons/GithubIcon';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/ButtonToto';
 import { formatError } from '@/utils/format-string';
 import { supabase } from '@/utils/supabase-client';
 import React, { useCallback, useState } from 'react';

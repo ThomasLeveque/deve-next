@@ -2,7 +2,7 @@
 
 import SpinnerIcon from '@/components/icons/SpinnerIcon';
 import CommentItem from '@/components/modals/AddCommentModal/CommentItem';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/ButtonToto';
 import {
   Dialog,
   DialogContent,

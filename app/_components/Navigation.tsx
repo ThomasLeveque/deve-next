@@ -3,7 +3,7 @@
 import AddLinkModal from '@/components/modals/AddLinkModal';
 import LoginModal from '@/components/modals/LoginModal';
 import { ProfileAvatar } from '@/components/ProfileAvatar';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/ButtonToto';
 import { DialogTrigger } from '@/components/ui/Dialog';
 import {
   DropdownMenu,
