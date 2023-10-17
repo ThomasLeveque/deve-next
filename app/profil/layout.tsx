@@ -2,7 +2,7 @@
 
 import AuthProtected from '@/components/AuthProtected';
 import { ProfileAvatar } from '@/components/ProfileAvatar';
-import { Switch } from '@/components/ui/switch-toto';
+import { Switch } from '@/components/ui/switch';
 import { useProfile } from '@/store/profile.store';
 import { format } from 'date-fns';
 
