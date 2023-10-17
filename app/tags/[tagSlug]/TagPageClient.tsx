@@ -1,9 +1,9 @@
 'use client';
 
-import SpinnerIcon from '@/components/icons/spinner-icon';
-import LinkItem from '@/components/link/link-item';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import SpinnerIcon from '@/components/icons/SpinnerIcon';
+import LinkCard from '@/components/LinkCard';
+import { Badge } from '@/components/ui/Badge';
+import { Button } from '@/components/ui/Button';
 import { useTagLinks } from '@/data/link/use-links-by-tag';
 import { GetTagBySlugReturn } from '@/data/tag/get-tag-by-slug';
 import { singleToArray } from '@/lib/utils';
@@ -23,9 +23,15 @@ export default function TagPageClient({ tag }: { tag: NonNullable<GetTagBySlugRe
       {links ? (
         <>
           <ul className="grid grid-cols-1 gap-5 lg:grid-cols-2 xl:grid-cols-3">
-            {links?.pages?.map((page) => page?.data.map((link) => <LinkItem key={link.id} link={link} />))}
+            {links?.pages?.map((page) => page?.data.map((link) => <LinkCard key={link.id} link={link} />))}
           </ul>
-          <Button variant="secondary" className="mx-auto mt-8" disabled={!hasNextPage} onClick={() => fetchNextPage()}>
+          <Button
+            variant="secondary"
+            className="mx-auto mt-8"
+            disabled={!hasNextPage}
+            isLoading={isFetchingNextPage}
+            onClick={() => fetchNextPage()}
+          >
             {hasNextPage ? 'Load more' : 'No more links'}
           </Button>
         </>

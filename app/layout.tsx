@@ -1,6 +1,6 @@
-import { GlobalComponents } from '@/components/GlobalComponents';
-import ReactQueryClientProvider from '@/components/ReactQueryClientProvider';
-import Header from '@/components/header';
+import AppProvider from '@/app/_components/AppProvider';
+import BackToTop from '@/app/_components/BackToTop';
+import { Navigation } from '@/app/_components/Navigation';
 import { cn } from '@/lib/utils';
 import { Poppins } from 'next/font/google';
 import './globals.css';
@@ -26,12 +26,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={`${poppins.variable} font-poppins`}>
-        <ReactQueryClientProvider>
-          <Header />
+        <AppProvider>
+          <Navigation />
           <main className={cn('px-5 xl:container xl:mx-auto')}>{children}</main>
 
-          <GlobalComponents />
-        </ReactQueryClientProvider>
+          <BackToTop />
+        </AppProvider>
       </body>
     </html>
   );

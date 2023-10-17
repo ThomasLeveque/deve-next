@@ -9,7 +9,7 @@ export async function generateMetadata({ params }: { params: { tagSlug: string }
   return { title: tag?.name };
 }
 
-export default async function Tag({ params: { tagSlug } }: { params: { tagSlug: string } }) {
+export default async function TagPage({ params: { tagSlug } }: { params: { tagSlug: string } }) {
   const tag = await getTagBySlug(tagSlug);
 
   if (!tag) {

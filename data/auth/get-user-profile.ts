@@ -1,19 +1,18 @@
 import { Nullable } from '@/types/shared';
-import { createServerClient } from '@/utils/supabase-server';
+import { supabase } from '@/utils/supabase-client';
 import { User } from '@supabase/supabase-js';
 
 export type GetUserProfileReturn = Awaited<ReturnType<typeof getUserProfile>>;
 
-export const getUserProfile = async (user: Nullable<User>, supabase: ReturnType<typeof createServerClient>) => {
+export const getUserProfile = async (user: Nullable<User>, supabaseClient: typeof supabase) => {
   if (!user) {
     return null;
   }
 
   try {
-    const profile = await supabase.from('profiles').select('*').eq('id', user.id).single();
+    const profile = await supabaseClient.from('profiles').select('*').eq('id', user.id).single();
     return profile.data;
   } catch (err) {
-    // toast.error(formatError(err as Error));
     return null;
   }
 };

@@ -1,13 +1,9 @@
 import { useProfile, useProfileLoaded } from '@/store/profile.store';
 import { useRouter } from 'next/navigation';
-import React, { useEffect } from 'react';
-import SpinnerIcon from './icons/spinner-icon';
+import { PropsWithChildren, useEffect } from 'react';
+import SpinnerIcon from './icons/SpinnerIcon';
 
-interface ProtectedProps {
-  children: React.ReactNode | React.ReactNode[];
-}
-
-const Protected: React.FC<ProtectedProps> = (props) => {
+export function Protected({ children }: PropsWithChildren) {
   const profile = useProfile()[0];
   const profileLoaded = useProfileLoaded()[0];
 
@@ -19,7 +15,7 @@ const Protected: React.FC<ProtectedProps> = (props) => {
     }
   }, [profile, profileLoaded, router]);
 
-  return profile ? <>{props.children}</> : <SpinnerIcon size={40} className="m-auto mt-14" />;
-};
+  return profile ? <>{children}</> : <SpinnerIcon size={40} className="m-auto mt-14" />;
+}
 
 export default Protected;

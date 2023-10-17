@@ -1,8 +1,8 @@
 'use client';
 
-import { ProfileAvatar } from '@/components/elements/profile-avatar';
-import ToggleSwitch from '@/components/elements/toggle-switch';
-import Protected from '@/components/protected';
+import { ProfileAvatar } from '@/components/ProfileAvatar';
+import Protected from '@/components/Protected';
+import ToggleSwitch from '@/components/ToggleSwitch';
 import { useProfile } from '@/store/profile.store';
 import { format } from 'date-fns';
 

@@ -1,7 +1,6 @@
 import { GetCommentsReturn } from '@/data/comment/use-comments';
 import { GetLinksReturn } from '@/data/link/get-links';
 import { arrayToSingle } from '@/lib/utils';
-import { useLinkToCommentModal } from '@/store/modals.store';
 import { Database } from '@/types/supabase';
 import { addItemInsidePaginatedData, updateItemInsidePaginatedData } from '@/utils/mutate-data';
 import { supabase } from '@/utils/supabase-client';
@@ -28,8 +27,6 @@ const addComment = async (commentToAdd: CommentInsert) => {
 };
 
 export const useAddLinkComment = (linkId: number): UseMutationResult<AddCommentReturn, Error, CommentInsert> => {
-  const [linkToCommentModal, setLinkToCommentModal] = useLinkToCommentModal();
-
   const queryClient = useQueryClient();
 
   const linksQueryKey = useLinksQueryKey();
@@ -46,9 +43,6 @@ export const useAddLinkComment = (linkId: number): UseMutationResult<AddCommentR
           oldLinks
         )
       );
-      if (linkToCommentModal) {
-        setLinkToCommentModal({ ...linkToCommentModal, commentsCount: linkToCommentModal.commentsCount + 1 });
-      }
     },
   });
 };
