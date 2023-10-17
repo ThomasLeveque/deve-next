@@ -2,7 +2,7 @@
 
 import SpinnerIcon from '@/components/icons/SpinnerIcon';
 import CommentItem from '@/components/modals/AddCommentModal/CommentItem';
-import { Button } from '@/components/ui/ButtonToto';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -10,7 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/Dialog';
+} from '@/components/ui/dialog';
 import { COMMENTS_PER_PAGE, useComments } from '@/data/comment/use-comments';
 import { GetLinksReturn } from '@/data/link/get-links';
 import { getDomain } from '@/utils/format-string';

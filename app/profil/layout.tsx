@@ -2,7 +2,7 @@
 
 import { ProfileAvatar } from '@/components/ProfileAvatar';
 import Protected from '@/components/Protected';
-import { Switch } from '@/components/ui/Switch';
+import { Switch } from '@/components/ui/switch';
 import { useProfile } from '@/store/profile.store';
 import { format } from 'date-fns';
 

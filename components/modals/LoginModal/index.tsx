@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/Dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useProfile } from '@/store/profile.store';
 import { PropsWithChildren, useEffect, useState } from 'react';
 import SignInWithDiscordBtn from './SignInWithDiscordBtn';

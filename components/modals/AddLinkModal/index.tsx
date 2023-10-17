@@ -1,7 +1,7 @@
 'use client';
 
-import { Button } from '@/components/ui/ButtonToto';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/Dialog';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { PlusIcon } from 'lucide-react';
 import { PropsWithChildren, useState } from 'react';
 import AddLinkForm from './AddLinkForm';

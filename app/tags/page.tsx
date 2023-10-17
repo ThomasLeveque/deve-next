@@ -2,7 +2,7 @@
 
 import SpinnerIcon from '@/components/icons/SpinnerIcon';
 import { TagListWrapper } from '@/components/TagListWrapper';
-import { Button } from '@/components/ui/ButtonToto';
+import { Button } from '@/components/ui/button';
 import { useTags } from '@/data/tag/use-tags';
 import { useRouter } from 'next/navigation';
 

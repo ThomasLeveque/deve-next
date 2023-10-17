@@ -1,6 +1,6 @@
 import TextArea from '@/components/Textarea';
 import { addCommentSchema, commentMaxLength } from '@/components/modals/AddCommentModal/schemas';
-import { Button } from '@/components/ui/ButtonToto';
+import { Button } from '@/components/ui/button';
 import { GetCommentsReturn } from '@/data/comment/use-comments';
 import { useUpdateLinkComment } from '@/data/comment/use-update-comment';
 import { useProfile } from '@/store/profile.store';

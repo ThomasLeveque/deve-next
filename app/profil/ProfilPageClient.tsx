@@ -2,7 +2,7 @@
 
 import SpinnerIcon from '@/components/icons/SpinnerIcon';
 import LinkCard from '@/components/LinkCard';
-import { Button } from '@/components/ui/ButtonToto';
+import { Button } from '@/components/ui/button';
 import { useUserLinks } from '@/data/link/use-user-links';
 import { useProfile } from '@/store/profile.store';
 

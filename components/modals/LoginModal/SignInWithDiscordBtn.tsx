@@ -1,5 +1,5 @@
 import DiscordIcon from '@/components/icons/DiscordIcon';
-import { Button } from '@/components/ui/ButtonToto';
+import { Button } from '@/components/ui/button';
 import { formatError } from '@/utils/format-string';
 import { supabase } from '@/utils/supabase-client';
 import React, { useCallback, useState } from 'react';

@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useProfile } from '@/store/profile.store';
 import { getInitials } from '@/utils/format-string';
 import { ComponentProps, useMemo } from 'react';

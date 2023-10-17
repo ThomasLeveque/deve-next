@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/ButtonToto';
-import { Popover, PopoverClose, PopoverContent, PopoverTrigger } from '@/components/ui/Popover';
+import { Button } from '@/components/ui/button';
+import { Popover, PopoverClose, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { GetCommentsReturn } from '@/data/comment/use-comments';
 import { useRemoveLinkComment } from '@/data/comment/use-remove-comment';
 import { arrayToSingle } from '@/lib/utils';

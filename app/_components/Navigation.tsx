@@ -3,15 +3,15 @@
 import AddLinkModal from '@/components/modals/AddLinkModal';
 import LoginModal from '@/components/modals/LoginModal';
 import { ProfileAvatar } from '@/components/ProfileAvatar';
-import { Button } from '@/components/ui/ButtonToto';
-import { DialogTrigger } from '@/components/ui/Dialog';
+import { Button } from '@/components/ui/button';
+import { DialogTrigger } from '@/components/ui/dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/DropdownMenu';
+} from '@/components/ui/dropdown-menu';
 import { useProfile, useProfileLoaded } from '@/store/profile.store';
 import { supabase } from '@/utils/supabase-client';
 import { LogOut, UserCircleIcon } from 'lucide-react';

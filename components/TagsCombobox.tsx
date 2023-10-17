@@ -1,6 +1,6 @@
 import { TagListWrapper } from '@/components/TagListWrapper';
 import SpinnerIcon from '@/components/icons/SpinnerIcon';
-import { Badge } from '@/components/ui/Badge';
+import { Badge } from '@/components/ui/badge';
 import { GetTagsReturn } from '@/data/tag/get-tags';
 import { useAddTag } from '@/data/tag/use-add-tag';
 import { useTags } from '@/data/tag/use-tags';

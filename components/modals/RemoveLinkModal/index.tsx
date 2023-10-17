@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/ButtonToto';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogClose,
@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/Dialog';
+} from '@/components/ui/dialog';
 import { useRemoveLink } from '@/data/link/use-remove-link';
 import { formatError } from '@/utils/format-string';
 import { TrashIcon } from 'lucide-react';
