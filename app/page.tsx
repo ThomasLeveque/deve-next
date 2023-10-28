@@ -2,9 +2,9 @@
 
 import LinkCard from '@/components/LinkCard';
 import OrderbyLinksDropdown from '@/components/OrderbyLinksDropdown';
-import TextInput from '@/components/TextInput';
 import SpinnerIcon from '@/components/icons/SpinnerIcon';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { useLinks } from '@/data/link/use-links';
 import { useQueryString } from '@/hooks/use-query-string';
 import { useRef } from 'react';
@@ -20,18 +20,14 @@ export default function HomePage() {
     <section className="my-8">
       <div className="mb-5 flex space-x-2">
         <OrderbyLinksDropdown className="flex-none" />
-        <TextInput
+        <Input
           ref={searchRef}
           placeholder="Search for a link..."
           type="search"
-          wrapperClassName="w-full"
+          className="w-full"
           id="search-link"
           onChange={(event) => setSearchQuery(event.target.value)}
           value={searchQuery}
-          clearValue={() => {
-            setSearchQuery('');
-            searchRef.current?.focus();
-          }}
         />
       </div>
       {!links ? (

@@ -1,8 +1,8 @@
 import TagsCombobox from '@/components/TagsCombobox';
-import TextInput from '@/components/TextInput';
 import { addLinkSchema } from '@/components/modals/AddLinkModal/schemas';
 import { Button } from '@/components/ui/button';
 import { DialogClose, DialogFooter } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import { useAddLink } from '@/data/link/use-add-link';
 import { GetTagsReturn } from '@/data/tag/get-tags';
 import { useProfile } from '@/store/profile.store';
@@ -60,22 +60,8 @@ function AddLinkForm({ closeModal }: AddLinkFormProps) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <TextInput
-        wrapperClassName="mb-6"
-        id="url"
-        label="URL"
-        placeholder="URL of your link"
-        {...register('url')}
-        errorText={errors.url?.message}
-      />
-      <TextInput
-        wrapperClassName="mb-6"
-        id="title"
-        label="Title"
-        placeholder="A title for your link"
-        {...register('title')}
-        errorText={errors.title?.message}
-      />
+      <Input className="mb-6" id="url" placeholder="URL of your link" {...register('url')} />
+      <Input className="mb-6" id="title" placeholder="A title for your link" {...register('title')} />
       <TagsCombobox
         selectedTags={watch('tags')}
         setSelectedTags={(tags) => {

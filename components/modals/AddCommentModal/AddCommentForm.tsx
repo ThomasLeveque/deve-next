@@ -1,9 +1,9 @@
 'use client';
 
-import TextArea from '@/components/Textarea';
 import { addCommentSchema, commentMaxLength } from '@/components/modals/AddCommentModal/schemas';
 import { Button } from '@/components/ui/button';
 import { DialogFooter } from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
 import { useAddLinkComment } from '@/data/comment/use-add-comment';
 import { useProfile } from '@/store/profile.store';
 import { formatError } from '@/utils/format-string';
@@ -83,14 +83,12 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
         </ul>
       ) : (
         <>
-          <TextArea
+          <Textarea
             id="link-comment"
             placeholder="Leave your comment here..."
             {...register('text')}
-            errorText={errors.text?.message}
             maxLength={commentMaxLength}
-            wrapperClassName="h-32"
-            className="h-full"
+            rows={5}
           />
           <p className="ml-1 mt-3 space-x-1 text-xs">
             <span>Characters left:</span>

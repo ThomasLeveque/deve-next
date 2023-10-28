@@ -1,6 +1,6 @@
-import TextArea from '@/components/Textarea';
 import { addCommentSchema, commentMaxLength } from '@/components/modals/AddCommentModal/schemas';
 import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
 import { GetCommentsReturn } from '@/data/comment/use-comments';
 import { useUpdateLinkComment } from '@/data/comment/use-update-comment';
 import { useProfile } from '@/store/profile.store';
@@ -74,14 +74,12 @@ const UpdateCommentForm: React.FC<UpdateCommentFormProps> = (props) => {
         <ReactMarkdown className="prose-sm prose">{commentText}</ReactMarkdown>
       ) : (
         <>
-          <TextArea
+          <Textarea
             id="link-comment"
             placeholder="Leave your comment here..."
             {...register('text')}
-            errorText={errors.text?.message}
             maxLength={commentMaxLength}
-            wrapperClassName="h-24"
-            className="h-full"
+            rows={5}
           />
           <p className="ml-1 mt-3 text-xs">
             Characters left: <span className="font-bold">{commentMaxLength - commentText.length}</span>

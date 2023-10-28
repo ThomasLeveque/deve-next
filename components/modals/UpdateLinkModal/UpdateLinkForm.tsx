@@ -1,7 +1,7 @@
 import TagsCombobox from '@/components/TagsCombobox';
-import TextInput from '@/components/TextInput';
 import { updateLinkSchema } from '@/components/modals/UpdateLinkModal/schemas';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { GetLinksReturn } from '@/data/link/get-links';
 import { useUpdateLink } from '@/data/link/use-update-link';
 import { GetTagsReturn } from '@/data/tag/get-tags';
@@ -71,22 +71,8 @@ const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <TextInput
-        wrapperClassName="mb-6"
-        id="url"
-        label="URL"
-        placeholder="URL of your link"
-        {...register('url')}
-        errorText={errors.url?.message}
-      />
-      <TextInput
-        wrapperClassName="mb-6"
-        id="title"
-        label="Title"
-        placeholder="A title for your link"
-        {...register('title')}
-        errorText={errors.title?.message}
-      />
+      <Input className="mb-6" id="url" placeholder="URL of your link" {...register('url')} />
+      <Input className="mb-6" id="title" placeholder="A title for your link" {...register('title')} />
       <TagsCombobox
         selectedTags={watch('tags')}
         setSelectedTags={(tags) => {
