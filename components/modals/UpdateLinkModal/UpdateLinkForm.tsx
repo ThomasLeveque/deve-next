@@ -1,6 +1,8 @@
 import TagsCombobox from '@/components/TagsCombobox';
 import { updateLinkSchema } from '@/components/modals/UpdateLinkModal/schemas';
 import { Button } from '@/components/ui/button';
+import { DialogFooter } from '@/components/ui/dialog';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { GetLinksReturn } from '@/data/link/get-links';
 import { useUpdateLink } from '@/data/link/use-update-link';
@@ -10,7 +12,7 @@ import { useProfile } from '@/store/profile.store';
 import { formatError } from '@/utils/format-string';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
-import { FieldError, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
 interface LinkFormData {
@@ -27,14 +29,7 @@ interface AddLinkFormProps {
 const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
   const profile = useProfile()[0];
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    reset,
-    formState: { errors },
-  } = useForm<LinkFormData>({
+  const form = useForm<LinkFormData>({
     resolver: zodResolver(updateLinkSchema),
     defaultValues: {
       url: props.linkToUpdate.url,
@@ -45,7 +40,7 @@ const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
 
   const updateLink = useUpdateLink();
 
-  async function onSubmit(formData: LinkFormData) {
+  const handleSubmit = form.handleSubmit(async (formData: LinkFormData) => {
     try {
       if (!profile) {
         throw new Error('You must be login');
@@ -67,29 +62,62 @@ const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
       toast.error(formatError(err as Error));
       console.error(err);
     }
-  }
+  });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Input className="mb-6" id="url" placeholder="URL of your link" {...register('url')} />
-      <Input className="mb-6" id="title" placeholder="A title for your link" {...register('title')} />
-      <TagsCombobox
-        selectedTags={watch('tags')}
-        setSelectedTags={(tags) => {
-          setValue('tags', tags, { shouldValidate: true });
-        }}
-        className="mb-8"
-        errorText={(errors.tags as unknown as FieldError)?.message}
-      />
-      <div className="flex justify-end space-x-4">
-        <Button variant="link" type="button" onClick={() => reset()}>
-          Reset
-        </Button>
-        <Button variant="default" type="submit" isLoading={updateLink.isPending}>
-          Update
-        </Button>
-      </div>
-    </form>
+    <Form {...form}>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <FormField
+          control={form.control}
+          name="url"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>URL</FormLabel>
+              <FormControl>
+                <Input placeholder="URL of your link" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Title</FormLabel>
+              <FormControl>
+                <Input placeholder="A title for your link" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="tags"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <TagsCombobox selectedTags={field.value} setSelectedTags={field.onChange} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <DialogFooter>
+          <Button variant="secondary" type="button" onClick={() => form.reset()}>
+            Reset
+          </Button>
+          <Button variant="default" type="submit" isLoading={updateLink.isPending}>
+            Update
+          </Button>
+        </DialogFooter>
+      </form>
+    </Form>
   );
 };
 

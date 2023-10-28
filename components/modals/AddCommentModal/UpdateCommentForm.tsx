@@ -1,12 +1,13 @@
 import { addCommentSchema, commentMaxLength } from '@/components/modals/AddCommentModal/schemas';
 import { Button } from '@/components/ui/button';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { GetCommentsReturn } from '@/data/comment/use-comments';
 import { useUpdateLinkComment } from '@/data/comment/use-update-comment';
 import { useProfile } from '@/store/profile.store';
 import { formatError } from '@/utils/format-string';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
@@ -28,82 +29,88 @@ const UpdateCommentForm: React.FC<UpdateCommentFormProps> = (props) => {
 
   const updateLinkComment = useUpdateLinkComment(props.linkId);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    watch,
-  } = useForm<CommentFormData>({
+  const form = useForm<CommentFormData>({
     resolver: zodResolver(addCommentSchema),
     defaultValues: {
       text: props.commentToUpdate.text,
     },
   });
 
-  const commentText = watch('text', props.commentToUpdate.text) ?? '';
+  const disabledPreview = form.watch('text').length === 0;
 
-  const onSubmit = useCallback(
-    async (formData: CommentFormData) => {
-      try {
-        if (!profile) {
-          throw new Error('You must be login');
-        }
-
-        if (formData.text !== props.commentToUpdate.text) {
-          await updateLinkComment.mutateAsync({
-            commentId: props.commentToUpdate.id,
-            commentToUpdate: {
-              text: formData.text,
-              updatedAt: new Date().toISOString(),
-            },
-          });
-        }
-        props.closeUpdate();
-      } catch (err) {
-        toast.error(formatError(err as Error));
-        console.error(err);
+  const handleSubmit = form.handleSubmit(async (formData: CommentFormData) => {
+    try {
+      if (!profile) {
+        throw new Error('You must be login');
       }
-      setShowPreview(false);
-    },
-    [profile, props.linkId, props.commentToUpdate.text]
-  );
+
+      if (formData.text !== props.commentToUpdate.text) {
+        await updateLinkComment.mutateAsync({
+          commentId: props.commentToUpdate.id,
+          commentToUpdate: {
+            text: formData.text,
+            updatedAt: new Date().toISOString(),
+          },
+        });
+      }
+      props.closeUpdate();
+    } catch (err) {
+      toast.error(formatError(err as Error));
+      console.error(err);
+    }
+    setShowPreview(false);
+  });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      {showPreview ? (
-        <ReactMarkdown className="prose-sm prose">{commentText}</ReactMarkdown>
-      ) : (
-        <>
-          <Textarea
-            id="link-comment"
-            placeholder="Leave your comment here..."
-            {...register('text')}
-            maxLength={commentMaxLength}
-            rows={5}
-          />
-          <p className="ml-1 mt-3 text-xs">
-            Characters left: <span className="font-bold">{commentMaxLength - commentText.length}</span>
-          </p>
-        </>
-      )}
+    <Form {...form}>
+      <form onSubmit={handleSubmit}>
+        <FormField
+          control={form.control}
+          name="text"
+          render={({ field }) => (
+            <FormItem>
+              {showPreview ? (
+                <ReactMarkdown className="prose-sm prose">{field.value}</ReactMarkdown>
+              ) : (
+                <>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Leave your comment here..."
+                      {...field}
+                      maxLength={commentMaxLength}
+                      rows={5}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    <span>Characters left: </span>
+                    <span className="font-bold">{commentMaxLength - field.value.length}</span>
+                  </FormDescription>
+                  <FormMessage />
+                </>
+              )}
+            </FormItem>
+          )}
+        />
 
-      <div className="mt-8 flex justify-end space-x-4">
-        <Button
-          variant="secondary"
-          type="button"
-          onClick={() => {
-            if (commentText.length > 0) {
-              setShowPreview((prevShowPreview) => !prevShowPreview);
-            }
-          }}
-        >
-          {showPreview ? 'Edit' : 'Preview'}
-        </Button>
-        <Button variant="default" type="submit">
-          Update
-        </Button>
-      </div>
-    </form>
+        <div className="mt-8 flex justify-end space-x-4">
+          <Button
+            variant="secondary"
+            type="button"
+            disabled={disabledPreview}
+            onClick={() => {
+              if (!disabledPreview) {
+                setShowPreview((prevShowPreview) => !prevShowPreview);
+              }
+            }}
+          >
+            {showPreview ? 'Edit' : 'Preview'}
+          </Button>
+          <Button variant="default" type="submit">
+            Update
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 };
 

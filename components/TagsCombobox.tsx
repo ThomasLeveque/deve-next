@@ -1,6 +1,7 @@
 import { TagListWrapper } from '@/components/TagListWrapper';
 import SpinnerIcon from '@/components/icons/SpinnerIcon';
 import { Badge } from '@/components/ui/badge';
+import { FormLabel } from '@/components/ui/form';
 import { GetTagsReturn } from '@/data/tag/get-tags';
 import { useAddTag } from '@/data/tag/use-add-tag';
 import { useTags } from '@/data/tag/use-tags';
@@ -118,9 +119,8 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
 
   return (
     <div className={className}>
-      <label {...getLabelProps()} className="mb-[6px] ml-1 block text-[10px] font-bold uppercase text-black">
-        TAGS (MIN 1, MAX 4)
-      </label>
+      <FormLabel {...getLabelProps()}>TAGS (MIN 1, MAX 4)</FormLabel>
+
       {selectedItems.length > 0 && (
         <TagListWrapper className="mb-4">
           {selectedItems.map((selectedItem, index) => (

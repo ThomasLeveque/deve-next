@@ -17,8 +17,8 @@ export const addItemInsidePaginatedData = <TData>(
   }
 
   return produce(items, (newItems) => {
-    if (newItems.pages[pageIndex].data) {
-      newItems.pages[pageIndex].data.push(item);
+    if (newItems.pages[pageIndex]?.data) {
+      newItems.pages[pageIndex]?.data.push(item);
     }
   });
 };
@@ -33,9 +33,17 @@ export const updateItemInsidePaginatedData = <TData extends { id: number }>(
 
   return produce(items, (newItems) => {
     const pageIndex = newItems.pages.findIndex((page) => page.data.find((d) => d.id === item.id));
-    const itemIndex = newItems.pages[pageIndex].data.findIndex((d) => d.id === item.id);
-    const previousItem = newItems.pages[pageIndex].data[itemIndex];
-    newItems.pages[pageIndex].data[itemIndex] = { ...previousItem, ...item };
+    const itemIndex = newItems.pages[pageIndex]?.data.findIndex((d) => d.id === item.id);
+
+    if (!itemIndex || !pageIndex) {
+      return newItems;
+    }
+
+    const previousItem = newItems.pages[pageIndex]?.data[itemIndex];
+
+    if (previousItem) {
+      newItems.pages[pageIndex]!.data[itemIndex] = { ...previousItem, ...item };
+    }
   });
 };
 
@@ -49,8 +57,10 @@ export const removeItemInsidePaginatedData = <TData extends { id: number }>(
 
   return produce(items, (newItems) => {
     const pageIndex = newItems.pages.findIndex((page) => page.data.find((d) => d.id === itemId));
-    const newData = newItems.pages[pageIndex].data.filter((d) => d.id !== itemId);
-    newItems.pages[pageIndex].data = newData;
+    const newData = newItems.pages[pageIndex]?.data.filter((d) => d.id !== itemId);
+    if (newData && newItems.pages[pageIndex]?.data) {
+      newItems.pages[pageIndex]!.data = newData;
+    }
   });
 };
 
@@ -70,7 +80,10 @@ export const updateItemsInsideData = <TData extends { id: number }>(
     itemsToUpdate.forEach((item) => {
       const itemIndex = newItems.findIndex((i) => i.id === item.id);
       const previousItem = newItems[itemIndex];
-      newItems[itemIndex] = { ...previousItem, ...item };
+
+      if (previousItem) {
+        newItems[itemIndex] = { ...previousItem, ...item };
+      }
     });
   });
 };

@@ -29,8 +29,9 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, linkId, isPreview = 
 
   const canUpdateComment = useMemo(() => profile && profile.id === comment.userId, [profile, comment.userId]);
 
-  const commentUser = arrayToSingle(comment.user);
+  const commentUser = isPreview ? comment.user[0] : arrayToSingle(comment.user);
 
+  console.log({ commentUser });
   return (
     <li className="rounded-button group border border-gray-400/30 p-5">
       <div className="mb-3 flex min-h-[18px] items-start justify-between space-x-3">

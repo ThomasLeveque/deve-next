@@ -2,13 +2,14 @@ import TagsCombobox from '@/components/TagsCombobox';
 import { addLinkSchema } from '@/components/modals/AddLinkModal/schemas';
 import { Button } from '@/components/ui/button';
 import { DialogClose, DialogFooter } from '@/components/ui/dialog';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useAddLink } from '@/data/link/use-add-link';
 import { GetTagsReturn } from '@/data/tag/get-tags';
 import { useProfile } from '@/store/profile.store';
 import { formatError } from '@/utils/format-string';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FieldError, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
 interface LinkFormData {
@@ -25,17 +26,11 @@ function AddLinkForm({ closeModal }: AddLinkFormProps) {
   const profile = useProfile()[0];
   const addLink = useAddLink();
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    formState: { errors },
-  } = useForm<LinkFormData>({
+  const form = useForm<LinkFormData>({
     resolver: zodResolver(addLinkSchema),
   });
 
-  async function onSubmit(formData: LinkFormData) {
+  const handleSubmit = form.handleSubmit(async (formData: LinkFormData) => {
     try {
       if (!profile) {
         throw new Error('You must be login');
@@ -56,31 +51,64 @@ function AddLinkForm({ closeModal }: AddLinkFormProps) {
       toast.error(formatError(err as Error));
       console.error(err);
     }
-  }
+  });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Input className="mb-6" id="url" placeholder="URL of your link" {...register('url')} />
-      <Input className="mb-6" id="title" placeholder="A title for your link" {...register('title')} />
-      <TagsCombobox
-        selectedTags={watch('tags')}
-        setSelectedTags={(tags) => {
-          setValue('tags', tags, { shouldValidate: true });
-        }}
-        className="mb-8"
-        errorText={(errors.tags as unknown as FieldError)?.message}
-      />
-      <DialogFooter>
-        <DialogClose asChild>
-          <Button type="button" variant="secondary">
-            Close
+    <Form {...form}>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <FormField
+          control={form.control}
+          name="url"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>URL</FormLabel>
+              <FormControl>
+                <Input placeholder="URL of your link" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Title</FormLabel>
+              <FormControl>
+                <Input placeholder="A title for your link" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="tags"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <TagsCombobox selectedTags={field.value} setSelectedTags={field.onChange} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button type="button" variant="secondary">
+              Close
+            </Button>
+          </DialogClose>
+          <Button type="submit" isLoading={addLink.isPending}>
+            Create
           </Button>
-        </DialogClose>
-        <Button type="submit" isLoading={addLink.isPending}>
-          Create
-        </Button>
-      </DialogFooter>
-    </form>
+        </DialogFooter>
+      </form>
+    </Form>
   );
 }
 
