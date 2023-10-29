@@ -4,13 +4,13 @@ import { Button } from '@/components/ui/button';
 import { DialogClose, DialogFooter } from '@/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { useToast } from '@/components/ui/use-toast';
 import { useAddLink } from '@/data/link/use-add-link';
 import { GetTagsReturn } from '@/data/tag/get-tags';
 import { useProfile } from '@/store/profile.store';
 import { formatError } from '@/utils/format-string';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
 
 interface LinkFormData {
   url: string;
@@ -25,6 +25,7 @@ interface AddLinkFormProps {
 function AddLinkForm({ closeModal }: AddLinkFormProps) {
   const profile = useProfile()[0];
   const addLink = useAddLink();
+  const { destructiveToast } = useToast();
 
   const form = useForm<LinkFormData>({
     resolver: zodResolver(addLinkSchema),
@@ -48,7 +49,7 @@ function AddLinkForm({ closeModal }: AddLinkFormProps) {
       // Do not setLoading(false) because addLink will unmount this component (Modal).
       closeModal();
     } catch (err) {
-      toast.error(formatError(err as Error));
+      destructiveToast({ description: formatError(err as Error) });
       console.error(err);
     }
   });

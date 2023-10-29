@@ -1,3 +1,4 @@
+import { useToast } from '@/components/ui/use-toast';
 import { GetLinksReturn } from '@/data/link/get-links';
 import { createClientClient } from '@/lib/supabase/client';
 import { singleToArray } from '@/lib/utils';
@@ -5,7 +6,6 @@ import { Database } from '@/types/supabase';
 import { formatError } from '@/utils/format-string';
 import { updateItemInsidePaginatedData } from '@/utils/mutate-data';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
 import { useLinksQueryKey } from '../link/use-links-query-key';
 
 type VoteInsert = Database['public']['Tables']['votes']['Insert'];
@@ -26,6 +26,7 @@ export const useAddLinkVote = (
   link: GetLinksReturn['data'][0]
 ): UseMutationResult<AddVoteReturn, Error, VoteInsert> => {
   const queryClient = useQueryClient();
+  const { destructiveToast } = useToast();
 
   const linksQueryKey = useLinksQueryKey();
 
@@ -40,7 +41,7 @@ export const useAddLinkVote = (
       );
     },
     onError: (err) => {
-      toast.error(formatError(err));
+      destructiveToast({ description: formatError(err) });
     },
   });
 };

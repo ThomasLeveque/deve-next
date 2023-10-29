@@ -12,6 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useToast } from '@/components/ui/use-toast';
 import { createClientClient } from '@/lib/supabase/client';
 import { useProfile, useProfileLoaded } from '@/store/profile.store';
 
@@ -30,6 +31,8 @@ export function Navigation() {
     supabase.auth.signOut();
   }
 
+  const { destructiveToast } = useToast();
+
   return (
     <header className="sticky top-0 z-30 bg-white">
       <div className="flex h-header items-center justify-between px-5 xl:container xl:mx-auto">
@@ -40,6 +43,13 @@ export function Navigation() {
           <Link href="/tags" className="with-ring px-1 font-bold hover:underline">
             Tags
           </Link>
+          <Button
+            onClick={() => {
+              destructiveToast({ description: 'Salut le miff' });
+            }}
+          >
+            Toast me !
+          </Button>
         </div>
         <div className="grid auto-cols-max grid-flow-col items-center gap-5">
           {profile ? (

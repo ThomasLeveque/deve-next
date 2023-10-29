@@ -1,8 +1,8 @@
+import { destructiveToast } from '@/components/ui/use-toast';
 import { env } from '@/env';
 import { OrderLinksKey } from '@/hooks/use-query-string';
 import { createClientClient } from '@/lib/supabase/client';
 import { formatError } from '@/utils/format-string';
-import toast from 'react-hot-toast';
 
 export const LINKS_PER_PAGE = env.NEXT_PUBLIC_LINKS_PER_PAGE;
 
@@ -48,7 +48,7 @@ export const getLinks = async (cursor: number, orderby: OrderLinksKey, searchQue
       cursor: links.length < LINKS_PER_PAGE ? undefined : nextCursor,
     };
   } catch (err) {
-    toast.error(formatError(err as Error));
+    destructiveToast({ description: formatError(err as Error) });
     console.error(err);
 
     return {

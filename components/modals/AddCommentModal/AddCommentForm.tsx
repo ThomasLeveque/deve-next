@@ -5,13 +5,13 @@ import { Button } from '@/components/ui/button';
 import { DialogFooter } from '@/components/ui/dialog';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/components/ui/use-toast';
 import { useAddLinkComment } from '@/data/comment/use-add-comment';
 import { useProfile } from '@/store/profile.store';
 import { formatError } from '@/utils/format-string';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
 import CommentItem from './CommentItem';
 
 interface CommentFormData {
@@ -24,6 +24,7 @@ interface AddCommentFormProps {
 
 const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
   const profile = useProfile()[0];
+  const { destructiveToast } = useToast();
 
   const [showPreview, setShowPreview] = useState(false);
 
@@ -52,7 +53,7 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
 
       form.reset();
     } catch (err) {
-      toast.error(formatError(err as Error));
+      destructiveToast({ description: formatError(err as Error) });
       console.error(err);
     }
     setShowPreview(false);

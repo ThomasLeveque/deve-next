@@ -1,3 +1,4 @@
+import { useToast } from '@/components/ui/use-toast';
 import { GetCommentsReturn } from '@/data/comment/use-comments';
 import { GetLinksReturn } from '@/data/link/get-links';
 import { useLinksQueryKey } from '@/data/link/use-links-query-key';
@@ -6,7 +7,6 @@ import { arrayToSingle } from '@/lib/utils';
 import { formatError } from '@/utils/format-string';
 import { removeItemInsidePaginatedData, updateItemInsidePaginatedData } from '@/utils/mutate-data';
 import { InfiniteData, UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
 import { queryKeys } from './query-keys';
 
 export type RemoveLinkCommentReturn = Awaited<ReturnType<typeof removeLinkComment>>;
@@ -29,6 +29,7 @@ const removeLinkComment = async (commentId: number) => {
 
 export const useRemoveLinkComment = (linkId: number): UseMutationResult<RemoveLinkCommentReturn, Error, number> => {
   const queryClient = useQueryClient();
+  const { destructiveToast } = useToast();
 
   const linksQueryKey = useLinksQueryKey();
 
@@ -47,7 +48,7 @@ export const useRemoveLinkComment = (linkId: number): UseMutationResult<RemoveLi
       );
     },
     onError: (err) => {
-      toast.error(formatError(err));
+      destructiveToast({ description: formatError(err) });
     },
   });
 };

@@ -2,6 +2,7 @@ import { addCommentSchema, commentMaxLength } from '@/components/modals/AddComme
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/components/ui/use-toast';
 import { GetCommentsReturn } from '@/data/comment/use-comments';
 import { useUpdateLinkComment } from '@/data/comment/use-update-comment';
 import { useProfile } from '@/store/profile.store';
@@ -9,7 +10,6 @@ import { formatError } from '@/utils/format-string';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
 
 interface CommentFormData {
@@ -24,6 +24,7 @@ interface UpdateCommentFormProps {
 
 const UpdateCommentForm: React.FC<UpdateCommentFormProps> = (props) => {
   const profile = useProfile()[0];
+  const { destructiveToast } = useToast();
 
   const [showPreview, setShowPreview] = useState(false);
 
@@ -55,7 +56,7 @@ const UpdateCommentForm: React.FC<UpdateCommentFormProps> = (props) => {
       }
       props.closeUpdate();
     } catch (err) {
-      toast.error(formatError(err as Error));
+      destructiveToast({ description: formatError(err as Error) });
       console.error(err);
     }
     setShowPreview(false);

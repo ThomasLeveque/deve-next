@@ -1,8 +1,8 @@
+import { destructiveToast } from '@/components/ui/use-toast';
 import { env } from '@/env';
 import { createClientClient } from '@/lib/supabase/client';
 import { formatError } from '@/utils/format-string';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
 import { queryKeys } from './query-keys';
 
 export const USER_LINKS_PER_PAGE = env.NEXT_PUBLIC_LINKS_PER_PAGE;
@@ -39,7 +39,7 @@ const getUserLinks = async (cursor: number, userId: string) => {
       cursor: userLinks.length < USER_LINKS_PER_PAGE ? undefined : nextCursor,
     };
   } catch (err) {
-    toast.error(formatError(err as Error));
+    destructiveToast({ description: formatError(err as Error) });
     console.error(err);
   }
 };

@@ -8,11 +8,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { useToast } from '@/components/ui/use-toast';
 import { useRemoveLink } from '@/data/link/use-remove-link';
 import { formatError } from '@/utils/format-string';
 import { TrashIcon } from 'lucide-react';
 import { useState } from 'react';
-import toast from 'react-hot-toast';
 
 type RemoveLinkModalProps = {
   linkIdToRemove: number;
@@ -21,13 +21,14 @@ type RemoveLinkModalProps = {
 function RemoveLinkModal({ linkIdToRemove }: RemoveLinkModalProps) {
   const removeLink = useRemoveLink();
   const [open, setOpen] = useState(false);
+  const { destructiveToast } = useToast();
 
   async function handleRemoveLink() {
     try {
       await removeLink.mutateAsync(linkIdToRemove);
       setOpen(false);
     } catch (err) {
-      toast.error(formatError(err as Error));
+      destructiveToast({ description: formatError(err as Error) });
     }
   }
 

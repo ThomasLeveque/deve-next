@@ -1,14 +1,14 @@
 import GoogleIcon from '@/components/icons/GoogleIcon';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/use-toast';
 import { createClientClient } from '@/lib/supabase/client';
 import getAlternateUrl from '@/utils/alternate-url';
 import { formatError } from '@/utils/format-string';
 import React, { useCallback, useState } from 'react';
-import toast from 'react-hot-toast';
 
 const SignInWithGoogleBtn: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
-
+  const { destructiveToast } = useToast();
   const handleSignInWithGoogle = useCallback(async () => {
     const supabase = createClientClient();
     try {
@@ -20,7 +20,7 @@ const SignInWithGoogleBtn: React.FC = () => {
         },
       });
     } catch (err) {
-      toast.error(formatError(err as Error));
+      destructiveToast({ description: formatError(err as Error) });
       console.error(err);
       setLoading(false);
     }

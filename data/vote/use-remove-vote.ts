@@ -1,10 +1,10 @@
+import { useToast } from '@/components/ui/use-toast';
 import { GetLinksReturn } from '@/data/link/get-links';
 import { createClientClient } from '@/lib/supabase/client';
 import { singleToArray } from '@/lib/utils';
 import { formatError } from '@/utils/format-string';
 import { updateItemInsidePaginatedData } from '@/utils/mutate-data';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
 import { useLinksQueryKey } from '../link/use-links-query-key';
 
 export type RemoveVoteReturn = Awaited<ReturnType<typeof removeVote>>;
@@ -25,6 +25,7 @@ export const useRemoveLinkVote = (
   link: GetLinksReturn['data'][0]
 ): UseMutationResult<RemoveVoteReturn, Error, number> => {
   const queryClient = useQueryClient();
+  const { destructiveToast } = useToast();
 
   const linksQueryKey = useLinksQueryKey();
 
@@ -39,7 +40,7 @@ export const useRemoveLinkVote = (
       );
     },
     onError: (err) => {
-      toast.error(formatError(err));
+      destructiveToast({ description: formatError(err) });
     },
   });
 };

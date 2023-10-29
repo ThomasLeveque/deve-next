@@ -1,15 +1,16 @@
 import GithubIcon from '@/components/icons/GithubIcon';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/use-toast';
 import { createClientClient } from '@/lib/supabase/client';
 import getAlternateUrl from '@/utils/alternate-url';
 import { formatError } from '@/utils/format-string';
 import React, { useCallback, useState } from 'react';
-import toast from 'react-hot-toast';
 
 const SignInWithGithubBtn: React.FC<{
   initialFocusButtonRef?: React.MutableRefObject<HTMLButtonElement | null>;
 }> = ({ initialFocusButtonRef }) => {
   const [loading, setLoading] = useState<boolean>(false);
+  const { destructiveToast } = useToast();
 
   const handleSignInWithGithub = useCallback(async () => {
     const supabase = createClientClient();
@@ -22,7 +23,7 @@ const SignInWithGithubBtn: React.FC<{
         },
       });
     } catch (err) {
-      toast.error(formatError(err as Error));
+      destructiveToast({ description: formatError(err as Error) });
       console.error(err);
       setLoading(false);
     }

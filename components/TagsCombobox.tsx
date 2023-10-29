@@ -2,14 +2,14 @@ import { TagListWrapper } from '@/components/TagListWrapper';
 import SpinnerIcon from '@/components/icons/SpinnerIcon';
 import { Badge } from '@/components/ui/badge';
 import { FormLabel } from '@/components/ui/form';
+import { useToast } from '@/components/ui/use-toast';
 import { GetTagsReturn } from '@/data/tag/get-tags';
 import { useAddTag } from '@/data/tag/use-add-tag';
 import { useTags } from '@/data/tag/use-tags';
 import { formatError, stringToSlug } from '@/utils/format-string';
 import { useCombobox, useMultipleSelection } from 'downshift';
-import { ChevronDown, InfoIcon, PlusIcon, X } from 'lucide-react';
+import { ChevronDown, PlusIcon, X } from 'lucide-react';
 import React, { useCallback, useMemo, useState } from 'react';
-import toast from 'react-hot-toast';
 import TagsComboboxOption from './TagsComboboxOption';
 
 const MAX_TAGS_LENGTH = 4;
@@ -23,6 +23,7 @@ interface TagsComboboxProps {
 
 const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelectedTags, className, errorText }) => {
   const [query, setQuery] = useState('');
+  const { destructiveToast, toast } = useToast();
   const addTag = useAddTag();
 
   const { data: tags } = useTags();
@@ -92,9 +93,8 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
   const handleAddSelectedItem = useCallback(
     (tag: GetTagsReturn[0]) => {
       if (selectedItems.length >= MAX_TAGS_LENGTH) {
-        toast('No more than 4 tags', {
-          className: 'Info',
-          icon: <InfoIcon />,
+        toast({
+          title: 'No more than 4 tags',
         });
         return;
       }
@@ -113,7 +113,9 @@ const TagsCombobox: React.FC<TagsComboboxProps> = ({ selectedTags = [], setSelec
       });
       handleAddSelectedItem(newTag);
     } catch (err) {
-      toast.error(formatError(err as Error));
+      destructiveToast({
+        description: formatError(err as Error),
+      });
     }
   }, [query, addTag, handleAddSelectedItem]);
 

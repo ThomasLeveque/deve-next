@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { DialogFooter } from '@/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { useToast } from '@/components/ui/use-toast';
 import { GetLinksReturn } from '@/data/link/get-links';
 import { useUpdateLink } from '@/data/link/use-update-link';
 import { GetTagsReturn } from '@/data/tag/get-tags';
@@ -13,7 +14,6 @@ import { formatError } from '@/utils/format-string';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
 
 interface LinkFormData {
   url: string;
@@ -28,6 +28,7 @@ interface AddLinkFormProps {
 
 const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
   const profile = useProfile()[0];
+  const { destructiveToast } = useToast();
 
   const form = useForm<LinkFormData>({
     resolver: zodResolver(updateLinkSchema),
@@ -59,7 +60,7 @@ const UpdateLinkForm: React.FC<AddLinkFormProps> = (props) => {
       // Do not setLoading(false) because addLink will unmount this component (Modal).
       props.closeModal();
     } catch (err) {
-      toast.error(formatError(err as Error));
+      destructiveToast({ description: formatError(err as Error) });
       console.error(err);
     }
   });

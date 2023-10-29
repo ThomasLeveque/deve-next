@@ -8,6 +8,7 @@ import { TagListWrapper } from '@/components/TagListWrapper';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { DialogTrigger } from '@/components/ui/dialog';
+import { useToast } from '@/components/ui/use-toast';
 import { GetLinksReturn } from '@/data/link/get-links';
 import { TagRow } from '@/data/tag/use-tags';
 import { useAddLinkVote } from '@/data/vote/use-add-vote';
@@ -19,7 +20,6 @@ import { format } from 'date-fns';
 import { ExternalLink, ThumbsDown, ThumbsUp } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
-import toast from 'react-hot-toast';
 
 interface LinkItemProps {
   link: GetLinksReturn['data'][0];
@@ -28,6 +28,7 @@ interface LinkItemProps {
 }
 
 function LinkCard({ link, isProfilLink = false }: LinkItemProps) {
+  const { destructiveToast } = useToast();
   const router = useRouter();
   const profile = useProfile()[0];
 
@@ -65,7 +66,9 @@ function LinkCard({ link, isProfilLink = false }: LinkItemProps) {
     if (tag.slug) {
       router.push(`/tags/${tag.slug}`);
     } else {
-      toast.error('Tag slug not defined');
+      destructiveToast({
+        description: 'Tag slug not defined',
+      });
     }
   }
 

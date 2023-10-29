@@ -1,3 +1,4 @@
+import { destructiveToast } from '@/components/ui/use-toast';
 import { GetLinksReturn } from '@/data/link/get-links';
 import { GetTagsReturn } from '@/data/tag/get-tags';
 import { queryKeys } from '@/data/tag/utils';
@@ -7,7 +8,6 @@ import { Database } from '@/types/supabase';
 import { formatError } from '@/utils/format-string';
 import { updateItemInsidePaginatedData, updateItemsInsideData } from '@/utils/mutate-data';
 import { InfiniteData, UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
 import { useLinksQueryKey } from './use-links-query-key';
 
 type LinkUpdate = Database['public']['Tables']['links']['Update'];
@@ -39,7 +39,9 @@ export const updateLink = async (linkId: number, linkToUpdate: LinkUpdate, tags:
         )
       );
     } catch (err) {
-      toast.error(formatError(new Error('Error during updating the tags of this link, please try again')));
+      destructiveToast({
+        description: formatError(new Error('Error during updating the tags of this link, please try again')),
+      });
     }
   }
 
