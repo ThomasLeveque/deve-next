@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Popover, PopoverClose, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { GetCommentsReturn } from '@/data/comment/use-comments';
 import { useRemoveLinkComment } from '@/data/comment/use-remove-comment';
-import { arrayToSingle } from '@/lib/utils';
+import { arrayToSingle, cn } from '@/lib/utils';
 import { useProfile } from '@/store/profile.store';
 import { format } from 'date-fns';
 import { PencilIcon, TrashIcon, XIcon } from 'lucide-react';
@@ -20,18 +20,16 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, linkId, isPreview = 
   const profile = useProfile()[0];
   const [updateComment, setUpdateComment] = useState(false);
 
+  const [isOpen, setIsOpen] = useState(false);
+
   const removeComment = useRemoveLinkComment(linkId);
 
-  const canRemoveComment = useMemo(
-    () => profile && (profile.role === 'admin' || profile.id === comment.userId),
-    [profile, comment.userId]
-  );
+  const canRemoveComment = profile && (profile.role === 'admin' || profile.id === comment.userId);
 
   const canUpdateComment = useMemo(() => profile && profile.id === comment.userId, [profile, comment.userId]);
 
   const commentUser = isPreview ? comment.user[0] : arrayToSingle(comment.user);
 
-  console.log({ commentUser });
   return (
     <li className="rounded-button group border border-gray-400/30 p-5">
       <div className="mb-3 flex min-h-[18px] items-start justify-between space-x-3">
@@ -43,14 +41,18 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, linkId, isPreview = 
             {format(new Date(comment.createdAt), 'MMMM d yyyy')}
           </p>
         </div>
-        <div className="flex space-x-2 group-hover:flex lg:hidden">
+        <div
+          className={cn('visible flex space-x-2 ', {
+            ['lg:invisible lg:group-hover:visible']: !isOpen,
+          })}
+        >
           {canUpdateComment && !isPreview && (
             <button onClick={() => setUpdateComment((prevUpdateComment) => !prevUpdateComment)}>
               {updateComment ? <XIcon size={16} /> : <PencilIcon size={16} />}
             </button>
           )}
           {canRemoveComment && !isPreview && (
-            <Popover>
+            <Popover onOpenChange={setIsOpen} open={isOpen}>
               <PopoverTrigger>
                 <TrashIcon size={16} />
               </PopoverTrigger>
@@ -60,7 +62,13 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, linkId, isPreview = 
                     Cancel
                   </Button>
                 </PopoverClose>
-                <Button className="w-full" variant="destructive" isLoading={removeComment.isPending} type="button">
+                <Button
+                  className="w-full"
+                  variant="destructive"
+                  isLoading={removeComment.isPending}
+                  onClick={() => removeComment.mutate(comment.id)}
+                  type="button"
+                >
                   Remove
                 </Button>
               </PopoverContent>

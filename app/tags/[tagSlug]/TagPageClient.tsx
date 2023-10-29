@@ -25,15 +25,17 @@ export default function TagPageClient({ tag }: { tag: NonNullable<GetTagBySlugRe
           <ul className="grid grid-cols-1 gap-5 lg:grid-cols-2 xl:grid-cols-3">
             {links?.pages?.map((page) => page?.data.map((link) => <LinkCard key={link.id} link={link} />))}
           </ul>
-          <Button
-            variant="secondary"
-            className="mx-auto mt-8"
-            disabled={!hasNextPage}
-            isLoading={isFetchingNextPage}
-            onClick={() => fetchNextPage()}
-          >
-            {hasNextPage ? 'Load more' : 'No more links'}
-          </Button>
+          <div className="flex justify-center">
+            <Button
+              variant="secondary"
+              className="mt-8"
+              disabled={!hasNextPage}
+              isLoading={isFetchingNextPage}
+              onClick={() => fetchNextPage()}
+            >
+              {hasNextPage ? 'Load more' : 'No more links'}
+            </Button>
+          </div>
         </>
       ) : (
         <SpinnerIcon size={40} className="m-auto mt-14" />

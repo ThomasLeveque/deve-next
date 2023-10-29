@@ -57,7 +57,7 @@ export async function middleware(request: NextRequest) {
     // Refresh session if expired - required for Server Components
     // https://supabase.com/docs/guides/auth/auth-helpers/nextjs#managing-session-with-middleware
     const session = await supabase.auth.getSession();
-    console.log({ session });
+    console.log('MIDDLEWARE', { session });
 
     // If the session was refreshed, the request and response cookies will have been updated
     // If the session was not refreshed, the request and response cookies will be unchanged
@@ -70,3 +70,8 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 }
+
+export const config = {
+  // Matcher ignoring `/_next/` and `/api/`
+  matcher: ['/((?!api|_next/static|_next/image|favicon|fonts).*)'],
+};
