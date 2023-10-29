@@ -1,15 +1,17 @@
-import { Nullable } from '@/types/shared';
+import { env } from '@/env';
+import { createClientClient } from '@/lib/supabase/client';
+import { Nullish } from '@/types/shared';
 import { formatError } from '@/utils/format-string';
-import { supabase } from '@/utils/supabase-client';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { queryKeys } from './query-keys';
 
-export const COMMENTS_PER_PAGE = Number(process.env.NEXT_PUBLIC_COMMENTS_PER_PAGE) ?? 20;
+export const COMMENTS_PER_PAGE = env.NEXT_PUBLIC_COMMENTS_PER_PAGE;
 
 export type GetCommentsReturn = Awaited<ReturnType<typeof getComments>>;
 
 const getComments = async (linkId: number, cursor: number) => {
+  const supabase = createClientClient();
   try {
     const nextCursor = cursor + COMMENTS_PER_PAGE;
     const response = await supabase
@@ -39,7 +41,7 @@ const getComments = async (linkId: number, cursor: number) => {
   }
 };
 
-export const useComments = (linkId: Nullable<number>, enabled = true) => {
+export const useComments = (linkId: Nullish<number>, enabled = true) => {
   return useInfiniteQuery({
     queryKey: queryKeys.comments(linkId as number),
     queryFn: ({ pageParam }) => getComments(linkId as number, pageParam),

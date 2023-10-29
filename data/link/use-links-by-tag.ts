@@ -1,15 +1,17 @@
-import { Nullable } from '@/types/shared';
+import { env } from '@/env';
+import { createClientClient } from '@/lib/supabase/client';
+import { Nullish } from '@/types/shared';
 import { formatError } from '@/utils/format-string';
-import { supabase } from '@/utils/supabase-client';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { queryKeys } from './query-keys';
 
-export const TAG_LINKS_PER_PAGE = Number(process.env.NEXT_PUBLIC_LINKS_PER_PAGE) ?? 20;
+export const TAG_LINKS_PER_PAGE = env.NEXT_PUBLIC_LINKS_PER_PAGE;
 
 export type GetLinksByTagsReturn = Awaited<ReturnType<typeof getLinksByTag>>;
 
 const getLinksByTag = async (cursor: number, tagSlug: string) => {
+  const supabase = createClientClient();
   try {
     const nextCursor = cursor + TAG_LINKS_PER_PAGE;
     const response = await supabase
@@ -49,7 +51,7 @@ const getLinksByTag = async (cursor: number, tagSlug: string) => {
   }
 };
 
-export const useTagLinks = (tagSlug: Nullable<string>) =>
+export const useTagLinks = (tagSlug: Nullish<string>) =>
   useInfiniteQuery({
     queryKey: queryKeys.tagLinks(tagSlug as string),
     queryFn: (context) => getLinksByTag(context.pageParam, tagSlug as string),

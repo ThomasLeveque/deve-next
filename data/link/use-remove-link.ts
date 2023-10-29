@@ -1,6 +1,6 @@
 import { GetLinksReturn } from '@/data/link/get-links';
+import { createClientClient } from '@/lib/supabase/client';
 import { removeItemInsidePaginatedData } from '@/utils/mutate-data';
-import { supabase } from '@/utils/supabase-client';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useLinksQueryKey } from './use-links-query-key';
@@ -8,6 +8,7 @@ import { useLinksQueryKey } from './use-links-query-key';
 export type RemoveLinkReturn = Awaited<ReturnType<typeof removeLink>>;
 
 export const removeLink = async (linkId: number) => {
+  const supabase = createClientClient();
   const { data: removedLink, error: removedLinkError } = await supabase
     .from('links')
     .delete()

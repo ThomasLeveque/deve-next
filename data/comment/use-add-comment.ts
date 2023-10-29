@@ -1,9 +1,9 @@
 import { GetCommentsReturn } from '@/data/comment/use-comments';
 import { GetLinksReturn } from '@/data/link/get-links';
+import { createClientClient } from '@/lib/supabase/client';
 import { arrayToSingle } from '@/lib/utils';
 import { Database } from '@/types/supabase';
 import { addItemInsidePaginatedData, updateItemInsidePaginatedData } from '@/utils/mutate-data';
-import { supabase } from '@/utils/supabase-client';
 import { InfiniteData, UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLinksQueryKey } from '../link/use-links-query-key';
 import { queryKeys } from './query-keys';
@@ -12,6 +12,7 @@ type CommentInsert = Database['public']['Tables']['comments']['Insert'];
 export type AddCommentReturn = Awaited<ReturnType<typeof addComment>>;
 
 const addComment = async (commentToAdd: CommentInsert) => {
+  const supabase = createClientClient();
   const response = await supabase
     .from('comments')
     .insert(commentToAdd)

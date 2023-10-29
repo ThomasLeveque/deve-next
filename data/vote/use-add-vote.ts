@@ -1,9 +1,9 @@
 import { GetLinksReturn } from '@/data/link/get-links';
+import { createClientClient } from '@/lib/supabase/client';
 import { singleToArray } from '@/lib/utils';
 import { Database } from '@/types/supabase';
 import { formatError } from '@/utils/format-string';
 import { updateItemInsidePaginatedData } from '@/utils/mutate-data';
-import { supabase } from '@/utils/supabase-client';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { useLinksQueryKey } from '../link/use-links-query-key';
@@ -12,6 +12,7 @@ type VoteInsert = Database['public']['Tables']['votes']['Insert'];
 export type AddVoteReturn = Awaited<ReturnType<typeof addVote>>;
 
 const addVote = async (voteToAdd: VoteInsert) => {
+  const supabase = createClientClient();
   const response = await supabase.from('votes').insert(voteToAdd).select().single();
   const newVote = response.data;
 

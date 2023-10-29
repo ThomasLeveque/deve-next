@@ -1,5 +1,5 @@
 import { formatTagWithLinksCount, GET_TAGS_SELECT } from '@/data/tag/utils';
-import { supabase } from '@/utils/supabase-client';
+import { createClientClient } from '@/lib/supabase/client';
 
 export type GetTagsReturn = Awaited<ReturnType<typeof getTags>>;
 
@@ -22,5 +22,6 @@ export const getTags = async () => {
 export type FetchTagsReturn = Awaited<ReturnType<typeof fetchTags>>;
 
 async function fetchTags() {
+  const supabase = createClientClient();
   return (await supabase.from('tags').select(GET_TAGS_SELECT)).data;
 }

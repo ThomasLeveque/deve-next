@@ -1,8 +1,8 @@
 import { GetLinksReturn } from '@/data/link/get-links';
+import { createClientClient } from '@/lib/supabase/client';
 import { singleToArray } from '@/lib/utils';
 import { formatError } from '@/utils/format-string';
 import { updateItemInsidePaginatedData } from '@/utils/mutate-data';
-import { supabase } from '@/utils/supabase-client';
 import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { useLinksQueryKey } from '../link/use-links-query-key';
@@ -10,6 +10,7 @@ import { useLinksQueryKey } from '../link/use-links-query-key';
 export type RemoveVoteReturn = Awaited<ReturnType<typeof removeVote>>;
 
 const removeVote = async (voteId: number) => {
+  const supabase = createClientClient();
   const response = await supabase.from('votes').delete().eq('id', voteId).select().single();
 
   const removedVote = response.data;

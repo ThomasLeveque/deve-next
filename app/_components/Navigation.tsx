@@ -12,8 +12,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { createClientClient } from '@/lib/supabase/client';
 import { useProfile, useProfileLoaded } from '@/store/profile.store';
-import { supabase } from '@/utils/supabase-client';
+
 import { LogOut, UserCircleIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -23,6 +24,11 @@ export function Navigation() {
   const profileLoaded = useProfileLoaded()[0];
 
   const router = useRouter();
+
+  function handleLogout() {
+    const supabase = createClientClient();
+    supabase.auth.signOut();
+  }
 
   return (
     <header className="sticky top-0 z-30 bg-white">
@@ -57,7 +63,7 @@ export function Navigation() {
                     <UserCircleIcon size={16} className="mr-2" />
                     <span>Profil</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => supabase.auth.signOut()}>
+                  <DropdownMenuItem onClick={handleLogout}>
                     <LogOut size={16} className="mr-2" />
                     <span>Logout</span>
                   </DropdownMenuItem>

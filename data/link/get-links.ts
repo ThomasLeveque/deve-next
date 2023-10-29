@@ -1,13 +1,15 @@
+import { env } from '@/env';
 import { OrderLinksKey } from '@/hooks/use-query-string';
+import { createClientClient } from '@/lib/supabase/client';
 import { formatError } from '@/utils/format-string';
-import { supabase } from '@/utils/supabase-client';
 import toast from 'react-hot-toast';
 
-export const LINKS_PER_PAGE = Number(process.env.NEXT_PUBLIC_LINKS_PER_PAGE) ?? 20;
+export const LINKS_PER_PAGE = env.NEXT_PUBLIC_LINKS_PER_PAGE;
 
 export type GetLinksReturn = Awaited<ReturnType<typeof getLinks>>;
 
 export const getLinks = async (cursor: number, orderby: OrderLinksKey, searchQuery = '') => {
+  const supabase = createClientClient();
   try {
     const nextCursor = cursor + LINKS_PER_PAGE;
     let query = supabase.from('links').select(`

@@ -1,4 +1,4 @@
-import { Nullable, PaginatedData } from '@/types/shared';
+import { Nullish, PaginatedData } from '@/types/shared';
 import { InfiniteData } from '@tanstack/react-query';
 import { Draft, produce } from 'immer';
 
@@ -66,7 +66,7 @@ export const removeItemInsidePaginatedData = <TData extends { id: number }>(
 
 export const addItemInsideData = <TData>(
   item: TData,
-  items: Nullable<TData[]>,
+  items: Nullish<TData[]>,
   newItemPosition: 'start' | 'end' = 'start'
 ): TData[] => (items ? (newItemPosition === 'start' ? [item, ...items] : [...items, item]) : []);
 

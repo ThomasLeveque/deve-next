@@ -1,10 +1,10 @@
 import { formatTagWithLinksCount, GET_TAGS_SELECT } from '@/data/tag/utils';
-import { Nullable } from '@/types/shared';
-import { supabase } from '@/utils/supabase-client';
+import { createClientClient } from '@/lib/supabase/client';
+import { Nullish } from '@/types/shared';
 
 export type GetTagBySlugReturn = Awaited<ReturnType<typeof getTagBySlug>>;
 
-export const getTagBySlug = async (tagSlug: Nullable<string>) => {
+export const getTagBySlug = async (tagSlug: Nullish<string>) => {
   if (!tagSlug) {
     return null;
   }
@@ -23,5 +23,6 @@ export const getTagBySlug = async (tagSlug: Nullable<string>) => {
 };
 
 async function fetchTagBySlug(tagSlug: string) {
+  const supabase = createClientClient();
   return (await supabase.from('tags').select(GET_TAGS_SELECT).eq('slug', tagSlug).single()).data;
 }

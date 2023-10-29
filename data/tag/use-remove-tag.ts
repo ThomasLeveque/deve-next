@@ -1,7 +1,7 @@
 import { GetTagsReturn } from '@/data/tag/get-tags';
+import { createClientClient } from '@/lib/supabase/client';
 import { formatError } from '@/utils/format-string';
 import { removeItemInsideData } from '@/utils/mutate-data';
-import { supabase } from '@/utils/supabase-client';
 import { useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { queryKeys } from './utils';
@@ -9,6 +9,7 @@ import { queryKeys } from './utils';
 export type RemoveTagReturn = Awaited<ReturnType<typeof removeTag>>;
 
 const removeTag = async (tagId: number) => {
+  const supabase = createClientClient();
   const response = await supabase.from('tags').delete().eq('id', tagId).select('id').single();
   const removedTag = response.data;
 

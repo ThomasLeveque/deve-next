@@ -1,10 +1,10 @@
 import { GetLinksReturn } from '@/data/link/get-links';
 import { GetTagsReturn } from '@/data/tag/get-tags';
 import { queryKeys } from '@/data/tag/utils';
+import { createClientClient } from '@/lib/supabase/client';
 import { singleToArray } from '@/lib/utils';
 import { Database } from '@/types/supabase';
 import { addItemInsidePaginatedData, updateItemsInsideData } from '@/utils/mutate-data';
-import { supabase } from '@/utils/supabase-client';
 import { InfiniteData, UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLinksQueryKey } from './use-links-query-key';
 
@@ -12,6 +12,7 @@ type LinkInsert = Database['public']['Tables']['links']['Insert'];
 export type AddLinkReturn = Awaited<ReturnType<typeof addLink>>;
 
 export const addLink = async (linkToAdd: LinkInsert, tags: GetTagsReturn = []) => {
+  const supabase = createClientClient();
   const { data: newLink, error: newLinkError } = await supabase
     .from('links')
     .insert(linkToAdd)

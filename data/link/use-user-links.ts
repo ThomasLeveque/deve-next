@@ -1,14 +1,16 @@
+import { env } from '@/env';
+import { createClientClient } from '@/lib/supabase/client';
 import { formatError } from '@/utils/format-string';
-import { supabase } from '@/utils/supabase-client';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { queryKeys } from './query-keys';
 
-export const USER_LINKS_PER_PAGE = Number(process.env.NEXT_PUBLIC_LINKS_PER_PAGE) ?? 20;
+export const USER_LINKS_PER_PAGE = env.NEXT_PUBLIC_LINKS_PER_PAGE;
 
 export type GetUserLinksReturn = Awaited<ReturnType<typeof getUserLinks>>;
 
 const getUserLinks = async (cursor: number, userId: string) => {
+  const supabase = createClientClient();
   try {
     const nextCursor = cursor + USER_LINKS_PER_PAGE;
     const response = await supabase

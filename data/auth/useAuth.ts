@@ -1,16 +1,19 @@
 import { getUserProfile } from '@/data/auth/get-user-profile';
+import { createClientClient } from '@/lib/supabase/client';
 import { useProfile, useProfileLoaded } from '@/store/profile.store';
-import { supabase } from '@/utils/supabase-client';
 import { Session } from '@supabase/supabase-js';
 import { useEffect } from 'react';
 
 export function useAuth() {
+  const supabase = createClientClient();
   const setProfile = useProfile()[1];
   const setProfileLoaded = useProfileLoaded()[1];
 
   useEffect(() => {
     const setUserProfile = async (session: Session | null) => {
-      const userProfile = await getUserProfile(session?.user, supabase);
+      console.log({ session });
+
+      const userProfile = await getUserProfile(session?.user);
       setProfile(userProfile);
       setProfileLoaded(true);
     };

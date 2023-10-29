@@ -1,7 +1,8 @@
 import GithubIcon from '@/components/icons/GithubIcon';
 import { Button } from '@/components/ui/button';
+import { createClientClient } from '@/lib/supabase/client';
+import getAlternateUrl from '@/utils/alternate-url';
 import { formatError } from '@/utils/format-string';
-import { supabase } from '@/utils/supabase-client';
 import React, { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
 
@@ -11,10 +12,14 @@ const SignInWithGithubBtn: React.FC<{
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleSignInWithGithub = useCallback(async () => {
+    const supabase = createClientClient();
     try {
       setLoading(true);
       await supabase.auth.signInWithOAuth({
         provider: 'github',
+        options: {
+          redirectTo: getAlternateUrl('/auth/callback'),
+        },
       });
     } catch (err) {
       toast.error(formatError(err as Error));

@@ -1,11 +1,11 @@
 import { GetLinksReturn } from '@/data/link/get-links';
 import { GetTagsReturn } from '@/data/tag/get-tags';
 import { queryKeys } from '@/data/tag/utils';
+import { createClientClient } from '@/lib/supabase/client';
 import { singleToArray } from '@/lib/utils';
 import { Database } from '@/types/supabase';
 import { formatError } from '@/utils/format-string';
 import { updateItemInsidePaginatedData, updateItemsInsideData } from '@/utils/mutate-data';
-import { supabase } from '@/utils/supabase-client';
 import { InfiniteData, UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { useLinksQueryKey } from './use-links-query-key';
@@ -14,6 +14,7 @@ type LinkUpdate = Database['public']['Tables']['links']['Update'];
 export type UpdateLinkReturn = Awaited<ReturnType<typeof updateLink>>;
 
 export const updateLink = async (linkId: number, linkToUpdate: LinkUpdate, tags: GetTagsReturn = []) => {
+  const supabase = createClientClient();
   const { data: updatedLink, error: updatedLinkError } = await supabase
     .from('links')
     .update(linkToUpdate)
