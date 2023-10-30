@@ -43,13 +43,6 @@ export function Navigation() {
           <Link href="/tags" className="with-ring px-1 font-bold hover:underline">
             Tags
           </Link>
-          <Button
-            onClick={() => {
-              destructiveToast({ description: 'Salut le miff' });
-            }}
-          >
-            Toast me !
-          </Button>
         </div>
         <div className="grid auto-cols-max grid-flow-col items-center gap-5">
           {profile ? (

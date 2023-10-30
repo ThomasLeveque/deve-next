@@ -73,8 +73,8 @@ function LinkCard({ link, isProfilLink = false }: LinkItemProps) {
   }
 
   return (
-    <li className="group">
-      <Card>
+    <li className="group h-full">
+      <Card className="flex h-full flex-col">
         <CardHeader className="space-y-5">
           <div className="flex min-h-[20px] items-start justify-between space-x-3">
             <div>
@@ -104,7 +104,7 @@ function LinkCard({ link, isProfilLink = false }: LinkItemProps) {
             ))}
           </TagListWrapper>
         </CardContent>
-        <CardFooter className="space-x-5">
+        <CardFooter className="mt-auto space-x-5">
           <LoginModal>
             <DialogTrigger
               className={cn('with-ring flex items-center space-x-[6px]')}

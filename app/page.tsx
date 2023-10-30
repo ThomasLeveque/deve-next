@@ -2,16 +2,13 @@
 
 import LinkCard from '@/components/LinkCard';
 import OrderbyLinksDropdown from '@/components/OrderbyLinksDropdown';
+import { SearchInput } from '@/components/SearchInput';
 import SpinnerIcon from '@/components/icons/SpinnerIcon';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { useLinks } from '@/data/link/use-links';
 import { useQueryString } from '@/hooks/use-query-string';
-import { useRef } from 'react';
 
 export default function HomePage() {
-  const searchRef = useRef<HTMLInputElement>(null);
-
   const { searchQuery, setSearchQuery } = useQueryString();
 
   const { data: links, fetchNextPage, hasNextPage, isFetchingNextPage } = useLinks();
@@ -20,14 +17,13 @@ export default function HomePage() {
     <section className="my-8">
       <div className="mb-5 flex space-x-2">
         <OrderbyLinksDropdown className="flex-none" />
-        <Input
-          ref={searchRef}
+        <SearchInput
           placeholder="Search for a link..."
-          type="search"
           className="w-full"
-          id="search-link"
+          inputClassName="w-full"
           onChange={(event) => setSearchQuery(event.target.value)}
           value={searchQuery}
+          clearValue={() => setSearchQuery('')}
         />
       </div>
       {!links ? (
