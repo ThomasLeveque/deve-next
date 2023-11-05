@@ -2,8 +2,8 @@ import { Button } from '@/components/ui/button';
 import { Popover, PopoverClose, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { GetCommentsReturn } from '@/data/comment/use-comments';
 import { useRemoveLinkComment } from '@/data/comment/use-remove-comment';
+import { FetchProfileReturn } from '@/lib/supabase/queries/fetch-profile';
 import { arrayToSingle, cn } from '@/lib/utils';
-import { useProfile } from '@/store/profile.store';
 import { format } from 'date-fns';
 import { PencilIcon, TrashIcon, XIcon } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
@@ -14,10 +14,10 @@ interface CommentItemProps {
   comment: GetCommentsReturn['data'][0];
   linkId: number;
   isPreview?: boolean;
+  profile: NonNullable<FetchProfileReturn>;
 }
 
-const CommentItem: React.FC<CommentItemProps> = ({ comment, linkId, isPreview = false }) => {
-  const profile = useProfile()[0];
+const CommentItem: React.FC<CommentItemProps> = ({ comment, linkId, isPreview = false, profile }) => {
   const [updateComment, setUpdateComment] = useState(false);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -78,7 +78,12 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, linkId, isPreview = 
       </div>
 
       {updateComment ? (
-        <UpdateCommentForm commentToUpdate={comment} linkId={linkId} closeUpdate={() => setUpdateComment(false)} />
+        <UpdateCommentForm
+          profile={profile}
+          commentToUpdate={comment}
+          linkId={linkId}
+          closeUpdate={() => setUpdateComment(false)}
+        />
       ) : (
         <ReactMarkdown className="prose-sm prose">{comment.text}</ReactMarkdown>
       )}

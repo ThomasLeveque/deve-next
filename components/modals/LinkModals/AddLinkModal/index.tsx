@@ -1,12 +1,13 @@
 'use client';
 
+import { LinkForm } from '@/components/modals/LinkModals/LinkForm';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { FetchProfileReturn } from '@/lib/supabase/queries/fetch-profile';
 import { PlusIcon } from 'lucide-react';
 import { PropsWithChildren, useState } from 'react';
-import AddLinkForm from './AddLinkForm';
 
-function AddLinkModal({ children }: PropsWithChildren) {
+function AddLinkModal({ children, profile }: PropsWithChildren<{ profile: NonNullable<FetchProfileReturn> }>) {
   const [open, setOpen] = useState(false);
 
   const closeModal = () => {
@@ -20,7 +21,7 @@ function AddLinkModal({ children }: PropsWithChildren) {
         <DialogHeader>
           <DialogTitle>Add new link</DialogTitle>
         </DialogHeader>
-        <AddLinkForm closeModal={closeModal} />
+        <LinkForm closeModal={closeModal} profile={profile} />
       </DialogContent>
     </Dialog>
   );
@@ -44,6 +45,4 @@ function AddLinkModalTrigger() {
   );
 }
 
-AddLinkModal.Trigger = AddLinkModalTrigger;
-
-export default AddLinkModal;
+export { AddLinkModal, AddLinkModalTrigger };

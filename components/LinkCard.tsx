@@ -1,9 +1,9 @@
 'use client';
 
 import AddCommentModal from '@/components/modals/AddCommentModal';
+import UpdateLinkModal from '@/components/modals/LinkModals/UpdateLinkModal';
 import LoginModal from '@/components/modals/LoginModal';
 import RemoveLinkModal from '@/components/modals/RemoveLinkModal';
-import UpdateLinkModal from '@/components/modals/UpdateLinkModal';
 import { TagListWrapper } from '@/components/TagListWrapper';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,11 +13,11 @@ import { GetLinksReturn } from '@/data/link/get-links';
 import { TagRow } from '@/data/tag/use-tags';
 import { useAddLinkVote } from '@/data/vote/use-add-vote';
 import { useRemoveLinkVote } from '@/data/vote/use-remove-vote';
+import { FetchProfileReturn } from '@/lib/supabase/queries/fetch-profile';
 import { arrayToSingle, cn, singleToArray } from '@/lib/utils';
-import { useProfile } from '@/store/profile.store';
 import { getDomain } from '@/utils/format-string';
 import { format } from 'date-fns';
-import { ExternalLink, ThumbsDown, ThumbsUp } from 'lucide-react';
+import { ExternalLink, ThumbsUp } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 
@@ -25,12 +25,12 @@ interface LinkItemProps {
   link: GetLinksReturn['data'][0];
   // To know if the component is used inside the profil page
   isProfilLink?: boolean;
+  profile: FetchProfileReturn;
 }
 
-function LinkCard({ link, isProfilLink = false }: LinkItemProps) {
+function LinkCard({ link, isProfilLink = false, profile }: LinkItemProps) {
   const { destructiveToast } = useToast();
   const router = useRouter();
-  const profile = useProfile()[0];
 
   const profileVote = useMemo(
     () => singleToArray(link.votes).find((vote) => vote.userId === profile?.id),
@@ -82,8 +82,8 @@ function LinkCard({ link, isProfilLink = false }: LinkItemProps) {
               <p className="text-[10px] text-gray-400">{format(new Date(link.createdAt), 'MMMM d yyyy')}</p>
             </div>
             <div className="flex space-x-1.5 group-hover:flex lg:hidden">
-              {!canUpdateLinkData && <UpdateLinkModal linkToUpdate={link} />}
-              {!canRemoveLink && <RemoveLinkModal linkIdToRemove={link.id} />}
+              {canUpdateLinkData && <UpdateLinkModal profile={profile} linkToUpdate={link} />}
+              {canRemoveLink && <RemoveLinkModal linkIdToRemove={link.id} />}
             </div>
           </div>
           <a href={link.url} rel="noreferrer" target="_blank" className="with-ring space-y-1.5">
@@ -120,12 +120,12 @@ function LinkCard({ link, isProfilLink = false }: LinkItemProps) {
                 }
               }}
             >
-              {Boolean(profileVote) ? <ThumbsDown size={16} /> : <ThumbsUp size={16} />}
+              <ThumbsUp size={16} className={cn({ ['fill-primary']: Boolean(profileVote) })} />
               <span className="text-[11px] font-bold">{renderFires}</span>
             </DialogTrigger>
           </LoginModal>
           {profile ? (
-            <AddCommentModal linkToComment={link}>
+            <AddCommentModal linkToComment={link} profile={profile}>
               <AddCommentModal.Trigger>{renderComments}</AddCommentModal.Trigger>
             </AddCommentModal>
           ) : (

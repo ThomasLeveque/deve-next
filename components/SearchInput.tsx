@@ -22,7 +22,7 @@ const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
           render={() => (
             <FormItem className={cn('relative flex items-center space-y-0', className)}>
               <FormLabel className="absolute left-3">
-                <Search size={18} />
+                <Search size={18} className="opacity-50" />
               </FormLabel>
               <FormControl>
                 <Input type="search" className={cn('px-10', inputClassName)} ref={ref} {...props} />

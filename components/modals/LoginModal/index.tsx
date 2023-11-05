@@ -1,19 +1,13 @@
+'use client';
+
+import SignInWithGithubBtn from '@/components/modals/LoginModal/SignInWithGithubBtn';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { useProfile } from '@/store/profile.store';
-import { PropsWithChildren, useEffect, useState } from 'react';
+import { PropsWithChildren, useState } from 'react';
 import SignInWithDiscordBtn from './SignInWithDiscordBtn';
-import SignInWithGithubBtn from './SignInWithGithubBtn';
 import SignInWithGoogleBtn from './SignInWithGoogleBtn';
 
 function LoginModal({ children }: PropsWithChildren) {
-  const profile = useProfile()[0];
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    if (profile && open) {
-      setOpen(false);
-    }
-  }, [profile, open]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

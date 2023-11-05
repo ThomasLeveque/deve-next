@@ -7,10 +7,11 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } 
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
 import { useAddLinkComment } from '@/data/comment/use-add-comment';
-import { useProfile } from '@/store/profile.store';
+
+import { FetchProfileReturn } from '@/lib/supabase/queries/fetch-profile';
 import { formatError } from '@/utils/format-string';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import CommentItem from './CommentItem';
 
@@ -20,15 +21,15 @@ interface CommentFormData {
 
 interface AddCommentFormProps {
   linkId: number;
+  profile: NonNullable<FetchProfileReturn>;
 }
 
-const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
-  const profile = useProfile()[0];
+function AddCommentForm({ linkId, profile }: AddCommentFormProps) {
   const { destructiveToast } = useToast();
 
   const [showPreview, setShowPreview] = useState(false);
 
-  const addLinkComment = useAddLinkComment(props.linkId);
+  const addLinkComment = useAddLinkComment(linkId);
 
   const form = useForm<CommentFormData>({
     resolver: zodResolver(addCommentSchema),
@@ -41,13 +42,9 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
 
   const handleSubmit = form.handleSubmit(async (formData: CommentFormData) => {
     try {
-      if (!profile) {
-        throw new Error('You must be login');
-      }
-
       await addLinkComment.mutateAsync({
         text: formData.text,
-        linkId: props.linkId,
+        linkId,
         userId: profile.id,
       });
 
@@ -70,17 +67,18 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
               {showPreview && profile ? (
                 <ul>
                   <CommentItem
+                    profile={profile}
                     comment={{
                       id: -1,
                       text: field.value,
                       userId: profile?.id,
-                      linkId: props.linkId,
+                      linkId: linkId,
                       user: [profile],
                       createdAt: new Date().toISOString(),
                       updatedAt: new Date().toISOString(),
                     }}
                     isPreview={true}
-                    linkId={props.linkId}
+                    linkId={linkId}
                   />
                 </ul>
               ) : (
@@ -124,6 +122,6 @@ const AddCommentForm: React.FC<AddCommentFormProps> = (props) => {
       </form>
     </Form>
   );
-};
+}
 
 export default AddCommentForm;

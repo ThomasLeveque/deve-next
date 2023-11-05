@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dialog';
 import { COMMENTS_PER_PAGE, useComments } from '@/data/comment/use-comments';
 import { GetLinksReturn } from '@/data/link/get-links';
+import { FetchProfileReturn } from '@/lib/supabase/queries/fetch-profile';
 import { getDomain } from '@/utils/format-string';
 import { MessageCircle } from 'lucide-react';
 import React, { PropsWithChildren, useState } from 'react';
@@ -21,9 +22,10 @@ import AddCommentForm from './AddCommentForm';
 type AddCommentModalProps = {
   linkToComment: GetLinksReturn['data'][0];
   children: React.ReactNode;
+  profile: NonNullable<FetchProfileReturn>;
 };
 
-function AddCommentModal({ linkToComment, children }: AddCommentModalProps) {
+function AddCommentModal({ linkToComment, children, profile }: AddCommentModalProps) {
   const [open, setOpen] = useState(false);
 
   const {
@@ -43,7 +45,7 @@ function AddCommentModal({ linkToComment, children }: AddCommentModalProps) {
             <DialogDescription>On {getDomain(linkToComment.url)}</DialogDescription>
           </a>
         </DialogHeader>
-        <AddCommentForm linkId={linkToComment.id} />
+        <AddCommentForm linkId={linkToComment.id} profile={profile} />
 
         {linkToComment.commentsCount > 0 ? (
           <>
@@ -53,7 +55,7 @@ function AddCommentModal({ linkToComment, children }: AddCommentModalProps) {
                   {comments.pages?.map(
                     (page) =>
                       page?.data?.map((comment) => (
-                        <CommentItem key={comment.id} comment={comment} linkId={linkToComment.id} />
+                        <CommentItem profile={profile} key={comment.id} comment={comment} linkId={linkToComment.id} />
                       ))
                   )}
                 </ul>

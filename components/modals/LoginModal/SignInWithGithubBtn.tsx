@@ -1,46 +1,47 @@
-import GithubIcon from '@/components/icons/GithubIcon';
+'use client';
+
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/components/ui/use-toast';
+import { destructiveToast } from '@/components/ui/use-toast';
 import { createClientClient } from '@/lib/supabase/client';
 import getAlternateUrl from '@/utils/alternate-url';
 import { formatError } from '@/utils/format-string';
-import React, { useCallback, useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { GithubIcon } from 'lucide-react';
+import { useState } from 'react';
 
-const SignInWithGithubBtn: React.FC<{
-  initialFocusButtonRef?: React.MutableRefObject<HTMLButtonElement | null>;
-}> = ({ initialFocusButtonRef }) => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const { destructiveToast } = useToast();
+function wait(ms: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
 
-  const handleSignInWithGithub = useCallback(async () => {
-    const supabase = createClientClient();
-    try {
-      setLoading(true);
+function SignInWithGithubBtn() {
+  const [isLoading, setIsLoading] = useState(false);
+  const { mutate } = useMutation({
+    mutationFn: async () => {
+      setIsLoading(true);
+      const supabase = createClientClient();
+
       await supabase.auth.signInWithOAuth({
         provider: 'github',
         options: {
           redirectTo: getAlternateUrl('/auth/callback'),
         },
       });
-    } catch (err) {
-      destructiveToast({ description: formatError(err as Error) });
-      console.error(err);
-      setLoading(false);
-    }
-    // Do not setLoading(false) because Signin with Github will unmount this component.
-  }, []);
+
+      await wait(3000);
+    },
+    onError(error) {
+      destructiveToast({ description: formatError(error as Error) });
+      console.error(error);
+    },
+  });
 
   return (
-    <Button
-      ref={initialFocusButtonRef}
-      variant="github"
-      isLoading={loading}
-      className="w-full"
-      onClick={handleSignInWithGithub}
-    >
+    <Button variant="github" className="w-full" type="submit" onClick={() => mutate()} isLoading={isLoading}>
       <GithubIcon className="mr-2 w-4" /> Github
     </Button>
   );
-};
+}
 
 export default SignInWithGithubBtn;

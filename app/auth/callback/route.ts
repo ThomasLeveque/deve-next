@@ -9,11 +9,12 @@ export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get('code');
 
+  console.log('CALLBACK');
+
   if (code) {
     const cookieStore = cookies();
     const supabase = createServerClient(cookieStore);
-    const session = await supabase.auth.exchangeCodeForSession(code);
-    console.log('CALLBACK', { session });
+    await supabase.auth.exchangeCodeForSession(code);
   }
 
   // URL to redirect to after sign in process completes

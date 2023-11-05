@@ -1,6 +1,4 @@
-'use client';
-
-import AddLinkModal from '@/components/modals/AddLinkModal';
+import { AddLinkModal, AddLinkModalTrigger } from '@/components/modals/LinkModals/AddLinkModal';
 import LoginModal from '@/components/modals/LoginModal';
 import { ProfileAvatar } from '@/components/ProfileAvatar';
 import { Button } from '@/components/ui/button';
@@ -12,26 +10,23 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useToast } from '@/components/ui/use-toast';
-import { createClientClient } from '@/lib/supabase/client';
-import { useProfile, useProfileLoaded } from '@/store/profile.store';
+import { fetchProfile } from '@/lib/supabase/queries/fetch-profile';
+import { createServerClient } from '@/lib/supabase/server';
 
 import { LogOut, UserCircleIcon } from 'lucide-react';
+import { cookies } from 'next/headers';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
-export function Navigation() {
-  const profile = useProfile()[0];
-  const profileLoaded = useProfileLoaded()[0];
+export async function Navigation() {
+  const profile = await fetchProfile();
 
-  const router = useRouter();
+  async function handleLogout() {
+    'use server';
 
-  function handleLogout() {
-    const supabase = createClientClient();
-    supabase.auth.signOut();
+    const cookieStore = cookies();
+    const supabase = createServerClient(cookieStore);
+    await supabase.auth.signOut();
   }
-
-  const { destructiveToast } = useToast();
 
   return (
     <header className="sticky top-0 z-30 bg-white">
@@ -46,43 +41,42 @@ export function Navigation() {
         </div>
         <div className="grid auto-cols-max grid-flow-col items-center gap-5">
           {profile ? (
-            <AddLinkModal>
-              <AddLinkModal.Trigger />
+            <AddLinkModal profile={profile}>
+              <AddLinkModalTrigger />
             </AddLinkModal>
           ) : (
             <LoginModal>
-              <AddLinkModal.Trigger />
+              <AddLinkModalTrigger />
             </LoginModal>
           )}
 
           {profile ? (
             <DropdownMenu>
               <DropdownMenuTrigger>
-                <ProfileAvatar />
+                <ProfileAvatar fallbackProps={{ width: 40, height: 40, priority: true }} profile={profile} />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuGroup>
-                  <DropdownMenuItem onClick={() => router.push('/profil')}>
-                    <UserCircleIcon size={16} className="mr-2" />
-                    <span>Profil</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={handleLogout}>
-                    <LogOut size={16} className="mr-2" />
-                    <span>Logout</span>
-                  </DropdownMenuItem>
+                  <Link href="/profile">
+                    <DropdownMenuItem>
+                      <UserCircleIcon size={16} className="mr-2" />
+                      <span>Profil</span>
+                    </DropdownMenuItem>
+                  </Link>
+                  <form action={handleLogout}>
+                    <button type="submit" className="w-full">
+                      <DropdownMenuItem>
+                        <LogOut size={16} className="mr-2" />
+                        <span>Logout</span>
+                      </DropdownMenuItem>
+                    </button>
+                  </form>
                 </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
             <LoginModal>
-              <DialogTrigger
-                asChild
-                onClick={(event) => {
-                  if (!profileLoaded) {
-                    event.preventDefault();
-                  }
-                }}
-              >
+              <DialogTrigger asChild>
                 <Button variant="default">Login</Button>
               </DialogTrigger>
             </LoginModal>

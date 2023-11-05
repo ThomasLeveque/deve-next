@@ -5,10 +5,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
 import { GetCommentsReturn } from '@/data/comment/use-comments';
 import { useUpdateLinkComment } from '@/data/comment/use-update-comment';
-import { useProfile } from '@/store/profile.store';
+import { FetchProfileReturn } from '@/lib/supabase/queries/fetch-profile';
 import { formatError } from '@/utils/format-string';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import ReactMarkdown from 'react-markdown';
 
@@ -20,20 +20,20 @@ interface UpdateCommentFormProps {
   commentToUpdate: GetCommentsReturn['data'][0];
   linkId: number;
   closeUpdate: () => void;
+  profile: NonNullable<FetchProfileReturn>;
 }
 
-const UpdateCommentForm: React.FC<UpdateCommentFormProps> = (props) => {
-  const profile = useProfile()[0];
+function UpdateCommentForm({ commentToUpdate, linkId, closeUpdate, profile }: UpdateCommentFormProps) {
   const { destructiveToast } = useToast();
 
   const [showPreview, setShowPreview] = useState(false);
 
-  const updateLinkComment = useUpdateLinkComment(props.linkId);
+  const updateLinkComment = useUpdateLinkComment(linkId);
 
   const form = useForm<CommentFormData>({
     resolver: zodResolver(addCommentSchema),
     defaultValues: {
-      text: props.commentToUpdate.text,
+      text: commentToUpdate.text,
     },
   });
 
@@ -45,16 +45,16 @@ const UpdateCommentForm: React.FC<UpdateCommentFormProps> = (props) => {
         throw new Error('You must be login');
       }
 
-      if (formData.text !== props.commentToUpdate.text) {
+      if (formData.text !== commentToUpdate.text) {
         await updateLinkComment.mutateAsync({
-          commentId: props.commentToUpdate.id,
+          commentId: commentToUpdate.id,
           commentToUpdate: {
             text: formData.text,
             updatedAt: new Date().toISOString(),
           },
         });
       }
-      props.closeUpdate();
+      closeUpdate();
     } catch (err) {
       destructiveToast({ description: formatError(err as Error) });
       console.error(err);
@@ -113,6 +113,6 @@ const UpdateCommentForm: React.FC<UpdateCommentFormProps> = (props) => {
       </form>
     </Form>
   );
-};
+}
 
 export default UpdateCommentForm;
