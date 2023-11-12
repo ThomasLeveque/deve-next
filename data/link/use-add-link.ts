@@ -1,17 +1,12 @@
-import { GetLinksReturn } from '@/data/link/get-links';
-import { GetTagsReturn } from '@/data/tag/get-tags';
-import { queryKeys } from '@/data/tag/utils';
 import { createClientClient } from '@/lib/supabase/client';
-import { singleToArray } from '@/lib/utils';
+import { FetchTagsReturn } from '@/lib/supabase/queries/fetch-tags';
 import { Database } from '@/types/supabase';
-import { addItemInsidePaginatedData, updateItemsInsideData } from '@/utils/mutate-data';
-import { InfiniteData, UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useLinksQueryKey } from './use-links-query-key';
+import { UseMutationResult, useMutation } from '@tanstack/react-query';
 
 type LinkInsert = Database['public']['Tables']['links']['Insert'];
 export type AddLinkReturn = Awaited<ReturnType<typeof addLink>>;
 
-export const addLink = async (linkToAdd: LinkInsert, tags: GetTagsReturn = []) => {
+export const addLink = async (linkToAdd: LinkInsert, tags: FetchTagsReturn = []) => {
   const supabase = createClientClient();
   const { data: newLink, error: newLinkError } = await supabase
     .from('links')
@@ -54,31 +49,9 @@ export const addLink = async (linkToAdd: LinkInsert, tags: GetTagsReturn = []) =
 export const useAddLink = (): UseMutationResult<
   AddLinkReturn,
   Error,
-  { linkToAdd: LinkInsert; tags: GetTagsReturn }
+  { linkToAdd: LinkInsert; tags: FetchTagsReturn }
 > => {
-  const queryClient = useQueryClient();
-
-  const queryKey = useLinksQueryKey();
-
   return useMutation({
     mutationFn: ({ linkToAdd, tags }) => addLink(linkToAdd, tags),
-    onSuccess: (newLink) => {
-      queryClient.setQueryData<InfiniteData<GetLinksReturn>>(queryKey, (oldLinks) =>
-        addItemInsidePaginatedData(newLink, oldLinks)
-      );
-
-      queryClient.setQueryData<GetTagsReturn>(queryKeys.tags, (oldTags) =>
-        updateItemsInsideData(
-          singleToArray(newLink.tags).map(({ id }) => {
-            const tagLinkCount = oldTags?.find((tag) => tag.id === id)?.linksCount;
-            return {
-              id: id,
-              linksCount: tagLinkCount ? tagLinkCount + 1 : 0,
-            };
-          }),
-          oldTags
-        )
-      );
-    },
   });
 };

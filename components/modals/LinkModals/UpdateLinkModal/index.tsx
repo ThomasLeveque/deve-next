@@ -1,16 +1,18 @@
 import { LinkForm } from '@/components/modals/LinkModals/LinkForm';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { GetLinksReturn } from '@/data/link/get-links';
+import { FetchLinksReturn } from '@/lib/supabase/queries/fetch-links';
 import { FetchProfileReturn } from '@/lib/supabase/queries/fetch-profile';
+import { FetchTagsReturn } from '@/lib/supabase/queries/fetch-tags';
 import { Pencil } from 'lucide-react';
 import { useState } from 'react';
 
 type UpdateLinkModalProps = {
-  linkToUpdate: GetLinksReturn['data'][0];
+  linkToUpdate: FetchLinksReturn[0];
   profile: NonNullable<FetchProfileReturn>;
+  tags: FetchTagsReturn;
 };
 
-function UpdateLinkModal({ linkToUpdate, profile }: UpdateLinkModalProps) {
+function UpdateLinkModal({ linkToUpdate, profile, tags }: UpdateLinkModalProps) {
   const [open, setOpen] = useState(false);
 
   const closeModal = () => {
@@ -27,7 +29,7 @@ function UpdateLinkModal({ linkToUpdate, profile }: UpdateLinkModalProps) {
         <DialogHeader>
           <DialogTitle>{`Update ${linkToUpdate.description}`}</DialogTitle>
         </DialogHeader>
-        <LinkForm profile={profile} closeModal={closeModal} linkToUpdate={linkToUpdate} />
+        <LinkForm profile={profile} closeModal={closeModal} linkToUpdate={linkToUpdate} tags={tags} />
       </DialogContent>
     </Dialog>
   );

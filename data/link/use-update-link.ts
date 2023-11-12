@@ -1,19 +1,14 @@
 import { destructiveToast } from '@/components/ui/use-toast';
-import { GetLinksReturn } from '@/data/link/get-links';
-import { GetTagsReturn } from '@/data/tag/get-tags';
-import { queryKeys } from '@/data/tag/utils';
 import { createClientClient } from '@/lib/supabase/client';
-import { singleToArray } from '@/lib/utils';
+import { FetchTagsReturn } from '@/lib/supabase/queries/fetch-tags';
 import { Database } from '@/types/supabase';
 import { formatError } from '@/utils/format-string';
-import { updateItemInsidePaginatedData, updateItemsInsideData } from '@/utils/mutate-data';
-import { InfiniteData, UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useLinksQueryKey } from './use-links-query-key';
+import { UseMutationResult, useMutation } from '@tanstack/react-query';
 
 type LinkUpdate = Database['public']['Tables']['links']['Update'];
 export type UpdateLinkReturn = Awaited<ReturnType<typeof updateLink>>;
 
-export const updateLink = async (linkId: number, linkToUpdate: LinkUpdate, tags: GetTagsReturn = []) => {
+export const updateLink = async (linkId: number, linkToUpdate: LinkUpdate, tags: FetchTagsReturn = []) => {
   const supabase = createClientClient();
   const { data: updatedLink, error: updatedLinkError } = await supabase
     .from('links')
@@ -26,7 +21,7 @@ export const updateLink = async (linkId: number, linkToUpdate: LinkUpdate, tags:
     throw new Error('Error during updating a link, please try again');
   }
 
-  const linksTagsToRemove = singleToArray(updatedLink.tags).filter((tag) => !tags.map((t) => t.id)?.includes(tag.id));
+  const linksTagsToRemove = updatedLink.tags.filter((tag) => !tags.map((t) => t.id)?.includes(tag.id));
   const shouldRemovelinksTags = linksTagsToRemove.length > 0;
   if (shouldRemovelinksTags) {
     try {
@@ -45,12 +40,7 @@ export const updateLink = async (linkId: number, linkToUpdate: LinkUpdate, tags:
     }
   }
 
-  const linksTagsToAdd = tags.filter(
-    (tag) =>
-      !singleToArray(updatedLink.tags)
-        .map((t) => t.id)
-        ?.includes(tag.id)
-  );
+  const linksTagsToAdd = tags.filter((tag) => !updatedLink.tags.map((t) => t.id)?.includes(tag.id));
   const shouldAddlinksTags = linksTagsToAdd.length > 0;
   if (shouldAddlinksTags) {
     const { error: linksTagsToAddError } = await supabase.from('links_tags').insert(
@@ -73,40 +63,9 @@ export const updateLink = async (linkId: number, linkToUpdate: LinkUpdate, tags:
 export const useUpdateLink = (): UseMutationResult<
   UpdateLinkReturn,
   Error,
-  { linkId: number; linkToUpdate: LinkUpdate; tags: GetTagsReturn }
+  { linkId: number; linkToUpdate: LinkUpdate; tags: FetchTagsReturn }
 > => {
-  const queryClient = useQueryClient();
-
-  const queryKey = useLinksQueryKey();
-
   return useMutation({
     mutationFn: ({ linkId, linkToUpdate, tags }) => updateLink(linkId, linkToUpdate, tags),
-    onSuccess: ({ updatedLink, linksTagsToAdd, linksTagsToRemove }) => {
-      queryClient.setQueryData<InfiniteData<GetLinksReturn>>(queryKey, (oldLinks) =>
-        updateItemInsidePaginatedData(updatedLink, oldLinks)
-      );
-
-      queryClient.setQueryData<GetTagsReturn>(queryKeys.tags, (oldTags) =>
-        updateItemsInsideData(
-          [
-            ...linksTagsToAdd.map(({ id }) => {
-              const tagLinkCount = oldTags?.find((tag) => tag.id === id)?.linksCount;
-              return {
-                id: id,
-                linksCount: tagLinkCount ? tagLinkCount + 1 : 0,
-              };
-            }),
-            ...linksTagsToRemove.map(({ id }) => {
-              const tagLinkCount = oldTags?.find((tag) => tag.id === id)?.linksCount;
-              return {
-                id: id,
-                linksCount: tagLinkCount ? tagLinkCount - 1 : 0,
-              };
-            }),
-          ],
-          oldTags
-        )
-      );
-    },
   });
 };

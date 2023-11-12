@@ -1,11 +1,8 @@
 import { useToast } from '@/components/ui/use-toast';
 import { GetCommentsReturn } from '@/data/comment/use-comments';
-import { GetLinksReturn } from '@/data/link/get-links';
-import { useLinksQueryKey } from '@/data/link/use-links-query-key';
 import { createClientClient } from '@/lib/supabase/client';
-import { arrayToSingle } from '@/lib/utils';
 import { formatError } from '@/utils/format-string';
-import { removeItemInsidePaginatedData, updateItemInsidePaginatedData } from '@/utils/mutate-data';
+import { removeItemInsidePaginatedData } from '@/utils/mutate-data';
 import { InfiniteData, UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from './query-keys';
 
@@ -31,20 +28,11 @@ export const useRemoveLinkComment = (linkId: number): UseMutationResult<RemoveLi
   const queryClient = useQueryClient();
   const { destructiveToast } = useToast();
 
-  const linksQueryKey = useLinksQueryKey();
-
   return useMutation({
     mutationFn: (commentId) => removeLinkComment(commentId),
     onSuccess: async (removedComment) => {
       queryClient.setQueryData<InfiniteData<GetCommentsReturn>>(queryKeys.comments(linkId), (oldComments) =>
         removeItemInsidePaginatedData(removedComment.id, oldComments)
-      );
-
-      queryClient.setQueryData<InfiniteData<GetLinksReturn>>(linksQueryKey, (oldLinks) =>
-        updateItemInsidePaginatedData(
-          { id: linkId, commentsCount: (arrayToSingle(removedComment.link)?.commentsCount ?? 0) - 1 },
-          oldLinks
-        )
       );
     },
     onError: (err) => {

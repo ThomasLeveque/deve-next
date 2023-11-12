@@ -4,10 +4,13 @@ import { LinkForm } from '@/components/modals/LinkModals/LinkForm';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { FetchProfileReturn } from '@/lib/supabase/queries/fetch-profile';
+import { FetchTagsReturn } from '@/lib/supabase/queries/fetch-tags';
 import { PlusIcon } from 'lucide-react';
 import { PropsWithChildren, useState } from 'react';
 
-function AddLinkModal({ children, profile }: PropsWithChildren<{ profile: NonNullable<FetchProfileReturn> }>) {
+type AddLinkModalProps = PropsWithChildren<{ profile: NonNullable<FetchProfileReturn>; tags: FetchTagsReturn }>;
+
+function AddLinkModal({ children, profile, tags }: AddLinkModalProps) {
   const [open, setOpen] = useState(false);
 
   const closeModal = () => {
@@ -21,7 +24,7 @@ function AddLinkModal({ children, profile }: PropsWithChildren<{ profile: NonNul
         <DialogHeader>
           <DialogTitle>Add new link</DialogTitle>
         </DialogHeader>
-        <LinkForm closeModal={closeModal} profile={profile} />
+        <LinkForm closeModal={closeModal} profile={profile} tags={tags} />
       </DialogContent>
     </Dialog>
   );

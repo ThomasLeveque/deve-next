@@ -18,12 +18,11 @@ import { Combobox, parseComboboxValues, parseValue } from '@/components/Combobox
 import { TagListWrapper } from '@/components/TagListWrapper';
 import SpinnerIcon from '@/components/icons/SpinnerIcon';
 import { Badge } from '@/components/ui/badge';
-import { GetLinksReturn } from '@/data/link/get-links';
 import { useUpdateLink } from '@/data/link/use-update-link';
 import { useAddTag } from '@/data/tag/use-add-tag';
 import { useRemoveTag } from '@/data/tag/use-remove-tag';
-import { useTags } from '@/data/tag/use-tags';
-import { singleToArray } from '@/lib/utils';
+import { FetchLinksReturn } from '@/lib/supabase/queries/fetch-links';
+import { FetchTagsReturn } from '@/lib/supabase/queries/fetch-tags';
 import { z } from 'zod';
 
 type LinkFormData = z.infer<typeof linkSchema>;
@@ -31,16 +30,16 @@ type LinkFormData = z.infer<typeof linkSchema>;
 interface AddLinkFormProps {
   closeModal: () => void;
   profile: NonNullable<FetchProfileReturn>;
-  linkToUpdate?: GetLinksReturn['data'][0];
+  linkToUpdate?: FetchLinksReturn[0];
+  tags: FetchTagsReturn;
 }
 
-export function LinkForm({ closeModal, profile, linkToUpdate }: AddLinkFormProps) {
+export function LinkForm({ closeModal, profile, linkToUpdate, tags }: AddLinkFormProps) {
   const addLink = useAddLink();
   const updateLink = useUpdateLink();
 
   const { destructiveToast } = useToast();
 
-  const { data: tags } = useTags();
   const addTag = useAddTag();
   const removeTag = useRemoveTag();
 
@@ -49,7 +48,7 @@ export function LinkForm({ closeModal, profile, linkToUpdate }: AddLinkFormProps
     defaultValues: {
       url: linkToUpdate?.url ?? '',
       title: linkToUpdate?.description ?? '',
-      tags: linkToUpdate ? singleToArray(linkToUpdate.tags).map((tag) => tag.id) : [],
+      tags: linkToUpdate ? linkToUpdate.tags.map((tag) => tag.id) : [],
     },
   });
 

@@ -1,9 +1,5 @@
-import { GetLinksReturn } from '@/data/link/get-links';
 import { createClientClient } from '@/lib/supabase/client';
-import { removeItemInsidePaginatedData } from '@/utils/mutate-data';
-import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
-import { useLinksQueryKey } from './use-links-query-key';
+import { useMutation, UseMutationResult } from '@tanstack/react-query';
 
 export type RemoveLinkReturn = Awaited<ReturnType<typeof removeLink>>;
 
@@ -24,19 +20,7 @@ export const removeLink = async (linkId: number) => {
 };
 
 export const useRemoveLink = (): UseMutationResult<RemoveLinkReturn, Error, number> => {
-  const queryClient = useQueryClient();
-  const router = useRouter();
-
-  const queryKey = useLinksQueryKey();
-
   return useMutation({
     mutationFn: (linkId) => removeLink(linkId),
-    onSuccess: ({ linkId }) => {
-      queryClient.setQueryData<InfiniteData<GetLinksReturn>>(queryKey, (oldLinks) =>
-        removeItemInsidePaginatedData(linkId, oldLinks)
-      );
-
-      router.refresh();
-    },
   });
 };

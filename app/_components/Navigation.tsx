@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { fetchProfile } from '@/lib/supabase/queries/fetch-profile';
+import { fetchTags } from '@/lib/supabase/queries/fetch-tags';
 import { createServerClient } from '@/lib/supabase/server';
 
 import { LogOut, UserCircleIcon } from 'lucide-react';
@@ -19,6 +20,7 @@ import Link from 'next/link';
 
 export async function Navigation() {
   const profile = await fetchProfile();
+  const tags = await fetchTags();
 
   async function handleLogout() {
     'use server';
@@ -41,7 +43,7 @@ export async function Navigation() {
         </div>
         <div className="grid auto-cols-max grid-flow-col items-center gap-5">
           {profile ? (
-            <AddLinkModal profile={profile}>
+            <AddLinkModal profile={profile} tags={tags}>
               <AddLinkModalTrigger />
             </AddLinkModal>
           ) : (

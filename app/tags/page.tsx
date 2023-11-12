@@ -1,14 +1,11 @@
-'use client';
-
 import SpinnerIcon from '@/components/icons/SpinnerIcon';
 import { TagListWrapper } from '@/components/TagListWrapper';
 import { Button } from '@/components/ui/button';
-import { useTags } from '@/data/tag/use-tags';
-import { useRouter } from 'next/navigation';
+import { fetchTags } from '@/lib/supabase/queries/fetch-tags';
+import Link from 'next/link';
 
-export default function TagsPage() {
-  const router = useRouter();
-  const { data: tags } = useTags();
+export default async function TagsPage() {
+  const tags = await fetchTags();
 
   return (
     <section className="my-8">
@@ -16,10 +13,12 @@ export default function TagsPage() {
       {tags && tags.length > 0 ? (
         <TagListWrapper className="mb-4">
           {tags
-            .filter((tag) => tag.linksCount > 0)
+            .filter((tag) => tag.links.length > 0)
             .map((tag) => (
               <li key={tag.id}>
-                <Button onClick={() => router.push(`/tags/${tag.slug}`)}>{`${tag.name} (${tag.linksCount})`}</Button>
+                <Button asChild>
+                  <Link href={`/tags/${tag.slug}`}>{`${tag.name} (${tag.links.length})`}</Link>
+                </Button>
               </li>
             ))}
         </TagListWrapper>

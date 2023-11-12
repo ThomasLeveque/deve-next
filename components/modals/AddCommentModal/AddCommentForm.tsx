@@ -73,7 +73,7 @@ function AddCommentForm({ linkId, profile }: AddCommentFormProps) {
                       text: field.value,
                       userId: profile?.id,
                       linkId: linkId,
-                      user: [profile],
+                      user: profile,
                       createdAt: new Date().toISOString(),
                       updatedAt: new Date().toISOString(),
                     }}

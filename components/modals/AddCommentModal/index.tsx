@@ -12,7 +12,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { COMMENTS_PER_PAGE, useComments } from '@/data/comment/use-comments';
-import { GetLinksReturn } from '@/data/link/get-links';
+import { FetchLinksReturn } from '@/lib/supabase/queries/fetch-links';
 import { FetchProfileReturn } from '@/lib/supabase/queries/fetch-profile';
 import { getDomain } from '@/utils/format-string';
 import { MessageCircle } from 'lucide-react';
@@ -20,7 +20,7 @@ import React, { PropsWithChildren, useState } from 'react';
 import AddCommentForm from './AddCommentForm';
 
 type AddCommentModalProps = {
-  linkToComment: GetLinksReturn['data'][0];
+  linkToComment: FetchLinksReturn[0];
   children: React.ReactNode;
   profile: NonNullable<FetchProfileReturn>;
 };
@@ -47,7 +47,7 @@ function AddCommentModal({ linkToComment, children, profile }: AddCommentModalPr
         </DialogHeader>
         <AddCommentForm linkId={linkToComment.id} profile={profile} />
 
-        {linkToComment.commentsCount > 0 ? (
+        {linkToComment.comments.length > 0 ? (
           <>
             {comments ? (
               <>
@@ -59,7 +59,7 @@ function AddCommentModal({ linkToComment, children, profile }: AddCommentModalPr
                       ))
                   )}
                 </ul>
-                {linkToComment.commentsCount > COMMENTS_PER_PAGE ? (
+                {linkToComment.comments.length > COMMENTS_PER_PAGE ? (
                   <Button
                     variant="secondary"
                     className="mx-auto mt-8"

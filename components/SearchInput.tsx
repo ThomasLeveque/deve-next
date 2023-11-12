@@ -2,19 +2,38 @@
 
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { useQueryString } from '@/hooks/use-query-string';
+import useDebounce from '@/hooks/useDebounce';
 import { cn } from '@/lib/utils';
 import { Search, XCircle } from 'lucide-react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-export interface SearchInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
+export interface SearchInputProps
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'value' | 'onChange'> {
   inputClassName?: string;
-  clearValue?: () => void;
 }
 
 const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
-  ({ className, inputClassName, clearValue, ...props }, ref) => {
+  ({ className, inputClassName, ...props }, ref) => {
     const form = useForm();
+    const { searchQuery, setSearchQuery } = useQueryString();
+    const [query, setQuery] = useState<string | null>(searchQuery);
+
+    const debouncedQuery = useDebounce<string | null>(query, 300);
+
+    useEffect(() => {
+      if (debouncedQuery === '') {
+        setSearchQuery(null);
+        return;
+      }
+
+      if (debouncedQuery !== searchQuery) {
+        setSearchQuery(debouncedQuery);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [debouncedQuery]);
+
     return (
       <Form {...form}>
         <FormField
@@ -25,10 +44,17 @@ const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
                 <Search size={18} className="opacity-50" />
               </FormLabel>
               <FormControl>
-                <Input type="search" className={cn('px-10', inputClassName)} ref={ref} {...props} />
+                <Input
+                  type="search"
+                  className={cn('px-10', inputClassName)}
+                  ref={ref}
+                  {...props}
+                  value={query ?? ''}
+                  onChange={(event) => setQuery(event.target.value)}
+                />
               </FormControl>
-              {props.value && (
-                <button className="absolute right-3" onClick={clearValue}>
+              {query && (
+                <button className="absolute right-3" onClick={() => setQuery(null)}>
                   <XCircle size={18} />
                 </button>
               )}

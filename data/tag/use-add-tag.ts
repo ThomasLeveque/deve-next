@@ -1,10 +1,7 @@
-import { GetTagsReturn } from '@/data/tag/get-tags';
-import { formatTagWithLinksCount, GET_TAGS_SELECT } from '@/data/tag/utils';
+import { GET_TAGS_SELECT } from '@/lib/constants';
 import { createClientClient } from '@/lib/supabase/client';
 import { Database } from '@/types/supabase';
-import { addItemInsideData } from '@/utils/mutate-data';
-import { useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
-import { queryKeys } from './utils';
+import { useMutation, UseMutationResult } from '@tanstack/react-query';
 
 type TagInsert = Database['public']['Tables']['tags']['Insert'];
 export type AddTagReturn = Awaited<ReturnType<typeof addTag>>;
@@ -17,15 +14,11 @@ const addTag = async (tagToAdd: TagInsert) => {
   if (!newTag || response.error) {
     throw new Error('Error during adding a new tag, please try again');
   }
-  return formatTagWithLinksCount(newTag);
+  return newTag;
 };
 
 export const useAddTag = (): UseMutationResult<AddTagReturn, Error, TagInsert> => {
-  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (tagToAdd) => addTag(tagToAdd),
-    onSuccess: (newTag) => {
-      queryClient.setQueryData<GetTagsReturn>(queryKeys.tags, (oldTags) => addItemInsideData(newTag, oldTags, 'end'));
-    },
   });
 };

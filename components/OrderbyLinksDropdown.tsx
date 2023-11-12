@@ -1,4 +1,6 @@
-import { OrderLinksKey, useQueryString } from '@/hooks/use-query-string';
+'use client';
+
+import { useQueryString } from '@/hooks/use-query-string';
 import { ArrowDownNarrowWide, ArrowUpNarrowWide, ThumbsUp } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -11,6 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { OrderLinksKey } from '@/lib/constants';
 import { objectEntries } from '@/utils/object-entries';
 
 const orderLinksDropdownItems = {

@@ -3,7 +3,7 @@ import { Popover, PopoverClose, PopoverContent, PopoverTrigger } from '@/compone
 import { GetCommentsReturn } from '@/data/comment/use-comments';
 import { useRemoveLinkComment } from '@/data/comment/use-remove-comment';
 import { FetchProfileReturn } from '@/lib/supabase/queries/fetch-profile';
-import { arrayToSingle, cn } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { PencilIcon, TrashIcon, XIcon } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
@@ -28,7 +28,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, linkId, isPreview = 
 
   const canUpdateComment = useMemo(() => profile && profile.id === comment.userId, [profile, comment.userId]);
 
-  const commentUser = isPreview ? comment.user[0] : arrayToSingle(comment.user);
+  const commentUser = comment.user;
 
   return (
     <li className="rounded-button group border border-gray-400/30 p-5">

@@ -9,12 +9,13 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { DialogTrigger } from '@/components/ui/dialog';
 import { useToast } from '@/components/ui/use-toast';
-import { GetLinksReturn } from '@/data/link/get-links';
-import { TagRow } from '@/data/tag/use-tags';
 import { useAddLinkVote } from '@/data/vote/use-add-vote';
 import { useRemoveLinkVote } from '@/data/vote/use-remove-vote';
+import { FetchLinksReturn } from '@/lib/supabase/queries/fetch-links';
 import { FetchProfileReturn } from '@/lib/supabase/queries/fetch-profile';
-import { arrayToSingle, cn, singleToArray } from '@/lib/utils';
+import { FetchTagsReturn } from '@/lib/supabase/queries/fetch-tags';
+import { TagRow } from '@/lib/supabase/types';
+import { cn } from '@/lib/utils';
 import { getDomain } from '@/utils/format-string';
 import { format } from 'date-fns';
 import { ExternalLink, ThumbsUp } from 'lucide-react';
@@ -22,45 +23,43 @@ import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 
 interface LinkItemProps {
-  link: GetLinksReturn['data'][0];
+  link: FetchLinksReturn[0];
   // To know if the component is used inside the profil page
   isProfilLink?: boolean;
   profile: FetchProfileReturn;
+  tags: FetchTagsReturn;
 }
 
-function LinkCard({ link, isProfilLink = false, profile }: LinkItemProps) {
+function LinkCard({ link, isProfilLink = false, profile, tags }: LinkItemProps) {
   const { destructiveToast } = useToast();
   const router = useRouter();
 
-  const profileVote = useMemo(
-    () => singleToArray(link.votes).find((vote) => vote.userId === profile?.id),
-    [profile, link.votes]
-  );
+  const profileVote = useMemo(() => link.votes.find((vote) => vote.userId === profile?.id), [profile, link.votes]);
 
   const canUpdateLinkData = profile && (profile.role === 'admin' || link.userId === profile.id);
   const canRemoveLink = profile && (profile.role === 'admin' || link.userId === profile.id);
 
   const renderFires = useMemo(() => {
-    if (link.votesCount === 0) {
+    if (link.votes.length === 0) {
       return 'Hot stuff';
     } else {
-      return `${link.votesCount}`;
+      return `${link.votes.length}`;
     }
-  }, [link.votesCount]);
+  }, [link.votes.length]);
 
   const renderComments = useMemo(() => {
-    if (link.commentsCount === 0) {
+    if (link.comments.length === 0) {
       return 'Add comment';
-    } else if (link.commentsCount === 1) {
-      return `${link.commentsCount} comment`;
+    } else if (link.comments.length === 1) {
+      return `${link.comments.length} comment`;
     } else {
-      return `${link.commentsCount} comments`;
+      return `${link.comments.length} comments`;
     }
-  }, [link.commentsCount]);
+  }, [link.comments.length]);
 
-  const addVote = useAddLinkVote(link);
+  const addVote = useAddLinkVote();
 
-  const removeVote = useRemoveLinkVote(link);
+  const removeVote = useRemoveLinkVote();
 
   function goToTagPage(tag: TagRow) {
     if (tag.slug) {
@@ -78,11 +77,11 @@ function LinkCard({ link, isProfilLink = false, profile }: LinkItemProps) {
         <CardHeader className="space-y-5">
           <div className="flex min-h-[20px] items-start justify-between space-x-3">
             <div>
-              {!isProfilLink && <h3 className="mb-1 text-[13px] font-bold">{arrayToSingle(link.user)?.username}</h3>}
+              {!isProfilLink && link.user && <h3 className="mb-1 text-[13px] font-bold">{link.user.username}</h3>}
               <p className="text-[10px] text-gray-400">{format(new Date(link.createdAt), 'MMMM d yyyy')}</p>
             </div>
             <div className="flex space-x-1.5 group-hover:flex lg:hidden">
-              {canUpdateLinkData && <UpdateLinkModal profile={profile} linkToUpdate={link} />}
+              {canUpdateLinkData && <UpdateLinkModal profile={profile} linkToUpdate={link} tags={tags} />}
               {canRemoveLink && <RemoveLinkModal linkIdToRemove={link.id} />}
             </div>
           </div>
@@ -95,7 +94,7 @@ function LinkCard({ link, isProfilLink = false, profile }: LinkItemProps) {
         </CardHeader>
         <CardContent>
           <TagListWrapper>
-            {singleToArray(link.tags).map((tag) => (
+            {link.tags.map((tag) => (
               <li key={tag.id}>
                 <button onClick={() => goToTagPage(tag)}>
                   <Badge variant="default">{tag.name}</Badge>

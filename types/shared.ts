@@ -4,3 +4,5 @@ export type PaginatedData<Data> = {
 };
 
 export type Nullish<T> = T | null | undefined;
+
+export type ObjectValues<T> = T[keyof T];
