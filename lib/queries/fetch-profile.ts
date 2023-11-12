@@ -1,4 +1,4 @@
-import { fetchUser } from '@/lib/supabase/queries/fetch-user';
+import { fetchUser } from '@/lib/queries/fetch-user';
 import { createServerClient } from '@/lib/supabase/server';
 
 import { cookies } from 'next/headers';

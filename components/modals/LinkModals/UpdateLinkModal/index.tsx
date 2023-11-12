@@ -1,8 +1,8 @@
 import { LinkForm } from '@/components/modals/LinkModals/LinkForm';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { FetchLinksReturn } from '@/lib/supabase/queries/fetch-links';
-import { FetchProfileReturn } from '@/lib/supabase/queries/fetch-profile';
-import { FetchTagsReturn } from '@/lib/supabase/queries/fetch-tags';
+import { FetchLinksReturn } from '@/lib/queries/fetch-links';
+import { FetchProfileReturn } from '@/lib/queries/fetch-profile';
+import { FetchTagsReturn } from '@/lib/queries/fetch-tags';
 import { Pencil } from 'lucide-react';
 import { useState } from 'react';
 

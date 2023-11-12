@@ -10,8 +10,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { fetchProfile } from '@/lib/supabase/queries/fetch-profile';
-import { fetchTags } from '@/lib/supabase/queries/fetch-tags';
+import { fetchProfile } from '@/lib/queries/fetch-profile';
+import { fetchTags } from '@/lib/queries/fetch-tags';
 import { createServerClient } from '@/lib/supabase/server';
 
 import { LogOut, UserCircleIcon } from 'lucide-react';

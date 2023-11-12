@@ -5,7 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
 import { GetCommentsReturn } from '@/data/comment/use-comments';
 import { useUpdateLinkComment } from '@/data/comment/use-update-comment';
-import { FetchProfileReturn } from '@/lib/supabase/queries/fetch-profile';
+import { FetchProfileReturn } from '@/lib/queries/fetch-profile';
 import { formatError } from '@/utils/format-string';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
@@ -18,17 +18,16 @@ interface CommentFormData {
 
 interface UpdateCommentFormProps {
   commentToUpdate: GetCommentsReturn['data'][0];
-  linkId: number;
   closeUpdate: () => void;
   profile: NonNullable<FetchProfileReturn>;
 }
 
-function UpdateCommentForm({ commentToUpdate, linkId, closeUpdate, profile }: UpdateCommentFormProps) {
+function UpdateCommentForm({ commentToUpdate, closeUpdate, profile }: UpdateCommentFormProps) {
   const { destructiveToast } = useToast();
 
   const [showPreview, setShowPreview] = useState(false);
 
-  const updateLinkComment = useUpdateLinkComment(linkId);
+  const updateLinkComment = useUpdateLinkComment();
 
   const form = useForm<CommentFormData>({
     resolver: zodResolver(addCommentSchema),

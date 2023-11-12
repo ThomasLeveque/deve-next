@@ -8,8 +8,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { useToast } from '@/components/ui/use-toast';
-import { useRemoveLink } from '@/data/link/use-remove-link';
+import { destructiveToast } from '@/components/ui/use-toast';
+import { removeLinkAction } from '@/lib/actions/remove-link.action';
+import { useAction } from '@/lib/actions/use-action';
 import { formatError } from '@/utils/format-string';
 import { TrashIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -19,18 +20,16 @@ type RemoveLinkModalProps = {
 };
 
 function RemoveLinkModal({ linkIdToRemove }: RemoveLinkModalProps) {
-  const removeLink = useRemoveLink();
   const [open, setOpen] = useState(false);
-  const { destructiveToast } = useToast();
 
-  async function handleRemoveLink() {
-    try {
-      await removeLink.mutateAsync(linkIdToRemove);
+  const [removeLinkLoading, triggerRemoveLinkAction] = useAction(removeLinkAction, {
+    onSuccess() {
       setOpen(false);
-    } catch (err) {
-      destructiveToast({ description: formatError(err as Error) });
-    }
-  }
+    },
+    onError(error) {
+      destructiveToast({ description: formatError(error) });
+    },
+  });
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -53,8 +52,8 @@ function RemoveLinkModal({ linkIdToRemove }: RemoveLinkModalProps) {
             variant="destructive"
             className="w-full"
             type="button"
-            isLoading={removeLink.isPending}
-            onClick={handleRemoveLink}
+            isLoading={removeLinkLoading}
+            onClick={() => triggerRemoveLinkAction(linkIdToRemove)}
           >
             Remove
           </Button>

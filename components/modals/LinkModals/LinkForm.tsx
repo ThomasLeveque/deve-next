@@ -5,24 +5,24 @@ import { Button } from '@/components/ui/button';
 import { DialogClose, DialogFooter } from '@/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useToast } from '@/components/ui/use-toast';
-import { useAddLink } from '@/data/link/use-add-link';
-import { FetchProfileReturn } from '@/lib/supabase/queries/fetch-profile';
-import { formatError, stringToSlug } from '@/utils/format-string';
+import { destructiveToast } from '@/components/ui/use-toast';
+import { FetchProfileReturn } from '@/lib/queries/fetch-profile';
+import { formatError } from '@/utils/format-string';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
-import { TrashIcon, X } from 'lucide-react';
+import { X } from 'lucide-react';
 
 import { Combobox, parseComboboxValues, parseValue } from '@/components/Combobox';
 import { TagListWrapper } from '@/components/TagListWrapper';
-import SpinnerIcon from '@/components/icons/SpinnerIcon';
+import { AddTagBtn } from '@/components/modals/LinkModals/AddTagBtn';
+import { RemoveTagBtn } from '@/components/modals/LinkModals/RemoveTagBtn';
 import { Badge } from '@/components/ui/badge';
-import { useUpdateLink } from '@/data/link/use-update-link';
-import { useAddTag } from '@/data/tag/use-add-tag';
-import { useRemoveTag } from '@/data/tag/use-remove-tag';
-import { FetchLinksReturn } from '@/lib/supabase/queries/fetch-links';
-import { FetchTagsReturn } from '@/lib/supabase/queries/fetch-tags';
+import { addLinkAction } from '@/lib/actions/add-link.action';
+import { updateLinkAction } from '@/lib/actions/update-link.action';
+import { useAction } from '@/lib/actions/use-action';
+import { FetchLinksReturn } from '@/lib/queries/fetch-links';
+import { FetchTagsReturn } from '@/lib/queries/fetch-tags';
 import { z } from 'zod';
 
 type LinkFormData = z.infer<typeof linkSchema>;
@@ -35,13 +35,25 @@ interface AddLinkFormProps {
 }
 
 export function LinkForm({ closeModal, profile, linkToUpdate, tags }: AddLinkFormProps) {
-  const addLink = useAddLink();
-  const updateLink = useUpdateLink();
+  const [addLinkLoading, triggerAddLinkAction] = useAction(addLinkAction, {
+    onSuccess() {
+      closeModal();
+    },
+    onError(error) {
+      destructiveToast({ description: formatError(error) });
+    },
+  });
 
-  const { destructiveToast } = useToast();
+  const [updateLinkLoading, triggerUpdateLinkAction] = useAction(updateLinkAction, {
+    onSuccess() {
+      closeModal();
+    },
+    onError(error) {
+      destructiveToast({ description: formatError(error) });
+    },
+  });
 
-  const addTag = useAddTag();
-  const removeTag = useRemoveTag();
+  const isLoading = addLinkLoading || updateLinkLoading;
 
   const form = useForm<LinkFormData>({
     resolver: zodResolver(linkSchema),
@@ -55,33 +67,25 @@ export function LinkForm({ closeModal, profile, linkToUpdate, tags }: AddLinkFor
   const selectedTags = tags?.filter((tag) => form.watch('tags').includes(tag.id)) ?? [];
 
   const handleSubmit = form.handleSubmit(async (formData: LinkFormData) => {
-    try {
-      if (linkToUpdate) {
-        await updateLink.mutateAsync({
-          linkId: linkToUpdate.id,
-          linkToUpdate: {
-            url: formData.url,
-            description: formData.title,
-            updatedAt: new Date().toISOString(),
-          },
-          tags: selectedTags,
-        });
-      } else {
-        await addLink.mutateAsync({
-          linkToAdd: {
-            url: formData.url,
-            description: formData.title,
-            userId: profile.id,
-          },
-          tags: selectedTags,
-        });
-      }
-
-      // Do not setLoading(false) because addLink will unmount this component (Modal).
-      closeModal();
-    } catch (err) {
-      destructiveToast({ description: formatError(err as Error) });
-      console.error(err);
+    if (linkToUpdate) {
+      triggerUpdateLinkAction(
+        linkToUpdate.id,
+        {
+          url: formData.url,
+          description: formData.title,
+          updatedAt: new Date().toISOString(),
+        },
+        selectedTags
+      );
+    } else {
+      triggerAddLinkAction(
+        {
+          url: formData.url,
+          description: formData.title,
+          userId: profile.id,
+        },
+        selectedTags
+      );
     }
   });
 
@@ -153,29 +157,13 @@ export function LinkForm({ closeModal, profile, linkToUpdate, tags }: AddLinkFor
                       return (
                         <>
                           ({tagLinksCount})
-                          {canBeRemove && (
-                            <>
-                              {removeTag.isPending ? (
-                                <SpinnerIcon size={16} />
-                              ) : (
-                                <button
-                                  type="button"
-                                  onClick={(event) => {
-                                    event.stopPropagation();
-                                    if (tag) {
-                                      removeTag.mutate(tag.id, {
-                                        onSuccess(id) {
-                                          field.onChange(parseComboboxValues(id, field.value));
-                                        },
-                                      });
-                                    }
-                                  }}
-                                  className="ml-auto"
-                                >
-                                  <TrashIcon size={16} />
-                                </button>
-                              )}
-                            </>
+                          {canBeRemove && tag && (
+                            <RemoveTagBtn
+                              tag={tag}
+                              onSuccess={(id) => {
+                                field.onChange(parseComboboxValues(id, field.value));
+                              }}
+                            />
                           )}
                         </>
                       );
@@ -184,30 +172,12 @@ export function LinkForm({ closeModal, profile, linkToUpdate, tags }: AddLinkFor
                       <div className="space-x-2">
                         <span>not Tags found</span>
                         {search && (
-                          <Button
-                            isLoading={addTag.isPending}
-                            onClick={() => {
-                              addTag.mutate(
-                                {
-                                  name: search,
-                                  slug: stringToSlug(search),
-                                },
-                                {
-                                  onSuccess(data) {
-                                    field.onChange(parseComboboxValues(data.id, field.value));
-                                  },
-                                  onError(error) {
-                                    destructiveToast({
-                                      description: formatError(error as Error),
-                                    });
-                                  },
-                                }
-                              );
+                          <AddTagBtn
+                            value={search}
+                            onSuccess={(id) => {
+                              field.onChange(parseComboboxValues(id, field.value));
                             }}
-                            size="sm"
-                          >
-                            Create <span className="mx-1 font-bold">{search}</span>tag
-                          </Button>
+                          />
                         )}
                       </div>
                     ),
@@ -226,8 +196,8 @@ export function LinkForm({ closeModal, profile, linkToUpdate, tags }: AddLinkFor
               Close
             </Button>
           </DialogClose>
-          <Button type="submit" isLoading={addLink.isPending}>
-            Create
+          <Button type="submit" isLoading={isLoading}>
+            {linkToUpdate ? 'Update' : 'Create'}
           </Button>
         </DialogFooter>
       </form>

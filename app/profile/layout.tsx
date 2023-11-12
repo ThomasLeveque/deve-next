@@ -1,6 +1,6 @@
 import { ProfileAvatar } from '@/components/ProfileAvatar';
 import { Switch } from '@/components/ui/switch';
-import { fetchProfile } from '@/lib/supabase/queries/fetch-profile';
+import { fetchProfile } from '@/lib/queries/fetch-profile';
 import { format } from 'date-fns';
 import { redirect } from 'next/navigation';
 

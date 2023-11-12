@@ -1,7 +1,7 @@
 import SpinnerIcon from '@/components/icons/SpinnerIcon';
 import { TagListWrapper } from '@/components/TagListWrapper';
 import { Button } from '@/components/ui/button';
-import { fetchTags } from '@/lib/supabase/queries/fetch-tags';
+import { fetchTags } from '@/lib/queries/fetch-tags';
 import Link from 'next/link';
 
 export default async function TagsPage() {

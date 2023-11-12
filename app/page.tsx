@@ -2,9 +2,9 @@ import LinkCard from '@/components/LinkCard';
 import OrderbyLinksDropdown from '@/components/OrderbyLinksDropdown';
 import { SearchInput } from '@/components/SearchInput';
 import { ORDERBY_PARAM, OrderLinksKey, SEARCH_PARAM, orderLinksKeys, pageParser } from '@/lib/constants';
-import { fetchLinks } from '@/lib/supabase/queries/fetch-links';
-import { fetchProfile } from '@/lib/supabase/queries/fetch-profile';
-import { fetchTags } from '@/lib/supabase/queries/fetch-tags';
+import { fetchLinks } from '@/lib/queries/fetch-links';
+import { fetchProfile } from '@/lib/queries/fetch-profile';
+import { fetchTags } from '@/lib/queries/fetch-tags';
 import { objectValues } from '@/utils/object-values';
 import { parseAsString, parseAsStringEnum } from 'next-usequerystate/parsers';
 

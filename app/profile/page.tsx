@@ -1,8 +1,8 @@
 import LinkCard from '@/components/LinkCard';
 import { pageParser } from '@/lib/constants';
-import { fetchLinksByUserId } from '@/lib/supabase/queries/fetch-links-by-user-id';
-import { fetchProfile } from '@/lib/supabase/queries/fetch-profile';
-import { fetchTags } from '@/lib/supabase/queries/fetch-tags';
+import { fetchLinksByUserId } from '@/lib/queries/fetch-links-by-user-id';
+import { fetchProfile } from '@/lib/queries/fetch-profile';
+import { fetchTags } from '@/lib/queries/fetch-tags';
 import { redirect } from 'next/navigation';
 
 export const metadata = {

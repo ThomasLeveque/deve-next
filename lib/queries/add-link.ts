@@ -1,12 +1,8 @@
+import { FetchTagsReturn } from '@/lib/queries/fetch-tags';
 import { createClientClient } from '@/lib/supabase/client';
-import { FetchTagsReturn } from '@/lib/supabase/queries/fetch-tags';
-import { Database } from '@/types/supabase';
-import { UseMutationResult, useMutation } from '@tanstack/react-query';
+import { LinkInsert } from '@/lib/supabase/types';
 
-type LinkInsert = Database['public']['Tables']['links']['Insert'];
-export type AddLinkReturn = Awaited<ReturnType<typeof addLink>>;
-
-export const addLink = async (linkToAdd: LinkInsert, tags: FetchTagsReturn = []) => {
+export const addLink = async (linkToAdd: LinkInsert, tags: FetchTagsReturn) => {
   const supabase = createClientClient();
   const { data: newLink, error: newLinkError } = await supabase
     .from('links')
@@ -40,18 +36,4 @@ export const addLink = async (linkToAdd: LinkInsert, tags: FetchTagsReturn = [])
     await supabase.from('links').delete().eq('id', newLink.id);
     throw new Error('Error during connecting a link to some tags, please try again');
   }
-
-  newLink.tags = tags;
-
-  return newLink;
-};
-
-export const useAddLink = (): UseMutationResult<
-  AddLinkReturn,
-  Error,
-  { linkToAdd: LinkInsert; tags: FetchTagsReturn }
-> => {
-  return useMutation({
-    mutationFn: ({ linkToAdd, tags }) => addLink(linkToAdd, tags),
-  });
 };

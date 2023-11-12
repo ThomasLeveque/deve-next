@@ -3,8 +3,8 @@
 import { LinkForm } from '@/components/modals/LinkModals/LinkForm';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { FetchProfileReturn } from '@/lib/supabase/queries/fetch-profile';
-import { FetchTagsReturn } from '@/lib/supabase/queries/fetch-tags';
+import { FetchProfileReturn } from '@/lib/queries/fetch-profile';
+import { FetchTagsReturn } from '@/lib/queries/fetch-tags';
 import { PlusIcon } from 'lucide-react';
 import { PropsWithChildren, useState } from 'react';
 

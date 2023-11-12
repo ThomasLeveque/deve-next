@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { FetchProfileReturn } from '@/lib/supabase/queries/fetch-profile';
+import { FetchProfileReturn } from '@/lib/queries/fetch-profile';
 import { getInitials } from '@/utils/format-string';
 import Image from 'next/image';
 import { ComponentProps } from 'react';

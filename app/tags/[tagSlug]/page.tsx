@@ -1,10 +1,10 @@
 import LinkCard from '@/components/LinkCard';
 import { Badge } from '@/components/ui/badge';
 import { pageParser } from '@/lib/constants';
-import { fetchLinksByTagSlug } from '@/lib/supabase/queries/fetch-links-by-tag-slug';
-import { fetchProfile } from '@/lib/supabase/queries/fetch-profile';
-import { fetchTagBySlug } from '@/lib/supabase/queries/fetch-tag-by-slug';
-import { fetchTags } from '@/lib/supabase/queries/fetch-tags';
+import { fetchLinksByTagSlug } from '@/lib/queries/fetch-links-by-tag-slug';
+import { fetchProfile } from '@/lib/queries/fetch-profile';
+import { fetchTagBySlug } from '@/lib/queries/fetch-tag-by-slug';
+import { fetchTags } from '@/lib/queries/fetch-tags';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 

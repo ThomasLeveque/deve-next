@@ -1,8 +1,6 @@
-import { GetCommentsReturn } from '@/data/comment/use-comments';
 import { createClientClient } from '@/lib/supabase/client';
 import { Database } from '@/types/supabase';
-import { updateItemInsidePaginatedData } from '@/utils/mutate-data';
-import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
+import { useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from './query-keys';
 
 type CommentUpdate = Database['public']['Tables']['comments']['Update'];
@@ -19,17 +17,17 @@ const updateComment = async (commentId: number, commentToUpdate: CommentUpdate) 
   return updatedComment;
 };
 
-export const useUpdateLinkComment = (
-  linkId: number
-): UseMutationResult<UpdateCommentReturn, Error, { commentId: number; commentToUpdate: CommentUpdate }> => {
+export const useUpdateLinkComment = (): UseMutationResult<
+  UpdateCommentReturn,
+  Error,
+  { commentId: number; commentToUpdate: CommentUpdate }
+> => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({ commentId, commentToUpdate }) => updateComment(commentId, commentToUpdate),
     onSuccess: async (updatedComment) => {
-      queryClient.setQueryData<InfiniteData<GetCommentsReturn>>(queryKeys.comments(linkId), (oldComments) =>
-        updateItemInsidePaginatedData(updatedComment, oldComments)
-      );
+      queryClient.invalidateQueries({ queryKey: queryKeys.comments(updatedComment.linkId) });
     },
   });
 };

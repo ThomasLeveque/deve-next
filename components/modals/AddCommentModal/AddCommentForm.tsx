@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
 import { useAddLinkComment } from '@/data/comment/use-add-comment';
 
-import { FetchProfileReturn } from '@/lib/supabase/queries/fetch-profile';
+import { FetchProfileReturn } from '@/lib/queries/fetch-profile';
 import { formatError } from '@/utils/format-string';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
@@ -22,14 +22,19 @@ interface CommentFormData {
 interface AddCommentFormProps {
   linkId: number;
   profile: NonNullable<FetchProfileReturn>;
+  onSuccess(): void;
 }
 
-function AddCommentForm({ linkId, profile }: AddCommentFormProps) {
+function AddCommentForm({ linkId, profile, onSuccess }: AddCommentFormProps) {
   const { destructiveToast } = useToast();
 
   const [showPreview, setShowPreview] = useState(false);
 
-  const addLinkComment = useAddLinkComment(linkId);
+  const addLinkComment = useAddLinkComment({
+    onSuccess: () => {
+      onSuccess();
+    },
+  });
 
   const form = useForm<CommentFormData>({
     resolver: zodResolver(addCommentSchema),
@@ -78,7 +83,6 @@ function AddCommentForm({ linkId, profile }: AddCommentFormProps) {
                       updatedAt: new Date().toISOString(),
                     }}
                     isPreview={true}
-                    linkId={linkId}
                   />
                 </ul>
               ) : (

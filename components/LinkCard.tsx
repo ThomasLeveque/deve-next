@@ -11,16 +11,16 @@ import { DialogTrigger } from '@/components/ui/dialog';
 import { useToast } from '@/components/ui/use-toast';
 import { useAddLinkVote } from '@/data/vote/use-add-vote';
 import { useRemoveLinkVote } from '@/data/vote/use-remove-vote';
-import { FetchLinksReturn } from '@/lib/supabase/queries/fetch-links';
-import { FetchProfileReturn } from '@/lib/supabase/queries/fetch-profile';
-import { FetchTagsReturn } from '@/lib/supabase/queries/fetch-tags';
+import { FetchLinksReturn } from '@/lib/queries/fetch-links';
+import { FetchProfileReturn } from '@/lib/queries/fetch-profile';
+import { FetchTagsReturn } from '@/lib/queries/fetch-tags';
 import { TagRow } from '@/lib/supabase/types';
 import { cn } from '@/lib/utils';
 import { getDomain } from '@/utils/format-string';
 import { format } from 'date-fns';
 import { ExternalLink, ThumbsUp } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 interface LinkItemProps {
   link: FetchLinksReturn[0];
@@ -33,6 +33,8 @@ interface LinkItemProps {
 function LinkCard({ link, isProfilLink = false, profile, tags }: LinkItemProps) {
   const { destructiveToast } = useToast();
   const router = useRouter();
+
+  const [commentsCount, setCommentsCount] = useState(link.comments.length);
 
   const profileVote = useMemo(() => link.votes.find((vote) => vote.userId === profile?.id), [profile, link.votes]);
 
@@ -48,14 +50,14 @@ function LinkCard({ link, isProfilLink = false, profile, tags }: LinkItemProps) 
   }, [link.votes.length]);
 
   const renderComments = useMemo(() => {
-    if (link.comments.length === 0) {
+    if (commentsCount === 0) {
       return 'Add comment';
-    } else if (link.comments.length === 1) {
-      return `${link.comments.length} comment`;
+    } else if (commentsCount === 1) {
+      return `${commentsCount} comment`;
     } else {
-      return `${link.comments.length} comments`;
+      return `${commentsCount} comments`;
     }
-  }, [link.comments.length]);
+  }, [commentsCount]);
 
   const addVote = useAddLinkVote();
 
@@ -124,7 +126,13 @@ function LinkCard({ link, isProfilLink = false, profile, tags }: LinkItemProps) 
             </DialogTrigger>
           </LoginModal>
           {profile ? (
-            <AddCommentModal linkToComment={link} profile={profile}>
+            <AddCommentModal
+              linkToComment={link}
+              profile={profile}
+              commentsCount={commentsCount}
+              onAddSuccess={() => setCommentsCount((prev) => prev + 1)}
+              onRemoveSuccess={() => setCommentsCount((prev) => prev - 1)}
+            >
               <AddCommentModal.Trigger>{renderComments}</AddCommentModal.Trigger>
             </AddCommentModal>
           ) : (

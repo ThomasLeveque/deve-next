@@ -1,14 +1,8 @@
-import { destructiveToast } from '@/components/ui/use-toast';
+import { FetchTagsReturn } from '@/lib/queries/fetch-tags';
 import { createClientClient } from '@/lib/supabase/client';
-import { FetchTagsReturn } from '@/lib/supabase/queries/fetch-tags';
-import { Database } from '@/types/supabase';
-import { formatError } from '@/utils/format-string';
-import { UseMutationResult, useMutation } from '@tanstack/react-query';
+import { LinkUpdate } from '@/lib/supabase/types';
 
-type LinkUpdate = Database['public']['Tables']['links']['Update'];
-export type UpdateLinkReturn = Awaited<ReturnType<typeof updateLink>>;
-
-export const updateLink = async (linkId: number, linkToUpdate: LinkUpdate, tags: FetchTagsReturn = []) => {
+export const updateLink = async (linkId: number, linkToUpdate: LinkUpdate, tags: FetchTagsReturn) => {
   const supabase = createClientClient();
   const { data: updatedLink, error: updatedLinkError } = await supabase
     .from('links')
@@ -34,9 +28,7 @@ export const updateLink = async (linkId: number, linkToUpdate: LinkUpdate, tags:
         )
       );
     } catch (err) {
-      destructiveToast({
-        description: formatError(new Error('Error during updating the tags of this link, please try again')),
-      });
+      throw new Error('Error during updating the tags of this link, please try again');
     }
   }
 
@@ -54,18 +46,4 @@ export const updateLink = async (linkId: number, linkToUpdate: LinkUpdate, tags:
       throw new Error('Error during updating the tags of this link, please try again');
     }
   }
-
-  updatedLink.tags = tags;
-
-  return { updatedLink, linksTagsToAdd, linksTagsToRemove };
-};
-
-export const useUpdateLink = (): UseMutationResult<
-  UpdateLinkReturn,
-  Error,
-  { linkId: number; linkToUpdate: LinkUpdate; tags: FetchTagsReturn }
-> => {
-  return useMutation({
-    mutationFn: ({ linkId, linkToUpdate, tags }) => updateLink(linkId, linkToUpdate, tags),
-  });
 };
