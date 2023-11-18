@@ -1,6 +1,7 @@
 import { env } from '@/env';
 import { GET_TAGS_SELECT } from '@/lib/constants';
 import { createServerClient } from '@/lib/supabase/server';
+import { getTotalPages } from '@/lib/utils/get-total-pages';
 import { cookies } from 'next/headers';
 
 export type FetchLinksByTagSlugReturn = Awaited<ReturnType<typeof fetchLinksByTagSlug>>;
@@ -21,7 +22,8 @@ export const fetchLinksByTagSlug = async (tagSlug: string, page: number) => {
       tags(${GET_TAGS_SELECT}),
       comments(*),
       votes(*)
-    `
+    `,
+        { count: 'exact' }
       )
       .eq('temp_tags.slug', tagSlug)
       .order('createdAt', { ascending: false })
@@ -33,10 +35,10 @@ export const fetchLinksByTagSlug = async (tagSlug: string, page: number) => {
       throw new Error('Cannot get tag links, try to reload the page');
     }
 
-    return tagLinks;
+    return { tagLinks, totalPages: getTotalPages(response.count, env.NEXT_PUBLIC_LINKS_PER_PAGE) };
   } catch (err) {
     console.error(err);
 
-    return [];
+    return { tagLinks: [], totalPages: null };
   }
 };

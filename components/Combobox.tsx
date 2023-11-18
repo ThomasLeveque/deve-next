@@ -6,7 +6,7 @@ import { Check, ChevronsUpDown } from 'lucide-react';
 
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/cn';
 import { useState } from 'react';
 
 type ComboboxProps<TValue extends string | number> = {

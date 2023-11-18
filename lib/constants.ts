@@ -5,6 +5,7 @@ export const pageParser = parseAsInteger.withDefault(1);
 
 export const SEARCH_PARAM = 'q';
 export const ORDERBY_PARAM = 'orderby';
+export const PAGE_PARAM = 'page';
 
 export const orderLinksKeys = {
   newest: 'newest',

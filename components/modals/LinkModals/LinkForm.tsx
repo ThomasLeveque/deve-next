@@ -30,7 +30,7 @@ type LinkFormData = z.infer<typeof linkSchema>;
 interface AddLinkFormProps {
   closeModal: () => void;
   profile: NonNullable<FetchProfileReturn>;
-  linkToUpdate?: FetchLinksReturn[0];
+  linkToUpdate?: FetchLinksReturn['links'][0];
   tags: FetchTagsReturn;
 }
 

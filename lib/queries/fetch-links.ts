@@ -1,6 +1,7 @@
 import { env } from '@/env';
 import { OrderLinksKey } from '@/lib/constants';
 import { createServerClient } from '@/lib/supabase/server';
+import { getTotalPages } from '@/lib/utils/get-total-pages';
 import { Nullish } from '@/types/shared';
 import { cookies } from 'next/headers';
 
@@ -20,7 +21,8 @@ export const fetchLinks = async (page: number, orderby: NonNullable<OrderLinksKe
     tags(*),
     comments(*),
     votes(*)
-  `
+  `,
+      { count: 'exact' }
     );
 
     if (orderby === 'newest') {
@@ -32,7 +34,7 @@ export const fetchLinks = async (page: number, orderby: NonNullable<OrderLinksKe
     }
 
     if (orderby === 'liked') {
-      query = query.order('votesCount', { ascending: false }).order('createdAt', { ascending: false });
+      query = query.order('votes_count', { ascending: false }).order('createdAt', { ascending: false });
     }
 
     if (searchQuery) {
@@ -47,9 +49,10 @@ export const fetchLinks = async (page: number, orderby: NonNullable<OrderLinksKe
       throw new Error('Cannot fetch links, try to reload the page');
     }
 
-    return links;
+    return { links, totalPages: getTotalPages(response.count, env.NEXT_PUBLIC_LINKS_PER_PAGE) };
   } catch (err) {
     console.error(err);
-    throw err;
+
+    return { links: [], totalPages: null };
   }
 };

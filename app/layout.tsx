@@ -1,7 +1,7 @@
 import AppProvider from '@/app/_components/AppProvider';
 import BackToTop from '@/app/_components/BackToTop';
 import { Navigation } from '@/app/_components/Navigation';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/cn';
 import { Poppins } from 'next/font/google';
 
 import './globals.css';

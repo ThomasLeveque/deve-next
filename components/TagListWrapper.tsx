@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/cn';
 import { PropsWithChildren } from 'react';
 
 export function TagListWrapper(props: PropsWithChildren<{ className?: string }>) {

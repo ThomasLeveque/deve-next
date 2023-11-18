@@ -7,7 +7,7 @@ import { Pencil } from 'lucide-react';
 import { useState } from 'react';
 
 type UpdateLinkModalProps = {
-  linkToUpdate: FetchLinksReturn[0];
+  linkToUpdate: FetchLinksReturn['links'][0];
   profile: NonNullable<FetchProfileReturn>;
   tags: FetchTagsReturn;
 };

@@ -4,7 +4,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/
 import { Input } from '@/components/ui/input';
 import { useQueryString } from '@/hooks/use-query-string';
 import useDebounce from '@/hooks/useDebounce';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/cn';
 import { Search, XCircle } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';

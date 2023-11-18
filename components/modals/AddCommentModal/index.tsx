@@ -20,7 +20,7 @@ import React, { PropsWithChildren, useState } from 'react';
 import AddCommentForm from './AddCommentForm';
 
 type AddCommentModalProps = {
-  linkToComment: FetchLinksReturn[0];
+  linkToComment: FetchLinksReturn['links'][0];
   children: React.ReactNode;
   profile: NonNullable<FetchProfileReturn>;
   commentsCount: number;

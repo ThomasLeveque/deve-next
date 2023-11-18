@@ -3,7 +3,7 @@ import { Popover, PopoverClose, PopoverContent, PopoverTrigger } from '@/compone
 import { GetCommentsReturn } from '@/data/comment/use-comments';
 import { useRemoveLinkComment } from '@/data/comment/use-remove-comment';
 import { FetchProfileReturn } from '@/lib/queries/fetch-profile';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/cn';
 import { format } from 'date-fns';
 import { PencilIcon, TrashIcon, XIcon } from 'lucide-react';
 import React, { useMemo, useState } from 'react';

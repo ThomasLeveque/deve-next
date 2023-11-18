@@ -1,6 +1,7 @@
 import LinkCard from '@/components/LinkCard';
+import Pagination from '@/components/Pagination';
 import { Badge } from '@/components/ui/badge';
-import { pageParser } from '@/lib/constants';
+import { PAGE_PARAM, pageParser } from '@/lib/constants';
 import { fetchLinksByTagSlug } from '@/lib/queries/fetch-links-by-tag-slug';
 import { fetchProfile } from '@/lib/queries/fetch-profile';
 import { fetchTagBySlug } from '@/lib/queries/fetch-tag-by-slug';
@@ -9,7 +10,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 type TagPageProps = {
-  searchParams: { page?: string | string[] };
+  searchParams: { [PAGE_PARAM]?: string | string[] };
   params: { tagSlug?: string | string[] };
 };
 
@@ -27,7 +28,7 @@ export default async function TagPage({ params: { tagSlug }, searchParams }: Tag
     notFound();
   }
 
-  const [links, tags] = await Promise.all([fetchLinksByTagSlug(tagSlug, page), fetchTags()]);
+  const [{ tagLinks, totalPages }, tags] = await Promise.all([fetchLinksByTagSlug(tagSlug, page), fetchTags()]);
 
   return (
     <section className="my-8">
@@ -37,8 +38,11 @@ export default async function TagPage({ params: { tagSlug }, searchParams }: Tag
         </h1>
       )}
       <ul className="grid grid-cols-1 gap-5 lg:grid-cols-2 xl:grid-cols-3">
-        {links?.map((link) => <LinkCard key={link.id} link={link} profile={profile} tags={tags} />)}
+        {tagLinks?.map((link) => <LinkCard key={link.id} link={link} profile={profile} tags={tags} />)}
       </ul>
+      {totalPages && (
+        <div className="flex justify-center">{<Pagination className="mt-8" totalPages={totalPages} />}</div>
+      )}
     </section>
   );
 }

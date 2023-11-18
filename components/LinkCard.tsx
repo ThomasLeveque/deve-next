@@ -1,10 +1,10 @@
 'use client';
 
+import { TagListWrapper } from '@/components/TagListWrapper';
 import AddCommentModal from '@/components/modals/AddCommentModal';
 import UpdateLinkModal from '@/components/modals/LinkModals/UpdateLinkModal';
 import LoginModal from '@/components/modals/LoginModal';
 import RemoveLinkModal from '@/components/modals/RemoveLinkModal';
-import { TagListWrapper } from '@/components/TagListWrapper';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { DialogTrigger } from '@/components/ui/dialog';
@@ -15,7 +15,7 @@ import { FetchLinksReturn } from '@/lib/queries/fetch-links';
 import { FetchProfileReturn } from '@/lib/queries/fetch-profile';
 import { FetchTagsReturn } from '@/lib/queries/fetch-tags';
 import { TagRow } from '@/lib/supabase/types';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/cn';
 import { getDomain } from '@/utils/format-string';
 import { format } from 'date-fns';
 import { ExternalLink, ThumbsUp } from 'lucide-react';
@@ -23,7 +23,7 @@ import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 
 interface LinkItemProps {
-  link: FetchLinksReturn[0];
+  link: FetchLinksReturn['links'][0];
   // To know if the component is used inside the profil page
   isProfilLink?: boolean;
   profile: FetchProfileReturn;

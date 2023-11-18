@@ -1,7 +1,8 @@
 import LinkCard from '@/components/LinkCard';
 import OrderbyLinksDropdown from '@/components/OrderbyLinksDropdown';
+import Pagination from '@/components/Pagination';
 import { SearchInput } from '@/components/SearchInput';
-import { ORDERBY_PARAM, OrderLinksKey, SEARCH_PARAM, orderLinksKeys, pageParser } from '@/lib/constants';
+import { ORDERBY_PARAM, OrderLinksKey, PAGE_PARAM, SEARCH_PARAM, orderLinksKeys, pageParser } from '@/lib/constants';
 import { fetchLinks } from '@/lib/queries/fetch-links';
 import { fetchProfile } from '@/lib/queries/fetch-profile';
 import { fetchTags } from '@/lib/queries/fetch-tags';
@@ -11,7 +12,11 @@ import { parseAsString, parseAsStringEnum } from 'next-usequerystate/parsers';
 const orderByParser = parseAsStringEnum<OrderLinksKey>(objectValues(orderLinksKeys)).withDefault('newest');
 
 type HomePageProps = {
-  searchParams: { page?: string | string[]; [ORDERBY_PARAM]?: string | string[]; [SEARCH_PARAM]?: string | string[] };
+  searchParams: {
+    [PAGE_PARAM]?: string | string[];
+    [ORDERBY_PARAM]?: string | string[];
+    [SEARCH_PARAM]?: string | string[];
+  };
 };
 
 export default async function HomePage({ searchParams }: HomePageProps) {
@@ -21,7 +26,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
   const profile = await fetchProfile();
 
-  const [links, tags] = await Promise.all([fetchLinks(page, orderBy, search), fetchTags()]);
+  const [{ links, totalPages }, tags] = await Promise.all([fetchLinks(page, orderBy, search), fetchTags()]);
 
   return (
     <section className="my-8">
@@ -34,6 +39,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           <LinkCard key={link.id} link={link} profile={profile} tags={tags} />
         ))}
       </ul>
+      {totalPages && (
+        <div className="flex justify-center">{<Pagination className="mt-8" totalPages={totalPages} />}</div>
+      )}
     </section>
   );
 }
