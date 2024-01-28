@@ -1,8 +1,13 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+} from '@/components/ui/pagination';
 import { PAGE_PARAM, pageParser } from '@/lib/constants';
-import { cn } from '@/utils/cn';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
 
@@ -11,7 +16,7 @@ type PaginationProps = {
   className?: string;
 };
 
-function Pagination({ totalPages, className }: PaginationProps) {
+function MyPagination({ totalPages, className }: PaginationProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -23,36 +28,52 @@ function Pagination({ totalPages, className }: PaginationProps) {
     const start = Math.max(1, currentPage - delta);
     const end = Math.min(totalPages, currentPage + delta);
 
-    const pages = Array.from({ length: end - start + 1 }, (_, i) => start + i);
+    const pages: (number | 'ellipsis')[] = Array.from({ length: end - start + 1 }, (_, i) => start + i);
 
     // Assurez-vous d'avoir toujours la première et la dernière page dans la liste
-    if (pages[0] !== 1) pages.unshift(1);
-    if (pages[pages.length - 1] !== totalPages) pages.push(totalPages);
+    if (pages[0] !== 1) {
+      pages.unshift('ellipsis');
+      pages.unshift(1);
+    }
+    if (pages[pages.length - 1] !== totalPages) {
+      pages.push('ellipsis');
+      pages.push(totalPages);
+    }
 
     return pages;
   }, [currentPage, totalPages, delta]);
 
   const handlePageChange = (page: number) => {
-    if (page === currentPage) {
-      return;
-    }
+    return () => {
+      if (page === currentPage) {
+        return;
+      }
 
-    const newSearchParams = new URLSearchParams(searchParams.toString());
-    newSearchParams.set(PAGE_PARAM, pageParser.serialize(page));
-    router.push(`?${newSearchParams.toString()}`);
+      const newSearchParams = new URLSearchParams(searchParams.toString());
+      newSearchParams.set(PAGE_PARAM, pageParser.serialize(page));
+      router.push(`?${newSearchParams.toString()}`);
+    };
   };
 
   return (
-    <ul className={cn('inline-flex gap-2', className)}>
-      {visiblePages.map((page) => (
-        <li key={page}>
-          <Button variant={page === currentPage ? 'default' : 'link'} onClick={() => handlePageChange(page)}>
-            {page}
-          </Button>
-        </li>
-      ))}
-    </ul>
+    <Pagination className={className}>
+      <PaginationContent>
+        {visiblePages.map((page, index) =>
+          page === 'ellipsis' ? (
+            <PaginationItem key={'ellipsis' + index}>
+              <PaginationEllipsis />
+            </PaginationItem>
+          ) : (
+            <PaginationItem key={page}>
+              <PaginationLink isActive={page === currentPage} onClick={handlePageChange(page)}>
+                {page}
+              </PaginationLink>
+            </PaginationItem>
+          )
+        )}
+      </PaginationContent>
+    </Pagination>
   );
 }
 
-export default Pagination;
+export default MyPagination;

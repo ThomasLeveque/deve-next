@@ -1,6 +1,6 @@
 import LinkCard from '@/components/LinkCard';
 import OrderbyLinksDropdown from '@/components/OrderbyLinksDropdown';
-import Pagination from '@/components/Pagination';
+import MyPagination from '@/components/Pagination';
 import { SearchInput } from '@/components/SearchInput';
 import { ORDERBY_PARAM, OrderLinksKey, PAGE_PARAM, SEARCH_PARAM, orderLinksKeys, pageParser } from '@/lib/constants';
 import { fetchLinks } from '@/lib/queries/fetch-links';
@@ -40,7 +40,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         ))}
       </ul>
       {totalPages && (
-        <div className="flex justify-center">{<Pagination className="mt-8" totalPages={totalPages} />}</div>
+        <div className="flex justify-center">{<MyPagination className="mt-8" totalPages={totalPages} />}</div>
       )}
     </section>
   );

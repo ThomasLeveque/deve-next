@@ -1,5 +1,5 @@
 import LinkCard from '@/components/LinkCard';
-import Pagination from '@/components/Pagination';
+import MyPagination from '@/components/Pagination';
 import { PAGE_PARAM, pageParser } from '@/lib/constants';
 import { fetchLinksByUserId } from '@/lib/queries/fetch-links-by-user-id';
 import { fetchProfile } from '@/lib/queries/fetch-profile';
@@ -32,7 +32,7 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
         {userLinks?.map((link) => <LinkCard isProfilLink key={link.id} link={link} profile={profile} tags={tags} />)}
       </ul>
       {totalPages && (
-        <div className="flex justify-center">{<Pagination className="mt-8" totalPages={totalPages} />}</div>
+        <div className="flex justify-center">{<MyPagination className="mt-8" totalPages={totalPages} />}</div>
       )}
     </section>
   );

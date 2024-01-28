@@ -1,6 +1,7 @@
+import { destructiveToast } from '@/components/ui/use-toast';
 import { createClientClient } from '@/lib/supabase/client';
 import { Database } from '@/types/supabase';
-import { useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
+import { useMutation, UseMutationOptions, UseMutationResult, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from './query-keys';
 
 type CommentUpdate = Database['public']['Tables']['comments']['Update'];
@@ -17,17 +18,23 @@ const updateComment = async (commentId: number, commentToUpdate: CommentUpdate) 
   return updatedComment;
 };
 
-export const useUpdateLinkComment = (): UseMutationResult<
-  UpdateCommentReturn,
-  Error,
-  { commentId: number; commentToUpdate: CommentUpdate }
-> => {
+export const useUpdateLinkComment = (
+  options?: UseMutationOptions<UpdateCommentReturn, Error, { commentId: number; commentToUpdate: CommentUpdate }>
+): UseMutationResult<UpdateCommentReturn, Error, { commentId: number; commentToUpdate: CommentUpdate }> => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({ commentId, commentToUpdate }) => updateComment(commentId, commentToUpdate),
-    onSuccess: async (updatedComment) => {
+    ...options,
+    onSuccess: async (updatedComment, ...params) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.comments(updatedComment.linkId) });
+      options?.onSuccess?.(updatedComment, ...params);
+    },
+    onError(error, variables, context) {
+      destructiveToast({
+        description: error.message,
+      });
+      options?.onError?.(error, variables, context);
     },
   });
 };

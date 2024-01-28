@@ -1,3 +1,4 @@
+import { destructiveToast } from '@/components/ui/use-toast';
 import { createClientClient } from '@/lib/supabase/client';
 import { Database } from '@/types/supabase';
 import { UseMutationOptions, UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -18,22 +19,23 @@ const addComment = async (commentToAdd: CommentInsert) => {
   return newComment;
 };
 
-export const useAddLinkComment = ({
-  onSuccess,
-  ...options
-}: UseMutationOptions<AddCommentReturn, Error, CommentInsert> = {}): UseMutationResult<
-  AddCommentReturn,
-  Error,
-  CommentInsert
-> => {
+export const useAddLinkComment = (
+  options?: UseMutationOptions<AddCommentReturn, Error, CommentInsert>
+): UseMutationResult<AddCommentReturn, Error, CommentInsert> => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (commentToAdd) => addComment(commentToAdd),
+    ...options,
     onSuccess: (newComment, ...params) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.comments(newComment.linkId) });
-      onSuccess?.(newComment, ...params);
+      options?.onSuccess?.(newComment, ...params);
     },
-    ...options,
+    onError(error, variables, context) {
+      destructiveToast({
+        description: error.message,
+      });
+      options?.onError?.(error, variables, context);
+    },
   });
 };

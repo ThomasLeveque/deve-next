@@ -1,5 +1,5 @@
 import LinkCard from '@/components/LinkCard';
-import Pagination from '@/components/Pagination';
+import MyPagination from '@/components/Pagination';
 import { Badge } from '@/components/ui/badge';
 import { PAGE_PARAM, pageParser } from '@/lib/constants';
 import { fetchLinksByTagSlug } from '@/lib/queries/fetch-links-by-tag-slug';
@@ -41,7 +41,7 @@ export default async function TagPage({ params: { tagSlug }, searchParams }: Tag
         {tagLinks?.map((link) => <LinkCard key={link.id} link={link} profile={profile} tags={tags} />)}
       </ul>
       {totalPages && (
-        <div className="flex justify-center">{<Pagination className="mt-8" totalPages={totalPages} />}</div>
+        <div className="flex justify-center">{<MyPagination className="mt-8" totalPages={totalPages} />}</div>
       )}
     </section>
   );

@@ -9,8 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { DialogTrigger } from '@/components/ui/dialog';
 import { useToast } from '@/components/ui/use-toast';
-import { useAddLinkVote } from '@/data/vote/use-add-vote';
-import { useRemoveLinkVote } from '@/data/vote/use-remove-vote';
+import { useLinkVote } from '@/data/vote/use-link-vote';
 import { FetchLinksReturn } from '@/lib/queries/fetch-links';
 import { FetchProfileReturn } from '@/lib/queries/fetch-profile';
 import { FetchTagsReturn } from '@/lib/queries/fetch-tags';
@@ -34,20 +33,31 @@ function LinkCard({ link, isProfilLink = false, profile, tags }: LinkItemProps) 
   const { destructiveToast } = useToast();
   const router = useRouter();
 
+  const [votes, setVotes] = useState(link.votes);
   const [commentsCount, setCommentsCount] = useState(link.comments.length);
 
-  const profileVote = useMemo(() => link.votes.find((vote) => vote.userId === profile?.id), [profile, link.votes]);
+  const profileVote = useMemo(() => votes.find((vote) => vote.userId === profile?.id), [profile, votes]);
 
   const canUpdateLinkData = profile && (profile.role === 'admin' || link.userId === profile.id);
   const canRemoveLink = profile && (profile.role === 'admin' || link.userId === profile.id);
 
+  const mutateLinkVote = useLinkVote({
+    onSuccess(data, variables) {
+      if (variables.type === 'add') {
+        setVotes((prev) => [...prev, data]);
+      } else {
+        setVotes((prev) => prev.filter((vote) => vote.id !== variables.voteId));
+      }
+    },
+  });
+
   const renderFires = useMemo(() => {
-    if (link.votes.length === 0) {
+    if (votes.length === 0) {
       return 'Hot stuff';
     } else {
-      return `${link.votes.length}`;
+      return `${votes.length}`;
     }
-  }, [link.votes.length]);
+  }, [votes.length]);
 
   const renderComments = useMemo(() => {
     if (commentsCount === 0) {
@@ -58,10 +68,6 @@ function LinkCard({ link, isProfilLink = false, profile, tags }: LinkItemProps) 
       return `${commentsCount} comments`;
     }
   }, [commentsCount]);
-
-  const addVote = useAddLinkVote();
-
-  const removeVote = useRemoveLinkVote();
 
   function goToTagPage(tag: TagRow) {
     if (tag.slug) {
@@ -113,10 +119,13 @@ function LinkCard({ link, isProfilLink = false, profile, tags }: LinkItemProps) 
                 if (profile) {
                   event.preventDefault();
                   profileVote
-                    ? removeVote.mutate(profileVote.id)
-                    : addVote.mutate({
-                        userId: profile.id,
-                        linkId: link.id,
+                    ? mutateLinkVote.mutate({ type: 'remove', voteId: profileVote.id })
+                    : mutateLinkVote.mutate({
+                        type: 'add',
+                        voteToAdd: {
+                          userId: profile.id,
+                          linkId: link.id,
+                        },
                       });
                 }
               }}

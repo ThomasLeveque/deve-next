@@ -30,7 +30,7 @@ export default async function ProfileLayout({ children }: { children: React.Reac
           </li>
           <li>
             <h3 className="mb-2 text-[10px] font-bold uppercase">Admin status :</h3>
-            <Switch className="mx-auto sm:mx-0" disabled={true} checked={profile.role === 'admin'} />
+            <Switch className="mx-auto cursor-not-allowed sm:mx-0" checked={profile.role === 'admin'} />
           </li>
           <li>
             <h3 className="mb-1 text-[10px] font-bold uppercase">Created at :</h3>
