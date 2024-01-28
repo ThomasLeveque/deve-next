@@ -62,16 +62,15 @@ function AddCommentModal({
             {comments ? (
               <>
                 <ul className="mt-8 space-y-5">
-                  {comments.pages?.map(
-                    (page) =>
-                      page?.data?.map((comment) => (
-                        <CommentItem
-                          profile={profile}
-                          key={comment.id}
-                          comment={comment}
-                          onRemove={() => onRemoveSuccess?.()}
-                        />
-                      ))
+                  {comments.pages?.map((page) =>
+                    page?.data?.map((comment) => (
+                      <CommentItem
+                        profile={profile}
+                        key={comment.id}
+                        comment={comment}
+                        onRemove={() => onRemoveSuccess?.()}
+                      />
+                    ))
                   )}
                 </ul>
                 {commentsCount > COMMENTS_PER_PAGE ? (
