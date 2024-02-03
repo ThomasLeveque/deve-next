@@ -10,7 +10,7 @@ const rootStore = createStore();
 
 export default function AppProvider({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
       <JotaiProvider store={rootStore}>
         <ReactQueryClientProvider>
           {children}

@@ -94,7 +94,7 @@ function LinkCard({ link, isProfilLink = false, profile, tags }: LinkItemProps) 
             </div>
           </div>
           <a href={link.url} rel="noreferrer" target="_blank" className="with-ring space-y-1.5">
-            <CardTitle>{link.description}</CardTitle>
+            <CardTitle className="leading-tight">{link.description}</CardTitle>
             <CardDescription className="inline-flex items-center space-x-2">
               <span>On {getDomain(link.url)}</span> <ExternalLink size={15} />
             </CardDescription>

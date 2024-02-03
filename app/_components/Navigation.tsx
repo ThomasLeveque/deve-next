@@ -1,3 +1,4 @@
+import { ColorModeToggle } from '@/components/ColorModeToggle';
 import { AddLinkModal, AddLinkModalTrigger } from '@/components/modals/LinkModals/AddLinkModal';
 import LoginModal from '@/components/modals/LoginModal';
 import { ProfileAvatar } from '@/components/ProfileAvatar';
@@ -31,7 +32,7 @@ export async function Navigation() {
   }
 
   return (
-    <header className="sticky top-0 z-30 bg-white">
+    <header className="sticky top-0 z-30 bg-background">
       <div className="flex h-header items-center justify-between px-5 xl:container xl:mx-auto">
         <div className="flex items-center space-x-5">
           <Link href="/" className="with-ring text-3xl font-bold">
@@ -51,7 +52,6 @@ export async function Navigation() {
               <AddLinkModalTrigger />
             </LoginModal>
           )}
-
           {profile ? (
             <DropdownMenu>
               <DropdownMenuTrigger>
@@ -83,6 +83,7 @@ export async function Navigation() {
               </DialogTrigger>
             </LoginModal>
           )}
+          <ColorModeToggle />
         </div>
       </div>
     </header>
