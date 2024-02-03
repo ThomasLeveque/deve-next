@@ -1,4 +1,4 @@
-import { ORDERBY_PARAM, OrderLinksKey, SEARCH_PARAM, orderLinksKeys } from '@/lib/constants';
+import { ORDERBY_PARAM, OrderLinksKey, PAGE_PARAM, SEARCH_PARAM, orderLinksKeys, pageParser } from '@/lib/constants';
 import { objectValues } from '@/utils/object-values';
 import { parseAsString, useQueryState } from 'next-usequerystate';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -7,8 +7,10 @@ import { useMemo } from 'react';
 interface useQueryStringReturn {
   orderbyQuery: OrderLinksKey;
   searchQuery: string;
+  pageQuery: number;
   setOrderbyQuery: (orderKey: OrderLinksKey) => void;
   setSearchQuery: (search: string | null) => void;
+  setPageQuery: (page: number | null) => void;
 }
 
 export const useQueryString = (): useQueryStringReturn => {
@@ -23,6 +25,14 @@ export const useQueryString = (): useQueryStringReturn => {
       history: 'replace',
       shallow: false,
       throttleMs: 200,
+    })
+  );
+
+  const [pageQuery, setPageQuery] = useQueryState(
+    PAGE_PARAM,
+    pageParser.withOptions({
+      history: 'push',
+      shallow: false,
     })
   );
 
@@ -44,5 +54,7 @@ export const useQueryString = (): useQueryStringReturn => {
     searchQuery: searchQuery ?? '',
     setOrderbyQuery,
     setSearchQuery,
+    setPageQuery,
+    pageQuery,
   };
 };

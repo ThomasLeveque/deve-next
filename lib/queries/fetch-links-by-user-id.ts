@@ -28,16 +28,16 @@ export async function fetchLinksByUserId(userId: string, page: number) {
       .order('createdAt', { ascending: false })
       .range(from, to);
 
-    const userLinks = response.data;
+    const links = response.data;
 
-    if (!userLinks) {
+    if (!links) {
       throw new Error('Cannot fetch links by userId, try to reload the page');
     }
 
-    return { userLinks, totalPages: getTotalPages(response.count, env.NEXT_PUBLIC_LINKS_PER_PAGE) };
+    return { links, totalPages: getTotalPages(response.count, env.NEXT_PUBLIC_LINKS_PER_PAGE) };
   } catch (err) {
     console.error(err);
 
-    return { userLinks: [], totalPages: null };
+    return { links: [], totalPages: null };
   }
 }

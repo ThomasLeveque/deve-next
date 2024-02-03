@@ -34,11 +34,13 @@ export const fetchLinks = async (page: number, orderby: NonNullable<OrderLinksKe
     }
 
     if (orderby === 'liked') {
+      // votes_count is define insi database functions (supabase)
       query = query.order('votes_count', { ascending: false }).order('createdAt', { ascending: false });
     }
 
     if (searchQuery) {
-      query = query.textSearch('description', searchQuery);
+      // description_url is define insi database functions (supabase)
+      query = query.textSearch('description_url', searchQuery);
     }
 
     const response = await query.range(from, to);

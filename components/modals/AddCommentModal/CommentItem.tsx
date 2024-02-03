@@ -84,7 +84,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, isPreview = false, p
       {updateComment ? (
         <UpdateCommentForm profile={profile} commentToUpdate={comment} closeUpdate={() => setUpdateComment(false)} />
       ) : (
-        <ReactMarkdown className="prose-sm prose">{comment.text}</ReactMarkdown>
+        <ReactMarkdown className="prose prose-sm">{comment.text}</ReactMarkdown>
       )}
     </li>
   );

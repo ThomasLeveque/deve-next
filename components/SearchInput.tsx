@@ -17,7 +17,7 @@ export interface SearchInputProps
 const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
   ({ className, inputClassName, ...props }, ref) => {
     const form = useForm();
-    const { searchQuery, setSearchQuery } = useQueryString();
+    const { searchQuery, setSearchQuery, setPageQuery } = useQueryString();
     const [query, setQuery] = useState<string | null>(searchQuery);
 
     const debouncedQuery = useDebounce<string | null>(query, 300);
@@ -29,6 +29,7 @@ const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
       }
 
       if (debouncedQuery !== searchQuery) {
+        setPageQuery(1);
         setSearchQuery(debouncedQuery);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps

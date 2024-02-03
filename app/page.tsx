@@ -1,6 +1,6 @@
-import LinkCard from '@/components/LinkCard';
+import { LinkCardSkeletonList } from '@/components/LinkCardSkeletonList';
+import { LinksList } from '@/components/LinksList';
 import OrderbyLinksDropdown from '@/components/OrderbyLinksDropdown';
-import MyPagination from '@/components/Pagination';
 import { SearchInput } from '@/components/SearchInput';
 import { ORDERBY_PARAM, OrderLinksKey, PAGE_PARAM, SEARCH_PARAM, orderLinksKeys, pageParser } from '@/lib/constants';
 import { fetchLinks } from '@/lib/queries/fetch-links';
@@ -8,6 +8,7 @@ import { fetchProfile } from '@/lib/queries/fetch-profile';
 import { fetchTags } from '@/lib/queries/fetch-tags';
 import { objectValues } from '@/utils/object-values';
 import { parseAsString, parseAsStringEnum } from 'next-usequerystate/parsers';
+import { Suspense } from 'react';
 
 const orderByParser = parseAsStringEnum<OrderLinksKey>(objectValues(orderLinksKeys)).withDefault('newest');
 
@@ -26,22 +27,19 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
   const profile = await fetchProfile();
 
-  const [{ links, totalPages }, tags] = await Promise.all([fetchLinks(page, orderBy, search), fetchTags()]);
-
   return (
     <section className="my-8">
       <div className="mb-5 flex space-x-2">
         <OrderbyLinksDropdown className="flex-none" />
-        <SearchInput placeholder="Search for a link..." className="w-full" inputClassName="w-full" />
+        <SearchInput
+          placeholder="Search for a link by description or url..."
+          className="w-full"
+          inputClassName="w-full"
+        />
       </div>
-      <ul className="grid grid-cols-1 gap-5 lg:grid-cols-2 xl:grid-cols-3">
-        {links.map((link) => (
-          <LinkCard key={link.id} link={link} profile={profile} tags={tags} />
-        ))}
-      </ul>
-      {totalPages && (
-        <div className="flex justify-center">{<MyPagination className="mt-8" totalPages={totalPages} />}</div>
-      )}
+      <Suspense fallback={<LinkCardSkeletonList />}>
+        <LinksList profile={profile} linksPromise={Promise.all([fetchLinks(page, orderBy, search), fetchTags()])} />
+      </Suspense>
     </section>
   );
 }

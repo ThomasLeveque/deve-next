@@ -29,16 +29,16 @@ export const fetchLinksByTagSlug = async (tagSlug: string, page: number) => {
       .order('createdAt', { ascending: false })
       .range(from, to);
 
-    const tagLinks = response.data;
+    const links = response.data;
 
-    if (!tagLinks) {
+    if (!links) {
       throw new Error('Cannot get tag links, try to reload the page');
     }
 
-    return { tagLinks, totalPages: getTotalPages(response.count, env.NEXT_PUBLIC_LINKS_PER_PAGE) };
+    return { links, totalPages: getTotalPages(response.count, env.NEXT_PUBLIC_LINKS_PER_PAGE) };
   } catch (err) {
     console.error(err);
 
-    return { tagLinks: [], totalPages: null };
+    return { links: [], totalPages: null };
   }
 };

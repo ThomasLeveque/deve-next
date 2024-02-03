@@ -7,8 +7,7 @@ import {
   PaginationItem,
   PaginationLink,
 } from '@/components/ui/pagination';
-import { PAGE_PARAM, pageParser } from '@/lib/constants';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useQueryString } from '@/hooks/use-query-string';
 import { useMemo } from 'react';
 
 type PaginationProps = {
@@ -17,16 +16,13 @@ type PaginationProps = {
 };
 
 function MyPagination({ totalPages, className }: PaginationProps) {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-
-  const currentPage = pageParser.parseServerSide(searchParams.get(PAGE_PARAM) ?? undefined);
+  const { pageQuery, setPageQuery } = useQueryString();
 
   const delta = 1; // Nombre de pages à afficher de chaque côté de la page actuelle
 
   const visiblePages = useMemo(() => {
-    const start = Math.max(1, currentPage - delta);
-    const end = Math.min(totalPages, currentPage + delta);
+    const start = Math.max(1, pageQuery - delta);
+    const end = Math.min(totalPages, pageQuery + delta);
 
     const pages: (number | 'ellipsis')[] = Array.from({ length: end - start + 1 }, (_, i) => start + i);
 
@@ -41,19 +37,7 @@ function MyPagination({ totalPages, className }: PaginationProps) {
     }
 
     return pages;
-  }, [currentPage, totalPages, delta]);
-
-  const handlePageChange = (page: number) => {
-    return () => {
-      if (page === currentPage) {
-        return;
-      }
-
-      const newSearchParams = new URLSearchParams(searchParams.toString());
-      newSearchParams.set(PAGE_PARAM, pageParser.serialize(page));
-      router.push(`?${newSearchParams.toString()}`);
-    };
-  };
+  }, [pageQuery, totalPages, delta]);
 
   return (
     <Pagination className={className}>
@@ -65,7 +49,7 @@ function MyPagination({ totalPages, className }: PaginationProps) {
             </PaginationItem>
           ) : (
             <PaginationItem key={page}>
-              <PaginationLink isActive={page === currentPage} onClick={handlePageChange(page)}>
+              <PaginationLink isActive={page === pageQuery} onClick={() => setPageQuery(page)}>
                 {page}
               </PaginationLink>
             </PaginationItem>

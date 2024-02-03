@@ -70,7 +70,7 @@ function UpdateCommentForm({ commentToUpdate, closeUpdate, profile }: UpdateComm
           render={({ field }) => (
             <FormItem>
               {showPreview ? (
-                <ReactMarkdown className="prose-sm prose">{field.value}</ReactMarkdown>
+                <ReactMarkdown className="prose prose-sm">{field.value}</ReactMarkdown>
               ) : (
                 <>
                   <FormControl>
