@@ -1,29 +1,58 @@
-import { getTagBySlug } from '@data/tag/get-tag-by-slug';
-import { getTags } from '@data/tag/get-tags';
-import TagPageClient from 'app/tags/[tagSlug]/TagPageClient';
+import { LinkCardSkeletonList } from '@/components/LinkCardSkeletonList';
+import { LinksList } from '@/components/LinksList';
+import { Badge } from '@/components/ui/badge';
+import { PAGE_PARAM, pageParser } from '@/lib/constants';
+import { fetchLinksByTagSlug } from '@/lib/queries/fetch-links-by-tag-slug';
+import { fetchProfile } from '@/lib/queries/fetch-profile';
+import { fetchTagBySlug } from '@/lib/queries/fetch-tag-by-slug';
+import { fetchTags } from '@/lib/queries/fetch-tags';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 
-export async function generateMetadata({ params }: { params: { tagSlug: string } }): Promise<Metadata> {
-  const tag = await getTagBySlug(params.tagSlug);
+type TagPageProps = {
+  searchParams: { [PAGE_PARAM]?: string | string[] };
+  params: { tagSlug?: string | string[] };
+};
 
-  return { title: tag?.name };
-}
+export default async function TagPage({ params: { tagSlug }, searchParams }: TagPageProps) {
+  if (Array.isArray(tagSlug) || !tagSlug) {
+    notFound();
+  }
 
-export async function generateStaticParams() {
-  const tags = await getTags();
+  const profile = await fetchProfile();
+  const page = pageParser.parseServerSide(searchParams.page);
 
-  return tags.map((tag) => ({ tagSlug: tag.slug }));
-}
-
-export const revalidate = 60;
-
-export default async function Tag({ params: { tagSlug } }: { params: { tagSlug: string } }) {
-  const tag = await getTagBySlug(tagSlug);
+  const tag = await fetchTagBySlug(tagSlug);
 
   if (!tag) {
     notFound();
   }
 
-  return <TagPageClient tag={tag} />;
+  return (
+    <section className="my-8">
+      {tag && (
+        <h1 className="mb-8 flex items-center gap-3 text-center text-4xl font-bold sm:text-left">
+          Tag: <Badge>{`${tag.name} (${tag.links.length})`}</Badge>
+        </h1>
+      )}
+      <Suspense fallback={<LinkCardSkeletonList />}>
+        <LinksList profile={profile} linksPromise={Promise.all([fetchLinksByTagSlug(tagSlug, page), fetchTags()])} />
+      </Suspense>
+    </section>
+  );
+}
+
+export async function generateMetadata({ params: { tagSlug } }: TagPageProps): Promise<Metadata> {
+  if (Array.isArray(tagSlug) || !tagSlug) {
+    notFound();
+  }
+
+  const tag = await fetchTagBySlug(tagSlug);
+
+  if (!tag) {
+    notFound();
+  }
+
+  return { title: tag.name };
 }

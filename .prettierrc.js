@@ -7,5 +7,6 @@ module.exports = {
   printWidth: 120,
   tabWidth: 2,
   useTabs: false,
-  plugins: [require('./merged-prettier-plugin.js')],
+  // works because prettier plugin tailwind is insiders version https://github.com/tailwindlabs/prettier-plugin-tailwindcss/issues/186
+  plugins: ['prettier-plugin-organize-imports', 'prettier-plugin-tailwindcss'],
 };

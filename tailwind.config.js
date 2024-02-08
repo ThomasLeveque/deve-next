@@ -1,59 +1,84 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { fontFamily } = require('tailwindcss/defaultTheme');
 
-/** @type {import('tailwindcss').Config} \*/
+/** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./components/**/*.{js,ts,jsx,tsx}', './app/**/*.{js,ts,jsx,tsx}'],
+  darkMode: ['class'],
+  content: ['./pages/**/*.{ts,tsx}', './components/**/*.{ts,tsx}', './app/**/*.{ts,tsx}', './src/**/*.{ts,tsx}'],
   theme: {
     fontFamily: {
       poppins: ['var(--font-poppins)', ...fontFamily.sans],
     },
+    container: {
+      center: true,
+      padding: '2rem',
+      screens: {
+        '2xl': '1400px',
+      },
+    },
     extend: {
-      extend: {
-        screens: {
-          mobile: { max: '639px' },
-        },
+      screens: {
+        mobile: { max: '639px' },
       },
       spacing: {
-        header: '100px',
-      },
-      width: {
-        sidebar: '250px',
-      },
-      borderRadius: {
-        modal: '20px',
-        'link-card': '15px',
-        button: '10px',
-        tag: '5px',
+        header: '80px',
       },
       colors: {
-        black: '#1B1C2C',
-        white: '#FFFFFF',
-        primary: '#CBEFB6',
-        secondary: '#5B5F97',
         discord: '#5865f2',
         google: '#DB4437',
         github: '#333333',
-        gray: {
-          100: '#F3F4F6',
-          400: '#9CA3AF',
-          900: '#343654',
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        primary: {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
         },
-        success: {
-          100: '#98C6AC',
-          400: '#58BA82',
-          900: '#40875F',
+        secondary: {
+          DEFAULT: 'hsl(var(--secondary))',
+          foreground: 'hsl(var(--secondary-foreground))',
         },
-        danger: {
-          100: '#F07C7A',
-          400: '#A22522',
-          900: '#701918',
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))',
         },
-        warning: {
-          100: '#FFB24D',
-          400: '#FE9000',
-          900: '#CC7400',
+        muted: {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
         },
+        accent: {
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))',
+        },
+        popover: {
+          DEFAULT: 'hsl(var(--popover))',
+          foreground: 'hsl(var(--popover-foreground))',
+        },
+        card: {
+          DEFAULT: 'hsl(var(--card))',
+          foreground: 'hsl(var(--card-foreground))',
+        },
+      },
+      borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
+      },
+      keyframes: {
+        'accordion-down': {
+          from: { height: '0px' },
+          to: { height: 'var(--radix-accordion-content-height)' },
+        },
+        'accordion-up': {
+          from: { height: 'var(--radix-accordion-content-height)' },
+          to: { height: '0px' },
+        },
+      },
+      animation: {
+        'accordion-down': 'accordion-down 0.2s ease-out',
+        'accordion-up': 'accordion-up 0.2s ease-out',
       },
       typography: (theme) => ({
         DEFAULT: {
@@ -66,5 +91,5 @@ module.exports = {
       }),
     },
   },
-  plugins: [require('@tailwindcss/typography'), require('prettier-plugin-tailwindcss')],
+  plugins: [require('tailwindcss-animate'), require('@tailwindcss/typography')],
 };

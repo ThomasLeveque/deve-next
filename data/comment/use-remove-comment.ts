@@ -1,24 +1,13 @@
-import { GetCommentsReturn } from '@data/comment/use-comments';
-import { GetLinksReturn } from '@data/link/get-links';
-import { useLinksQueryKey } from '@data/link/use-links-query-key';
-import { useLinkToCommentModal } from '@store/modals.store';
-import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
-import { arrayToSingle } from '@utils/array-to-single';
-import { formatError } from '@utils/format-string';
-import { removeItemInsidePaginatedData, updateItemInsidePaginatedData } from '@utils/mutate-data';
-import { supabase } from '@utils/supabase-client';
-import toast from 'react-hot-toast';
+import { destructiveToast } from '@/components/ui/use-toast';
+import { createClientClient } from '@/lib/supabase/client';
+import { UseMutationOptions, UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from './query-keys';
 
 export type RemoveLinkCommentReturn = Awaited<ReturnType<typeof removeLinkComment>>;
 
 const removeLinkComment = async (commentId: number) => {
-  const response = await supabase
-    .from('comments')
-    .delete()
-    .eq('id', commentId)
-    .select(`*, link:links(commentsCount)`)
-    .single();
+  const supabase = createClientClient();
+  const response = await supabase.from('comments').delete().eq('id', commentId).select().single();
   const removedComment = response.data;
 
   if (!removedComment || response.error) {
@@ -27,31 +16,23 @@ const removeLinkComment = async (commentId: number) => {
   return removedComment;
 };
 
-export const useRemoveLinkComment = (linkId: number): UseMutationResult<RemoveLinkCommentReturn, Error, number> => {
-  const [linkToCommentModal, setLinkToCommentModal] = useLinkToCommentModal();
-
+export const useRemoveLinkComment = (
+  options?: UseMutationOptions<RemoveLinkCommentReturn, Error, number>
+): UseMutationResult<RemoveLinkCommentReturn, Error, number> => {
   const queryClient = useQueryClient();
 
-  const linksQueryKey = useLinksQueryKey();
-
-  return useMutation((commentId) => removeLinkComment(commentId), {
-    onSuccess: async (removedComment) => {
-      queryClient.setQueryData<InfiniteData<GetCommentsReturn>>(queryKeys.comments(linkId), (oldComments) =>
-        removeItemInsidePaginatedData(removedComment.id, oldComments)
-      );
-
-      queryClient.setQueryData<InfiniteData<GetLinksReturn>>(linksQueryKey, (oldLinks) =>
-        updateItemInsidePaginatedData(
-          { id: linkId, commentsCount: (arrayToSingle(removedComment.link)?.commentsCount ?? 0) - 1 },
-          oldLinks
-        )
-      );
-      if (linkToCommentModal) {
-        setLinkToCommentModal({ ...linkToCommentModal, commentsCount: linkToCommentModal.commentsCount - 1 });
-      }
+  return useMutation({
+    mutationFn: (commentId) => removeLinkComment(commentId),
+    ...options,
+    onSuccess: async (removedComment, ...params) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.comments(removedComment.linkId) });
+      options?.onSuccess?.(removedComment, ...params);
     },
-    onError: (err) => {
-      toast.error(formatError(err));
+    onError(error, variables, context) {
+      destructiveToast({
+        description: error.message,
+      });
+      options?.onError?.(error, variables, context);
     },
   });
 };

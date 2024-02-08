@@ -1,23 +1,15 @@
-import { GetCommentsReturn } from '@data/comment/use-comments';
-import { GetLinksReturn } from '@data/link/get-links';
-import { useLinkToCommentModal } from '@store/modals.store';
-import { InfiniteData, useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
-import { arrayToSingle } from '@utils/array-to-single';
-import { addItemInsidePaginatedData, updateItemInsidePaginatedData } from '@utils/mutate-data';
-import { supabase } from '@utils/supabase-client';
-import { Database } from '~types/supabase';
-import { useLinksQueryKey } from '../link/use-links-query-key';
+import { destructiveToast } from '@/components/ui/use-toast';
+import { createClientClient } from '@/lib/supabase/client';
+import { Database } from '@/types/supabase';
+import { UseMutationOptions, UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from './query-keys';
 
 type CommentInsert = Database['public']['Tables']['comments']['Insert'];
 export type AddCommentReturn = Awaited<ReturnType<typeof addComment>>;
 
 const addComment = async (commentToAdd: CommentInsert) => {
-  const response = await supabase
-    .from('comments')
-    .insert(commentToAdd)
-    .select(`*, link:links(commentsCount), user:profiles(*)`)
-    .single();
+  const supabase = createClientClient();
+  const response = await supabase.from('comments').insert(commentToAdd).select().single();
 
   const newComment = response.data;
 
@@ -27,28 +19,23 @@ const addComment = async (commentToAdd: CommentInsert) => {
   return newComment;
 };
 
-export const useAddLinkComment = (linkId: number): UseMutationResult<AddCommentReturn, Error, CommentInsert> => {
-  const [linkToCommentModal, setLinkToCommentModal] = useLinkToCommentModal();
-
+export const useAddLinkComment = (
+  options?: UseMutationOptions<AddCommentReturn, Error, CommentInsert>
+): UseMutationResult<AddCommentReturn, Error, CommentInsert> => {
   const queryClient = useQueryClient();
 
-  const linksQueryKey = useLinksQueryKey();
-
-  return useMutation((commentToAdd) => addComment(commentToAdd), {
-    onSuccess: async (newComment) => {
-      queryClient.setQueryData<InfiniteData<GetCommentsReturn>>(queryKeys.comments(linkId), (oldComments) => {
-        return addItemInsidePaginatedData(newComment, oldComments);
+  return useMutation({
+    mutationFn: (commentToAdd) => addComment(commentToAdd),
+    ...options,
+    onSuccess: (newComment, ...params) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.comments(newComment.linkId) });
+      options?.onSuccess?.(newComment, ...params);
+    },
+    onError(error, variables, context) {
+      destructiveToast({
+        description: error.message,
       });
-
-      queryClient.setQueryData<InfiniteData<GetLinksReturn>>(linksQueryKey, (oldLinks) =>
-        updateItemInsidePaginatedData(
-          { id: linkId, commentsCount: (arrayToSingle(newComment.link)?.commentsCount ?? 0) + 1 },
-          oldLinks
-        )
-      );
-      if (linkToCommentModal) {
-        setLinkToCommentModal({ ...linkToCommentModal, commentsCount: linkToCommentModal.commentsCount + 1 });
-      }
+      options?.onError?.(error, variables, context);
     },
   });
 };
