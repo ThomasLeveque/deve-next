@@ -17,6 +17,9 @@ function wait(ms: number) {
 
 function SignInWithGithubBtn() {
   const [isLoading, setIsLoading] = useState(false);
+
+  console.log({ url: getAlternateUrl('/auth/callback') });
+
   const { mutate } = useMutation({
     mutationFn: async () => {
       setIsLoading(true);
